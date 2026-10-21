@@ -130,7 +130,6 @@ Report vulnerabilities to security@hop.top, not in a public issue; see
 
 ## License
 
-MIT, © Idea Crafters LLC and jadb; see [LICENSE](LICENSE). `spec/`, `ts/`, `py/`, `rs/` and `php/` carry
-the same license in their own `LICENSE` files. The RFC 8785 vectors in
-`spec/v1.0/fixtures/vectors/jcs/` are third-party data under Apache-2.0; see
-[LICENSE-NOTE.md](spec/v1.0/fixtures/vectors/jcs/LICENSE-NOTE.md).
+MIT, © Idea Crafters LLC and jadb; see [LICENSE](LICENSE).
+
+The RFC 8785 vectors in `spec/v1.0/fixtures/vectors/jcs/` are third-party data under Apache-2.0; see [LICENSE-NOTE.md](spec/v1.0/fixtures/vectors/jcs/LICENSE-NOTE.md).
