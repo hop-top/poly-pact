@@ -1,0 +1,5 @@
+{
+  "transport_code": "INVALID_MESSAGE",
+  "rejected_before_crypto": true,
+  "reason": "first violation /channels/0 enum: tcp-loopback is not stdio, uds or named-pipe"
+}

@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/binding/target.ts b/ts/src/core/binding/target.ts
+index 85ef4a3..793c674 100644
+--- a/ts/src/core/binding/target.ts
++++ b/ts/src/core/binding/target.ts
+@@ -120,7 +120,7 @@ function checkComponent(s: string, isPath: boolean): void {
+         `the ${name} encodes the unreserved character %${hex2(b)} at offset ${i}`,
+       );
+     }
+-    if (isPath && b === 0x2f) {
++    if (isPath && b === 0x2f && false) {
+       throw refuse(Rule.ENCODED_SLASH, `the path has an encoded slash at offset ${i}`);
+     }
+     decoded[n++] = b;

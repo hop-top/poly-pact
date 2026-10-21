@@ -1,0 +1,44 @@
+{
+  "case_version": 1,
+  "id": "BASIC-08.store-down",
+  "title": "When the account database cannot answer, the roles are a dependency failure, never a remembered value",
+  "draft": [
+    "17.1",
+    "18"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "role_map": {
+      "AP_READER": "invoice-reader",
+      "AP_APPROVER": "invoice-approver"
+    },
+    "accounts_answered_at": 1792079998,
+    "unavailable_sources": [
+      "legacy-accounts"
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "basic:legacy-accounts:20417",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/invoices"
+      },
+      "workload": "basic:legacy-accounts:20417",
+      "mechanism": "basic"
+    },
+    "native_path": "/principal/roles"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "error",
+    "reason_code": "DEPENDENCY_UNAVAILABLE"
+  }
+}

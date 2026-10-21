@@ -1,0 +1,149 @@
+{
+  "case_version": 1,
+  "id": "FILES-12.other-domain",
+  "title": "An account with the same relative identifier in another domain is another principal, named by its own domain SID",
+  "draft": [
+    "8.5",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "files/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://files.acme.example/environments/fs01",
+      "origin": "https://files.acme.example",
+      "header_allowlist": []
+    },
+    "parameters": {
+      "context_max_age_seconds": 300,
+      "handle_max_lifetime_seconds": 300
+    },
+    "service_account": "svc",
+    "accounts": [
+      {
+        "ref": "alice",
+        "sid": "S-1-5-21-1004336348-1177238915-682003330-1105",
+        "display_name": "Alice Martin",
+        "groups": [
+          "S-1-5-21-1004336348-1177238915-682003330-513",
+          "S-1-5-21-1004336348-1177238915-682003330-1201"
+        ],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9hbGljZQ=="
+      },
+      {
+        "ref": "bob",
+        "sid": "S-1-5-21-1004336348-1177238915-682003330-1106",
+        "display_name": "Bob Okafor",
+        "groups": [
+          "S-1-5-21-1004336348-1177238915-682003330-513",
+          "S-1-5-21-1004336348-1177238915-682003330-1202"
+        ],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9ib2I="
+      },
+      {
+        "ref": "alice-2",
+        "sid": "S-1-5-21-1004336348-1177238915-682003330-1107",
+        "display_name": "Alice Martin",
+        "groups": [
+          "S-1-5-21-1004336348-1177238915-682003330-513"
+        ],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9hbGljZS0y"
+      },
+      {
+        "ref": "alice-other-domain",
+        "sid": "S-1-5-21-2718281828-3141592653-1414213562-1105",
+        "display_name": "Alice Martin",
+        "groups": [],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9hbGljZS1vdGhlci1kb21haW4="
+      },
+      {
+        "ref": "svc",
+        "sid": "S-1-5-21-1004336348-1177238915-682003330-1500",
+        "display_name": "svc-files-broker",
+        "groups": [
+          "S-1-5-21-1004336348-1177238915-682003330-513"
+        ],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9zdmM="
+      }
+    ],
+    "open_source_id": "fs01-ntfs-open",
+    "registry": [
+      {
+        "file_id": "report-q3",
+        "path": "D:\\Shares\\Reports\\q3-summary.txt",
+        "final_path": "\\\\?\\D:\\Shares\\Reports\\q3-summary.txt",
+        "volume_serial": "5c3a91e2d04b7f18",
+        "object_id": "000000000000000000030000000a41c7"
+      },
+      {
+        "file_id": "payroll-2026-09",
+        "path": "D:\\Shares\\Restricted\\payroll-2026-09.txt",
+        "final_path": "\\\\?\\D:\\Shares\\Restricted\\payroll-2026-09.txt",
+        "volume_serial": "5c3a91e2d04b7f18",
+        "object_id": "000000000000000000030000000a41d2"
+      }
+    ],
+    "objects": [
+      {
+        "path": "D:\\Shares\\Reports\\q3-summary.txt",
+        "final_path": "\\\\?\\D:\\Shares\\Reports\\q3-summary.txt",
+        "volume_serial": "5c3a91e2d04b7f18",
+        "object_id": "000000000000000000030000000a41c7",
+        "attributes": [],
+        "acl": [
+          {
+            "sid": "S-1-5-21-1004336348-1177238915-682003330-1201",
+            "effect": "allow",
+            "access": [
+              "read"
+            ]
+          },
+          {
+            "sid": "S-1-5-21-1004336348-1177238915-682003330-1500",
+            "effect": "allow",
+            "access": [
+              "read"
+            ]
+          }
+        ],
+        "content_b64": "Y29udGVudHMgb2YgcmVwb3J0LXEzCg=="
+      },
+      {
+        "path": "D:\\Shares\\Restricted\\payroll-2026-09.txt",
+        "final_path": "\\\\?\\D:\\Shares\\Restricted\\payroll-2026-09.txt",
+        "volume_serial": "5c3a91e2d04b7f18",
+        "object_id": "000000000000000000030000000a41d2",
+        "attributes": [],
+        "acl": [
+          {
+            "sid": "S-1-5-21-1004336348-1177238915-682003330-1500",
+            "effect": "allow",
+            "access": [
+              "read"
+            ]
+          }
+        ],
+        "content_b64": "Y29udGVudHMgb2YgcGF5cm9sbC0yMDI2LTA5Cg=="
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://files.acme.example/files/report-q3/content",
+    "headers": {},
+    "native_state_ref": "alice-other-domain"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "authenticated",
+    "principal": {
+      "id": "files:S-1-5-21-2718281828-3141592653-1414213562:S-1-5-21-2718281828-3141592653-1414213562-1105",
+      "realm": {
+        "tenant_id": "acme",
+        "environment_id": "https://files.acme.example/environments/fs01"
+      },
+      "workload": "files:S-1-5-21-2718281828-3141592653-1414213562:S-1-5-21-2718281828-3141592653-1414213562-1105",
+      "mechanism": "negotiate"
+    }
+  }
+}

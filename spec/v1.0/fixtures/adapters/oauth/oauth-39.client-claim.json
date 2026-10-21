@@ -1,0 +1,154 @@
+{
+  "case_version": 1,
+  "id": "OAUTH-39.client-claim",
+  "title": "/oauth/client_id of a form G principal is the namespaced client",
+  "draft": [
+    "8.3",
+    "17.1",
+    "17.2"
+  ],
+  "native_state": {
+    "model": "oauth/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.acme.example/environments/crm",
+      "origin": "https://gateway.acme.example",
+      "header_allowlist": [
+        "accept",
+        "prefer"
+      ]
+    },
+    "entries": [
+      {
+        "id": "G1",
+        "form": "google-id-token",
+        "issuer": "https://accounts.google.com",
+        "tenant": "corp.acme.example",
+        "audiences": [
+          "412038750493-q7r2m9k4v1x8c3b6n0d5f2h7j9l1p3s4.apps.googleusercontent.com"
+        ],
+        "clients": [
+          "412038750493-q7r2m9k4v1x8c3b6n0d5f2h7j9l1p3s4.apps.googleusercontent.com",
+          "412038750493-t8w3y6z1a4e7g0i2k5m9o1q3u5x7b9d2.apps.googleusercontent.com"
+        ],
+        "sender_constraint": "none",
+        "lifetime_seconds": 3600,
+        "algorithms": [
+          "RS256"
+        ],
+        "key_refresh_seconds": 3600,
+        "key_max_age_seconds": 86400,
+        "trusted_origins": [
+          "https://www.googleapis.com"
+        ]
+      }
+    ],
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/workspace/files",
+        "entry": "G1",
+        "scope": ""
+      }
+    ],
+    "keys": [
+      {
+        "ref": "google-a",
+        "bits": 2048
+      }
+    ],
+    "tokens": [
+      {
+        "ref": "alice",
+        "jws": {
+          "header": {
+            "alg": "RS256",
+            "kid": "kid-google-a",
+            "typ": "JWT"
+          },
+          "claims": {
+            "iss": "https://accounts.google.com",
+            "azp": "412038750493-q7r2m9k4v1x8c3b6n0d5f2h7j9l1p3s4.apps.googleusercontent.com",
+            "aud": "412038750493-q7r2m9k4v1x8c3b6n0d5f2h7j9l1p3s4.apps.googleusercontent.com",
+            "sub": "104837201958362914057",
+            "hd": "corp.acme.example",
+            "email": "alice@corp.acme.example",
+            "email_verified": true,
+            "name": "Alice Example",
+            "iat": 1792079400,
+            "exp": 1792083000
+          },
+          "key": "google-a",
+          "signature": "valid"
+        }
+      }
+    ],
+    "introspection": [],
+    "discovery": [
+      {
+        "entry": "G1",
+        "url": "https://accounts.google.com/.well-known/openid-configuration",
+        "status": 200,
+        "document": {
+          "issuer": "https://accounts.google.com",
+          "jwks_uri": "https://www.googleapis.com/oauth2/v3/certs",
+          "id_token_signing_alg_values_supported": [
+            "RS256"
+          ]
+        }
+      }
+    ],
+    "key_sets": [
+      {
+        "entry": "G1",
+        "url": "https://www.googleapis.com/oauth2/v3/certs",
+        "status": 200,
+        "keys": [
+          {
+            "key": "google-a",
+            "kid": "kid-google-a",
+            "kty": "RSA",
+            "use": "sig",
+            "alg": "RS256"
+          }
+        ],
+        "headers": {
+          "Cache-Control": "public, max-age=20123, must-revalidate, no-transform"
+        }
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "oauth:https%3A%2F%2Faccounts.google.com:corp.acme.example:104837201958362914057",
+      "realm": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.acme.example/environments/crm"
+      },
+      "workload": "oauth:https%3A%2F%2Faccounts.google.com:corp.acme.example:412038750493-q7r2m9k4v1x8c3b6n0d5f2h7j9l1p3s4.apps.googleusercontent.com",
+      "mechanism": "oauth",
+      "authenticated_at": 1792080000,
+      "attributes": {
+        "oauth": {
+          "entry": "G1",
+          "form": "google-id-token",
+          "tenant": "corp.acme.example",
+          "scopes": [],
+          "issued_at": 1792079400
+        }
+      }
+    },
+    "native_path": "/oauth/client_id"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": "oauth:https%3A%2F%2Faccounts.google.com:corp.acme.example:412038750493-q7r2m9k4v1x8c3b6n0d5f2h7j9l1p3s4.apps.googleusercontent.com",
+      "observed_at": 1792079400,
+      "status_checked_at": null,
+      "source_id": "G1",
+      "source_ref": ""
+    }
+  }
+}

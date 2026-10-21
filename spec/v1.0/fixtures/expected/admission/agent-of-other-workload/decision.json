@@ -1,0 +1,4 @@
+{
+  "transport_code": "CONTEXT_MISMATCH",
+  "reason": "resolve_agent_binding returns UNKNOWN with no agent, operator or key and reports that the realm holds a record of the presented agent ID for another workload (draft 17.1; identity mapping IM-11, section 8 row 6): the agent is enrolled in the authenticated realm, but not for the authenticated workload. No binding in force can be verified at 11.3 step 2, before an authenticated evaluation (12.2); the report makes the code CONTEXT_MISMATCH (13.4: principal or realm differs), not INVALID_PROOF; no receipt"
+}

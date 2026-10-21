@@ -1,0 +1,17 @@
+{
+  "manifest_version": 1,
+  "entries": [
+    {
+      "id": "admission/valid",
+      "kind": "evaluate",
+      "scope": "runner",
+      "path": "admission/valid",
+      "expected": "expected/admission/valid/decision.json",
+      "outcome": "ADMISSIBLE",
+      "spec_map_row": "CL-11.3",
+      "draft_section": "11.3",
+      "transport": ["https"],
+      "layer": "transcript"
+    }
+  ]
+}

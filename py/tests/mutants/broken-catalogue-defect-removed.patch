@@ -1,0 +1,15 @@
+diff --git a/py/tests/broken/catalogue.py b/py/tests/broken/catalogue.py
+--- a/py/tests/broken/catalogue.py
++++ b/py/tests/broken/catalogue.py
+@@ -455,11 +455,6 @@ CATALOGUE: tuple[Spec, ...] = (
+         "reports a check's native verdict without applying its age limits",
+         ("FRESH-02.stale-snapshot", "FRESH-03.observed-ahead", "FRESH-06.restamped"),
+     ),
+-    Spec(
+-        Defect.STALE_AT_LIMIT,
+-        "treats an age equal to its limit as stale",
+-        ("FRESH-02.at-limit",),
+-    ),
+     Spec(
+         Defect.DEFER_CLOCK_AHEAD,
+         "reports a source clock that runs ahead as a source that cannot answer",

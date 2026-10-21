@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jws/Es256.php b/php/src/Core/Jws/Es256.php
+index 2871892..7ddb0c8 100644
+--- a/php/src/Core/Jws/Es256.php
++++ b/php/src/Core/Jws/Es256.php
+@@ -107,7 +107,7 @@ final class Es256
+         }
+         $r = substr($sig, 0, self::COORDINATE_OCTETS);
+         $s = substr($sig, self::COORDINATE_OCTETS);
+-        if (!self::inRange($r) || !self::inRange($s)) {
++        if (!self::inRange($r) || !self::inRange($s) || strcmp($s, self::HALF_N) > 0) {
+             return false;
+         }
+         $ok = openssl_verify($input, self::sequence($r, $s), $key, \OPENSSL_ALGO_SHA256);

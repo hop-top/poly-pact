@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/policy-violation-as-adherence-failure",
+  "adversarial_claim": "A detected policy violation places a security hold, or a gateway's report that it saw no violation earns the agent positive policy_adherence weight.",
+  "subject_event_id": "security-event-0001",
+  "events": [
+    {
+      "event_id": "security-event-0001",
+      "report": "reports/security-event-0001.json",
+      "signed": "signed/security-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "policy_adherence",
+        "positive": 0,
+        "negative": 1
+      },
+      "rationale": "Draft 14.5, row 'Detected policy violation': SECURITY reported by gateway, FAILURE, policy_adherence; causal_assessment AGENT, so one attributable failure (14.6 rules 8, 9, 12). It cites the gateway's violation record of its task and operation (14.2). It places no hold (15.4): security_status stays CLEAR."
+    },
+    {
+      "event_id": "security-event-0002",
+      "report": "reports/security-event-0002.json",
+      "signed": "signed/security-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "reporter-not-authorized",
+      "contribution": {
+        "dimension": "policy_adherence",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5 and 14.6 rule 12: a gateway SECURITY report other than a FAILURE on policy_adherence is UNQUALIFIED. 'No violation observed' is an admission pass in disguise and earns no positive reputation (14.3)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 1
+    }
+  }
+}

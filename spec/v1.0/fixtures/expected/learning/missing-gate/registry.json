@@ -1,0 +1,15 @@
+{
+  "artifacts": {},
+  "active": [],
+  "acknowledgments": [],
+  "rejections": [
+    {
+      "step": 0,
+      "code": "INVALID_MESSAGE",
+      "reason_codes": []
+    }
+  ],
+  "holds": [],
+  "reevaluation_required": [],
+  "subject": "/rejections/0"
+}

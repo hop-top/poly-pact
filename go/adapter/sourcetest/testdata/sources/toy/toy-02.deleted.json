@@ -1,0 +1,15 @@
+{
+  "case_version": 1,
+  "id": "TOY-02.deleted",
+  "title": "A principal whose record was deleted answers no fact at the next read",
+  "draft": ["9.2", "18"],
+  "source": {"model": "toy/1", "source_id": "toy-directory", "lag_seconds": 60, "paths": ["/principal/groups", "/principal/account_state"]},
+  "steps": [
+    {"at": 1792079000, "inbound": {"op": "put", "principal": "x-toy:acme:7a1f", "path": "/principal/groups", "value": ["finance"]}},
+    {"at": 1792079500, "inbound": {"op": "delete", "principal": "x-toy:acme:7a1f"}, "expect": {"status": "ok"}}
+  ],
+  "reads": [
+    {"native_path": "/principal/groups", "principal": "x-toy:acme:7a1f", "expect": {"outcome": "error", "reason_code": "MISSING_FIELD"}},
+    {"native_path": "/principal/roles", "principal": "x-toy:acme:7a1f", "expect": {"outcome": "error", "reason_code": "UNSUPPORTED_REQUIREMENT"}}
+  ]
+}

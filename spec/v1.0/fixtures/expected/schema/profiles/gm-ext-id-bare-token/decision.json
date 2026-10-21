@@ -1,0 +1,5 @@
+{
+  "transport_code": "INVALID_MESSAGE",
+  "rejected_before_crypto": true,
+  "reason": "first violation /extensions_supported/0 anyOf: neither a URI nor a pact- token"
+}

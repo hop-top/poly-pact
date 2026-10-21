@@ -1,0 +1,1 @@
+{"description":"Read the approved September invoice to prepare the department summary.","intent_id":"intent-september-invoices-007","purpose_id":"https://policies.example/purposes/invoice-summary/v1","task_id":"native-task:september-summary-007"}

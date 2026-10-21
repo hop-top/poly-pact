@@ -1,0 +1,11 @@
+--- a/rs/src/core/digest.rs
++++ b/rs/src/core/digest.rs
+@@ -57,7 +57,7 @@
+ /// the base64url SHA-256 of its RFC 8785 canonical form.
+ pub fn object_digest_json(data: &[u8]) -> Result<Digest, Error> {
+     let first = data.iter().find(|b| !matches!(b, b' ' | b'\t' | b'\n' | b'\r'));
+-    if first != Some(&b'{') {
++    if first.is_none() {
+         return Err(Error::NotObject);
+     }
+     let canonical = jcs::canonicalize(data).map_err(Error::Canonicalize)?;

@@ -1,0 +1,11 @@
+diff --git a/ts/src/internal/numbers.ts b/ts/src/internal/numbers.ts
+index b162a79..f4c8656 100644
+--- a/ts/src/internal/numbers.ts
++++ b/ts/src/internal/numbers.ts
+@@ -11,5 +11,5 @@
+ /** The RFC 8785 text of the finite number `f`; a `RangeError` for NaN and the infinities. */
+ export function numberText(f: number): string {
+   if (!Number.isFinite(f)) throw new RangeError(`jcs: ${f} is not a finite number`);
+-  return JSON.stringify(f);
++  return JSON.stringify(f).replace(/e([+-])([0-9])$/, 'e$10$2');
+ }

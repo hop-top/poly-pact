@@ -1,0 +1,64 @@
+{
+  "case_version": 1,
+  "id": "BASIC-01.unknown-user",
+  "title": "An unknown user-id gets the same public reason as a wrong password, so the denial does not disclose whether an account exists",
+  "draft": [
+    "17.1",
+    "13.4"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "credentials": [
+      {
+        "ref": "ops",
+        "user_id": "invoice-assistant-ops",
+        "password": "Tq7!harbor-lantern-42"
+      },
+      {
+        "ref": "ops-wrong-password",
+        "user_id": "invoice-assistant-ops",
+        "password": "Tq7!harbor-lantern-43"
+      },
+      {
+        "ref": "unknown-user",
+        "user_id": "invoice-assistant-0ps",
+        "password": "Tq7!harbor-lantern-42"
+      },
+      {
+        "ref": "approver",
+        "user_id": "legacy-approver",
+        "password": "Lm4:quarry:otter"
+      },
+      {
+        "ref": "batch",
+        "user_id": "legacy-batch",
+        "password": "batch\u0007bell-31"
+      },
+      {
+        "ref": "former",
+        "user_id": "former-assistant",
+        "password": "Zx9$willow-ember-07"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://invoices.northstar.example/invoices/INV-1041",
+    "native_state_ref": "unknown-user"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "CREDENTIAL_REJECTED",
+    "must_not_call": [
+      "execute"
+    ]
+  }
+}

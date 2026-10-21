@@ -1,0 +1,12 @@
+diff --git a/ts/test/broken/freshness.ts b/ts/test/broken/freshness.ts
+index 619b71d..20fdbb1 100644
+--- a/ts/test/broken/freshness.ts
++++ b/ts/test/broken/freshness.ts
+@@ -67,6 +67,7 @@ export function checkFreshness(b: Adapter, checkId: string, out: CheckOutcome):
+   }
+   if (
+     b.has(Defect.STALE_AT_LIMIT) &&
++    false &&
+     (atLimit(rec.observed_at, f.max_age_seconds) ||
+       atLimit(rec.status_checked_at, f.status_max_age_seconds))
+   ) {

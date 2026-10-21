@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Dialect declaration required of spec/v1.0/schemas/pact.schema.json",
+  "type": "object",
+  "required": ["$schema"],
+  "properties": {
+    "$schema": {
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "tasks": [
+    {
+      "task_id": "native-task:september-summary-007",
+      "agent_id": "https://identity.example/agents/invoice-assistant",
+      "operator_id": "https://identity.example/operators/acme",
+      "principal_id": "https://identity.example/principals/alice",
+      "independence_group": "native-task-group:september-summary-007"
+    },
+    {
+      "task_id": "native-task:ledger-review-0042",
+      "agent_id": "https://identity.example/agents/ledger-reviewer",
+      "operator_id": "https://identity.example/operators/ledgerworks",
+      "principal_id": "https://identity.example/principals/bob",
+      "independence_group": "native-task-group:ledger-review-0042"
+    }
+  ],
+  "records": {
+    "native-review:september-summary-007/read-0001": {
+      "kind": "assessment",
+      "state": "completed",
+      "returned": null,
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0001",
+      "executor": null,
+      "observed_at": 1792079970
+    },
+    "native-review:ledger-review-0042/review-0001": {
+      "kind": "assessment",
+      "state": "completed",
+      "returned": null,
+      "task_id": "native-task:ledger-review-0042",
+      "operation_id": "ledger-review-operation-0001",
+      "executor": null,
+      "observed_at": 1792079975
+    }
+  }
+}

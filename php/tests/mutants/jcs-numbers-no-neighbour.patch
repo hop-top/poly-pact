@@ -1,0 +1,15 @@
+diff --git a/php/src/Core/Jcs/Number.php b/php/src/Core/Jcs/Number.php
+index b5aed48..bb5f9a3 100644
+--- a/php/src/Core/Jcs/Number.php
++++ b/php/src/Core/Jcs/Number.php
+@@ -72,9 +72,7 @@ final class Number
+                 return [$d, $e];
+             }
+             $c = $v > $a ? $d - 1 : $d + 1;
+-            if ((float) ($c . 'e' . $e) === $a) {
+-                return [$c, $e];
+-            }
++
+         }
+ 
+         // 17 significant digits always round-trip.

@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/core/binding/_headers.py b/py/src/hop_top_pact/core/binding/_headers.py
+--- a/py/src/hop_top_pact/core/binding/_headers.py
++++ b/py/src/hop_top_pact/core/binding/_headers.py
+@@ -92,7 +92,7 @@
+     header. A value that is not uri-host [ ":" port ] with a non-empty host
+     is refused.
+     """
+-    values = [v for name, v in lines if lower_ascii(name) == "host"]
++    values = [v for name, v in lines if name == "Host"]
+     if len(values) > 1:
+         raise refuse(Rule.DUPLICATE_HOST, f"the request has {len(values)} Host field lines")
+     if origin_form and not values:

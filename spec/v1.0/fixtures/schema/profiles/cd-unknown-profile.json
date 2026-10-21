@@ -1,0 +1,18 @@
+{
+  "description": "ConformanceDeclaration payload naming the conformance profile lite, which is not a conformance profile (draft 22.1).",
+  "objects": [
+    {
+      "section": "22.1",
+      "def": "ConformanceDeclaration",
+      "object": {
+        "conformance_profile": "lite",
+        "version": "0.1",
+        "omitted_roles": [
+          "reputation",
+          "learning"
+        ],
+        "owner": "https://owner.example/issuer"
+      }
+    }
+  ]
+}

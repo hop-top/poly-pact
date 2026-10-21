@@ -1,0 +1,12 @@
+diff --git a/py/tests/broken/freshness.py b/py/tests/broken/freshness.py
+--- a/py/tests/broken/freshness.py
++++ b/py/tests/broken/freshness.py
+@@ -69,7 +69,7 @@ def check_freshness(b: BrokenAdapter, check_id: str, out: CheckOutcome) -> Check
+             source_id=out.source_id,
+             source_ref=out.source_ref,
+         )
+-    if b.has(Defect.STALE_AT_LIMIT) and (
++    if b.has(Defect.STALE_AT_LIMIT) and False and (
+         at_limit(rec.observed_at, f.max_age_seconds)
+         or at_limit(rec.status_checked_at, f.status_max_age_seconds)
+     ):

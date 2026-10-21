@@ -1,0 +1,67 @@
+{
+  "decision": "INADMISSIBLE",
+  "transport_code": null,
+  "checks": [
+    {
+      "check_id": "reputation-context",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED",
+      "evidence_ids_include": [
+        "tuGqrHbP7nSDBthOkQBfOA"
+      ],
+      "source_ref": "configured-selection-record:snapshot-degraded-below-rule"
+    },
+    {
+      "check_id": "reputation-reliability-score",
+      "result": "FAIL",
+      "reason_code": "INVALID_CLAIM"
+    },
+    {
+      "check_id": "reputation-reliability-confidence",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "reputation-reliability-tasks",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "selection-consistency-v1",
+      "result": "FAIL",
+      "reason_code": "SELECTION_INPUT_CHANGED",
+      "evidence_ids_include": [
+        "tuGqrHbP7nSDBthOkQBfOA"
+      ],
+      "source_ref": "configured-selection-record:snapshot-degraded-below-rule"
+    }
+  ],
+  "receipt": {
+    "typ": "pact-admission+jwt",
+    "signer": "keys/validator.jwk.json",
+    "claims": {
+      "pact_version": "0.1",
+      "iss": "https://trust.example/issuers/finance",
+      "sub": "https://identity.example/agents/invoice-assistant",
+      "aud": "https://gateway.example/finance",
+      "iat": 1792080010,
+      "tenant_id": "acme",
+      "presentation_id": "BE86JEdrpiUkgywQkDS46A",
+      "operation_id": "invoice-read-operation-0001",
+      "principal_id": "https://identity.example/principals/alice",
+      "environment_id": "https://gateway.example/environments/finance",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "profile_digest": "y7200_nqUscI5OH71Ac4oVNXXR9G4b7iOBTeMrJUBt8",
+      "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+      "operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+      "requirements_digest": "xetHWZOClm5eHhvzUy9ZrLCNc_2Km5RKbrT5ZQ1SGSk",
+      "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+      "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+      "decision": "INADMISSIBLE",
+      "terminal_reason": "COMPLETED",
+      "mode": "enforced"
+    },
+    "exp_max": 1792080070
+  },
+  "executed": false
+}

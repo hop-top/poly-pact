@@ -1,0 +1,68 @@
+{
+  "case_version": 1,
+  "id": "BASIC-06.record-outcome",
+  "title": "Credentials in an observation never appear in the signed outcome report",
+  "draft": [
+    "14.1",
+    "19"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "reporting": {
+      "issuer": "https://invoices.northstar.example/reporters/gateway",
+      "audience": "https://reputation.northstar.example/service",
+      "kid": "gateway-outcome-key-1"
+    }
+  },
+  "call": {
+    "observation": {
+      "event_id": "event-basic-authorization-0001",
+      "event_kind": "AUTHORIZATION",
+      "context": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/invoices",
+        "agent_id": "https://agents.northstar.example/invoice-assistant",
+        "purpose_id": "invoice-lookup",
+        "action_class": "invoice.read",
+        "resource_class": "invoice",
+        "runtime_class": "managed"
+      },
+      "task_id": "native-task:invoice-review-0001",
+      "operation_id": "op-invoice-read-INV-1041",
+      "admission_receipt_id": null,
+      "observed_at": 1792079995,
+      "result": "SUCCESS",
+      "dimension": "none",
+      "severity": "info",
+      "evidence_refs": [
+        "native-record:permission-0091",
+        "https://audit.northstar.example/r/91?password=Tq7!harbor-lantern-42"
+      ],
+      "attribution": {
+        "native_task_ref": "native-task:invoice-review-0001",
+        "independence_group": "group-1",
+        "causal_assessment": "UNKNOWN",
+        "assessment_ref": null
+      },
+      "supersedes": [],
+      "details": "permission lookup replayed the request: Authorization: Basic aW52b2ljZS1hc3Npc3RhbnQtb3BzOlRxNyFoYXJib3ItbGFudGVybi00Mg=="
+    }
+  },
+  "expect": {
+    "function": "record_outcome",
+    "outcome": "signed",
+    "leak_scan": {
+      "secrets": [
+        "Tq7!harbor-lantern-42",
+        "aW52b2ljZS1hc3Npc3RhbnQtb3BzOlRxNyFoYXJib3ItbGFudGVybi00Mg=="
+      ]
+    }
+  }
+}

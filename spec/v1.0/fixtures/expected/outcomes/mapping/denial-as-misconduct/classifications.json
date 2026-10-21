@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/denial-as-misconduct",
+  "adversarial_claim": "A native denial is reported as agent misconduct: AUTHORIZATION FAILURE on policy_adherence, so that the denial would add negative policy_adherence weight.",
+  "subject_event_id": "authorization-event-0002",
+  "events": [
+    {
+      "event_id": "authorization-event-0001",
+      "report": "reports/authorization-event-0001.json",
+      "signed": "signed/authorization-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "none",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Native denial': AUTHORIZATION, FAILURE, none; zero weight; not misconduct. The authorization record names the declared delegated-user executor (14.2)."
+    },
+    {
+      "event_id": "authorization-event-0002",
+      "report": "reports/authorization-event-0002.json",
+      "signed": "signed/authorization-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "invalid-report",
+      "contribution": {
+        "dimension": "policy_adherence",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft A.2: ADMISSION and AUTHORIZATION events MUST use dimension none. Draft 14.3: native denials MUST NOT count as agent misconduct without additional attributable evidence. The receiver refuses the report; no negative weight."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

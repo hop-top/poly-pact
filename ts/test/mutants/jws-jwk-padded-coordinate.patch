@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/jws/jwk.ts b/ts/src/core/jws/jwk.ts
+index cb44289..1953210 100644
+--- a/ts/src/core/jws/jwk.ts
++++ b/ts/src/core/jws/jwk.ts
+@@ -151,7 +151,7 @@ function coordinate(name: string, s: unknown): Uint8Array {
+   let b: Uint8Array;
+   try {
+     if (typeof s !== 'string') throw new Error(`a ${typeof s}, not a string`);
+-    b = decodeSegment(s);
++    b = decodeSegment(s.replace(/=+$/, ''));
+   } catch (err) {
+     throw fail(Reason.JWK_INVALID, `${name} is not canonical base64url`, err);
+   }

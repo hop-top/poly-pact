@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/jcs.py b/py/src/hop_top_pact/core/jcs.py
+index 4a76692..347e6e7 100644
+--- a/py/src/hop_top_pact/core/jcs.py
++++ b/py/src/hop_top_pact/core/jcs.py
+@@ -84,7 +84,7 @@ def _write(v: object, out: list[str], depth: int, path: list[str]) -> None:
+             if not isinstance(k, str):
+                 raise TypeError(f"jcs: member name {k!r} is not a str")
+         out.append("{")
+-        for i, k in enumerate(sorted(v, key=_utf16)):
++        for i, k in enumerate(sorted(v)):
+             if i:
+                 out.append(",")
+             out.append(_string(k, path, k))

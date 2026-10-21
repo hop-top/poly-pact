@@ -1,0 +1,13 @@
+diff --git a/php/src/Vectors/SchemaCase/SchemaDocument.php b/php/src/Vectors/SchemaCase/SchemaDocument.php
+index c48abbc..1a6f919 100644
+--- a/php/src/Vectors/SchemaCase/SchemaDocument.php
++++ b/php/src/Vectors/SchemaCase/SchemaDocument.php
+@@ -61,7 +61,7 @@ final readonly class SchemaDocument
+             if (!\is_string($typ)) {
+                 return Verdict::rejected('protected header: no typ string');
+             }
+-            $def = SchemaFixture::typDef($typ);
++            $def = SchemaFixture::typDef($typ) ?? 'Evidence';
+             if ($def === null) {
+                 return Verdict::rejected(\sprintf('typ %s is not a typ of the draft 7.3 table', json_encode($typ, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_INVALID_UTF8_SUBSTITUTE)));
+             }

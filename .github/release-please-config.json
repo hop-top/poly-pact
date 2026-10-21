@@ -1,0 +1,111 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "separate-pull-requests": true,
+  "pull-request-title-pattern": "chore(release):${component} ${version}",
+  "include-component-in-tag": true,
+  "tag-separator": "/",
+  "label": "status:release-pending",
+  "release-label": "status:release-tagged",
+  "changelog-sections": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "perf", "section": "Performance" },
+    { "type": "refactor", "section": "Refactoring", "hidden": true },
+    { "type": "docs", "section": "Documentation", "hidden": true },
+    { "type": "test", "section": "Tests", "hidden": true },
+    { "type": "build", "section": "Build", "hidden": true },
+    { "type": "ci", "section": "CI", "hidden": true },
+    { "type": "chore", "section": "Miscellaneous", "hidden": true }
+  ],
+  "plugins": [
+    {
+      "type": "target-context",
+      "stableBranches": ["main"],
+      "prereleaseBranches": ["next"]
+    },
+    {
+      "type": "conditional-linked-versions",
+      "groupName": "pact-sdk",
+      "components": ["pact-go", "pact-ts", "pact-py", "pact-rs", "pact-php"]
+    }
+  ],
+  "packages": {
+    "go": {
+      "release-type": "go",
+      "component": "pact-go",
+      "changelog-path": "CHANGELOG.md",
+      "exclude-paths": ["go/cmd"],
+      "prerelease": true,
+      "prerelease-type": "alpha.0",
+      "versioning": "target",
+      "bump-minor-pre-major": true
+    },
+    "cli": {
+      "release-type": "go",
+      "component": "pact",
+      "changelog-path": "CHANGELOG.md",
+      "prerelease": true,
+      "prerelease-type": "alpha.0",
+      "versioning": "target",
+      "bump-minor-pre-major": true
+    },
+    "ts": {
+      "release-type": "node",
+      "component": "pact-ts",
+      "changelog-path": "CHANGELOG.md",
+      "prerelease": true,
+      "prerelease-type": "alpha.0",
+      "versioning": "target",
+      "bump-minor-pre-major": true
+    },
+    "py": {
+      "release-type": "python",
+      "component": "pact-py",
+      "package-name": "hop-top-pact",
+      "changelog-path": "CHANGELOG.md",
+      "prerelease": true,
+      "prerelease-type": "alpha.0",
+      "versioning": "target",
+      "bump-minor-pre-major": true
+    },
+    "rs": {
+      "release-type": "rust",
+      "component": "pact-rs",
+      "changelog-path": "CHANGELOG.md",
+      "prerelease": true,
+      "prerelease-type": "alpha.0",
+      "versioning": "target",
+      "bump-minor-pre-major": true
+    },
+    "php": {
+      "release-type": "php",
+      "component": "pact-php",
+      "changelog-path": "CHANGELOG.md",
+      "prerelease": true,
+      "prerelease-type": "alpha.0",
+      "versioning": "target",
+      "bump-minor-pre-major": true
+    },
+    "spec/v1.0": {
+      "release-type": "simple",
+      "component": "pact-spec",
+      "changelog-path": "CHANGELOG.md",
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "perf", "section": "Performance" },
+        { "type": "docs", "section": "Specification" },
+        { "type": "refactor", "section": "Refactoring", "hidden": true },
+        { "type": "test", "section": "Tests", "hidden": true },
+        { "type": "build", "section": "Build", "hidden": true },
+        { "type": "ci", "section": "CI", "hidden": true },
+        { "type": "chore", "section": "Miscellaneous", "hidden": true }
+      ],
+      "prerelease": true,
+      "prerelease-type": "alpha.0",
+      "versioning": "target",
+      "bump-minor-pre-major": true,
+      "extra-files": ["draft.md", "README.md"]
+    }
+  }
+}

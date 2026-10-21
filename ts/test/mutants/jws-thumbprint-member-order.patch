@@ -1,0 +1,12 @@
+diff --git a/ts/src/core/jws/jwk.ts b/ts/src/core/jws/jwk.ts
+index cb44289..83924e6 100644
+--- a/ts/src/core/jws/jwk.ts
++++ b/ts/src/core/jws/jwk.ts
+@@ -212,6 +212,6 @@ export function thumbprint(k: JWK): Digest {
+   publicKeyOf(k);
+   // The values are base64url and fixed ASCII names, so nothing needs JSON
+   // escaping (RFC 7638 section 3.3).
+-  const input = `{"crv":"${k.crv}","kty":"${k.kty}","x":"${k.x}","y":"${k.y}"}`;
++  const input = `{"kty":"${k.kty}","crv":"${k.crv}","x":"${k.x}","y":"${k.y}"}`;
+   return createHash('sha256').update(input).digest('base64url') as Digest;
+ }

@@ -1,0 +1,20 @@
+name: spec-commit-rules
+
+# Per-version commit isolation on pull requests touching the spec tree:
+# every commit stays inside one `spec/vX.Y/` directory (a whole-directory
+# rename is the one admitted cross-directory shape) and carries no
+# breaking-change syntax (a breaking change opens a new version directory).
+# The rules and the script live in hop-top/.github; the spec root is read
+# from the release-please config (package `spec/v1.0`).
+
+on:
+  pull_request:
+    paths: ["spec/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  rules:
+    name: spec commit rules
+    uses: hop-top/.github/.github/workflows/spec-commit-rules.yml@v0

@@ -1,0 +1,13 @@
+diff --git a/ts/src/vectors/harness.ts b/ts/src/vectors/harness.ts
+index c050364..8932ab1 100644
+--- a/ts/src/vectors/harness.ts
++++ b/ts/src/vectors/harness.ts
+@@ -173,7 +173,7 @@ export function runManifest(path: string, options: RunOptions = {}): Run {
+       failed += 1;
+       details.push(`FAIL ${e.id}: ${oneLine(o.detail)}`);
+       lines.push({ id: e.id, kind: e.kind, result: 'fail' });
+-      if (options.gates?.(e) !== 'planned') status = 1;
++      if (options.gates?.(e) === 'required') status = 1;
+       continue;
+     }
+     skipped += 1;

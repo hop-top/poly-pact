@@ -1,0 +1,6 @@
+{
+  "id": "vectors/strictjson/lone-surrogate-high-then-bmp",
+  "input_text": "{\"operation_id\":\"invoice-read-operation-0001\",\"environment_id\":\"https://gateway.example/environments/finance\",\"principal_id\":\"https://identity.example/principals/alice\",\"action\":\"\\ud800\\u0041\",\"resources\":[\"https://invoices.example/invoices/INV-1042\"],\"method\":\"GET\",\"target_uri\":\"https://gateway.example/invoices/INV-1042\",\"body_digest\":\"47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU\",\"headers\":{}}",
+  "expect": "reject",
+  "reason": "High surrogate escape followed by a non-surrogate escape. Decode target: OperationContext."
+}

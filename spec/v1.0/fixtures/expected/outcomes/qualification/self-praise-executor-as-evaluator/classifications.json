@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/self-praise-executor-as-evaluator",
+  "adversarial_claim": "The executor of a task, also registered as an evaluator, assesses its own task and earns task_quality credit for it.",
+  "subject_event_id": "quality-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution completed with data returned': EXECUTION, SUCCESS, reliability; counts toward reliability. The signer is registered as executor (A.2 reporter_role) and the cited record names the declared executor (14.2)."
+    },
+    {
+      "event_id": "quality-event-0002",
+      "report": "reports/quality-event-0002.json",
+      "signed": "signed/quality-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "self-praise",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.6 rule 5: the signer is registered as executor for this task (it reported the task's execution) and MUST NOT be accepted as evaluator for the same task. Its evaluator registration is a second trust record of the same iss. UNQUALIFIED reports contribute nothing (14.3)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 1,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

@@ -1,0 +1,19 @@
+diff --git a/py/src/hop_top_pact/core/digest.py b/py/src/hop_top_pact/core/digest.py
+index 0530a9b..c5ce29c 100644
+--- a/py/src/hop_top_pact/core/digest.py
++++ b/py/src/hop_top_pact/core/digest.py
+@@ -72,14 +72,6 @@ def object_digest(value: object) -> Digest:
+             offset=DEFAULT_MAX_BYTES,
+             detail=f"encoding is {size} bytes, limit is {DEFAULT_MAX_BYTES} bytes",
+         )
+-    if found.unsafe is not None:
+-        path, f = found.unsafe
+-        raise StrictJSONError(
+-            StrictJSONErrorKind.INTEGER,
+-            path,
+-            0,
+-            f"{f!r} is written as an integer literal outside ±{MAX_SAFE_INTEGER}",
+-        )
+     return bytes_digest(canonical)
+ 
+ 

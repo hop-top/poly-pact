@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/adapter/enroll_memory.py b/py/src/hop_top_pact/adapter/enroll_memory.py
+index 0afd911..ad7680a 100644
+--- a/py/src/hop_top_pact/adapter/enroll_memory.py
++++ b/py/src/hop_top_pact/adapter/enroll_memory.py
+@@ -255,8 +255,6 @@ class MemoryRegistry:
+                 raise self._refuse(entry, EnrollError(EnrollErrorKind.COMPROMISED, repr(agent_id)))
+             if row.binding.status == BindingStatus.REVOKED:
+                 raise self._refuse(entry, EnrollError(EnrollErrorKind.REVOKED, repr(agent_id)))
+-            if (admin.realm, new_jkt) in self._used_keys:
+-                raise self._refuse(entry, EnrollError(EnrollErrorKind.KEY_REUSE, repr(new_jkt)))
+             row.binding = replace(row.binding, holder_jkt=new_jkt, observed_at=entry.at)
+             self._used_keys.add((admin.realm, new_jkt))
+             self._commit(entry, AuditResult.APPLIED)

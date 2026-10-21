@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Clock/Clocks.php b/php/src/Core/Clock/Clocks.php
+index ab9df89..1ef7aeb 100644
+--- a/php/src/Core/Clock/Clocks.php
++++ b/php/src/Core/Clock/Clocks.php
+@@ -129,7 +129,7 @@ final class Clocks
+         self::checkRange('iat', $iat);
+         [$sec, $us] = Instant::split($now);
+         $bound = $iat + self::PRESENTATION_VALIDITY;
+-        if ($sec > $bound || ($sec === $bound && $us > 0)) {
++        if ($sec > $bound) {
+             throw new ClockError(ClockErrorKind::TOO_OLD, \sprintf('iat %d, now %d', $iat, $sec));
+         }
+     }

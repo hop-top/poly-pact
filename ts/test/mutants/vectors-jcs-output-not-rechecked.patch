@@ -1,0 +1,13 @@
+diff --git a/ts/src/vectors/run-core.ts b/ts/src/vectors/run-core.ts
+index 7f7f520..bd29409 100644
+--- a/ts/src/vectors/run-core.ts
++++ b/ts/src/vectors/run-core.ts
+@@ -53,8 +53,6 @@ export function runJCS(root: string, e: Entry, core: Core): void {
+       `canonical form ${JSON.stringify(str(got))}, want ${JSON.stringify(str(want))}`,
+     );
+   }
+-  if (!equal(core.canonicalize(want), want))
+-    throw new Error('the expected output is not canonical');
+ }
+ 
+ /** The shortest exponent literal of an IEEE 754 double, sign of zero kept. */

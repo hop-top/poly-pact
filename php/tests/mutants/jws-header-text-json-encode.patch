@@ -1,0 +1,12 @@
+diff --git a/php/src/Core/Jws/Text.php b/php/src/Core/Jws/Text.php
+index 2aad284..f1c9056 100644
+--- a/php/src/Core/Jws/Text.php
++++ b/php/src/Core/Jws/Text.php
+@@ -25,6 +25,7 @@ final class Text
+      */
+     public static function quote(string $s): string
+     {
++        return (string) json_encode($s, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_INVALID_UTF8_SUBSTITUTE);
+         $out = '';
+         while ($s !== '') {
+             $i = Utf8::firstInvalid($s);

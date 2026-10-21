@@ -1,0 +1,10 @@
+[{"file":"signed/policies/finance.jws","kind":"policy","received_at":1792080000},
+ {"file":"signed/artifacts/baseline-v1.jws","kind":"artifact","received_at":1792080000},
+ {"file":"signed/artifacts/baseline-base2-v1.jws","kind":"artifact","received_at":1792080000},
+ {"file":"signed/events/learning-evaluated-event-0001.jws","kind":"event","received_at":1792080060},
+ {"file":"signed/events/learning-evaluated-event-0002.jws","kind":"event","received_at":1792080060},
+ {"file":"signed/events/learning-shadow-event-0001.jws","kind":"event","received_at":1792080120},
+ {"file":"signed/events/learning-shadow-event-0002.jws","kind":"event","received_at":1792080120},
+ {"file":"signed/events/learning-active-event-0001.jws","kind":"event","received_at":1792166580},
+ {"file":"signed/events/learning-rollback-event-0001.jws","kind":"event","received_at":1792166640},
+ {"file":"signed/events/learning-rollback-event-0002.jws","kind":"event","received_at":1792166700}]

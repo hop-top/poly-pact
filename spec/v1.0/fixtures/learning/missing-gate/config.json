@@ -1,0 +1,32 @@
+{
+  "now": 1792080000,
+  "clock_skew_seconds": 5,
+  "learning_service": {
+    "service_id": "https://learning.example/finance",
+    "tenant_id": "acme",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "trust": [
+    {
+      "iss": "https://trust.example/issuers/finance",
+      "role": "policy-authority",
+      "keys": [
+        "keys/issuer.jwk.json"
+      ]
+    },
+    {
+      "iss": "https://learning.example/controllers/finance",
+      "role": "learning-controller",
+      "keys": [
+        "keys/learning-controller.jwk.json"
+      ]
+    }
+  ],
+  "evaluations": {
+    "configured-evaluation-store:independent-0001": {
+      "evaluator_id": "https://learning.example/evaluators/independent"
+    }
+  },
+  "source_data_manifests": {},
+  "gates": []
+}

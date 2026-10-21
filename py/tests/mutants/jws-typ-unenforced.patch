@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/jws/__init__.py b/py/src/hop_top_pact/core/jws/__init__.py
+index 44ad305..149d273 100644
+--- a/py/src/hop_top_pact/core/jws/__init__.py
++++ b/py/src/hop_top_pact/core/jws/__init__.py
+@@ -222,7 +222,7 @@ class Verifier:
+ 
+         raw_header = _segment(h64, "protected header")
+         header, role, members = _parse_header(raw_header, self.limits)
+-        if self.typ and header.typ != self.typ:
++        if False and header.typ != self.typ:
+             raise JWSError(Reason.TYP_MISMATCH, f"typ {header.typ!r}, want {self.typ!r}")
+         if role == Role.HOLDER:
+             if "jwk" not in members:

@@ -1,0 +1,124 @@
+{
+  "case_version": 1,
+  "id": "GOOGLE-14.token-unavailable",
+  "title": "A token endpoint that refuses the service account is DEPENDENCY_UNAVAILABLE for every fact.",
+  "draft": [
+    "18",
+    "17.2"
+  ],
+  "now": 1792080000,
+  "source": {
+    "model": "googledir/1",
+    "source_id": "googledir-northstar",
+    "principal_prefix": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:",
+    "groups": [
+      "grp-eng"
+    ],
+    "transitive_groups": [],
+    "directory": {
+      "customer": "my_customer",
+      "users": [
+        {
+          "id": "118233047251904436211",
+          "primary_email": "avery@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436212",
+          "primary_email": "blake@northstar.example",
+          "aliases": [],
+          "suspended": true,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436213",
+          "primary_email": "casey@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": true
+        },
+        {
+          "id": "118233047251904436214",
+          "primary_email": "devon@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436215",
+          "primary_email": "emery@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        }
+      ],
+      "groups": [
+        {
+          "id": "grp-platform",
+          "members": [
+            "118233047251904436214"
+          ],
+          "groups": []
+        },
+        {
+          "id": "grp-eng",
+          "members": [
+            "118233047251904436211"
+          ],
+          "groups": [
+            "grp-platform"
+          ]
+        },
+        {
+          "id": "grp-all",
+          "members": [],
+          "groups": [
+            "grp-eng"
+          ]
+        },
+        {
+          "id": "grp-ops",
+          "members": [
+            "118233047251904436212"
+          ],
+          "groups": []
+        }
+      ]
+    }
+  },
+  "steps": [
+    {
+      "at": 1792080000,
+      "inbound": {
+        "admin": {
+          "op": "fail",
+          "api": "token",
+          "status": 500
+        }
+      },
+      "expect": {}
+    }
+  ],
+  "reads": [
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "error",
+        "reason_code": "DEPENDENCY_UNAVAILABLE"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/groups/grp-eng/member",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "error",
+        "reason_code": "DEPENDENCY_UNAVAILABLE"
+      }
+    }
+  ]
+}

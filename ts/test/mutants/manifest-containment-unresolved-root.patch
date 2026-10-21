@@ -1,0 +1,13 @@
+diff --git a/ts/src/runner/manifest/files.ts b/ts/src/runner/manifest/files.ts
+index 599b462..9915091 100644
+--- a/ts/src/runner/manifest/files.ts
++++ b/ts/src/runner/manifest/files.ts
+@@ -183,7 +183,7 @@ function locate(root: string, realRoot: string, rel: string, dirs: Map<string, s
+     if ((err as NodeJS.ErrnoException).code === 'ENOENT') return 'is a dangling symbolic link';
+     return `cannot be resolved: ${messageOf(err)}`;
+   }
+-  if (!real.startsWith(realRoot + sep)) return 'resolves outside the fixture directory';
++  if (!real.startsWith(root + sep)) return 'resolves outside the fixture directory';
+   return '';
+ }
+ 

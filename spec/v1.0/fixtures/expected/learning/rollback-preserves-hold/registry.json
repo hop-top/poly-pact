@@ -1,0 +1,64 @@
+{
+  "artifacts": {
+    "signed/artifacts/baseline-v1.jws": "ROLLED_BACK",
+    "signed/artifacts/baseline-fallback-v1.jws": "ACTIVE"
+  },
+  "active": [
+    {
+      "context": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+        "action_class": "invoice.read",
+        "resource_class": "department-finance-invoice",
+        "runtime_class": "managed-v1"
+      },
+      "artifact": "signed/artifacts/baseline-fallback-v1.jws"
+    }
+  ],
+  "acknowledgments": [
+    {
+      "step": 1,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 2,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 3,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 4,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 5,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 6,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 7,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 8,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 9,
+      "status": "ACCEPTED"
+    }
+  ],
+  "rejections": [],
+  "holds": [
+    "security-event-0001"
+  ],
+  "reevaluation_required": [],
+  "subject": "/acknowledgments/8"
+}

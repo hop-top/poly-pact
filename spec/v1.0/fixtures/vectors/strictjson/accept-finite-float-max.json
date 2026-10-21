@@ -1,0 +1,6 @@
+{
+  "id": "vectors/strictjson/accept-finite-float-max",
+  "input_text": "{\"operation_id\":\"invoice-read-operation-0001\",\"environment_id\":\"https://gateway.example/environments/finance\",\"principal_id\":\"https://identity.example/principals/alice\",\"action\":\"invoice.read\",\"resources\":[\"https://invoices.example/invoices/INV-1042\"],\"method\":\"GET\",\"target_uri\":\"https://gateway.example/invoices/INV-1042\",\"body_digest\":\"47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU\",\"headers\":{},\"extensions\":{\"n\":1.7976931348623157e308}}",
+  "expect": "accept",
+  "reason": "Largest finite binary64 is not non-finite. Decode target: OperationContext."
+}

@@ -1,0 +1,5 @@
+{
+  "transport_code": "INVALID_MESSAGE",
+  "rejected_before_crypto": true,
+  "reason": "first violation /omitted_roles/0 enum: only reputation and learning may be omitted"
+}

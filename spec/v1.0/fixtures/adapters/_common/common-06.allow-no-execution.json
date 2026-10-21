@@ -1,0 +1,67 @@
+{
+  "case_version": 1,
+  "id": "COMMON-06.allow-no-execution",
+  "title": "An allow comes back with its obligations and authorizing runs nothing",
+  "draft": ["17.1"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "policy": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "https://idp.acme.example/alice",
+        "action": "invoice.read",
+        "resource": "https://invoices.example/invoices/INV-1042",
+        "effect": "ALLOW",
+        "obligations": [
+          {
+            "id": "redact-fields",
+            "attributes": {
+              "fields": ["iban"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer",
+      "attributes": {"device_id": "acme-mdm:device-7f3c2b1a", "peer_address": "10.20.30.40"}
+    },
+    "operation": {
+      "operation_id": "op-invoice-approve-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://idp.acme.example/alice",
+      "action": "invoice.read",
+      "resources": ["https://invoices.example/invoices/INV-1042"],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {
+    "function": "authorize_native",
+    "outcome": "ALLOW",
+    "decision": {
+      "obligations": [
+        {
+          "id": "redact-fields",
+          "attributes": {
+            "fields": ["iban"]
+          }
+        }
+      ]
+    },
+    "must_not_call": ["execute"]
+  }
+}

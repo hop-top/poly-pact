@@ -1,0 +1,10 @@
+--- a/rs/examples/vectors/harness.rs
++++ b/rs/examples/vectors/harness.rs
+@@ -170,7 +170,6 @@
+                 run.failed += 1;
+                 run.details.push(format!("FAIL {}: {}", e.id, one_line(&detail)));
+                 line.result = "fail".into();
+-                run.status = 1;
+                 not_applicable(&mut run, gates, e);
+             }
+             Outcome::Skipped { reason, detail, spec_defects, missing } => {

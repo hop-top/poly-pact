@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/jws/__init__.py b/py/src/hop_top_pact/core/jws/__init__.py
+index 44ad305..d04776b 100644
+--- a/py/src/hop_top_pact/core/jws/__init__.py
++++ b/py/src/hop_top_pact/core/jws/__init__.py
+@@ -248,7 +248,7 @@ class Verifier:
+             raise JWSError(Reason.PAYLOAD_JSON, "", e) from e
+ 
+         sig = _segment(s64, "signature")
+-        if len(sig) != _SIGNATURE_OCTETS:
++        if len(sig) not in (_SIGNATURE_OCTETS - 1, _SIGNATURE_OCTETS):
+             raise JWSError(Reason.SIGNATURE_LENGTH, f"{len(sig)} octets, want {_SIGNATURE_OCTETS}")
+ 
+         req = KeyRequest(

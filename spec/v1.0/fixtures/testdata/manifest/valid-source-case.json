@@ -1,0 +1,15 @@
+{
+  "manifest_version": 1,
+  "entries": [
+    {
+      "id": "sources/scim/scim-01.join",
+      "kind": "source-case",
+      "scope": "adapter",
+      "path": "sources/scim/scim-01.join.json",
+      "expected": null,
+      "outcome": null,
+      "spec_map_row": "CL-17.2",
+      "draft_section": "17.2"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "decision": "DEFERRED",
+  "transport_code": null,
+  "checks": [
+    {
+      "check_id": "purpose-operation-v1",
+      "result": "UNKNOWN",
+      "reason_code": "NOT_EVALUATED"
+    },
+    {
+      "check_id": "native-delegation-v1",
+      "result": "UNKNOWN",
+      "reason_code": "NOT_EVALUATED"
+    },
+    {
+      "check_id": "security-hold-v1",
+      "result": "UNKNOWN",
+      "reason_code": "NOT_EVALUATED"
+    }
+  ],
+  "receipt": {
+    "typ": "pact-admission+jwt",
+    "signer": "keys/validator.jwk.json",
+    "claims": {
+      "pact_version": "0.1",
+      "iss": "https://trust.example/issuers/finance",
+      "sub": "https://identity.example/agents/invoice-assistant",
+      "aud": "https://gateway.example/finance",
+      "tenant_id": "acme",
+      "presentation_id": "FLQSwXZNGztG6WTD64Y0Qw",
+      "operation_id": "invoice-read-operation-0001",
+      "principal_id": "https://identity.example/principals/alice",
+      "environment_id": "https://gateway.example/environments/finance",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "profile_digest": "b6pNI8i5pX5MtuxkaBw0M-4tmzdkGsHVS_Kyji7_uOU",
+      "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+      "operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+      "requirements_digest": "yhm0t29rZfM4GCqIRrRah9KQ3x6TfXSXydS2B93C7No",
+      "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+      "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+      "decision": "DEFERRED",
+      "terminal_reason": "CANCELLED",
+      "mode": "enforced"
+    },
+    "exp_max": 1792080070
+  },
+  "executed": false
+}

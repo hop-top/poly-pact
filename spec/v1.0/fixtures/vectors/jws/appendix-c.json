@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/appendix-c",
+  "description": "The exact compact evidence JWS of draft Appendix C, under the Appendix C issuer key. Its decoded payload is, byte for byte, the JSON block of Appendix B.5 (pact_version 0.1), and it decodes and validates as Evidence.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC1pc3N1ZXIta2V5LTEifQ.ewogICJwYWN0X3ZlcnNpb24iOiAiMC4xIiwKICAiaXNzIjogImh0dHBzOi8vdHJ1c3QuZXhhbXBsZS9pc3N1ZXJzL2ZpbmFuY2UiLAogICJzdWIiOiAiaHR0cHM6Ly9pZGVudGl0eS5leGFtcGxlL2FnZW50cy9pbnZvaWNlLWFzc2lzdGFudCIsCiAgImF1ZCI6ICJodHRwczovL2dhdGV3YXkuZXhhbXBsZS9maW5hbmNlIiwKICAianRpIjogIjdvSlEtM2JnbExOTFJ4OFRwejI3NVEiLAogICJpYXQiOiAxNzkyMDgwMDAwLAogICJuYmYiOiAxNzkyMDgwMDAwLAogICJleHAiOiAxNzkyMDgwMzAwLAogICJ0ZW5hbnRfaWQiOiAiYWNtZSIsCiAgImVudmlyb25tZW50X2lkIjogImh0dHBzOi8vZ2F0ZXdheS5leGFtcGxlL2Vudmlyb25tZW50cy9maW5hbmNlIiwKICAiaG9sZGVyX2prdCI6ICJ4eDBCY0Etd01vaHc4YXRZREpPZTZwZUdNb2RrbEcyd1JIQmxYSE12bDBNIiwKICAia2luZCI6ICJydW50aW1lIiwKICAiY2xhaW1zIjogWwogICAgewogICAgICAicGF0aCI6ICIvYXR0cmlidXRlcy9ydW50aW1lL2lzb2xhdGlvbiIsCiAgICAgICJ2YWx1ZSI6ICJtYW5hZ2VkIgogICAgfQogIF0sCiAgInN0YXR1c19yZWYiOiAicnVudGltZS1hdHRlc3RhdGlvbjpmaW5hbmNlLWFnZW50LTAwMDEiCn0.qiZpXOwu5RsEaJCAf5fXXlID8gFjHR_B4alE_jHMCa0Y6ZpW2tjNpzz3m47WCO65PiKiOsw6l3isryCAQZvQtw",
+  "expected_typ": "pact-evidence+jwt",
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": "Evidence",
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": "{\n  \"pact_version\": \"0.1\",\n  \"iss\": \"https://trust.example/issuers/finance\",\n  \"sub\": \"https://identity.example/agents/invoice-assistant\",\n  \"aud\": \"https://gateway.example/finance\",\n  \"jti\": \"7oJQ-3bglLNLRx8Tpz275Q\",\n  \"iat\": 1792080000,\n  \"nbf\": 1792080000,\n  \"exp\": 1792080300,\n  \"tenant_id\": \"acme\",\n  \"environment_id\": \"https://gateway.example/environments/finance\",\n  \"holder_jkt\": \"xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M\",\n  \"kind\": \"runtime\",\n  \"claims\": [\n    {\n      \"path\": \"/attributes/runtime/isolation\",\n      \"value\": \"managed\"\n    }\n  ],\n  \"status_ref\": \"runtime-attestation:finance-agent-0001\"\n}"
+}

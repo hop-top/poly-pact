@@ -1,0 +1,45 @@
+{
+  "id": "vectors/jws/typ-evidence-signed-by-validator",
+  "description": "Evidence signed by the validator key. Evidence requires role issuer, and the validator key is not in the issuer key set.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC12YWxpZGF0b3Ita2V5LTEifQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy90eXAtZXZpZGVuY2Utc2lnbmVkLWJ5LXZhbGlkYXRvciJ9.qWRWuLhenNHBvbD8nAB1f2esYJNfIFMFnOIQ-WLPGGs4lU_-xd6uKNq2XYB82Fxp385LgN6xlUUFF77nrN1pTw",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ],
+    "validator": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "sBoXKnakYCyS0yQsuJfd4wJMdA3rshW0xrCq6Twikak",
+        "y": "6FwQdDI32tVv7A4t-6cDeRwA93Acfha9_XxIU4_Hf-I",
+        "kid": "test-validator-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "kid-unknown",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "sBoXKnakYCyS0yQsuJfd4wJMdA3rshW0xrCq6Twikak",
+    "y": "6FwQdDI32tVv7A4t-6cDeRwA93Acfha9_XxIU4_Hf-I",
+    "kid": "test-validator-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

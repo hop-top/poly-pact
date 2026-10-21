@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/appendix-c-version-mismatch",
+  "description": "The earlier Appendix C evidence JWS (spec/v1.0/fixtures/parse/appendix-c-wrong-version.jws). The ES256 signature is valid under the issuer key, but the payload carries pact_version \"0.2\" where the schema requires the constant \"0.1\", so the artifact is rejected after decoding.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC1pc3N1ZXIta2V5LTEifQ.eyJwYWN0X3ZlcnNpb24iOiIwLjIiLCJpc3MiOiJodHRwczovL3RydXN0LmV4YW1wbGUvaXNzdWVycy9maW5hbmNlIiwic3ViIjoiaHR0cHM6Ly9pZGVudGl0eS5leGFtcGxlL2FnZW50cy9pbnZvaWNlLWFzc2lzdGFudCIsImF1ZCI6Imh0dHBzOi8vZ2F0ZXdheS5leGFtcGxlL2ZpbmFuY2UiLCJqdGkiOiI3b0pRLTNiZ2xMTkxSeDhUcHoyNzVRIiwiaWF0IjoxNzkyMDgwMDAwLCJuYmYiOjE3OTIwODAwMDAsImV4cCI6MTc5MjA4MDMwMCwidGVuYW50X2lkIjoiYWNtZSIsImVudmlyb25tZW50X2lkIjoiaHR0cHM6Ly9nYXRld2F5LmV4YW1wbGUvZW52aXJvbm1lbnRzL2ZpbmFuY2UiLCJob2xkZXJfamt0IjoieHgwQmNBLXdNb2h3OGF0WURKT2U2cGVHTW9ka2xHMndSSEJsWEhNdmwwTSIsImtpbmQiOiJydW50aW1lIiwiY2xhaW1zIjpbeyJwYXRoIjoiL2F0dHJpYnV0ZXMvcnVudGltZS9pc29sYXRpb24iLCJ2YWx1ZSI6Im1hbmFnZWQifV0sInN0YXR1c19yZWYiOiJydW50aW1lLWF0dGVzdGF0aW9uOmZpbmFuY2UtYWdlbnQtMDAwMSJ9.XAGjmp0tggG5zip5qVvhwQzNJA0-Ux8ZlWKUKpdclvvQmzqQybDvTb3zA0Q0m5EaMhddv7Qd1Rr1OAsEnn4dHw",
+  "expected_typ": "pact-evidence+jwt",
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": "Evidence",
+  "expect": "reject",
+  "reject_reason": "payload-schema",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

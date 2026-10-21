@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    {"decoded":"reports/execution-event-0001.json","signed":"signed/execution-event-0001.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"3xL0z90rfrmKOM33yVqeKA"},
+    {"decoded":"reports/execution-event-0002.json","signed":"signed/execution-event-0002.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"GB73odvfI-QPovmz_Y-LIQ"},
+    {"decoded":"reports/execution-event-0003.json","signed":"signed/execution-event-0003.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"Y7HN3beW6h0IMHgOxwGE9A"},
+    {"decoded":"reports/execution-event-0004.json","signed":"signed/execution-event-0004.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"p8cL7pvOCEqX6on6nrojfw"},
+    {"decoded":"reports/execution-event-0005.json","signed":"signed/execution-event-0005.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"SZsjLVSsM029D2Y50B9bzw"},
+    {"decoded":"reports/execution-event-0006.json","signed":"signed/execution-event-0006.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"MSlDRsrkV8YmwkojwxldIA"},
+    {"decoded":"reports/execution-event-0007.json","signed":"signed/execution-event-0007.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"Cy2OJ-ymb2mHRUCJmgDBjg"},
+    {"decoded":"reports/execution-event-0008.json","signed":"signed/execution-event-0008.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"KbNwmiexxV5_wyEEeWaeqA"},
+    {"decoded":"reports/execution-event-0009.json","signed":"signed/execution-event-0009.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"ealcaL9l15Fg1KdQ68lX8A"},
+    {"decoded":"reports/execution-event-0010.json","signed":"signed/execution-event-0010.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"SR8DG5VIxkiNiQHgH31ugw"},
+    {"decoded":"reports/execution-event-0011.json","signed":"signed/execution-event-0011.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"bEJDEvvncLnomd1wHfjJQA"},
+    {"decoded":"reports/execution-event-0012.json","signed":"signed/execution-event-0012.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"bRbLCJxlvqsxuN0UHd3hbA"}
+  ]
+}

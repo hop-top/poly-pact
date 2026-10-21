@@ -1,0 +1,6 @@
+{
+  "id": "vectors/strictjson/accept-depth-16-arrays",
+  "input_text": "{\"operation_id\":\"invoice-read-operation-0001\",\"environment_id\":\"https://gateway.example/environments/finance\",\"principal_id\":\"https://identity.example/principals/alice\",\"action\":\"invoice.read\",\"resources\":[\"https://invoices.example/invoices/INV-1042\"],\"method\":\"GET\",\"target_uri\":\"https://gateway.example/invoices/INV-1042\",\"body_digest\":\"47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU\",\"headers\":{},\"extensions\":{\"a\":[[[[[[[[[[[[[[]]]]]]]]]]]]]]}}",
+  "expect": "accept",
+  "reason": "Array nesting depth exactly 16 is within the baseline limit. Decode target: OperationContext."
+}

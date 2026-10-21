@@ -1,0 +1,140 @@
+[
+  {
+    "kind": "conformance",
+    "id": "full",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/conformance/full/profile.md",
+    "status": "draft"
+  },
+  {
+    "kind": "conformance",
+    "id": "single-owner",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/conformance/single-owner/profile.md",
+    "status": "draft"
+  },
+  {
+    "kind": "transport",
+    "id": "stdio-ipc",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/transport/stdio-ipc/profile.md",
+    "status": "draft"
+  },
+  {
+    "kind": "integration",
+    "id": "mcp",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/mcp/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-mcp-1"
+  },
+  {
+    "kind": "integration",
+    "id": "abac",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/abac/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-abac-1"
+  },
+  {
+    "kind": "integration",
+    "id": "aws",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/aws/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-aws-1"
+  },
+  {
+    "kind": "integration",
+    "id": "basic",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/basic/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-basic-1"
+  },
+  {
+    "kind": "integration",
+    "id": "db",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/db/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-db-1"
+  },
+  {
+    "kind": "integration",
+    "id": "files",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/files/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-files-1"
+  },
+  {
+    "kind": "integration",
+    "id": "k8s",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/k8s/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-k8s-1"
+  },
+  {
+    "kind": "integration",
+    "id": "ldap",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/ldap/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-ldap-1"
+  },
+  {
+    "kind": "integration",
+    "id": "mtls",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/mtls/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-mtls-1"
+  },
+  {
+    "kind": "integration",
+    "id": "oauth",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/oauth/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-oauth-1"
+  },
+  {
+    "kind": "integration",
+    "id": "rebac",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/rebac/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-rebac-1"
+  },
+  {
+    "kind": "integration",
+    "id": "saml",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/saml/profile.md",
+    "status": "draft",
+    "mapping_revision": "pact-saml-1"
+  },
+  {
+    "kind": "source",
+    "id": "scim",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/sources/scim.md",
+    "status": "draft"
+  },
+  {
+    "kind": "source",
+    "id": "ssf",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/sources/ssf.md",
+    "status": "draft"
+  },
+  {
+    "kind": "source",
+    "id": "googledir",
+    "version": "0.1",
+    "doc": "spec/v1.0/profiles/sources/googledir.md",
+    "status": "draft"
+  }
+]

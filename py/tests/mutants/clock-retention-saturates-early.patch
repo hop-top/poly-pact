@@ -1,0 +1,11 @@
+diff --git a/py/src/hop_top_pact/core/clock.py b/py/src/hop_top_pact/core/clock.py
+index 40a56ee..f155a5d 100644
+--- a/py/src/hop_top_pact/core/clock.py
++++ b/py/src/hop_top_pact/core/clock.py
+@@ -312,5 +312,5 @@ def replay_retention(exp: int, iat: int, skew: timedelta) -> datetime:
+     sec, us = (expiry, 0) if expiry > horizon_sec else (horizon_sec, horizon_us)
+     total_us = sec * _US + us
+     if total_us > _LAST_US:
+-        return _LAST
++        return _LAST.replace(microsecond=0)
+     return _EPOCH + timedelta(microseconds=total_us)

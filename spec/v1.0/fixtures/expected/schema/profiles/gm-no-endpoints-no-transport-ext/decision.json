@@ -1,0 +1,5 @@
+{
+  "transport_code": "INVALID_MESSAGE",
+  "rejected_before_crypto": true,
+  "reason": "first violation (document) required: endpoints and jwks_uri are required without pact-transport-profile-v1"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/header-alg-ps256",
+  "description": "RSA-PSS is not in the PACT profile, which accepts ES256 and, only where negotiated, Ed25519 (draft 7.2). The signature is a valid ES256 signature by the issuer key.",
+  "compact": "eyJhbGciOiJQUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC1pc3N1ZXIta2V5LTEifQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9oZWFkZXItYWxnLXBzMjU2In0.0cLZVooa7Uocjf05OTNVMDHBUA_46wHTSHhqWm_-Vx88QQgSbLH3VVSanASHK3LXy9IBhpgy627o00jNouzr3A",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "alg-unsupported",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/header-b64-false",
+  "description": "b64 false, the RFC 7797 unencoded-payload option, without crit: unencoded payloads are prohibited (draft 7.2). The payload segment is ordinary base64url and the signature is valid over it.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC1pc3N1ZXIta2V5LTEiLCJiNjQiOmZhbHNlfQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9oZWFkZXItYjY0LWZhbHNlIn0.BVPaaJFLLeg8B5hY30xMx3KWlPWG39UdQkdtdMT5SzMDFHQQIKxrO-4YKQquSwYX-acL_gmTxr9W_g8oUGK7lQ",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "header-b64",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

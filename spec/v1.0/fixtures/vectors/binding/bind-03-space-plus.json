@@ -1,0 +1,47 @@
+{
+  "id": "vectors/binding/bind-03-space-plus",
+  "description": "A space written + in the query is kept as +, so the digest differs from bind-03-space-percent-20.",
+  "config": {
+    "origin": "https://gateway.example",
+    "header_allowlist": [
+      "if-match",
+      "x-dry-run"
+    ],
+    "normalization_id": "finance-header-normalization-1",
+    "mapping_version": "finance-http-1",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "request": {
+    "method": "GET",
+    "raw_request_uri": "/invoices/INV-1042?q=a+b",
+    "headers": [
+      {
+        "name": "Host",
+        "value": "gateway.example"
+      }
+    ],
+    "body_b64": ""
+  },
+  "operation_id": "invoice-read-operation-0001",
+  "principal_id": "https://identity.example/principals/alice",
+  "action": "invoice.read",
+  "resources": [
+    "https://invoices.example/invoices/INV-1042"
+  ],
+  "expect": {
+    "operation_context": {
+      "operation_id": "invoice-read-operation-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://identity.example/principals/alice",
+      "action": "invoice.read",
+      "resources": [
+        "https://invoices.example/invoices/INV-1042"
+      ],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042?q=a+b",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect_operation_digest": "gymJNqfuXpe6k2lxsc8Y9zN7P7hcvbM49orysRe_eEo"
+}

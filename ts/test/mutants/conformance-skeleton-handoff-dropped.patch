@@ -1,0 +1,13 @@
+diff --git a/ts/src/conformance/main.ts b/ts/src/conformance/main.ts
+index 9c61ea3..635c2a2 100644
+--- a/ts/src/conformance/main.ts
++++ b/ts/src/conformance/main.ts
+@@ -76,7 +76,7 @@ function main(argv: readonly string[]): number {
+     const { fixtures, id } = locate(resolve(argv[1] as string));
+     lines = [];
+     for (const x of read(fixtures, id).exchanges) {
+-      for (let i = 0; i < x.submissions.length + x.handoff.length; i++) {
++      for (let i = 0; i < x.submissions.length; i++) {
+         lines.push(JSON.stringify(problem(lines.length + 1)));
+       }
+     }

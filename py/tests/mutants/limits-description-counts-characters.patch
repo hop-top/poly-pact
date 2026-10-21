@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/limits.py b/py/src/hop_top_pact/core/limits.py
+index c4caef9..ac9474d 100644
+--- a/py/src/hop_top_pact/core/limits.py
++++ b/py/src/hop_top_pact/core/limits.py
+@@ -219,7 +219,7 @@ def validate_intent(limits: Limits, intent: Intent | None) -> None:
+     if intent is None:
+         raise LimitError(LimitErrorKind.NIL_OBJECT, detail="intent")
+     _exceeds(
+-        KEY_MAX_DESCRIPTION_BYTES, len(intent.description.encode("utf-8")), limits.description_bytes
++        KEY_MAX_DESCRIPTION_BYTES, len(intent.description), limits.description_bytes
+     )
+ 
+ 

@@ -1,0 +1,22 @@
+{
+  "description": "TransportDeclaration payload naming the channel tcp-loopback: a channel reachable over a network is not eligible for a local-channel profile (draft 13.3.1).",
+  "objects": [
+    {
+      "section": "13.3.1",
+      "def": "TransportDeclaration",
+      "object": {
+        "transport_profile": "stdio-ipc",
+        "version": "0.1",
+        "channels": [
+          "tcp-loopback"
+        ],
+        "framing": "ndjson",
+        "max_frame_bytes": 524288,
+        "identity_assurance": [
+          "kernel-peer",
+          "launcher"
+        ]
+      }
+    }
+  ]
+}

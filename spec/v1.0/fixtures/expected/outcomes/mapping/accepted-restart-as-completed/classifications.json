@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/accepted-restart-as-completed",
+  "adversarial_claim": "A restart request that the native job service only accepted is reported as a completed execution: EXECUTION SUCCESS on reliability, citing the acceptance record as if it recorded completion.",
+  "subject_event_id": "execution-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "none",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Asynchronous request accepted': EXECUTION, UNKNOWN, none; zero weight. Draft 15.3: UNKNOWN contributes zero weight."
+    },
+    {
+      "event_id": "execution-event-0002",
+      "report": "reports/execution-event-0002.json",
+      "signed": "signed/execution-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "no-completion-record",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.2: the receiver verifies evidence references, and the only record cited shows the request accepted, not completed. Draft 14.5: completion is a separate event with its own event_id, reported when completion is observed. Draft 14.1: missing execution visibility is never filled with assumed success."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

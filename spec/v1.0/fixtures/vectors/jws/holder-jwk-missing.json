@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/holder-jwk-missing",
+  "description": "A presentation that names the holder key by kid and embeds no jwk. A holder-signed artifact is verified only with its embedded jwk, never by kid, even when a key set holds that kid.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtcHJlc2VudGF0aW9uK2p3dCIsImtpZCI6InRlc3QtaG9sZGVyLWtleS0xIn0.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9ob2xkZXItandrLW1pc3NpbmcifQ.uBWaTaRO-sTxyqsth69h7weEhRlvQtWcIz-sue0AA_56kxEKwbXPf3SSjIOIy62B17qY52CngRb93MKZhSVmHg",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "holder": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+        "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+        "kid": "test-holder-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "jwk-missing",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+    "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+    "kid": "test-holder-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

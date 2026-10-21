@@ -1,0 +1,40 @@
+{
+  "decision": "DEFERRED",
+  "transport_code": null,
+  "checks": [
+    {
+      "check_id": "agent-holder-binding",
+      "result": "UNKNOWN",
+      "reason_code": "DEPENDENCY_UNAVAILABLE"
+    }
+  ],
+  "receipt": {
+    "typ": "pact-admission+jwt",
+    "signer": "keys/validator.jwk.json",
+    "claims": {
+      "pact_version": "0.1",
+      "iss": "https://trust.example/issuers/finance",
+      "sub": "https://identity.example/agents/invoice-assistant",
+      "aud": "https://gateway.example/finance",
+      "iat": 1792080000,
+      "tenant_id": "acme",
+      "presentation_id": "LMRntUb0_POgzoC70v-Rsg",
+      "operation_id": "invoice-read-operation-0001",
+      "principal_id": "https://identity.example/principals/alice",
+      "environment_id": "https://gateway.example/environments/finance",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "profile_digest": "b6pNI8i5pX5MtuxkaBw0M-4tmzdkGsHVS_Kyji7_uOU",
+      "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+      "operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+      "requirements_digest": "PSpvb08wdzUFttcbQIQ97v4c44nc3Xhr42VI7LjgJ-U",
+      "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+      "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+      "decision": "DEFERRED",
+      "terminal_reason": "COMPLETED",
+      "mode": "enforced"
+    },
+    "exp_max": 1792080060
+  },
+  "executed": false,
+  "reason": "the enrollment source behind resolve_agent_binding cannot answer (exchange.json availability.enrollment_source unavailable; draft 17.1): the binding of the presented agent cannot be established, and the record native_context.json states is never read, so no cached binding admits. A required dependency is unavailable during the authenticated evaluation: agent-holder-binding is UNKNOWN with DEPENDENCY_UNAVAILABLE and the receipt is SEALED_DEFERRED (11.3 step 2, 12.2, 18; identity mapping section 8 row 8, IM-11), with no positive admission and no execution"
+}

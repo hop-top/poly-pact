@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/es256-signature-63-bytes",
+  "description": "The R || S of es256-leading-zero-r with the leading zero octet of R dropped: 63 octets. RFC 7518 section 3.4 requires exactly 64.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC1pc3N1ZXIta2V5LTEifQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9lczI1Ni1sZWFkaW5nLXplcm8tciJ9.YbNSuCbR_f_hp1-MdD9Hc1zG_v7kjNdXWwu-E55pFhx7K7qDB1u7CbY5heqWPnPHiSImNlMTTja6VslrBGh3",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "signature-length",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": false,
+  "expected_payload": null
+}

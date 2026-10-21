@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Limits.php b/php/src/Core/Limits.php
+index ae4e7a6..744f73f 100644
+--- a/php/src/Core/Limits.php
++++ b/php/src/Core/Limits.php
+@@ -168,7 +168,7 @@ final readonly class Limits
+         if ($intent === null) {
+             throw new LimitError(LimitErrorKind::NIL_OBJECT, detail: 'intent');
+         }
+-        self::exceeds(Core::KEY_MAX_DESCRIPTION_BYTES, \strlen($intent->description), $this->descriptionBytes);
++        self::exceeds(Core::KEY_MAX_DESCRIPTION_BYTES, mb_strlen($intent->description), $this->descriptionBytes);
+     }
+ 
+     /**

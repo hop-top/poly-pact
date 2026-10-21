@@ -1,0 +1,168 @@
+{
+  "case_version": 1,
+  "id": "K8S-04.missing-groups",
+  "title": "A review without the service-account groups of the account's namespace is refused",
+  "draft": [
+    "17.1",
+    "8.5"
+  ],
+  "native_state": {
+    "model": "k8s/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://ops-gateway.northstar.example/environments/operations",
+      "origin": "https://ops-gateway.northstar.example",
+      "header_allowlist": []
+    },
+    "cluster": {
+      "cluster_id": "northstar-prod",
+      "gateway_audience": "https://ops-gateway.northstar.example",
+      "namespaces": [
+        "operations"
+      ]
+    },
+    "accounts": [
+      {
+        "namespace": "operations",
+        "name": "release-observer",
+        "uid": "4c1d7e2a-9b35-4f60-8a1e-7d2c5b9f0e31"
+      }
+    ],
+    "gateway_account": {
+      "token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Im5vcnRoc3Rhci1wcm9kLXNhLTIwMjYifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzkyMDgzMDAwLCJpYXQiOjE3OTIwNzk0MDAsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiYjBjNGUxZDItb3BzLWdhdGV3YXkiLCJuYmYiOjE3OTIwNzk0MDAsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpwYWN0LXN5c3RlbTpvcHMtZ2F0ZXdheSJ9.ZXhhbXBsZS1zaWduYXR1cmUtYjBjNGUxZDItb3BzLWdhdGV3YXk"
+    },
+    "tokens": [
+      {
+        "ref": "observer",
+        "token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Im5vcnRoc3Rhci1wcm9kLXNhLTIwMjYifQ.eyJhdWQiOlsiaHR0cHM6Ly9vcHMtZ2F0ZXdheS5ub3J0aHN0YXIuZXhhbXBsZSJdLCJleHAiOjE3OTIwODMwMDAsImlhdCI6MTc5MjA3OTQwMCwiaXNzIjoiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJqdGkiOiJyZWxlYXNlLW9ic2VydmVyLW9ic2VydmVyIiwibmJmIjoxNzkyMDc5NDAwLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6b3BlcmF0aW9uczpyZWxlYXNlLW9ic2VydmVyIn0.ZXhhbXBsZS1zaWduYXR1cmUtcmVsZWFzZS1vYnNlcnZlci1vYnNlcnZlcg",
+        "reviews": [
+          {
+            "audiences": [
+              "https://ops-gateway.northstar.example"
+            ],
+            "status": {
+              "authenticated": true,
+              "audiences": [
+                "https://ops-gateway.northstar.example"
+              ],
+              "user": {
+                "username": "system:serviceaccount:operations:release-observer",
+                "uid": "4c1d7e2a-9b35-4f60-8a1e-7d2c5b9f0e31",
+                "groups": [
+                  "system:authenticated"
+                ],
+                "extra": {
+                  "authentication.kubernetes.io/credential-id": [
+                    "JTI=release-observer-observer"
+                  ],
+                  "authentication.kubernetes.io/node-name": [
+                    "ops-node-2"
+                  ],
+                  "authentication.kubernetes.io/pod-name": [
+                    "release-observer-agent-7c9f4"
+                  ],
+                  "authentication.kubernetes.io/pod-uid": [
+                    "6b2e9f1a-8d43-4c70-b1e5-9a3c0d7f2e84"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "pods": [
+      {
+        "metadata": {
+          "name": "release-observer-agent-7c9f4",
+          "namespace": "operations",
+          "uid": "6b2e9f1a-8d43-4c70-b1e5-9a3c0d7f2e84"
+        },
+        "spec": {
+          "serviceAccountName": "release-observer",
+          "automountServiceAccountToken": false,
+          "containers": [
+            {
+              "name": "agent",
+              "image": "registry.northstar.example/agents/release-observer:1.4.2"
+            }
+          ]
+        }
+      }
+    ],
+    "authorization": [
+      {
+        "subject": {
+          "user": "system:serviceaccount:operations:release-observer"
+        },
+        "verb": "get",
+        "api_group": "apps",
+        "resource": "deployments",
+        "namespace": "operations",
+        "status": {
+          "allowed": true,
+          "reason": "RBAC: allowed by RoleBinding \"release-observer-binding/operations\" of Role \"deployment-observer\" to ServiceAccount \"release-observer/operations\""
+        }
+      },
+      {
+        "subject": {
+          "user": "system:serviceaccount:operations:release-observer"
+        },
+        "verb": "list",
+        "api_group": "apps",
+        "resource": "deployments",
+        "namespace": "operations",
+        "status": {
+          "allowed": true,
+          "reason": "RBAC: allowed by RoleBinding \"release-observer-binding/operations\" of Role \"deployment-observer\" to ServiceAccount \"release-observer/operations\""
+        }
+      }
+    ],
+    "self_reviews": [
+      {
+        "token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Im5vcnRoc3Rhci1wcm9kLXNhLTIwMjYifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzkyMDgzMDAwLCJpYXQiOjE3OTIwNzk0MDAsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiYjBjNGUxZDItb3BzLWdhdGV3YXkiLCJuYmYiOjE3OTIwNzk0MDAsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpwYWN0LXN5c3RlbTpvcHMtZ2F0ZXdheSJ9.ZXhhbXBsZS1zaWduYXR1cmUtYjBjNGUxZDItb3BzLWdhdGV3YXk",
+        "user_info": {
+          "username": "system:serviceaccount:pact-system:ops-gateway",
+          "uid": "9d4a1b7c-2e58-4c03-a6f9-0b3e7d1c5a26",
+          "groups": [
+            "system:serviceaccounts",
+            "system:serviceaccounts:pact-system",
+            "system:authenticated"
+          ]
+        }
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://ops-gateway.northstar.example/environments/operations"
+        },
+        "workload": "k8s:northstar-prod:system:serviceaccount:operations:release-observer",
+        "agent_id": "https://agents.northstar.example/release-observer",
+        "operator_id": "https://operators.northstar.example/platform",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1792076400,
+        "status_checked_at": 1792079995,
+        "source_id": "enrollment-registry",
+        "source_ref": "enrollment-0001"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://ops-gateway.northstar.example/api/v1/deployments",
+    "native_state_ref": "observer"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "CREDENTIAL_REJECTED",
+    "leak_scan": {
+      "secrets": [
+        "eyJhbGciOiJSUzI1NiIsImtpZCI6Im5vcnRoc3Rhci1wcm9kLXNhLTIwMjYifQ.eyJhdWQiOlsiaHR0cHM6Ly9vcHMtZ2F0ZXdheS5ub3J0aHN0YXIuZXhhbXBsZSJdLCJleHAiOjE3OTIwODMwMDAsImlhdCI6MTc5MjA3OTQwMCwiaXNzIjoiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJqdGkiOiJyZWxlYXNlLW9ic2VydmVyLW9ic2VydmVyIiwibmJmIjoxNzkyMDc5NDAwLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6b3BlcmF0aW9uczpyZWxlYXNlLW9ic2VydmVyIn0.ZXhhbXBsZS1zaWduYXR1cmUtcmVsZWFzZS1vYnNlcnZlci1vYnNlcnZlcg"
+      ]
+    }
+  }
+}

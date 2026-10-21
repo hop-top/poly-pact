@@ -1,0 +1,13 @@
+diff --git a/ts/src/adapter/adaptertest/run.ts b/ts/src/adapter/adaptertest/run.ts
+index 5276a9c..947cbcb 100644
+--- a/ts/src/adapter/adaptertest/run.ts
++++ b/ts/src/adapter/adaptertest/run.ts
+@@ -225,7 +225,7 @@ export class Run {
+   /** Scans an error's text, which includes the text of everything it wraps. */
+   scanError(what: string, err: unknown): void {
+     if (this.c.expect.leak_scan === null) return;
+-    this.scanText(`${what} error`, errorText(err));
++    this.scanText(`${what} error`, String((err as Error)?.message));
+   }
+ 
+   /**

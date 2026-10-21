@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/runner/manifest/entry.py b/py/src/hop_top_pact/runner/manifest/entry.py
+index a42863b..b7d3910 100644
+--- a/py/src/hop_top_pact/runner/manifest/entry.py
++++ b/py/src/hop_top_pact/runner/manifest/entry.py
+@@ -217,7 +217,7 @@ class Manifest:
+         else:
+             v = self._top["manifest_version"]
+             # Go compares the member's text with "1": only the integer literal 1.
+-            if not (type(v) is int and v == VERSION):
++            if v != VERSION:
+                 ps.add(
+                     RULE_SHAPE,
+                     FILE_NAME,

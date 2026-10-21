@@ -1,0 +1,3 @@
+[{"ingest":"execution-event-0001","received_at":1792080000},
+ {"ingest":"execution-event-0002","received_at":1792080000},
+ {"query":{"agent_id":"https://identity.example/agents/invoice-assistant","holder_jkt":"xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M","context":{"action_class":"invoice-summary.export","agent_id":"https://identity.example/agents/invoice-assistant","environment_id":"https://gateway.example/environments/finance","purpose_id":"https://policies.example/purposes/invoice-summary/v1","resource_class":"department-finance-summary-job","runtime_class":"managed-v1","tenant_id":"acme"},"audience":"https://gateway.example/finance"},"now":1792080000}]

@@ -1,0 +1,6 @@
+{
+  "source": "Gateway connection facts",
+  "category": "action",
+  "attributes": ["/environment/network_zone", "/environment/time"],
+  "freshness": "Gateway itself (network zone and time, derived for each request)"
+}

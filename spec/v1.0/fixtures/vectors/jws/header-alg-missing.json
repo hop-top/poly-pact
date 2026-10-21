@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/header-alg-missing",
+  "description": "The protected header has no alg member.",
+  "compact": "eyJ0eXAiOiJwYWN0LWV2aWRlbmNlK2p3dCIsImtpZCI6InRlc3QtaXNzdWVyLWtleS0xIn0.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9oZWFkZXItYWxnLW1pc3NpbmcifQ.-JCUWpaNtps4Hm1uhazxeOGmwGkzUIi8pfrLoMp-uIhVYXsqA20w6ef0xmE4MfVxQFGrMOn6ftGhJlFY7wputg",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "alg-unsupported",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/vectors/__main__.py b/py/src/hop_top_pact/vectors/__main__.py
+index b69b6ba..0dff241 100644
+--- a/py/src/hop_top_pact/vectors/__main__.py
++++ b/py/src/hop_top_pact/vectors/__main__.py
+@@ -76,7 +76,7 @@ def run_entry(root: Path, e: Entry) -> tuple[dict[str, Any], str]:
+     if not runs(e):
+         line["result"] = "skipped:" + OUT_OF_SCOPE
+         return line, ""
+-    missing = [c for c in e.capabilities or () if c not in DECLARED_CAPABILITIES]
++    missing: list[str] = []
+     try:
+         if missing:
+             raise Skipped(

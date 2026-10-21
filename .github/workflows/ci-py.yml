@@ -1,0 +1,168 @@
+name: ci-py
+
+on:
+  push:
+    branches: [main, next, 'release/*']
+    paths:
+      - "py/**"
+      - "spec/v1.0/fixtures/**"
+      - "spec/v1.0/schemas/**"
+      - "spec/v1.0/draft.md"
+      - "spec/v1.0/profiles/freshness.md"
+      - "spec/v1.0/profiles/registry.json"
+      - "spec/v1.0/profiles/integration-profile.schema.json"
+      - "spec/v1.0/spec-map.md"
+      - "tools/spec/manifest-parity-cases.json"
+      - "scripts/paritycases.py"
+      - "scripts/specjson.py"
+      - "go/core/enums.go"
+      - "go/runner/manifest/**"
+      - "tools/mutants.py"
+      - "mise.toml"
+      - "Makefile"
+      - ".github/workflows/ci-py.yml"
+  pull_request:
+    paths:
+      - "py/**"
+      - "spec/v1.0/fixtures/**"
+      - "spec/v1.0/schemas/**"
+      - "spec/v1.0/draft.md"
+      - "spec/v1.0/profiles/freshness.md"
+      - "spec/v1.0/profiles/registry.json"
+      - "spec/v1.0/profiles/integration-profile.schema.json"
+      - "spec/v1.0/spec-map.md"
+      - "tools/spec/manifest-parity-cases.json"
+      - "scripts/paritycases.py"
+      - "scripts/specjson.py"
+      - "go/core/enums.go"
+      - "go/runner/manifest/**"
+      - "tools/mutants.py"
+      - "mise.toml"
+      - "Makefile"
+      - ".github/workflows/ci-py.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: Python / Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # The requires-python floor and the latest 3.x release. mise reads
+        # MISE_PYTHON_VERSION in place of the mise.toml pin.
+        python: ["3.11", "3"]
+    env:
+      MISE_PYTHON_VERSION: ${{ matrix.python }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          cache: true
+
+      - name: Install dependencies
+        run: mise run install
+
+      - name: Interpreter
+        run: py/.venv/bin/python3 -VV
+
+      - name: Lint
+        run: make py-lint
+
+      - name: Test
+        run: make py-test
+
+      - name: Vectors
+        run: make py-vectors > /dev/null
+
+      - name: Schema copy
+        run: make py-check-schema
+
+      - name: Build
+        run: make py-build
+
+  test-windows:
+    # make py-test on Windows: the path, symbolic-link and containment
+    # handling of the manifest module and the fixture readers. One Python
+    # version, the mise.toml pin. Installs Python alone, as macos-smoke does.
+    name: Python / Test (windows)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Verify spec bytes
+        # Fixture and draft bytes are byte-exact inputs to the digest and
+        # signature tests; a line-ending conversion at checkout rewrites
+        # them (.github/workflows/ci-go.yml, "Verify spec bytes").
+        run: |
+          converted=$(git ls-files --eol -- spec | awk '{ if (substr($1, 3) != substr($2, 3)) print }')
+          if [ -n "$converted" ]; then
+            echo "::error::checkout converted line endings under spec/"
+            printf '%s\n' "$converted"
+            exit 1
+          fi
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: python
+          cache: true
+
+      - name: Install dependencies
+        # A Windows virtualenv keeps its interpreter in Scripts/, not bin/.
+        working-directory: py
+        run: |
+          mise exec -- python -m venv .venv
+          ./.venv/Scripts/python.exe -m pip install --quiet --upgrade pip
+          ./.venv/Scripts/python.exe -m pip install --quiet -c constraints.txt -e ".[dev]"
+
+      - name: Test
+        run: make MISE= PY_PYTHON=./.venv/Scripts/python.exe py-test
+
+  # The wheel path on a second system before the first release: cryptography
+  # ships a macOS arm64 wheel only. Installs Python alone, so it does not run
+  # mise run install (that needs every toolchain of mise.toml).
+  macos-smoke:
+    name: Python / macOS arm64 smoke
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: python
+          cache: true
+
+      - name: Install dependencies
+        working-directory: py
+        run: |
+          mise exec -- python3 -m venv .venv
+          ./.venv/bin/python3 -m pip install --quiet --upgrade pip
+          ./.venv/bin/python3 -m pip install --quiet -c constraints.txt -e ".[dev]"
+
+      - name: Test
+        run: make MISE= py-test
+
+      - name: Build
+        run: make MISE= py-build

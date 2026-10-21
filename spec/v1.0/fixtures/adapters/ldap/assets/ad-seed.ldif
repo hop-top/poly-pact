@@ -1,0 +1,89 @@
+version: 1
+# Directory content of the Active Directory realm of the LDAP adapter cases,
+# for the unit tier only: an OpenLDAP server has neither the schema nor the
+# in-chain matching rule. objectGUID is stated as 16 octets in base64.
+# memberOf is not stated: the directory maintains it from member. The
+# passwords are test values in clear text; they serve no deployment.
+
+dn: DC=corp,DC=northstar,DC=example
+objectClass: domainDNS
+dc: corp
+objectGUID:: ej8MUp1BToum8gAAAAAwAQ==
+
+dn: CN=Users,DC=corp,DC=northstar,DC=example
+objectClass: container
+cn: Users
+objectGUID:: ej8MUp1BToum8gAAAAAwAg==
+
+dn: OU=Groups,DC=corp,DC=northstar,DC=example
+objectClass: organizationalUnit
+ou: Groups
+objectGUID:: ej8MUp1BToum8gAAAAAwAw==
+
+dn: CN=Stock Agent,CN=Users,DC=corp,DC=northstar,DC=example
+objectClass: user
+cn: Stock Agent
+sAMAccountName: stock-agent
+userPassword: Ad3!spruce-ledger-90
+objectGUID:: ej8MUp1BToum8gAAAAAxAQ==
+userAccountControl: 512
+msDS-User-Account-Control-Computed: 0
+accountExpires: 9223372036854775807
+pwdLastSet: 134049024000000000
+
+dn: CN=Disabled Agent,CN=Users,DC=corp,DC=northstar,DC=example
+objectClass: user
+cn: Disabled Agent
+sAMAccountName: disabled-agent
+userPassword: Ad7!hazel-ridge-15
+objectGUID:: ej8MUp1BToum8gAAAAAxAg==
+userAccountControl: 514
+msDS-User-Account-Control-Computed: 0
+accountExpires: 9223372036854775807
+pwdLastSet: 134049024000000000
+
+dn: CN=PACT Sentinel,CN=Users,DC=corp,DC=northstar,DC=example
+objectClass: user
+cn: PACT Sentinel
+sAMAccountName: pact-sentinel
+objectGUID:: ej8MUp1BToum8gAAAAAxCA==
+userAccountControl: 514
+msDS-User-Account-Control-Computed: 16
+accountExpires: 9223372036854775807
+pwdLastSet: 0
+
+dn: CN=PACT Lookup,CN=Users,DC=corp,DC=northstar,DC=example
+objectClass: user
+cn: PACT Lookup
+sAMAccountName: pact-lookup
+userPassword: Ad5!willow-crest-41
+objectGUID:: ej8MUp1BToum8gAAAAAxCQ==
+userAccountControl: 512
+msDS-User-Account-Control-Computed: 0
+accountExpires: 9223372036854775807
+pwdLastSet: 134049024000000000
+
+dn: CN=Warehouse Readers,OU=Groups,DC=corp,DC=northstar,DC=example
+objectClass: group
+cn: Warehouse Readers
+member: CN=Stock Agent,CN=Users,DC=corp,DC=northstar,DC=example
+member: CN=Disabled Agent,CN=Users,DC=corp,DC=northstar,DC=example
+objectGUID:: ej8MUp1BToum8gAAAAAyAQ==
+
+dn: CN=Inventory Staff,OU=Groups,DC=corp,DC=northstar,DC=example
+objectClass: group
+cn: Inventory Staff
+member: CN=Warehouse Readers,OU=Groups,DC=corp,DC=northstar,DC=example
+objectGUID:: ej8MUp1BToum8gAAAAAyAg==
+
+dn: CN=PACT Sentinel Group,OU=Groups,DC=corp,DC=northstar,DC=example
+objectClass: group
+cn: PACT Sentinel Group
+member: CN=PACT Sentinel,CN=Users,DC=corp,DC=northstar,DC=example
+objectGUID:: ej8MUp1BToum8gAAAAAyBA==
+
+dn: CN=PACT Sentinel Parent,OU=Groups,DC=corp,DC=northstar,DC=example
+objectClass: group
+cn: PACT Sentinel Parent
+member: CN=PACT Sentinel Group,OU=Groups,DC=corp,DC=northstar,DC=example
+objectGUID:: ej8MUp1BToum8gAAAAAyBQ==

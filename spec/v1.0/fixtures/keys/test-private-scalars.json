@@ -1,0 +1,117 @@
+{
+  "label": "PUBLIC TEST PRIVATE KEYS - NOT SECRET",
+  "warning": "These private values are published test fixtures. Anyone can derive them. They MUST NOT be used for production identities, signing or trust anchors.",
+  "encoding": "d is the base64url (no padding) of the 32-byte big-endian P-256 private scalar (RFC 7518 section 6.2.2.1), or of the 32-byte Ed25519 seed (RFC 8037 section 2).",
+  "keys": [
+    {
+      "role": "holder",
+      "kid": "test-holder-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "1",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE",
+      "public_jwk": "holder.jwk.json"
+    },
+    {
+      "role": "issuer",
+      "kid": "test-issuer-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "2",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI",
+      "public_jwk": "issuer.jwk.json"
+    },
+    {
+      "role": "adversarial",
+      "kid": "test-adversarial-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "3",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM",
+      "public_jwk": "adversarial.jwk.json"
+    },
+    {
+      "role": "reputation-service",
+      "kid": "test-reputation-service-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "4",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ",
+      "public_jwk": "reputation-service.jwk.json"
+    },
+    {
+      "role": "learning-controller",
+      "kid": "test-learning-controller-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "5",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU",
+      "public_jwk": "learning-controller.jwk.json"
+    },
+    {
+      "role": "validator",
+      "kid": "test-validator-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "6",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY",
+      "public_jwk": "validator.jwk.json"
+    },
+    {
+      "role": "executor",
+      "kid": "test-executor-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "7",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc",
+      "public_jwk": "executor.jwk.json"
+    },
+    {
+      "role": "evaluator",
+      "kid": "test-evaluator-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "8",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg",
+      "public_jwk": "evaluator.jwk.json"
+    },
+    {
+      "role": "security-authority",
+      "kid": "test-security-authority-key-1",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "9",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk",
+      "public_jwk": "security-authority.jwk.json"
+    },
+    {
+      "role": "holder-2",
+      "kid": "test-holder-key-2",
+      "alg": "ES256",
+      "kty": "EC",
+      "crv": "P-256",
+      "scalar": "10",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAo",
+      "public_jwk": "holder-2.jwk.json"
+    },
+    {
+      "role": "ed25519",
+      "kid": "test-ed25519-key-1",
+      "alg": "Ed25519",
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "seed_hex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+      "d": "nWGxne_9WmC6hEr0kuwsxERJxWl7MmkZcDusAxyuf2A",
+      "public_jwk": "ed25519.jwk.json"
+    }
+  ]
+}

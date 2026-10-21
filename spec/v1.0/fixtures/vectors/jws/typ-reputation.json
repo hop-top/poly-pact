@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/typ-reputation",
+  "description": "typ pact-reputation+jwt requires signer role reputation-service (draft 7.3); kid is resolved in the key set trusted for that role.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtcmVwdXRhdGlvbitqd3QiLCJraWQiOiJ0ZXN0LXJlcHV0YXRpb24tc2VydmljZS1rZXktMSJ9.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy90eXAtcmVwdXRhdGlvbiJ9.xFHZqb8EyVzelpmBVeRUxgAhyrvxP8wBDai-Ri-NW5pDWlTYBAz8mV8_n4oOZbr_HTPlhDW20zlJXVhIzXOcGg",
+  "expected_typ": "pact-reputation+jwt",
+  "trusted_keysets": {
+    "reputation-service": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "4lNKNTLQj7ugLd5lnuYr0AMf4tt4VZbvUJMCRGsDCFI",
+        "y": "4PFXWkxjPMcZ3-5f2oYtdk78lsPzDuAFXELCPxhO2MY",
+        "kid": "test-reputation-service-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "4lNKNTLQj7ugLd5lnuYr0AMf4tt4VZbvUJMCRGsDCFI",
+    "y": "4PFXWkxjPMcZ3-5f2oYtdk78lsPzDuAFXELCPxhO2MY",
+    "kid": "test-reputation-service-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": "{\"pact_version\":\"0.1\",\"jti\":\"vectors/jws/typ-reputation\"}"
+}

@@ -1,0 +1,47 @@
+{
+  "id": "vectors/binding/bind-07-content-encoding-gzip",
+  "description": "A body with Content-Encoding gzip is refused: the baseline forbids content encodings on protected requests.",
+  "config": {
+    "origin": "https://gateway.example",
+    "header_allowlist": [
+      "if-match",
+      "x-dry-run"
+    ],
+    "normalization_id": "finance-header-normalization-1",
+    "mapping_version": "finance-http-1",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "request": {
+    "method": "POST",
+    "raw_request_uri": "/invoices/INV-1042/approve",
+    "headers": [
+      {
+        "name": "Host",
+        "value": "gateway.example"
+      },
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      },
+      {
+        "name": "Content-Encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "Content-Length",
+        "value": "55"
+      }
+    ],
+    "body_b64": "H4sIAAAAAAAC/6tWSszNL80rUbJSMjQy0DMwUNJRSi4tKkrNS64EirmGBinVAgCfgaDOJAAAAA=="
+  },
+  "operation_id": "invoice-approve-operation-0001",
+  "principal_id": "https://identity.example/principals/alice",
+  "action": "invoice.approve",
+  "resources": [
+    "https://invoices.example/invoices/INV-1042"
+  ],
+  "expect": {
+    "reject_reason": "INVALID_MESSAGE"
+  },
+  "expect_operation_digest": null
+}

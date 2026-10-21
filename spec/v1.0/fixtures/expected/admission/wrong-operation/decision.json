@@ -1,0 +1,39 @@
+{
+  "decision": "INADMISSIBLE",
+  "transport_code": null,
+  "checks": [
+    {
+      "check_id": "operation-binding",
+      "result": "FAIL",
+      "reason_code": "CONTEXT_MISMATCH"
+    }
+  ],
+  "receipt": {
+    "typ": "pact-admission+jwt",
+    "signer": "keys/validator.jwk.json",
+    "claims": {
+      "pact_version": "0.1",
+      "iss": "https://trust.example/issuers/finance",
+      "sub": "https://identity.example/agents/invoice-assistant",
+      "aud": "https://gateway.example/finance",
+      "iat": 1792080000,
+      "tenant_id": "acme",
+      "presentation_id": "86cbr1SlLlveTuk2VSsacg",
+      "operation_id": "invoice-export-operation-0002",
+      "principal_id": "https://identity.example/principals/alice",
+      "environment_id": "https://gateway.example/environments/finance",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "profile_digest": "b6pNI8i5pX5MtuxkaBw0M-4tmzdkGsHVS_Kyji7_uOU",
+      "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+      "operation_digest": "kHoM7zoobxqvPVNyzJm58gYDjuYfaxMAwqSFo7H3ifQ",
+      "requirements_digest": "ohJTJCb0mGUHOKoHIse3pXX9bAoKpf8QSzH5uKP_G1E",
+      "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+      "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+      "decision": "INADMISSIBLE",
+      "terminal_reason": "COMPLETED",
+      "mode": "enforced"
+    },
+    "exp_max": 1792080060
+  },
+  "executed": false
+}

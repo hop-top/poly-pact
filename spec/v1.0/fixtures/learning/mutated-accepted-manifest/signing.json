@@ -1,0 +1,7 @@
+{
+  "artifacts": [
+    {"decoded":"policies/finance.json","signed":"signed/policies/finance.jws","typ":"pact-learning-policy+jwt","signer":"issuer","jti":"AXYhP3tMOIl9jcOr5Z0rgg","exp":1794672000},
+    {"decoded":"artifacts/baseline-v1.json","signed":"signed/artifacts/baseline-v1.jws","typ":"pact-learning-artifact+jwt","signer":"learning-controller","jti":"6_WYGw4VhYPi2PnVDgjH5w","exp":1794672000},
+    {"decoded":"artifacts/baseline-v1-mutated.json","signed":"signed/artifacts/baseline-v1-mutated.jws","typ":"pact-learning-artifact+jwt","signer":"learning-controller","jti":"KSZ6a0Us-kLITTk4KHaoAQ","exp":1794672000}
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "case_version": 1,
+  "id": "LDAP-10.executor-lookup",
+  "title": "The lookup account offered as the executor is EXECUTOR_MISMATCH",
+  "draft": [
+    "17.5",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "ldap/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/inventory",
+      "origin": "https://inventory.northstar.example",
+      "header_allowlist": []
+    },
+    "login_realm": "hq",
+    "directories": [
+      {
+        "name": "northstar-ldap",
+        "seed": "assets/seed.ldif"
+      }
+    ],
+    "realms": [
+      {
+        "realm_id": "hq",
+        "kind": "openldap",
+        "directory": "northstar-ldap",
+        "user_bases": [
+          "ou=people,ou=hq,dc=northstar,dc=example"
+        ],
+        "group_bases": [
+          "ou=groups,ou=hq,dc=northstar,dc=example"
+        ],
+        "account_class": "inetOrgPerson",
+        "group_class": "groupOfNames",
+        "login_attribute": "uid",
+        "lookup": {
+          "dn": "uid=pact-lookup,ou=service,ou=people,ou=hq,dc=northstar,dc=example",
+          "password": "Lu9!amber-gate-58"
+        },
+        "denied_principals": [
+          "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001109"
+        ],
+        "sentinel": {
+          "account": "5c0e8a1e-3b7d-4f2a-9c61-000000001108",
+          "group": "5c0e8a1e-3b7d-4f2a-9c61-000000001204"
+        },
+        "direct_groups": true,
+        "nested": "none"
+      }
+    ],
+    "execution": {
+      "running_identity": "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001109"
+    }
+  },
+  "call": {
+    "principal": {
+      "id": "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001101",
+      "realm": {"tenant_id": "northstar", "environment_id": "https://gateway.northstar.example/environments/inventory"},
+      "workload": "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001101",
+      "mechanism": "ldap-simple-bind"
+    },
+    "check_id": "execution-identity-v1",
+    "operation": {
+      "operation_id": "op-inventory-0001",
+      "environment_id": "https://gateway.northstar.example/environments/inventory",
+      "principal_id": "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001101",
+      "action": "stock.read",
+      "resources": [
+        "warehouse:WH-7"
+      ],
+      "method": "GET",
+      "target_uri": "https://inventory.northstar.example/api/v1/warehouses/WH-7/stock",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {
+    "function": "check_context",
+    "outcome": "FAIL",
+    "reason_code": "EXECUTOR_MISMATCH"
+  }
+}

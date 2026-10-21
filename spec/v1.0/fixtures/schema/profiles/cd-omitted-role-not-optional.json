@@ -1,0 +1,41 @@
+{
+  "description": "ConformanceDeclaration payloads that omit a role no conformance profile may omit: gateway, validator and holder, one per document (draft 22.1).",
+  "objects": [
+    {
+      "section": "22.1",
+      "def": "ConformanceDeclaration",
+      "object": {
+        "conformance_profile": "single-owner",
+        "version": "0.1",
+        "omitted_roles": [
+          "gateway"
+        ],
+        "owner": "https://owner.example/issuer"
+      }
+    },
+    {
+      "section": "22.1",
+      "def": "ConformanceDeclaration",
+      "object": {
+        "conformance_profile": "single-owner",
+        "version": "0.1",
+        "omitted_roles": [
+          "validator"
+        ],
+        "owner": "https://owner.example/issuer"
+      }
+    },
+    {
+      "section": "22.1",
+      "def": "ConformanceDeclaration",
+      "object": {
+        "conformance_profile": "single-owner",
+        "version": "0.1",
+        "omitted_roles": [
+          "holder"
+        ],
+        "owner": "https://owner.example/issuer"
+      }
+    }
+  ]
+}

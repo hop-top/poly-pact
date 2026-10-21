@@ -1,0 +1,35 @@
+{
+  "id": "vectors/binding/bind-20-dot-segment",
+  "description": "A complete .. path segment would be removed by RFC 3986 path segment normalization: an ambiguous encoding, refused.",
+  "config": {
+    "origin": "https://gateway.example",
+    "header_allowlist": [
+      "if-match",
+      "x-dry-run"
+    ],
+    "normalization_id": "finance-header-normalization-1",
+    "mapping_version": "finance-http-1",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "request": {
+    "method": "GET",
+    "raw_request_uri": "/invoices/INV-9999/../INV-1042",
+    "headers": [
+      {
+        "name": "Host",
+        "value": "gateway.example"
+      }
+    ],
+    "body_b64": ""
+  },
+  "operation_id": "invoice-read-operation-0001",
+  "principal_id": "https://identity.example/principals/alice",
+  "action": "invoice.read",
+  "resources": [
+    "https://invoices.example/invoices/INV-1042"
+  ],
+  "expect": {
+    "reject_reason": "INVALID_MESSAGE"
+  },
+  "expect_operation_digest": null
+}

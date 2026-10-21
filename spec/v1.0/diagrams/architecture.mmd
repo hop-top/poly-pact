@@ -1,0 +1,36 @@
+%% PACT v1.0 — informative diagram for section 4.
+%% Logical responsibilities and information exchange, not message order.
+%% Roles may be colocated. Evidence arrows do not require direct network calls.
+%% Execution requires valid native authentication, ADMISSIBLE PACT admission,
+%% current native authorization, and all native execution conditions.
+flowchart TB
+    accTitle: PACT control and data boundaries
+    accDescr: The gateway combines PACT admission with native authentication, authorization, and execution checks. External approval evidence can satisfy applicable requirements, while authorized exceptions remain governed by native policy.
+
+    A["Agent"]
+
+    subgraph ENV["Existing controlled environment"]
+        G["Gateway and enforcement"]
+        N["Native identity and authorization"]
+        R["Protected resource"]
+    end
+
+    subgraph PACT["PACT logical roles"]
+        Q["Requirement publisher"]
+        V["PACT validator"]
+    end
+
+    E["Trusted evidence and reputation sources"]
+    H["External approval system"]
+
+    A -->|Signed presentation and actual request| G
+    G -->|Signed requirement contract| A
+    Q -->|Base and authorized adaptive requirements| G
+    G -->|Presentation and bound native context| V
+    E -->|Claims, status, and reputation evidence| V
+    H -->|Trusted approval evidence and status| V
+    V -->|Admission result and signed receipt| G
+    G -->|Principal, action, resource, and approval context| N
+    H -->|Approval or exception recognized by native policy| N
+    N -->|Identity context and current authorization decision| G
+    G -->|All four execution conditions pass| R

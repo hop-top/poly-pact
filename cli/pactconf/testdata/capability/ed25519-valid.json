@@ -1,0 +1,32 @@
+{
+  "id": "vectors/jws/ed25519-valid",
+  "description": "Evidence JWS signed with Ed25519 (RFC 9864 section 2.2) by the Ed25519 test key, the RFC 8032 section 7.1 test 1 key: accepted where Ed25519 is negotiated (draft 7.2). The signature was made with Go's crypto/ed25519 from the seed in keys/test-private-scalars.json, not with the package under test.",
+  "compact": "eyJhbGciOiJFZDI1NTE5IiwidHlwIjoicGFjdC1ldmlkZW5jZStqd3QiLCJraWQiOiJ0ZXN0LWVkMjU1MTkta2V5LTEifQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9lZDI1NTE5LXZhbGlkIn0.iZeU-4asdydGS5muq3g7lrYFqXG8gJOtLKq4LHttVdpRP2dRe5UCza-8iguThmAyI16c1SEgVd5N5K5BTZEuBA",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+        "kid": "test-ed25519-key-1",
+        "alg": "Ed25519",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+    "kid": "test-ed25519-key-1",
+    "alg": "Ed25519",
+    "use": "sig"
+  },
+  "signature_valid": null,
+  "expected_payload": "{\"pact_version\":\"0.1\",\"jti\":\"vectors/jws/ed25519-valid\"}"
+}

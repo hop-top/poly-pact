@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/adapters/memory/native.py b/py/src/hop_top_pact/adapters/memory/native.py
+--- a/py/src/hop_top_pact/adapters/memory/native.py
++++ b/py/src/hop_top_pact/adapters/memory/native.py
+@@ -59,7 +59,7 @@
+         value: JSONValue = c.value  # type: ignore[assignment]
+         return NativeClaim(
+             value=value,
+-            observed_at=observed,
++            observed_at=a.clock.now(),
+             status_checked_at=checked,
+             source_id=c.source_id,
+             source_ref=c.source_ref,

@@ -1,0 +1,65 @@
+{
+  "case_version": 1,
+  "id": "BASIC-07.two-agents-a",
+  "title": "An account with two enrollments in force is a configuration error: agent A gets no binding, even with its own key",
+  "draft": [
+    "6.1",
+    "17.1"
+  ],
+  "workloads": "dedicated",
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://gateway.northstar.example/environments/invoices"
+        },
+        "workload": "basic:legacy-accounts:20417",
+        "agent_id": "https://agents.northstar.example/invoice-assistant",
+        "operator_id": "https://operators.northstar.example/finance-ops",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079970,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-20417-a"
+      },
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://gateway.northstar.example/environments/invoices"
+        },
+        "workload": "basic:legacy-accounts:20417",
+        "agent_id": "https://agents.northstar.example/invoice-assistant-b",
+        "operator_id": "https://operators.northstar.example/finance-ops",
+        "holder_jkt": "ahxE1XEYqxvLIZy3r4nx9RE4E0683KndykyuZTK9xQg",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079970,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-20417-b"
+      }
+    ]
+  },
+  "call": {
+    "realm": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices"
+    },
+    "workload": "basic:legacy-accounts:20417",
+    "agent_id": "https://agents.northstar.example/invoice-assistant"
+  },
+  "expect": {
+    "function": "resolve_agent_binding",
+    "outcome": "error",
+    "reason_code": "UNSUPPORTED_REQUIREMENT"
+  }
+}

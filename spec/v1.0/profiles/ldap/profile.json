@@ -1,0 +1,197 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "ldap", "version": "3", "mapping_revision": "pact-ldap-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/api/v1/warehouses/{warehouse_id}/stock",
+      "action": "stock.read",
+      "resource_mapping": "warehouse:{warehouse_id}, from the path parameter; the principal is the authenticated directory account ldap:{realm_id}:{unique_id}, never the lookup account (illustrative route of the example I06 deployment; a deployment lists its own routes)"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "LDAP adapter in the gateway authentication stage before routing: search for the account on the lookup connection, then a simple bind as that account over LDAPS or StartTLS on its own connection; an empty password is rejected before any directory request"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup for the realm, the workload ldap:{realm_id}:{unique_id}, and the agent ID that the presentation names; the workload alone never names an agent, and a workload with more than one enrollment in force is a configuration error; the directory is not an enrollment actor"},
+    {"function": "map_operation", "component": "Gateway mapping stage of the application at the deployment's mapping revision; not defined by this profile"},
+    {"function": "read_native_claim", "component": "LDAP adapter directory reads by the read-only lookup account for the native paths /principal/id, /principal/group_ids, /principal/group_ids_nested, and /principal/account_state, at mapping revision pact-ldap-1"},
+    {"function": "check_context", "component": "Installed gateway checks: execution-identity-v1 with the lookup account excluded from every executor class, and native-principal-binding-v1; no LDAP-specific check"},
+    {"function": "authorize_native", "component": "The application's existing authorization, called with the original authenticated principal and never with the lookup account"},
+    {"function": "record_outcome", "component": "Gateway and application outcome writers; the directory adds no execution visibility"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain of the deployment; supplied by the deployment, not by this profile"},
+    {"component": "C02", "owner": "Adapter owner and directory owner", "what_exists": "LDAP adapter, the directory, and the lookup service account; the adapter is go/adapters/ldap in the reference implementation, the directory and the account are supplied by the directory owner"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry, looked up by realm, workload, and the agent ID that the presentation names; the contract and an in-memory backend exist, a durable backend is to be supplied by the deployment"},
+    {"component": "C04", "owner": "none", "what_exists": "Not used: the agent acts under its own dedicated account; employee delegation is not claimed"},
+    {"component": "C05", "owner": "Directory owner and IAM owner", "what_exists": "The directory for identity, group, and account-state reads, and the enrollment registry; exists"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: the read route needs no external approval"},
+    {"component": "C07", "owner": "Application owner", "what_exists": "Mapper of the application at the deployment's revision; supplied by the deployment for the reference route"},
+    {"component": "C08", "owner": "Resource owner", "what_exists": "The inventory application of the example; unchanged by this profile"},
+    {"component": "C09", "owner": "Gateway and platform owner", "what_exists": "The gateway's replay and receipt store; supplied by the deployment, not by this profile"},
+    {"component": "C10", "owner": "Resource owner", "what_exists": "The gateway's outcome writer and the application's audit log; supplied by the deployment, not by this profile"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "The gateway's policy registry; registry only, no adaptation lifecycle is claimed"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "The gateway's hold store and the enrollment registry; supplied by the deployment, directory removals and disables are read live"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "The gateway's evidence and audit store; supplied by the deployment, passwords and service secrets are excluded from it"},
+    {"component": "C15", "owner": "none", "what_exists": "Not used: the read route has no transaction or budget"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no runtime attestation or data-use guarantee is claimed"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Application login by means other than the directory: local accounts, API keys, or another single sign-on",
+      "control": "out_of_claim",
+      "evidence": "Excluded in unsupported_forms (authentication other than the simple bind over LDAPS or StartTLS); no negative fixture is planned"
+    },
+    {
+      "path": "Direct requests to the application backend that skip the gateway",
+      "control": "out_of_claim",
+      "evidence": "The network control belongs to the deployment; excluded in unsupported_forms (routes other than the reference route); no negative fixture is planned"
+    },
+    {
+      "path": "Direct use of the lookup account's credential against the directory",
+      "control": "out_of_claim",
+      "evidence": "A directory access control concern: the lookup account is read-only and its credential never reaches a request, a receipt, or a profile; no negative fixture is planned"
+    }
+  ],
+  "unsupported_forms": [
+    "Employee delegation, universal schema, or nested-group semantics (handoff row I06): only the dedicated account and the configured resolver are claimed; nesting is supported only through the Active Directory in-chain resolver and is unsupported for OpenLDAP",
+    "Application entitlement taxonomy: a directory group is a fact, and what it permits stays with the application",
+    "Authentication other than the simple bind over LDAPS or StartTLS (anonymous or unauthenticated bind, an unprotected simple bind, every SASL mechanism, the Active Directory Sicily mechanism, LDAPv2): only one arrangement is admitted",
+    "Shared directory accounts: one directory account per agent, the default of identity-mapping section 5, and a workload with more than one enrollment in force is a configuration error",
+    "A distinguished name, cn, uid, sAMAccountName, user principal name, mail, or display name as an identifier: only the unique id (entryUUID or objectGUID) is admitted",
+    "A directory other than OpenLDAP 2.6 or Active Directory Domain Services (for example Active Directory Lightweight Directory Services, another LDAP server, a cloud directory): no documentation for them was read",
+    "Nested groups on OpenLDAP, dynamic groups, and any other overlay-based expansion: nesting is configured as unsupported and a requirement on the nested path ends in UNSUPPORTED_REQUIREMENT",
+    "Membership through the Active Directory primary group, through tokenGroups, or across domains and forests: the direct and chain resolvers do not claim them",
+    "Reads served by a replica or by a domain controller other than the one that takes changes, with no declared bound: no replication bound is published, and without a declared bound every finite limit is unachievable",
+    "Referral chasing, and truncated results treated as complete: a referral or a limit-exceeded result is never a complete answer",
+    "Any route other than the reference route of protected_routes: not listed, so not claimed"
+  ],
+  "freshness": [
+    {
+      "source": "Directory account state and identity entry",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Directory direct group membership",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Directory nested group resolution (Active Directory in-chain matching rule)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Enrollment registry (agent and key binding status)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "Directory account state and identity entry",
+      "facts": ["identity", "account_state"],
+      "live_check": {"available": true, "endpoint_class": "Directory search by unique id over LDAPS or StartTLS"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    },
+    {
+      "source": "Directory direct group membership",
+      "facts": ["groups"],
+      "live_check": {"available": true, "endpoint_class": "Directory search of the memberOf attribute over LDAPS or StartTLS"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    },
+    {
+      "source": "Directory nested group resolution (Active Directory in-chain matching rule)",
+      "facts": ["groups"],
+      "live_check": {"available": true, "endpoint_class": "Directory search with the in-chain matching rule over LDAPS or StartTLS"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    }
+  ],
+  "attribute_sources": [],
+  "residual_limits": [
+    "Post-read: stock data already returned to the agent is not recalled by a later removal from a group or a disable, and no egress or data-use control is claimed; disclosed here with no bound",
+    "Revocation propagation, directory: the 0 second bounds of freshness hold for one server that takes every change and answers every read, with no cache; elsewhere a removal, disable, or lock reaches the gateway within the bound the deployment declares, and PACT does not promise instantaneous revocation from a replicated directory; lock state diverges between servers (OpenLDAP records failures on the replica that served them, Active Directory replicates a lockout urgently only to the PDC emulator and some sites and does not replicate an unlock urgently)",
+    "Revocation propagation, enrollment: a revocation or compromise mark reaches the gateway within the 0 second status bound of the registry, inside the consistency of the registry backend; the in-memory backend is local to one process",
+    "Session age: a deployment that authenticates once and keeps a session carries the age of the login in the principal fact; groups and state are read for each evaluation, so a stale session cannot claim a fresh group observation",
+    "Directory enforcement: the adapter reads state attributes and cannot show that the directory enforces them (for example that an OpenLDAP database loads the password policy overlay); the bind result is the directory's own enforcement",
+    "Access control uniformity: the visibility sentinel detects a lookup account that lost access to a whole base, not an entry-specific denial inside a base, which can only remove a group or hide an account and so yields FAIL, never a positive result",
+    "Directory reads are not re-stamp checked: each read is a new source record with its own as-of instant, so the monotonic guard never compares two reads of one entry; it still protects relayed or re-signed copies",
+    "Lock expiry: whether a lapsed temporary lock clears pwdAccountLockedTime or resets the computed Active Directory lockout bit is not established, so a lapsed lock can be reported as locked, which fails closed"
+  ],
+  "fixtures": [
+    {"id": "adapters/ldap/ad-seed", "path": "fixtures/adapters/ldap/assets/ad-seed.ldif"},
+    {"id": "adapters/ldap/change-delete-entry", "path": "fixtures/adapters/ldap/assets/ldap-03.delete-entry.ldif"},
+    {"id": "adapters/ldap/change-remove-member", "path": "fixtures/adapters/ldap/assets/ldap-08.remove-member.ldif"},
+    {"id": "adapters/ldap/ldap-01.empty-name", "path": "fixtures/adapters/ldap/ldap-01.empty-name.json"},
+    {"id": "adapters/ldap/ldap-01.empty-password", "path": "fixtures/adapters/ldap/ldap-01.empty-password.json"},
+    {"id": "adapters/ldap/ldap-01.identity-headers-ignored", "path": "fixtures/adapters/ldap/ldap-01.identity-headers-ignored.json"},
+    {"id": "adapters/ldap/ldap-01.mapped-to-nothing", "path": "fixtures/adapters/ldap/ldap-01.mapped-to-nothing.json"},
+    {"id": "adapters/ldap/ldap-01.prohibited", "path": "fixtures/adapters/ldap/ldap-01.prohibited.json"},
+    {"id": "adapters/ldap/ldap-01.valid", "path": "fixtures/adapters/ldap/ldap-01.valid.json"},
+    {"id": "adapters/ldap/ldap-01.wrong-password", "path": "fixtures/adapters/ldap/ldap-01.wrong-password.json"},
+    {"id": "adapters/ldap/ldap-02.active", "path": "fixtures/adapters/ldap/ldap-02.active.json"},
+    {"id": "adapters/ldap/ldap-02.ad-active", "path": "fixtures/adapters/ldap/ldap-02.ad-active.json"},
+    {"id": "adapters/ldap/ldap-02.ad-disabled", "path": "fixtures/adapters/ldap/ldap-02.ad-disabled.json"},
+    {"id": "adapters/ldap/ldap-02.disabled", "path": "fixtures/adapters/ldap/ldap-02.disabled.json"},
+    {"id": "adapters/ldap/ldap-02.expired", "path": "fixtures/adapters/ldap/ldap-02.expired.json"},
+    {"id": "adapters/ldap/ldap-02.locked", "path": "fixtures/adapters/ldap/ldap-02.locked.json"},
+    {"id": "adapters/ldap/ldap-02.password-reset", "path": "fixtures/adapters/ldap/ldap-02.password-reset.json"},
+    {"id": "adapters/ldap/ldap-03.deleted-entry-groups", "path": "fixtures/adapters/ldap/ldap-03.deleted-entry-groups.json"},
+    {"id": "adapters/ldap/ldap-03.deleted-entry-state", "path": "fixtures/adapters/ldap/ldap-03.deleted-entry-state.json"},
+    {"id": "adapters/ldap/ldap-03.unknown-login", "path": "fixtures/adapters/ldap/ldap-03.unknown-login.json"},
+    {"id": "adapters/ldap/ldap-04.duplicate-cn", "path": "fixtures/adapters/ldap/ldap-04.duplicate-cn.json"},
+    {"id": "adapters/ldap/ldap-04.same-cn-other-login", "path": "fixtures/adapters/ldap/ldap-04.same-cn-other-login.json"},
+    {"id": "adapters/ldap/ldap-04.wildcard-name", "path": "fixtures/adapters/ldap/ldap-04.wildcard-name.json"},
+    {"id": "adapters/ldap/ldap-05.ad-chain", "path": "fixtures/adapters/ldap/ldap-05.ad-chain.json"},
+    {"id": "adapters/ldap/ldap-05.chain-unsupported-by-server", "path": "fixtures/adapters/ldap/ldap-05.chain-unsupported-by-server.json"},
+    {"id": "adapters/ldap/ldap-05.direct-unsupported", "path": "fixtures/adapters/ldap/ldap-05.direct-unsupported.json"},
+    {"id": "adapters/ldap/ldap-05.nested-unsupported", "path": "fixtures/adapters/ldap/ldap-05.nested-unsupported.json"},
+    {"id": "adapters/ldap/ldap-06.hidden-entries", "path": "fixtures/adapters/ldap/ldap-06.hidden-entries.json"},
+    {"id": "adapters/ldap/ldap-06.hidden-groups", "path": "fixtures/adapters/ldap/ldap-06.hidden-groups.json"},
+    {"id": "adapters/ldap/ldap-06.hidden-state", "path": "fixtures/adapters/ldap/ldap-06.hidden-state.json"},
+    {"id": "adapters/ldap/ldap-07.lookup-bind-fails", "path": "fixtures/adapters/ldap/ldap-07.lookup-bind-fails.json"},
+    {"id": "adapters/ldap/ldap-07.tls-fails", "path": "fixtures/adapters/ldap/ldap-07.tls-fails.json"},
+    {"id": "adapters/ldap/ldap-07.unreachable-authenticate", "path": "fixtures/adapters/ldap/ldap-07.unreachable-authenticate.json"},
+    {"id": "adapters/ldap/ldap-07.unreachable-claim", "path": "fixtures/adapters/ldap/ldap-07.unreachable-claim.json"},
+    {"id": "adapters/ldap/ldap-08.member", "path": "fixtures/adapters/ldap/ldap-08.member.json"},
+    {"id": "adapters/ldap/ldap-08.removed", "path": "fixtures/adapters/ldap/ldap-08.removed.json"},
+    {"id": "adapters/ldap/ldap-09.branch-login", "path": "fixtures/adapters/ldap/ldap-09.branch-login.json"},
+    {"id": "adapters/ldap/ldap-09.other-realm-group", "path": "fixtures/adapters/ldap/ldap-09.other-realm-group.json"},
+    {"id": "adapters/ldap/ldap-09.other-realm-principal", "path": "fixtures/adapters/ldap/ldap-09.other-realm-principal.json"},
+    {"id": "adapters/ldap/ldap-10.authorize-no-substitution", "path": "fixtures/adapters/ldap/ldap-10.authorize-no-substitution.json"},
+    {"id": "adapters/ldap/ldap-10.authorize-original", "path": "fixtures/adapters/ldap/ldap-10.authorize-original.json"},
+    {"id": "adapters/ldap/ldap-10.executor-lookup", "path": "fixtures/adapters/ldap/ldap-10.executor-lookup.json"},
+    {"id": "adapters/ldap/ldap-10.executor-principal", "path": "fixtures/adapters/ldap/ldap-10.executor-principal.json"},
+    {"id": "adapters/ldap/ldap-10.lookup-login", "path": "fixtures/adapters/ldap/ldap-10.lookup-login.json"},
+    {"id": "adapters/ldap/ldap-10.lookup-principal", "path": "fixtures/adapters/ldap/ldap-10.lookup-principal.json"},
+    {"id": "adapters/ldap/ldap-11.dedicated", "path": "fixtures/adapters/ldap/ldap-11.dedicated.json"},
+    {"id": "adapters/ldap/ldap-11.two-agents-a", "path": "fixtures/adapters/ldap/ldap-11.two-agents-a.json"},
+    {"id": "adapters/ldap/ldap-11.two-agents-b", "path": "fixtures/adapters/ldap/ldap-11.two-agents-b.json"},
+    {"id": "adapters/ldap/seed", "path": "fixtures/adapters/ldap/assets/seed.ldif"}
+  ]
+}

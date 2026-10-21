@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jws/Base64Url.php b/php/src/Core/Jws/Base64Url.php
+index fde7827..43d0fd8 100644
+--- a/php/src/Core/Jws/Base64Url.php
++++ b/php/src/Core/Jws/Base64Url.php
+@@ -45,7 +45,7 @@ final class Base64Url
+             throw new \UnexpectedValueException(\sprintf('base64url: length %d is 1 mod 4', \strlen($s)));
+         }
+         $b = base64_decode(strtr($s, '-_', '+/'), true);
+-        if ($b === false || self::encode($b) !== $s) {
++        if ($b === false) {
+             throw new \UnexpectedValueException(\sprintf('base64url: non-zero spare bits at offset %d', \strlen($s) - 1));
+         }
+ 

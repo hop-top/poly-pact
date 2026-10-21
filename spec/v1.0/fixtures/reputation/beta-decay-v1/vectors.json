@@ -1,0 +1,1261 @@
+[
+  {
+    "id": "empty-history",
+    "dimension": "reliability",
+    "events": [],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 5000,
+      "confidence_bps": 0
+    },
+    "note": "No qualified event: alpha = beta = 1, the 15.3 cold start."
+  },
+  {
+    "id": "one-success-at-t",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 6666,
+      "confidence_bps": 476
+    },
+    "note": "One success observed at t: alpha = 2, beta = 1; 20000/3 and 10000/21."
+  },
+  {
+    "id": "one-success-30-days",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 6000,
+      "confidence_bps": 243
+    },
+    "note": "One success one half-life old: decayed weight exactly 0.5; alpha = 1.5, effective weight 0.5."
+  },
+  {
+    "id": "b6-reliability",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 9259,
+      "confidence_bps": 5555
+    },
+    "note": "Appendix B.6 reliability: 25 independent tasks, all at t, 24 successes and 1 failure: alpha = 25, beta = 2."
+  },
+  {
+    "id": "b6-task-quality",
+    "dimension": "task_quality",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "task_quality"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 9000,
+      "confidence_bps": 4736
+    },
+    "note": "Appendix B.6 task_quality: 18 independent tasks at t, 17 successes and 1 failure: alpha = 18, beta = 2."
+  },
+  {
+    "id": "b6-policy-adherence",
+    "dimension": "policy_adherence",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 8750,
+      "confidence_bps": 2307
+    },
+    "note": "Appendix B.6 policy_adherence: 6 independent tasks at t, all successes: alpha = 7, beta = 1."
+  },
+  {
+    "id": "failure-weight-5",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 5,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 1428,
+      "confidence_bps": 2000
+    },
+    "note": "One failure at t with weight 5, the maximum an approved severity rule allows: alpha = 1, beta = 6."
+  },
+  {
+    "id": "failure-weight-5-60-days",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1786896000,
+        "result": "FAILURE",
+        "weight": 5,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 3076,
+      "confidence_bps": 588
+    },
+    "note": "Weight-5 failure two half-lives old: decayed weight exactly 1.25."
+  },
+  {
+    "id": "unknown-and-not-applicable-zero",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "UNKNOWN",
+        "weight": 1,
+        "dimension": "none"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "NOT_APPLICABLE",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 5000,
+      "confidence_bps": 0
+    },
+    "note": "UNKNOWN (dimension none, Appendix A.2) and NOT_APPLICABLE contribute zero weight: the empty-history result."
+  },
+  {
+    "id": "success-with-unknown-and-not-applicable",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "UNKNOWN",
+        "weight": 1,
+        "dimension": "none"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "NOT_APPLICABLE",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 6666,
+      "confidence_bps": 476
+    },
+    "note": "The zero-weight results leave one success unchanged: the one-success-at-t result."
+  },
+  {
+    "id": "other-dimensions-ignored",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "policy_adherence"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 7500,
+      "confidence_bps": 909
+    },
+    "note": "Dimensions stay separate (15.1): only the 2 reliability successes count for reliability."
+  },
+  {
+    "id": "effective-weight-20",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 7272,
+      "confidence_bps": 5000
+    },
+    "note": "Effective weight exactly 20: confidence exactly 5000; alpha = 16, beta = 6."
+  },
+  {
+    "id": "effective-weight-20-decayed",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 9545,
+      "confidence_bps": 5000
+    },
+    "note": "40 successes one half-life old: effective weight exactly 20 from decayed weights."
+  },
+  {
+    "id": "floor-confidence-below-5000",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792079999,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 9545,
+      "confidence_bps": 4999
+    },
+    "note": "Floor boundary: one success 1 second old weighs 2^(-1/2592000), so the effective weight is 20 minus 2.67e-7 and the confidence lies 3.3e-5 bp below 5000: it floors to 4999, not 5000."
+  },
+  {
+    "id": "floor-score-below-8000",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792079999,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 7999,
+      "confidence_bps": 1304
+    },
+    "note": "Floor boundary: one success 1 second old weighs 2^(-1/2592000), so alpha = 4 minus 2.67e-7, beta = 1, and the score lies 1.1e-4 bp below 8000: it floors to 7999, not 8000."
+  },
+  {
+    "id": "floor-score-exact-7500-decayed",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1791216000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1791216000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1791216000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1791216000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 7500,
+      "confidence_bps": 2055
+    },
+    "note": "Floor boundary: alpha = 3 + 3w and beta = 1 + w with w = 2^(-1/3), so the exact score is 7500; binary64 gives 7500.000000000001 when the events are summed in array order; another order may land one ulp below and floor to 7499, inside the 1 bp tolerance."
+  },
+  {
+    "id": "mixed-decays",
+    "dimension": "reliability",
+    "events": [
+      {
+        "observed_at": 1792080000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1791475200,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1789488000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1786896000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1784304000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1790784000,
+        "result": "FAILURE",
+        "weight": 1,
+        "dimension": "reliability"
+      },
+      {
+        "observed_at": 1788192000,
+        "result": "FAILURE",
+        "weight": 2,
+        "dimension": "reliability"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 6067,
+      "confidence_bps": 1714
+    },
+    "note": "Successes 0, 7, 30, 60 and 90 days old; failures 15 days old (weight 1) and 45 days old (weight 2)."
+  },
+  {
+    "id": "history-400-days-old",
+    "dimension": "task_quality",
+    "events": [
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      },
+      {
+        "observed_at": 1757520000,
+        "result": "SUCCESS",
+        "weight": 1,
+        "dimension": "task_quality"
+      }
+    ],
+    "t": 1792080000,
+    "expected": {
+      "score_bps": 5002,
+      "confidence_bps": 0
+    },
+    "note": "Ten successes 400 days old: each weight 2^(-40/3); the score decays toward 5000 and the confidence to 0."
+  }
+]

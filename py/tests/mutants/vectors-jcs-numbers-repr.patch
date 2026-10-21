@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/vectors/_groups.py b/py/src/hop_top_pact/vectors/_groups.py
+index a290619..d2d8f37 100644
+--- a/py/src/hop_top_pact/vectors/_groups.py
++++ b/py/src/hop_top_pact/vectors/_groups.py
+@@ -220,6 +220,7 @@ def go_exponent(f: float) -> str:
+     """The literal Go's strconv.FormatFloat(f, 'e', -1, 64) writes: shortest digits, d.ddde±XX."""
+     if not math.isfinite(f):
+         raise Fail(f"{f!r} is not finite")
++    return repr(f)
+     sign = "-" if math.copysign(1.0, f) < 0 else ""
+     if f == 0:
+         return sign + "0e+00"

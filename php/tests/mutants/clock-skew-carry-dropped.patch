@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Clock/Clocks.php b/php/src/Core/Clock/Clocks.php
+index ab9df89..ec26a47 100644
+--- a/php/src/Core/Clock/Clocks.php
++++ b/php/src/Core/Clock/Clocks.php
+@@ -85,7 +85,7 @@ final class Clocks
+         // now + skew as whole seconds; a claim is a whole second, so claim <=
+         // now + skew exactly when claim <= latest. A now past 2^53-1 is past
+         // every claim, so it is capped before the sum, which cannot overflow.
+-        $latest = min($sec, self::MAX_TIMESTAMP + 1) + intdiv($us + $skew, self::SECOND);
++        $latest = min($sec, self::MAX_TIMESTAMP + 1) + intdiv($skew, self::SECOND);
+         if ($nbf > $latest) {
+             throw new ClockError(ClockErrorKind::NOT_YET_VALID, \sprintf('nbf %d, now %d, skew %s', $nbf, $sec, self::duration($skew)));
+         }

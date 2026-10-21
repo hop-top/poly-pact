@@ -1,0 +1,121 @@
+{
+  "case_version": 1,
+  "id": "LDAP-01.mapped-to-nothing",
+  "title": "A password of characters that SASLprep maps to nothing is empty and is refused before any directory request",
+  "draft": [
+    "17.1",
+    "13.4"
+  ],
+  "native_state": {
+    "model": "ldap/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/inventory",
+      "origin": "https://inventory.northstar.example",
+      "header_allowlist": []
+    },
+    "login_realm": "hq",
+    "directories": [
+      {
+        "name": "northstar-ldap",
+        "seed": "assets/seed.ldif"
+      }
+    ],
+    "realms": [
+      {
+        "realm_id": "hq",
+        "kind": "openldap",
+        "directory": "northstar-ldap",
+        "user_bases": [
+          "ou=people,ou=hq,dc=northstar,dc=example"
+        ],
+        "group_bases": [
+          "ou=groups,ou=hq,dc=northstar,dc=example"
+        ],
+        "account_class": "inetOrgPerson",
+        "group_class": "groupOfNames",
+        "login_attribute": "uid",
+        "lookup": {
+          "dn": "uid=pact-lookup,ou=service,ou=people,ou=hq,dc=northstar,dc=example",
+          "password": "Lu9!amber-gate-58"
+        },
+        "denied_principals": [
+          "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001109"
+        ],
+        "sentinel": {
+          "account": "5c0e8a1e-3b7d-4f2a-9c61-000000001108",
+          "group": "5c0e8a1e-3b7d-4f2a-9c61-000000001204"
+        },
+        "direct_groups": true,
+        "nested": "none"
+      }
+    ],
+    "credentials": [
+      {
+        "ref": "assistant",
+        "user_id": "inventory-assistant",
+        "password": "Wh7!lantern-stock-21"
+      },
+      {
+        "ref": "assistant-wrong-password",
+        "user_id": "inventory-assistant",
+        "password": "Wh7!lantern-stock-22"
+      },
+      {
+        "ref": "retail",
+        "user_id": "inventory-assistant-retail",
+        "password": "Wh7!lantern-stock-21"
+      },
+      {
+        "ref": "unknown-login",
+        "user_id": "inventory-assistnat",
+        "password": "Wh7!lantern-stock-21"
+      },
+      {
+        "ref": "lookup",
+        "user_id": "pact-lookup",
+        "password": "Lu9!amber-gate-58"
+      },
+      {
+        "ref": "empty-password",
+        "user_id": "inventory-assistant",
+        "password": ""
+      },
+      {
+        "ref": "empty-name",
+        "user_id": "",
+        "password": "Wh7!lantern-stock-21"
+      },
+      {
+        "ref": "mapped-to-nothing",
+        "user_id": "inventory-assistant",
+        "password": "­᠋️"
+      },
+      {
+        "ref": "prohibited",
+        "user_id": "inventory-assistant",
+        "password": "Wh7!lantern\u0007stock-21"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://inventory.northstar.example/api/v1/warehouses/WH-7/stock",
+    "native_state_ref": "mapped-to-nothing"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "NO_CREDENTIAL",
+    "leak_scan": {
+      "secrets": [
+        "Wh7!lantern-stock-21",
+        "Lu9!amber-gate-58"
+      ]
+    },
+    "must_not_call": [
+      "directory",
+      "execute"
+    ]
+  }
+}

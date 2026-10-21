@@ -1,0 +1,12 @@
+diff --git a/ts/src/core/binding/headers.ts b/ts/src/core/binding/headers.ts
+--- a/ts/src/core/binding/headers.ts
++++ b/ts/src/core/binding/headers.ts
+@@ -99,7 +99,7 @@
+     throw refuse(Rule.MISSING_HOST, 'an origin-form request without Host');
+   }
+   for (const v of values) {
+-    if (!validHost(trimOWS(v))) {
++    if (!validHost(trimOWS(v)) && v === '') {
+       throw refuse(Rule.INVALID_HOST, 'the Host value is not uri-host [ ":" port ]');
+     }
+   }

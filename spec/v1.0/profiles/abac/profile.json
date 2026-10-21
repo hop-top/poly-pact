@@ -1,0 +1,302 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "opa-data-api", "version": "v1", "mapping_revision": "pact-abac-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/api/documents/{document_id}",
+      "action": "document.read",
+      "resource_mapping": "document:{document_id}, resolved by map_operation from the path parameter against the document catalog; the one member of OperationContext.resources; query parameters and headers that can change what is returned are part of the bound operation; the response is one JSON document"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "Gateway authentication stage, before routing; produces the principal in the namespace of the authenticating mechanism, with the authenticated device identifier and the connection's peer address as Principal attributes"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup inside the gateway, by the realm, the authenticated workload, and the agent ID that the presentation names; whether a workload may carry more than one record is the choice of the authenticating profile"},
+    {"function": "map_operation", "component": "Gateway mapping stage, mapping revision pact-abac-1; builds the OperationContext for the document read"},
+    {"function": "read_native_claim", "component": "Fact adapters for principal, department, clearance, device compliance, classification, owning department, network zone, and time over approved native paths"},
+    {"function": "check_context", "component": "Installed gateway checks run on the authenticated principal and the agent binding: the ABAC policy-version check, which reads device_id and peer_address from the principal, native-delegation-v1, and execution-identity-v1; native-principal-binding-v1 is the validator's"},
+    {"function": "authorize_native", "component": "Adapter decision client calling the OPA REST Data API; a native denial is final; the executor rereads device, zone, and time and applies the obligations before disclosure"},
+    {"function": "record_outcome", "component": "Gateway outcome writer, and the executor's immutable native record of the decision, the obligations applied, and the executor identity"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain of the document gateway; to be supplied by the deployment"},
+    {"component": "C02", "owner": "IAM owner and adapter owner", "what_exists": "Identity adapter and the fact adapters behind read_native_claim exist; the decision client of this profile is the reference implementation go/adapters/abac"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry, administrator-run enrollment; to be supplied by the deployment"},
+    {"component": "C04", "owner": "Application and IAM owner", "what_exists": "Delegation registry holding user, agent, and task authority, behind native-delegation-v1; exists"},
+    {"component": "C05", "owner": "Owner of each source", "what_exists": "HR/identity adapter, security-attribute service, device-management adapter, document catalog, the gateway itself for network zone and time, enrollment registry, and hold store; exist as the sources of freshness, membership_sources, and attribute_sources"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: the sample policy needs no external approval; a policy that does adds this component and an approval-class check"},
+    {"component": "C07", "owner": "Adapter owner", "what_exists": "Mapper at revision pact-abac-1 for the operation and the policy input; to be supplied"},
+    {"component": "C08", "owner": "Policy owner and resource owner", "what_exists": "OPA with the installed policy as the native decision exists; the document service as obligation executor is assumed and specified by the profile rules"},
+    {"component": "C09", "owner": "Gateway and platform owner", "what_exists": "Replay and receipt store, and the shared store of the monotonic guard; to be supplied"},
+    {"component": "C10", "owner": "Resource and evidence owner", "what_exists": "Gateway outcome writer and the executor's native record; to be supplied"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Registry of base requirements and the installed-check registry holding the pinned policy version; registry only, no adaptation lifecycle; the OPA policy source is a native store owned by the policy owner"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "Revocation and hold store; to be supplied"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled evidence and audit store, including the OPA decision log; to be supplied"},
+    {"component": "C15", "owner": "none", "what_exists": "Not used: the document read has no transaction or budget"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no runtime or data-use guarantee is claimed; obligation enforcement is resource enforcement by C08 before disclosure, and use after disclosure is attested-only"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Direct request to the document service from any host other than the gateway",
+      "control": "closed",
+      "evidence": "Network policy admits only the gateway as a source, and the executor refuses a request that lacks the decision envelope; negative case ABAC-21"
+    },
+    {
+      "path": "Direct request to the policy decision point's Data, Policy, or other API by any process other than the adapter, including a write of policy or data",
+      "control": "closed",
+      "evidence": "The PDP authenticates its clients and authorizes the adapter identity only for POST on the decision path; negative case ABAC-22"
+    },
+    {
+      "path": "Other actions on the same documents: export, download, search, list",
+      "control": "out_of_claim",
+      "evidence": "Only the document read route is listed in protected_routes; excluded in unsupported_forms"
+    },
+    {
+      "path": "Other applications or routes that read the document store or the catalog directly",
+      "control": "out_of_claim",
+      "evidence": "The claim covers the document read route only; excluded in unsupported_forms"
+    },
+    {
+      "path": "A shared HTTP response cache between the executor and the agent",
+      "control": "out_of_claim",
+      "evidence": "A cached copy of a disclosed response would be served without a new decision; excluded in unsupported_forms, and the deployment disables caching for the route"
+    }
+  ],
+  "unsupported_forms": [
+    "Universal policies, or a PACT policy language: only the native OPA policy and its decision document are claimed; PACT defines no policy language, no other engine, and no policy, and the clearance chain and sample rule are illustrative",
+    "Instantaneous propagation of a fact change: a change reaches a decision within the status bound of its source and, for device, zone, and time, again at execution within 30 seconds; nothing faster is promised",
+    "Policy input taken from the agent, including a signed evidence artifact: evidence the agent carries is compared and discarded, and the input carries the authoritative value",
+    "Clearance with compartments or any order that is not one chain: only a configured finite chain of levels is claimed",
+    "Obligation types other than filter_fields, redact, and watermark, deny-list filtering, and parameters beyond those the profile defines: any other is unmet and nothing is disclosed",
+    "Obligations on content that is not a JSON document, other than a watermark whose means the mapping declares, and disclosure that streams bytes before every obligation is applied: the executor must hold the content until every obligation is applied and verified",
+    "Policy rules specific to an agent, a task, or a purpose: the input has no agent identifier, task, or purpose, and the task relation is established by native-delegation-v1 and the purpose and operation check",
+    "Any action other than document.read on the listed route, including export: not listed, so not claimed",
+    "Execution-time recheck of principal, department, clearance, classification, or owning department: only device, zone, and time are read again, and the others rely on their admission-time bounds",
+    "Reuse of a decision across requests, and an embedded or non-REST OPA interface: every decision is a new query through the REST Data API",
+    "Verification of policy content from policy_version or from a bundle revision: both are labels the policy publisher sets, and the profile pins and compares them",
+    "Observation mode: obligations are not enforced there",
+    "Enforcement of data use after disclosure: execution-control-v1 is not in the contract, and use after disclosure is attested-only"
+  ],
+  "freshness": [
+    {
+      "source": "Principal identifier (HR/identity adapter, subject.principal_id)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Department (HR/identity adapter, subject.department)",
+      "observation": "authoritative",
+      "max_age_seconds": 90,
+      "status_max_age_seconds": 60,
+      "outage": "defer"
+    },
+    {
+      "source": "Clearance (security-attribute service, subject.clearance)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Device compliance (device-management adapter, environment.device.compliant)",
+      "observation": "authoritative",
+      "max_age_seconds": 300,
+      "status_max_age_seconds": 30,
+      "outage": "defer"
+    },
+    {
+      "source": "Document classification (document catalog, resource.classification)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Owning department (document catalog, resource.owning_department)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Network zone and time (the gateway itself, environment.network_zone and environment.time)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Enrollment registry (agent and key binding status)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Security hold store",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "Principal identifier (HR/identity adapter, subject.principal_id)",
+      "facts": ["identity"],
+      "live_check": {"available": true, "endpoint_class": "identity adapter lookup"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    }
+  ],
+  "attribute_sources": [
+    {
+      "source": "HR/identity adapter",
+      "category": "subject",
+      "attributes": ["/subject/department"],
+      "freshness": "Department (HR/identity adapter, subject.department)"
+    },
+    {
+      "source": "Security-attribute service",
+      "category": "subject",
+      "attributes": ["/subject/clearance"],
+      "freshness": "Clearance (security-attribute service, subject.clearance)"
+    },
+    {
+      "source": "Device-management adapter",
+      "category": "environment",
+      "attributes": ["/environment/device/compliant"],
+      "freshness": "Device compliance (device-management adapter, environment.device.compliant)"
+    },
+    {
+      "source": "Document catalog",
+      "category": "resource",
+      "attributes": ["/resource/classification"],
+      "freshness": "Document classification (document catalog, resource.classification)"
+    },
+    {
+      "source": "Document catalog",
+      "category": "resource",
+      "attributes": ["/resource/owning_department"],
+      "freshness": "Owning department (document catalog, resource.owning_department)"
+    },
+    {
+      "source": "The gateway itself",
+      "category": "environment",
+      "attributes": ["/environment/network_zone", "/environment/time"],
+      "freshness": "Network zone and time (the gateway itself, environment.network_zone and environment.time)"
+    }
+  ],
+  "residual_limits": [
+    "Post-read: content disclosed after the obligations were applied is outside the executor's control, since the agent can copy, forward, or export it; a watermark marks a copy and does not prevent copying; purpose and data-use restrictions are attested-only because execution-control-v1 is not in the contract; an executed read is not undone by revoking its receipt; disclosed here with no bound",
+    "Revocation propagation: a change at the principal, clearance, classification, owning department, enrollment, or hold source is seen at the next read with status bound 0, within each source's own consistency; a department change within 60 s; a device, zone, or time change within 30 s at admission and again at execution",
+    "Decision-to-release window: the principal, department, clearance, classification, and owning department are not read again at execution, so a change between the decision and the release is not seen; the window is bounded by the executor's own request deadline, not by PACT",
+    "Policy label: policy_version and the bundle revision are labels, and a policy change that keeps the label is invisible to the pin; change control belongs to the policy owner",
+    "Source integrity: the fact sources are authoritative by assumption, and a corrupted record yields a decision that looks correct; PACT detects stale facts and disagreement with the agent's claim, not a wrong source",
+    "Decision log content: the OPA log event carries the full input and result, so clearance, department, and device state are stored with it as protected evidence; a mask rule reduces what a replay can reproduce, and log delivery requeues, backs off, and drops events above a rate limit",
+    "Obligation granularity: filter_fields and redact act on JSON Pointers of one JSON document; response size, timing, error text, and the vacuous satisfaction of a pointer that resolves to nothing are side channels the profile does not close",
+    "Time rules: a policy rule conditioned on environment.time can be 30 s out of date at execution"
+  ],
+  "fixtures": [
+    {"id": "adapters/abac/abac-01.claim", "path": "fixtures/adapters/abac/abac-01.claim.json"},
+    {"id": "adapters/abac/abac-01.decision", "path": "fixtures/adapters/abac/abac-01.decision.json"},
+    {"id": "adapters/abac/abac-02.classification", "path": "fixtures/adapters/abac/abac-02.classification.json"},
+    {"id": "adapters/abac/abac-02.control", "path": "fixtures/adapters/abac/abac-02.control.json"},
+    {"id": "adapters/abac/abac-02.department", "path": "fixtures/adapters/abac/abac-02.department.json"},
+    {"id": "adapters/abac/abac-02.device", "path": "fixtures/adapters/abac/abac-02.device.json"},
+    {"id": "adapters/abac/abac-03.claim", "path": "fixtures/adapters/abac/abac-03.claim.json"},
+    {"id": "adapters/abac/abac-03.forwarded-zone", "path": "fixtures/adapters/abac/abac-03.forwarded-zone.json"},
+    {"id": "adapters/abac/abac-04.check", "path": "fixtures/adapters/abac/abac-04.check.json"},
+    {"id": "adapters/abac/abac-04.claim", "path": "fixtures/adapters/abac/abac-04.claim.json"},
+    {"id": "adapters/abac/abac-04.no-device", "path": "fixtures/adapters/abac/abac-04.no-device.json"},
+    {"id": "adapters/abac/abac-05.at-limits", "path": "fixtures/adapters/abac/abac-05.at-limits.json"},
+    {"id": "adapters/abac/abac-05.classification-status", "path": "fixtures/adapters/abac/abac-05.classification-status.json"},
+    {"id": "adapters/abac/abac-05.clearance-observed", "path": "fixtures/adapters/abac/abac-05.clearance-observed.json"},
+    {"id": "adapters/abac/abac-05.department-observed", "path": "fixtures/adapters/abac/abac-05.department-observed.json"},
+    {"id": "adapters/abac/abac-05.department-status", "path": "fixtures/adapters/abac/abac-05.department-status.json"},
+    {"id": "adapters/abac/abac-05.device-observed", "path": "fixtures/adapters/abac/abac-05.device-observed.json"},
+    {"id": "adapters/abac/abac-05.device-status", "path": "fixtures/adapters/abac/abac-05.device-status.json"},
+    {"id": "adapters/abac/abac-05.owning-department-observed", "path": "fixtures/adapters/abac/abac-05.owning-department-observed.json"},
+    {"id": "adapters/abac/abac-05.principal-id-status", "path": "fixtures/adapters/abac/abac-05.principal-id-status.json"},
+    {"id": "adapters/abac/abac-06.at-skew", "path": "fixtures/adapters/abac/abac-06.at-skew.json"},
+    {"id": "adapters/abac/abac-06.clock-ahead", "path": "fixtures/adapters/abac/abac-06.clock-ahead.json"},
+    {"id": "adapters/abac/abac-06.restamped", "path": "fixtures/adapters/abac/abac-06.restamped.json"},
+    {"id": "adapters/abac/abac-07.catalog", "path": "fixtures/adapters/abac/abac-07.catalog.json"},
+    {"id": "adapters/abac/abac-07.clearance", "path": "fixtures/adapters/abac/abac-07.clearance.json"},
+    {"id": "adapters/abac/abac-07.device", "path": "fixtures/adapters/abac/abac-07.device.json"},
+    {"id": "adapters/abac/abac-07.hr", "path": "fixtures/adapters/abac/abac-07.hr.json"},
+    {"id": "adapters/abac/abac-07.outage-before-stale", "path": "fixtures/adapters/abac/abac-07.outage-before-stale.json"},
+    {"id": "adapters/abac/abac-08.device-not-boolean", "path": "fixtures/adapters/abac/abac-08.device-not-boolean.json"},
+    {"id": "adapters/abac/abac-08.missing-before-stale", "path": "fixtures/adapters/abac/abac-08.missing-before-stale.json"},
+    {"id": "adapters/abac/abac-08.no-classification", "path": "fixtures/adapters/abac/abac-08.no-classification.json"},
+    {"id": "adapters/abac/abac-08.no-owning-department", "path": "fixtures/adapters/abac/abac-08.no-owning-department.json"},
+    {"id": "adapters/abac/abac-08.no-source-time", "path": "fixtures/adapters/abac/abac-08.no-source-time.json"},
+    {"id": "adapters/abac/abac-08.unmapped-department", "path": "fixtures/adapters/abac/abac-08.unmapped-department.json"},
+    {"id": "adapters/abac/abac-08.unmapped-zone", "path": "fixtures/adapters/abac/abac-08.unmapped-zone.json"},
+    {"id": "adapters/abac/abac-09.classification", "path": "fixtures/adapters/abac/abac-09.classification.json"},
+    {"id": "adapters/abac/abac-09.clearance", "path": "fixtures/adapters/abac/abac-09.clearance.json"},
+    {"id": "adapters/abac/abac-10.rank-denies", "path": "fixtures/adapters/abac/abac-10.rank-denies.json"},
+    {"id": "adapters/abac/abac-10.rank-permits", "path": "fixtures/adapters/abac/abac-10.rank-permits.json"},
+    {"id": "adapters/abac/abac-11.check", "path": "fixtures/adapters/abac/abac-11.check.json"},
+    {"id": "adapters/abac/abac-11.empty-object", "path": "fixtures/adapters/abac/abac-11.empty-object.json"},
+    {"id": "adapters/abac/abac-11.no-result", "path": "fixtures/adapters/abac/abac-11.no-result.json"},
+    {"id": "adapters/abac/abac-12.allow-string", "path": "fixtures/adapters/abac/abac-12.allow-string.json"},
+    {"id": "adapters/abac/abac-12.array-body", "path": "fixtures/adapters/abac/abac-12.array-body.json"},
+    {"id": "adapters/abac/abac-12.array-result", "path": "fixtures/adapters/abac/abac-12.array-result.json"},
+    {"id": "adapters/abac/abac-12.bare-boolean", "path": "fixtures/adapters/abac/abac-12.bare-boolean.json"},
+    {"id": "adapters/abac/abac-12.duplicate-member", "path": "fixtures/adapters/abac/abac-12.duplicate-member.json"},
+    {"id": "adapters/abac/abac-12.empty-type", "path": "fixtures/adapters/abac/abac-12.empty-type.json"},
+    {"id": "adapters/abac/abac-12.extra-member", "path": "fixtures/adapters/abac/abac-12.extra-member.json"},
+    {"id": "adapters/abac/abac-12.no-allow", "path": "fixtures/adapters/abac/abac-12.no-allow.json"},
+    {"id": "adapters/abac/abac-12.no-obligations", "path": "fixtures/adapters/abac/abac-12.no-obligations.json"},
+    {"id": "adapters/abac/abac-12.not-json", "path": "fixtures/adapters/abac/abac-12.not-json.json"},
+    {"id": "adapters/abac/abac-12.null-result", "path": "fixtures/adapters/abac/abac-12.null-result.json"},
+    {"id": "adapters/abac/abac-12.obligation-extra-member", "path": "fixtures/adapters/abac/abac-12.obligation-extra-member.json"},
+    {"id": "adapters/abac/abac-12.obligation-no-params", "path": "fixtures/adapters/abac/abac-12.obligation-no-params.json"},
+    {"id": "adapters/abac/abac-12.obligations-object", "path": "fixtures/adapters/abac/abac-12.obligations-object.json"},
+    {"id": "adapters/abac/abac-12.params-not-object", "path": "fixtures/adapters/abac/abac-12.params-not-object.json"},
+    {"id": "adapters/abac/abac-12.repeated-type", "path": "fixtures/adapters/abac/abac-12.repeated-type.json"},
+    {"id": "adapters/abac/abac-12.trailing-text", "path": "fixtures/adapters/abac/abac-12.trailing-text.json"},
+    {"id": "adapters/abac/abac-13.absent", "path": "fixtures/adapters/abac/abac-13.absent.json"},
+    {"id": "adapters/abac/abac-13.check", "path": "fixtures/adapters/abac/abac-13.check.json"},
+    {"id": "adapters/abac/abac-13.empty", "path": "fixtures/adapters/abac/abac-13.empty.json"},
+    {"id": "adapters/abac/abac-13.not-string", "path": "fixtures/adapters/abac/abac-13.not-string.json"},
+    {"id": "adapters/abac/abac-14.check", "path": "fixtures/adapters/abac/abac-14.check.json"},
+    {"id": "adapters/abac/abac-14.other-version", "path": "fixtures/adapters/abac/abac-14.other-version.json"},
+    {"id": "adapters/abac/abac-15.redirect", "path": "fixtures/adapters/abac/abac-15.redirect.json"},
+    {"id": "adapters/abac/abac-15.refused", "path": "fixtures/adapters/abac/abac-15.refused.json"},
+    {"id": "adapters/abac/abac-15.status-204", "path": "fixtures/adapters/abac/abac-15.status-204.json"},
+    {"id": "adapters/abac/abac-15.status-400", "path": "fixtures/adapters/abac/abac-15.status-400.json"},
+    {"id": "adapters/abac/abac-15.status-404", "path": "fixtures/adapters/abac/abac-15.status-404.json"},
+    {"id": "adapters/abac/abac-15.status-500", "path": "fixtures/adapters/abac/abac-15.status-500.json"},
+    {"id": "adapters/abac/abac-15.timeout", "path": "fixtures/adapters/abac/abac-15.timeout.json"},
+    {"id": "adapters/abac/abac-16.empty-decision-id", "path": "fixtures/adapters/abac/abac-16.empty-decision-id.json"},
+    {"id": "adapters/abac/abac-16.no-decision-id", "path": "fixtures/adapters/abac/abac-16.no-decision-id.json"},
+    {"id": "adapters/abac/abac-16.numeric-decision-id", "path": "fixtures/adapters/abac/abac-16.numeric-decision-id.json"},
+    {"id": "adapters/abac/abac-17.deny-with-obligations", "path": "fixtures/adapters/abac/abac-17.deny-with-obligations.json"},
+    {"id": "adapters/abac/abac-18.builtin-error", "path": "fixtures/adapters/abac/abac-18.builtin-error.json"},
+    {"id": "adapters/abac/abac-19.native-deny", "path": "fixtures/adapters/abac/abac-19.native-deny.json"},
+    {"id": "adapters/abac/abac-28.check", "path": "fixtures/adapters/abac/abac-28.check.json"},
+    {"id": "adapters/abac/abac-28.unknown-type", "path": "fixtures/adapters/abac/abac-28.unknown-type.json"},
+    {"id": "adapters/abac/abac-36.export", "path": "fixtures/adapters/abac/abac-36.export.json"},
+    {"id": "adapters/abac/abac-36.read", "path": "fixtures/adapters/abac/abac-36.read.json"},
+    {"id": "adapters/abac/abac-37.provenance", "path": "fixtures/adapters/abac/abac-37.provenance.json"},
+    {"id": "adapters/abac/abac-38.check-allow", "path": "fixtures/adapters/abac/abac-38.check-allow.json"},
+    {"id": "adapters/abac/abac-38.check-deny", "path": "fixtures/adapters/abac/abac-38.check-deny.json"},
+    {"id": "adapters/abac/policy", "path": "fixtures/adapters/abac/assets/policy.rego"}
+  ]
+}

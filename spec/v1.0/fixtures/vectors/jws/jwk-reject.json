@@ -1,0 +1,177 @@
+[
+  {
+    "id": "x-unpadded",
+    "description": "The leading-zero-x key of thumbprint.json with x shortened to 31 octets (leading zero dropped), as some libraries export it. RFC 7518 section 6.2.1.2 requires the full coordinate size, and the thumbprint over the short form differs from the key's.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "VUOJSvPQDtfXQKvb11yWsGh3t4fbX3Dup4uQqNfACg",
+      "y": "u0yFo9jqKe-q-iRAaRLdhNWxTcMr9lbvbGvVil2UP5I"
+    },
+    "reject_reason": "jwk-invalid"
+  },
+  {
+    "id": "y-33-octets",
+    "description": "The holder key with a zero octet prepended to y: 33 octets.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+      "y": "AE_jQuL-Gn-bjufrSnwPnhYrzjNXazFezsu2QGg3v1H1"
+    },
+    "reject_reason": "jwk-invalid"
+  },
+  {
+    "id": "x-padded",
+    "description": "The holder key with \"=\" padding after x.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY=",
+      "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU"
+    },
+    "reject_reason": "jwk-invalid"
+  },
+  {
+    "id": "y-std-alphabet",
+    "description": "The holder key with y in the standard base64 alphabet.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+      "y": "T+NC4v4af5uO5+tKfA+eFivOM1drMV7Oy7ZAaDe/UfU"
+    },
+    "reject_reason": "jwk-invalid"
+  },
+  {
+    "id": "x-spare-bits",
+    "description": "The holder key with a non-zero spare bit in the last character of x: same octets under a lenient decoder, not the canonical encoding.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpZ",
+      "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU"
+    },
+    "reject_reason": "jwk-invalid"
+  },
+  {
+    "id": "y-missing",
+    "description": "An EC P-256 JWK without y.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY"
+    },
+    "reject_reason": "jwk-invalid"
+  },
+  {
+    "id": "x-not-string",
+    "description": "An EC JWK whose x is a JSON number.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": 1,
+      "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU"
+    },
+    "reject_reason": "jwk-invalid"
+  },
+  {
+    "id": "crv-lowercase",
+    "description": "crv \"p-256\": crv values are case-sensitive (RFC 7518 section 6.2.1.1).",
+    "jwk": {
+      "kty": "EC",
+      "crv": "p-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+      "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU"
+    },
+    "reject_reason": "jwk-curve"
+  },
+  {
+    "id": "crv-p384",
+    "description": "A P-384 key (private scalar 2 on P-384): not an ES256 key.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-384",
+      "x": "CNmZBXuj0tlpJgBFxVuX8IkCWVmm9DTWUdIH0Z-5bp5P4Ohuvg5k-FuWqcdSld9h",
+      "y": "joDx-lsbPO23v-jf_W26dLJ12HW8bMQ-kE5QXyVqtCVf_UPpTTniLWFQHnAKlA6A"
+    },
+    "reject_reason": "jwk-curve"
+  },
+  {
+    "id": "kty-okp",
+    "description": "The Ed25519 test key (kty OKP, RFC 8037 section 2), loaded for the baseline, ES256 alone. An OKP Ed25519 key is accepted only where Ed25519 has been negotiated explicitly (draft 7.2); this file does not negotiate it, so the key is refused as jwk-curve.",
+    "jwk": {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+      "kid": "test-ed25519-key-1",
+      "alg": "Ed25519",
+      "use": "sig"
+    },
+    "reject_reason": "jwk-curve"
+  },
+  {
+    "id": "kty-rsa",
+    "description": "The RSA key of RFC 7638 section 3.1: not an ES256 key.",
+    "jwk": {
+      "kty": "RSA",
+      "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+      "e": "AQAB",
+      "alg": "RS256",
+      "kid": "2011-04-29"
+    },
+    "reject_reason": "jwk-curve"
+  },
+  {
+    "id": "off-curve",
+    "description": "x from the holder key, y from the issuer key: not a point on P-256.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+      "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E"
+    },
+    "reject_reason": "jwk-off-curve"
+  },
+  {
+    "id": "private-d",
+    "description": "The holder key with its private member d (the published test scalar 1).",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+      "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+      "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE"
+    },
+    "reject_reason": "jwk-private"
+  },
+  {
+    "id": "key-ops-encrypt",
+    "description": "The holder key with key_ops [\"encrypt\"]: a key whose key_ops do not name verify is not a verification key (RFC 7517 section 4.3).",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+      "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+      "key_ops": [
+        "encrypt"
+      ]
+    },
+    "reject_reason": "jwk-usage"
+  },
+  {
+    "id": "key-ops-duplicate",
+    "description": "The holder key with key_ops [\"verify\", \"verify\"]: RFC 7517 section 4.3 says duplicate key operation values MUST NOT be present.",
+    "jwk": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+      "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+      "key_ops": [
+        "verify",
+        "verify"
+      ]
+    },
+    "reject_reason": "jwk-invalid"
+  }
+]

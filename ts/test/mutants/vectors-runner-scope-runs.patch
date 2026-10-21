@@ -1,0 +1,13 @@
+diff --git a/ts/src/vectors/harness.ts b/ts/src/vectors/harness.ts
+index d5c19d1..0370c1e 100644
+--- a/ts/src/vectors/harness.ts
++++ b/ts/src/vectors/harness.ts
+@@ -44,7 +44,7 @@ const IN_SCOPE_KINDS = ['vector', 'key'];
+ 
+ /** Whether the harness runs the entry: kind vector or key, scope core or adapter. */
+ export function inScope(e: Entry): boolean {
+-  return IN_SCOPE_KINDS.includes(e.kind) && e.scope !== 'runner';
++  return IN_SCOPE_KINDS.includes(e.kind);
+ }
+ 
+ /**

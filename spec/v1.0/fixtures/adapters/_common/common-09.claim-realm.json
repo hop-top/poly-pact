@@ -1,0 +1,54 @@
+{
+  "case_version": 1,
+  "id": "COMMON-09.claim-realm",
+  "title": "A claim of one realm is not read for a same-spelled principal of another",
+  "draft": ["8.5", "17.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "approved_paths": ["/attributes/environment/roles"],
+    "claims": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "alice",
+        "path": "/attributes/environment/roles",
+        "value": ["approver"],
+        "observed_at": 1792079400,
+        "source_id": "directory-acme"
+      },
+      {
+        "realm": {
+          "tenant_id": "globex",
+          "environment_id": "https://gateway.example/environments/finance"
+        },
+        "principal": "alice",
+        "path": "/attributes/environment/roles",
+        "value": ["viewer"],
+        "observed_at": 1792079400,
+        "source_id": "directory-globex"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "alice",
+      "realm": {"tenant_id": "globex", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "w-1",
+      "mechanism": "bearer"
+    },
+    "native_path": "/attributes/environment/roles"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": ["viewer"],
+      "source_id": "directory-globex"
+    }
+  }
+}

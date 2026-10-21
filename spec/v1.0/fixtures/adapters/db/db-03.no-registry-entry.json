@@ -1,0 +1,101 @@
+{
+  "case_version": 1,
+  "id": "DB-03.no-registry-entry",
+  "title": "An action with no query registry entry at the installed revision is UNSUPPORTED_REQUIREMENT, no connection",
+  "draft": [
+    "13.4",
+    "10.2",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "db/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://reports.northstar.example/environments/analytics",
+      "origin": "https://reports.northstar.example",
+      "header_allowlist": []
+    },
+    "cluster_id": "northstar-reports",
+    "installed": [
+      {
+        "revision": "pact-db-1",
+        "routes": [
+          "R1"
+        ],
+        "queries": [
+          "report.read"
+        ]
+      },
+      {
+        "revision": "pact-db-2",
+        "routes": [
+          "R1"
+        ],
+        "queries": []
+      }
+    ],
+    "registry": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://reports.northstar.example/environments/analytics"
+        },
+        "principal": "https://idp.northstar.example/users/maya",
+        "login_role": "report_maya",
+        "role_oid": 16390,
+        "credential_ref": "secret-store:report_maya",
+        "tenant_id": "northstar",
+        "revision": "role-registry-r3",
+        "changed_at": 1792070000
+      },
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://reports.northstar.example/environments/analytics"
+        },
+        "principal": "https://idp.northstar.example/users/lee",
+        "login_role": "report_lee",
+        "role_oid": 16391,
+        "credential_ref": "secret-store:report_lee",
+        "tenant_id": "harbor-analytics",
+        "revision": "role-registry-r3",
+        "changed_at": 1792070000
+      }
+    ],
+    "credentials": [
+      {
+        "ref": "secret-store:report_maya",
+        "secret": "pg-pass-report-maya-5d1f9c"
+      },
+      {
+        "ref": "secret-store:report_lee",
+        "secret": "pg-pass-report-lee-8a2e47"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://reports.northstar.example/api/v1/reports/R-481"
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.northstar.example/users/maya",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://reports.northstar.example/environments/analytics"
+      },
+      "workload": "https://idp.northstar.example/clients/analytics-assistant",
+      "mechanism": "oauth"
+    },
+    "mapping_version": "pact-db-2"
+  },
+  "expect": {
+    "function": "map_operation",
+    "outcome": "error",
+    "reason_code": "UNSUPPORTED_REQUIREMENT",
+    "must_not_call": [
+      "connect",
+      "execute"
+    ]
+  }
+}

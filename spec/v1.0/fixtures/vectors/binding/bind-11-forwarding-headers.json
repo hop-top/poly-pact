@@ -1,0 +1,63 @@
+{
+  "id": "vectors/binding/bind-11-forwarding-headers",
+  "description": "Host, X-Forwarded-Host, X-Forwarded-Proto, X-Forwarded-Port and Forwarded do not select the origin: target_uri uses the configured origin and the digest is that of Appendix B.3.",
+  "config": {
+    "origin": "https://gateway.example",
+    "header_allowlist": [
+      "if-match",
+      "x-dry-run"
+    ],
+    "normalization_id": "finance-header-normalization-1",
+    "mapping_version": "finance-http-1",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "request": {
+    "method": "GET",
+    "raw_request_uri": "/invoices/INV-1042",
+    "headers": [
+      {
+        "name": "Host",
+        "value": "evil.example"
+      },
+      {
+        "name": "X-Forwarded-Host",
+        "value": "evil.example"
+      },
+      {
+        "name": "X-Forwarded-Proto",
+        "value": "http"
+      },
+      {
+        "name": "X-Forwarded-Port",
+        "value": "8080"
+      },
+      {
+        "name": "Forwarded",
+        "value": "for=203.0.113.9;host=evil.example;proto=http"
+      }
+    ],
+    "body_b64": ""
+  },
+  "operation_id": "invoice-read-operation-0001",
+  "principal_id": "https://identity.example/principals/alice",
+  "action": "invoice.read",
+  "resources": [
+    "https://invoices.example/invoices/INV-1042"
+  ],
+  "expect": {
+    "operation_context": {
+      "operation_id": "invoice-read-operation-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://identity.example/principals/alice",
+      "action": "invoice.read",
+      "resources": [
+        "https://invoices.example/invoices/INV-1042"
+      ],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect_operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0"
+}

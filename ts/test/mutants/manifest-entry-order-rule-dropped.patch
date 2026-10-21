@@ -1,0 +1,20 @@
+diff --git a/ts/src/runner/manifest/manifest.ts b/ts/src/runner/manifest/manifest.ts
+index f595bfe..942d38b 100644
+--- a/ts/src/runner/manifest/manifest.ts
++++ b/ts/src/runner/manifest/manifest.ts
+@@ -193,15 +193,6 @@ export class Manifest {
+       } else {
+         first.set(e.id, i);
+       }
+-      const prev = this.entries[i - 1];
+-      if (prev !== undefined && compareCodePoints(prev.id, e.id) > 0) {
+-        add(
+-          ps,
+-          RULE_ORDER,
+-          e.id,
+-          `entries[${i}] sorts before entries[${i - 1}] ${prev.id}; sort the entries by id`,
+-        );
+-      }
+     }
+     return ps;
+   }

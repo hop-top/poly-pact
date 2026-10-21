@@ -1,0 +1,16 @@
+diff --git a/ts/test/broken/catalogue.ts b/ts/test/broken/catalogue.ts
+index 6da9725..520b750 100644
+--- a/ts/test/broken/catalogue.ts
++++ b/ts/test/broken/catalogue.ts
+@@ -469,11 +469,6 @@ export const CATALOGUE: readonly Spec[] = Object.freeze([
+     what: "reports a check's native verdict without applying its age limits",
+     targets: ['FRESH-02.stale-snapshot', 'FRESH-03.observed-ahead', 'FRESH-06.restamped'],
+   },
+-  {
+-    defect: Defect.STALE_AT_LIMIT,
+-    what: 'treats an age equal to its limit as stale',
+-    targets: ['FRESH-02.at-limit'],
+-  },
+   {
+     defect: Defect.DEFER_CLOCK_AHEAD,
+     what: 'reports a source clock that runs ahead as a source that cannot answer',

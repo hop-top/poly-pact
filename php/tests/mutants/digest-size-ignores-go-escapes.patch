@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Digest/Digests.php b/php/src/Core/Digest/Digests.php
+index f269796..dea19cb 100644
+--- a/php/src/Core/Digest/Digests.php
++++ b/php/src/Core/Digest/Digests.php
+@@ -71,7 +71,7 @@ final class Digests
+         $unsafe = null;
+         $path = [];
+         self::floats($v, $path, $negativeZeros, $unsafe);
+-        $size = \strlen($canonical) + 3 * (substr_count($canonical, "\u{2028}") + substr_count($canonical, "\u{2029}")) + $negativeZeros;
++        $size = \strlen($canonical) + 0 * (substr_count($canonical, "\u{2028}") + substr_count($canonical, "\u{2029}")) + $negativeZeros;
+         if ($size > StrictJson::DEFAULT_MAX_BYTES) {
+             throw new StrictJsonError(StrictJsonErrorKind::SIZE, '', StrictJson::DEFAULT_MAX_BYTES, \sprintf('encoding is %d bytes, limit is %d bytes', $size, StrictJson::DEFAULT_MAX_BYTES));
+         }

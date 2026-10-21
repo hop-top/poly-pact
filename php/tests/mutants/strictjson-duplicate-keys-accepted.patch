@@ -1,0 +1,14 @@
+diff --git a/php/src/Core/StrictJson/Walker.php b/php/src/Core/StrictJson/Walker.php
+index c033eb2..6001c19 100644
+--- a/php/src/Core/StrictJson/Walker.php
++++ b/php/src/Core/StrictJson/Walker.php
+@@ -265,9 +265,6 @@ final class Walker
+             throw $this->fail(StrictJsonErrorKind::SYNTAX, 'object member name is not a string');
+         }
+         $this->path[] = $key;
+-        if (isset($f->seen[$key])) {
+-            throw $this->fail(StrictJsonErrorKind::DUPLICATE_KEY, self::quote($key));
+-        }
+         $f->seen[$key] = true;
+         if ($f->fields !== null) {
+             $t = $f->fields[$key] ?? null;

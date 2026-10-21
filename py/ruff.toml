@@ -1,0 +1,23 @@
+# ruff check and ruff format (make py-lint). Generated files are formatted
+# and linted like the rest.
+target-version = "py311"
+line-length = 100
+src = ["src", "tests", "scripts"]
+
+[lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "PT", "TID", "S"]
+ignore = [
+    # assert is how pytest tests state expectations.
+    "S101",
+]
+
+[lint.per-file-ignores]
+# Generated enum members named PASS look like passwords to the S105 rule.
+"src/hop_top_pact/core/enums.py" = ["S105"]
+# Test helpers run the package entry points in subprocesses.
+"tests/**" = ["S603"]
+# Defect names such as leak-token-in-denial look like passwords to the S105 rule.
+"tests/broken/defects.py" = ["S105"]
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"

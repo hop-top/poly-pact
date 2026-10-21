@@ -1,0 +1,41 @@
+name: version-check
+
+# Guard over release-version literals and spec version paths: annotated
+# literals equal the manifest, annotated files and `extra-files` are one
+# set, no stray version literal, and every `spec/vX.Y` path names a
+# manifest version. The rules and the script live in hop-top/.github. No
+# path filter: literals live everywhere, and the run is a few seconds of
+# standard-library Python.
+#
+# Release PRs stay green by construction: release-please bumps the
+# manifest and every annotated extra-file together in one commit. A
+# hand-edited literal, or a stale spec path, fails here on the pull
+# request that introduces it.
+#
+# `allow` skips files that must spell a prerelease version that is not
+# ours to rewrite:
+#   RELEASING.md            documents the version scheme with examples
+#   .github/tests/*         promotion-gate test fixtures (example manifests)
+#   docs/sdk/deps-rs.md     a third-party crate's rc in a dependency review
+#   docs/sdk/probes/*       recorded probe output (build artifact names)
+#   docs/sdk/ports-plan-py.md  the Python port plan as approved
+
+on:
+  push:
+    branches: [main, next, 'release/*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: version-check
+    uses: hop-top/.github/.github/workflows/version-check.yml@v0
+    with:
+      allow: |
+        RELEASING.md
+        .github/tests/*
+        docs/sdk/deps-rs.md
+        docs/sdk/probes/*
+        docs/sdk/ports-plan-py.md

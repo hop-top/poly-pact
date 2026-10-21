@@ -1,0 +1,73 @@
+{
+  "case_version": 1,
+  "id": "BASIC-03.forged-marker",
+  "title": "Headers that claim the request passed the gateway do not stand in for the enforcement marker",
+  "draft": [
+    "4.4",
+    "8.5",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "credentials": [
+      {
+        "ref": "ops",
+        "user_id": "invoice-assistant-ops",
+        "password": "Tq7!harbor-lantern-42"
+      },
+      {
+        "ref": "ops-wrong-password",
+        "user_id": "invoice-assistant-ops",
+        "password": "Tq7!harbor-lantern-43"
+      },
+      {
+        "ref": "unknown-user",
+        "user_id": "invoice-assistant-0ps",
+        "password": "Tq7!harbor-lantern-42"
+      },
+      {
+        "ref": "approver",
+        "user_id": "legacy-approver",
+        "password": "Lm4:quarry:otter"
+      },
+      {
+        "ref": "batch",
+        "user_id": "legacy-batch",
+        "password": "batch\u0007bell-31"
+      },
+      {
+        "ref": "former",
+        "user_id": "former-assistant",
+        "password": "Zx9$willow-ember-07"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://invoices.northstar.example/invoices/INV-1041",
+    "native_state_ref": "ops",
+    "arrival": "direct",
+    "headers": {
+      "X-Gateway-Authenticated": "true",
+      "X-Pact-Enforced": "1",
+      "X-Authenticated-User": "invoice-assistant-ops",
+      "Forwarded": "for=10.0.0.5;by=gateway"
+    }
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "CREDENTIAL_REJECTED",
+    "must_not_call": [
+      "account_lookup",
+      "execute"
+    ]
+  }
+}

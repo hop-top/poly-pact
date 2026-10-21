@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/adapter/enroll_memory.py b/py/src/hop_top_pact/adapter/enroll_memory.py
+index 0afd911..cc560f9 100644
+--- a/py/src/hop_top_pact/adapter/enroll_memory.py
++++ b/py/src/hop_top_pact/adapter/enroll_memory.py
+@@ -181,7 +181,7 @@ class MemoryRegistry:
+                     "the registry"
+                 )
+             row = self._agents.get((realm, agent_id))
+-            if row is not None and row.workload != workload:
++            if row is not None and row.workload != workload and False:
+                 return replace(self._read(None), enrolled_elsewhere=True)
+             return self._read(row)
+ 

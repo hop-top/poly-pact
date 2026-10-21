@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "duplicate-member",
+      "rule": "manifest-json",
+      "mutation": [
+        {"op": "text", "apply": [["replace-first", "{", "{\"entries\": [], "]]}
+      ]
+    },
+    {
+      "id": "trailing-data",
+      "rule": "manifest-json",
+      "mutation": [
+        {"op": "text", "apply": [["append", "{}\n"]]}
+      ]
+    },
+    {
+      "id": "byte-order-mark",
+      "rule": "manifest-json",
+      "mutation": [
+        {"op": "text", "apply": [["prepend", "\ufeff"]]}
+      ]
+    },
+    {
+      "id": "lone-surrogate",
+      "rule": "manifest-json",
+      "mutation": [
+        {"op": "text", "apply": [["replace", ": \"", ": \"\\ud800"]]}
+      ]
+    },
+    {
+      "id": "top-level-array",
+      "rule": "manifest-json",
+      "mutation": [
+        {"op": "move", "from": "/entries", "path": ""}
+      ]
+    },
+    {
+      "id": "top-level-null",
+      "rule": "manifest-json",
+      "mutation": [
+        {"op": "replace", "path": "", "value": null}
+      ]
+    },
+    {
+      "id": "manifest-absent",
+      "rule": "manifest-json",
+      "mutation": [
+        {"op": "delete", "file": "manifest.json"}
+      ]
+    },
+    {
+      "id": "unknown-top-level-member",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "add", "path": "/generated", "value": true}
+      ]
+    },
+    {
+      "id": "version-2",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "replace", "path": "/manifest_version", "value": 2}
+      ]
+    },
+    {
+      "id": "version-1.0",
+      "rule": "manifest-shape",
+      "note": "JSON Schema compares numbers by value, so manifest.schema.json accepts 1.0 and 1e0 as its const 1. Both checkers read the number as written and reject them, as spec/v1.0/fixtures/README.md (Manifest) intends.",
+      "mutation": [
+        {"op": "text", "apply": [["replace-first", "\"manifest_version\": 1,", "\"manifest_version\": 1.0,"]]}
+      ]
+    },
+    {
+      "id": "version-1e0",
+      "rule": "manifest-shape",
+      "note": "JSON Schema compares numbers by value, so manifest.schema.json accepts 1.0 and 1e0 as its const 1. Both checkers read the number as written and reject them, as spec/v1.0/fixtures/README.md (Manifest) intends.",
+      "mutation": [
+        {"op": "text", "apply": [["replace-first", "\"manifest_version\": 1,", "\"manifest_version\": 1e0,"]]}
+      ]
+    },
+    {
+      "id": "version-missing",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "remove", "path": "/manifest_version"}
+      ]
+    },
+    {
+      "id": "entries-object",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "replace", "path": "/entries", "value": {}}
+      ]
+    },
+    {
+      "id": "entries-missing",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "remove", "path": "/entries"}
+      ]
+    },
+    {
+      "id": "entry-not-object",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "add", "path": "/entries/0", "value": "keys/holder"}
+      ]
+    },
+    {
+      "id": "member-missing",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "remove", "path": "/entries/{vector}/draft_section"}
+      ]
+    },
+    {
+      "id": "member-unknown",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "add", "path": "/entries/{vector}/note", "value": "x"}
+      ]
+    },
+    {
+      "id": "member-not-string",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/scope", "value": 1}
+      ]
+    },
+    {
+      "id": "expected-number",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/expected", "value": 1}
+      ]
+    },
+    {
+      "id": "id-one-segment",
+      "rule": "entry-id",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{key}/id", "value": "keys"}
+      ]
+    },
+    {
+      "id": "id-four-segments",
+      "rule": "entry-id",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{key}/id", "value": "keys/a/b/c"}
+      ]
+    },
+    {
+      "id": "id-upper-case",
+      "rule": "entry-id",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}/id", "path": "/entries/{key}/id", "apply": [["upper"]]}
+      ]
+    },
+    {
+      "id": "id-trailing-hyphen",
+      "rule": "entry-id",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}/id", "path": "/entries/{key}/id", "apply": [["append", "-"]]}
+      ]
+    },
+    {
+      "id": "id-empty",
+      "rule": "entry-id",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{key}/id", "value": ""}
+      ]
+    },
+    {
+      "id": "id-dot-in-key",
+      "rule": "entry-id",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{key}/path"}, "file": {"from": "/entries/{key}/path", "apply": [["dirname"], ["append", "/zz.control.jwk.json"]]}},
+        {"op": "insert-entry", "like": "/entries/{key}", "set": {"id": "keys/zz.control", "path": {"from": "/entries/{key}/path", "apply": [["dirname"], ["append", "/zz.control.jwk.json"]]}, "expected": null, "outcome": null}}
+      ]
+    },
+    {
+      "id": "id-underscore-in-key",
+      "rule": "entry-id",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{key}/path"}, "file": {"from": "/entries/{key}/path", "apply": [["dirname"], ["append", "/_control.jwk.json"]]}},
+        {"op": "insert-entry", "like": "/entries/{key}", "set": {"id": "keys/_control", "path": {"from": "/entries/{key}/path", "apply": [["dirname"], ["append", "/_control.jwk.json"]]}, "expected": null, "outcome": null}}
+      ]
+    },
+    {
+      "id": "duplicate-id",
+      "rule": "entry-id-duplicate",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}", "path": "/entries/{key}"}
+      ]
+    },
+    {
+      "id": "unsorted",
+      "rule": "entry-order",
+      "mutation": [
+        {"op": "move", "from": "/entries/1", "path": "/entries/0"}
+      ]
+    },
+    {
+      "id": "kind-unknown",
+      "rule": "entry-kind",
+      "forbid": ["entry-expected", "entry-outcome"],
+      "mutation": [
+        {"op": "replace", "path": "/entries/{key}/kind", "value": "evaluation"}
+      ]
+    },
+    {
+      "id": "scope-unknown",
+      "rule": "entry-scope",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{key}/scope", "value": "sdk"}
+      ]
+    },
+    {
+      "id": "path-dot-dot",
+      "rule": "entry-path",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}/path", "path": "/entries/{key}/path", "apply": [["prepend", "keys/../"]]}
+      ]
+    },
+    {
+      "id": "path-absolute",
+      "rule": "entry-path",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}/path", "path": "/entries/{key}/path", "apply": [["prepend", "/"]]}
+      ]
+    },
+    {
+      "id": "path-backslash",
+      "rule": "entry-path",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}/path", "path": "/entries/{key}/path", "apply": [["replace", "/", "\\"]]}
+      ]
+    },
+    {
+      "id": "path-hidden",
+      "rule": "entry-path",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}/path", "path": "/entries/{key}/path", "apply": [["dirname"], ["append", "/.hidden.json"]]}
+      ]
+    },
+    {
+      "id": "path-absent",
+      "rule": "path-missing",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}/path", "path": "/entries/{key}/path", "apply": [["dirname"], ["append", "/absent.jwk.json"]]}
+      ]
+    },
+    {
+      "id": "path-dangling-link",
+      "rule": "path-missing",
+      "mutation": [
+        {"op": "delete", "file": {"from": "/entries/{key}/path"}},
+        {"op": "symlink", "file": {"from": "/entries/{key}/path"}, "target": "nowhere.json"}
+      ]
+    },
+    {
+      "id": "path-link-outside",
+      "rule": "path-missing",
+      "mutation": [
+        {"op": "delete", "file": {"from": "/entries/{key}/path"}},
+        {"op": "symlink", "file": {"from": "/entries/{key}/path"}, "target": "../../draft.md"}
+      ]
+    },
+    {
+      "id": "expected-absent",
+      "rule": "expected-missing",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{vector}/path", "path": "/entries/{vector}/expected", "apply": [["dirname"], ["append", "/no.json"]]}
+      ]
+    },
+    {
+      "id": "expected-directory",
+      "rule": "expected-missing",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{vector}/path", "path": "/entries/{vector}/expected", "apply": [["dirname"]]}
+      ]
+    },
+    {
+      "id": "expected-null-for-vector",
+      "rule": "entry-expected",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/expected", "value": null}
+      ]
+    },
+    {
+      "id": "expected-set-for-key",
+      "rule": "entry-expected",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{key}/path", "path": "/entries/{key}/expected"}
+      ]
+    },
+    {
+      "id": "expected-dot-dot",
+      "rule": "entry-expected",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{vector}/path", "path": "/entries/{vector}/expected", "apply": [["prepend", "../"]]}
+      ]
+    },
+    {
+      "id": "outcome-unknown",
+      "rule": "entry-outcome",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/outcome", "value": "PASS"}
+      ]
+    },
+    {
+      "id": "outcome-lower-case",
+      "rule": "entry-outcome",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{vector}/outcome", "path": "/entries/{vector}/outcome", "apply": [["lower"]]}
+      ]
+    },
+    {
+      "id": "outcome-null-for-vector",
+      "rule": "entry-outcome",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/outcome", "value": null}
+      ]
+    },
+    {
+      "id": "outcome-set-for-key",
+      "rule": "entry-outcome",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{key}/outcome", "value": "MATCH"}
+      ]
+    },
+    {
+      "id": "row-lower-case",
+      "rule": "entry-spec-map-row",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{vector}/spec_map_row", "path": "/entries/{vector}/spec_map_row", "apply": [["lower"]]}
+      ]
+    },
+    {
+      "id": "row-empty",
+      "rule": "entry-spec-map-row",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/spec_map_row", "value": ""}
+      ]
+    },
+    {
+      "id": "section-prefix",
+      "rule": "entry-draft-section",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{vector}/draft_section", "path": "/entries/{vector}/draft_section", "apply": [["prepend", "Section "]]}
+      ]
+    },
+    {
+      "id": "section-zero",
+      "rule": "entry-draft-section",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/draft_section", "value": "7.0"}
+      ]
+    },
+    {
+      "id": "capabilities-empty",
+      "rule": "entry-capabilities",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/capabilities", "value": []}
+      ]
+    },
+    {
+      "id": "capability-unknown",
+      "rule": "entry-capabilities",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/capabilities", "value": ["ed25519"]}
+      ]
+    },
+    {
+      "id": "capability-upper-case",
+      "rule": "entry-capabilities",
+      "mutation": [
+        {"op": "add", "path": "/entries/{vector}/capabilities", "value": ["JWS-ED25519"]}
+      ]
+    },
+    {
+      "id": "capability-repeated",
+      "rule": "entry-capabilities",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/capabilities", "value": ["jws-ed25519", "jws-ed25519"]}
+      ]
+    },
+    {
+      "id": "capabilities-string",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/capabilities", "value": "jws-ed25519"}
+      ]
+    },
+    {
+      "id": "capability-not-string",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/capabilities", "value": [null]}
+      ]
+    },
+    {
+      "id": "conformance-profile-empty",
+      "rule": "entry-conformance-profile",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/conformance_profile", "value": []}
+      ]
+    },
+    {
+      "id": "conformance-profile-unknown",
+      "rule": "entry-conformance-profile",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/conformance_profile", "value": ["lite"]}
+      ]
+    },
+    {
+      "id": "conformance-profile-repeated",
+      "rule": "entry-conformance-profile",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/conformance_profile", "value": ["full", "full"]}
+      ]
+    },
+    {
+      "id": "conformance-profile-string",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/conformance_profile", "value": "full"}
+      ]
+    },
+    {
+      "id": "transport-empty",
+      "rule": "entry-transport",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": []}
+      ]
+    },
+    {
+      "id": "transport-unknown",
+      "rule": "entry-transport",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["tcp"]}
+      ]
+    },
+    {
+      "id": "transport-channel-name",
+      "rule": "entry-transport",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["stdio"]}
+      ]
+    },
+    {
+      "id": "transport-repeated",
+      "rule": "entry-transport",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["stdio-ipc", "stdio-ipc"]}
+      ]
+    },
+    {
+      "id": "transport-string",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": "stdio-ipc"}
+      ]
+    },
+    {
+      "id": "layer-unknown",
+      "rule": "entry-layer",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["stdio-ipc"]},
+        {"op": "add", "path": "/entries/{evaluate}/layer", "value": "network"}
+      ]
+    },
+    {
+      "id": "layer-on-https",
+      "rule": "entry-layer",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["https"]},
+        {"op": "add", "path": "/entries/{evaluate}/layer", "value": "os"}
+      ]
+    },
+    {
+      "id": "layer-without-transport",
+      "rule": "entry-layer",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/layer", "value": "transcript"}
+      ]
+    },
+    {
+      "id": "layer-missing-on-transport-kind",
+      "rule": "entry-layer",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["stdio-ipc"]},
+        {"op": "replace", "path": "/entries/{evaluate}/kind", "value": "transport"}
+      ]
+    },
+    {
+      "id": "layer-not-string",
+      "rule": "manifest-shape",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["stdio-ipc"]},
+        {"op": "add", "path": "/entries/{evaluate}/layer", "value": 1}
+      ]
+    },
+    {
+      "id": "mcp-kind-in-runner-scope",
+      "rule": "entry-scope",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{evaluate}/kind", "value": "mcp"}
+      ]
+    },
+    {
+      "id": "profile-kind-in-core-scope",
+      "rule": "entry-scope",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{evaluate}/scope", "value": "core"},
+        {"op": "replace", "path": "/entries/{evaluate}/kind", "value": "profile"}
+      ]
+    },
+    {
+      "id": "case-in-cases-directory",
+      "rule": "adapter-case-path",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "adapters/_common/cases/zz-case.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "adapters/_common/zz-case", "path": "adapters/_common/cases/zz-case.json", "expected": "adapters/_common/cases/zz-case.json"}}
+      ]
+    },
+    {
+      "id": "case-path-of-another-case",
+      "rule": "adapter-case-path",
+      "mutation": [
+        {"op": "copy", "from": "/entries/{adapter-case#2}/path", "path": "/entries/{adapter-case}/path"}
+      ]
+    },
+    {
+      "id": "case-outside-adapters",
+      "rule": "adapter-case-path",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "vectors/zz-case.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "vectors/zz-case", "path": "vectors/zz-case.json", "expected": "vectors/zz-case.json"}}
+      ]
+    },
+    {
+      "id": "case-two-segments",
+      "rule": "adapter-case-path",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "adapters/zz-case.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "adapters/zz-case", "path": "adapters/zz-case.json", "expected": "adapters/zz-case.json"}}
+      ]
+    },
+    {
+      "id": "stray-file",
+      "rule": "file-uncovered",
+      "mutation": [
+        {"op": "write", "file": "keys/stray.jwk.json", "text": "{}"}
+      ]
+    },
+    {
+      "id": "nested-manifest",
+      "rule": "file-uncovered",
+      "mutation": [
+        {"op": "write", "file": "keys/manifest.json", "text": "{}"}
+      ]
+    },
+    {
+      "id": "lower-case-license",
+      "rule": "file-uncovered",
+      "mutation": [
+        {"op": "write", "file": "keys/license.md", "text": "# x\n"}
+      ]
+    },
+    {
+      "id": "entry-removed",
+      "rule": "file-uncovered",
+      "mutation": [
+        {"op": "remove", "path": "/entries/{key}"}
+      ]
+    },
+    {
+      "id": "beside-a-directory-path",
+      "rule": "file-uncovered",
+      "mutation": [
+        {"op": "write", "file": {"from": "/entries/{evaluate}/path", "apply": [["append", "-2/config.json"]]}, "text": "{}"}
+      ]
+    },
+    {
+      "id": "link-to-directory",
+      "rule": "file-uncovered",
+      "mutation": [
+        {"op": "symlink", "file": {"from": "/entries/{key}/path", "apply": [["dirname"], ["append", "/linked"]]}, "target": ".."}
+      ]
+    },
+    {
+      "id": "expected-tree-of-no-entry",
+      "rule": "file-uncovered",
+      "mutation": [
+        {"op": "write", "file": {"from": "/entries/{evaluate}/id", "apply": [["prepend", "expected/"], ["append", "-zz-unknown/decision.json"]]}, "text": "{}"}
+      ]
+    },
+    {
+      "id": "dot-file",
+      "rule": "file-uncovered",
+      "forbid": ["file-extension"],
+      "mutation": [
+        {"op": "write", "file": "keys/.md", "text": "# x\n"}
+      ]
+    },
+    {
+      "id": "upper-case-extension",
+      "rule": "file-extension",
+      "forbid": ["file-uncovered"],
+      "mutation": [
+        {"op": "write", "file": {"from": "/entries/{evaluate}/path", "apply": [["append", "/stray.JSON"]]}, "text": "{}"}
+      ]
+    },
+    {
+      "id": "upper-case-native-in-asset",
+      "rule": "file-extension",
+      "forbid": ["file-uncovered"],
+      "mutation": [
+        {"op": "write", "file": "adapters/zz-control/schema.SQL", "text": "-- control\n"},
+        {"op": "insert-entry", "set": {"id": "adapters/zz-control/schema", "kind": "adapter-asset", "scope": "adapter", "path": "adapters/zz-control", "expected": null, "outcome": null, "spec_map_row": {"from": "/entries/{adapter-case}/spec_map_row"}, "draft_section": {"from": "/entries/{adapter-case}/draft_section"}}}
+      ]
+    },
+    {
+      "id": "txt-file",
+      "rule": "file-extension",
+      "mutation": [
+        {"op": "write", "file": "keys/notes.txt", "text": "x\n"}
+      ]
+    },
+    {
+      "id": "native-outside-asset",
+      "rule": "file-extension",
+      "mutation": [
+        {"op": "write", "file": "keys/policy.rego", "text": "package x\n"}
+      ]
+    },
+    {
+      "id": "hidden-file",
+      "rule": "file-extension",
+      "mutation": [
+        {"op": "write", "file": "keys/.DS_Store", "text": "x"}
+      ]
+    },
+    {
+      "id": "bare-license",
+      "rule": "file-extension",
+      "forbid": ["file-uncovered"],
+      "mutation": [
+        {"op": "write", "file": "keys/LICENSE", "text": "x\n"}
+      ]
+    },
+    {
+      "id": "row-unknown",
+      "rule": "row-unknown",
+      "checker": "map",
+      "label": "manifest cross-reference",
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/spec_map_row", "value": "ZZ-99"}
+      ]
+    },
+    {
+      "id": "group-unlisted",
+      "rule": "group-unlisted",
+      "checker": "map",
+      "label": "fixture groups",
+      "mutation": [
+        {"op": "map-group", "group": {"from": "/entries/{key}/id", "apply": [["segment", 0]]}, "drop": true}
+      ]
+    },
+    {
+      "id": "fixture-id-missing",
+      "rule": "fixture-id-missing",
+      "checker": "map",
+      "label": "fixture ids",
+      "mutation": [
+        {"op": "remove", "path": "/entries/{key}"}
+      ]
+    },
+    {
+      "id": "landed-to-planned",
+      "rule": "group-planned-has-entries",
+      "checker": "map",
+      "label": "fixture groups",
+      "mutation": [
+        {"op": "map-group", "status": "landed", "set_status": "planned"}
+      ]
+    },
+    {
+      "id": "planned-to-partial",
+      "rule": "group-partial-empty",
+      "checker": "map",
+      "label": "fixture groups",
+      "mutation": [
+        {"op": "map-group", "status": "planned", "set_status": "partial"}
+      ]
+    },
+    {
+      "id": "landed-to-partial",
+      "rule": "group-partial-complete",
+      "checker": "map",
+      "label": "fixture groups",
+      "mutation": [
+        {"op": "map-group", "status": "landed", "set_status": "partial"}
+      ]
+    },
+    {
+      "id": "planned-to-landed",
+      "rule": "group-landed-empty",
+      "checker": "map",
+      "label": "fixture groups",
+      "mutation": [
+        {"op": "map-group", "status": "planned", "set_status": "landed"}
+      ]
+    },
+    {
+      "id": "groups-heading-renamed",
+      "rule": "spec-map",
+      "checker": "map",
+      "label": null,
+      "mutation": [
+        {"op": "map-line", "line": "## Fixture groups", "text": "## Fixture group list"}
+      ]
+    },
+    {
+      "id": "license-file-uncovered",
+      "rule": null,
+      "mutation": [
+        {"op": "write", "file": "keys/LICENSE-EXTRA.md", "text": "# x\n"}
+      ]
+    },
+    {
+      "id": "readme-in-new-directory",
+      "rule": null,
+      "mutation": [
+        {"op": "write", "file": "keys/notes/README.md", "text": "# x\n"}
+      ]
+    },
+    {
+      "id": "key-entry-null-expected",
+      "rule": null,
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{key}/path"}, "file": {"from": "/entries/{key}/path", "apply": [["dirname"], ["append", "/zz-control.jwk.json"]]}},
+        {"op": "insert-entry", "like": "/entries/{key}", "set": {"id": "keys/zz-control", "path": {"from": "/entries/{key}/path", "apply": [["dirname"], ["append", "/zz-control.jwk.json"]]}, "expected": null, "outcome": null}}
+      ]
+    },
+    {
+      "id": "disputed-outcome",
+      "rule": null,
+      "mutation": [
+        {"op": "replace", "path": "/entries/{vector}/outcome", "value": "DISPUTED"}
+      ]
+    },
+    {
+      "id": "native-file-in-asset",
+      "rule": null,
+      "mutation": [
+        {"op": "write", "file": "adapters/zz-control/schema.sql", "text": "-- control\n"},
+        {"op": "insert-entry", "set": {"id": "adapters/zz-control/schema", "kind": "adapter-asset", "scope": "adapter", "path": "adapters/zz-control", "expected": null, "outcome": null, "spec_map_row": {"from": "/entries/{adapter-case}/spec_map_row"}, "draft_section": {"from": "/entries/{adapter-case}/draft_section"}}}
+      ]
+    },
+    {
+      "id": "adapter-case-of-an-adapter",
+      "rule": null,
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "adapters/zz-control/zz-01.variant.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "adapters/zz-control/zz-01.variant", "path": "adapters/zz-control/zz-01.variant.json", "expected": "adapters/zz-control/zz-01.variant.json"}}
+      ]
+    },
+    {
+      "id": "source-case-of-a-source",
+      "rule": null,
+      "note": "A source case is sources/<source>/<case>.json, scope adapter, with no expected file and no outcome; the group sources has entries and every id its rows list exists, so it stays landed.",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "sources/zz-control/zz-01.variant.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "sources/zz-control/zz-01.variant", "kind": "source-case", "scope": "adapter", "path": "sources/zz-control/zz-01.variant.json", "expected": null, "outcome": null}}
+      ]
+    },
+    {
+      "id": "source-case-in-cases-directory",
+      "rule": "source-case-path",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "sources/zz-control/cases/zz-01.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "sources/zz-control/zz-01", "kind": "source-case", "scope": "adapter", "path": "sources/zz-control/cases/zz-01.json", "expected": null, "outcome": null}}
+      ]
+    },
+    {
+      "id": "source-case-outside-sources",
+      "rule": "source-case-path",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "vectors/zz-source-case.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "vectors/zz-source-case", "kind": "source-case", "scope": "adapter", "path": "vectors/zz-source-case.json", "expected": null, "outcome": null}}
+      ]
+    },
+    {
+      "id": "source-case-in-runner-scope",
+      "rule": "entry-scope",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "sources/zz-control/zz-01.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "sources/zz-control/zz-01", "kind": "source-case", "scope": "runner", "path": "sources/zz-control/zz-01.json", "expected": null, "outcome": null}}
+      ]
+    },
+    {
+      "id": "source-case-with-an-outcome",
+      "rule": "entry-outcome",
+      "mutation": [
+        {"op": "copy-file", "source": {"from": "/entries/{adapter-case}/path"}, "file": "sources/zz-control/zz-01.json"},
+        {"op": "insert-entry", "like": "/entries/{adapter-case}", "set": {"id": "sources/zz-control/zz-01", "kind": "source-case", "scope": "adapter", "path": "sources/zz-control/zz-01.json", "expected": null, "outcome": "ACCEPTED"}}
+      ]
+    },
+    {
+      "id": "second-file-in-expected-tree",
+      "rule": null,
+      "mutation": [
+        {"op": "write", "file": {"from": "/entries/{evaluate}/id", "apply": [["prepend", "expected/"], ["append", "/exchanges/1/decision.json"]]}, "text": "{}"}
+      ]
+    },
+    {
+      "id": "capability-on-entries",
+      "rule": null,
+      "note": "capabilities is optional: an entry with it tests an optional capability; an entry without it is mandatory.",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/capabilities", "value": ["jws-ed25519"]},
+        {"op": "add", "path": "/entries/{key}/capabilities", "value": ["jws-ed25519"]}
+      ]
+    },
+    {
+      "id": "entry-fields-on-entries",
+      "rule": null,
+      "note": "conformance_profile, transport and layer are optional; layer goes with a transport that has stdio-ipc.",
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/conformance_profile", "value": ["full", "single-owner"]},
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["https", "stdio-ipc"]},
+        {"op": "add", "path": "/entries/{evaluate}/layer", "value": "transcript"},
+        {"op": "add", "path": "/entries/{key}/conformance_profile", "value": ["single-owner"]}
+      ]
+    },
+    {
+      "id": "new-kinds-in-their-scope",
+      "rule": null,
+      "mutation": [
+        {"op": "add", "path": "/entries/{evaluate}/transport", "value": ["stdio-ipc"]},
+        {"op": "add", "path": "/entries/{evaluate}/layer", "value": "transcript"},
+        {"op": "replace", "path": "/entries/{evaluate}/kind", "value": "transport"}
+      ]
+    },
+    {
+      "id": "testdata-file-uncovered",
+      "rule": null,
+      "mutation": [
+        {"op": "write", "file": "testdata/manifest/zz-control.json", "text": "{}"}
+      ]
+    }
+  ]
+}

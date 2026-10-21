@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/execution-as-policy-adherence",
+  "adversarial_claim": "An execution report raises the agent's policy adherence: EXECUTION SUCCESS on policy_adherence, citing the completed execution record.",
+  "subject_event_id": "execution-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution completed with data returned': EXECUTION reported by the executor, SUCCESS, reliability, citing the completed execution record of its task and operation (14.2). One positive unit (15.3)."
+    },
+    {
+      "event_id": "execution-event-0002",
+      "report": "reports/execution-event-0002.json",
+      "signed": "signed/execution-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "invalid-report",
+      "contribution": {
+        "dimension": "policy_adherence",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft A.2 and 14.5: EXECUTION uses reliability or none; an EXECUTION report on task_quality or policy_adherence is not an assessment. Draft 14.3: an executor's own attestation of adherence is no performance evidence. The receiver refuses the report with INVALID_MESSAGE; policy_adherence stays at the empty history."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 1,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

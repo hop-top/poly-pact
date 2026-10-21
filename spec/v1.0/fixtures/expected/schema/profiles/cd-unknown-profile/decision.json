@@ -1,0 +1,5 @@
+{
+  "transport_code": "INVALID_MESSAGE",
+  "rejected_before_crypto": true,
+  "reason": "first violation /conformance_profile enum: lite is not full or single-owner"
+}

@@ -1,0 +1,151 @@
+{
+  "case_version": 1,
+  "id": "REBAC-08.editor",
+  "title": "A fresh edit Checks relation editor: an editor who is not a viewer is allowed",
+  "draft": [
+    "10.3",
+    "17.1",
+    "17.2"
+  ],
+  "native_state": {
+    "model": "rebac/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/collaboration",
+      "origin": "https://gateway.northstar.example",
+      "header_allowlist": [
+        "content-type",
+        "if-match",
+        "x-relationship"
+      ]
+    },
+    "mappings": [
+      {
+        "version": "pact-rebac-1",
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/documents/{document_id}",
+            "action": "document.read",
+            "resource": "https://docs.northstar.example/documents/{document_id}"
+          },
+          {
+            "method": "PATCH",
+            "path": "/documents/{document_id}",
+            "action": "document.write",
+            "resource": "https://docs.northstar.example/documents/{document_id}"
+          }
+        ]
+      }
+    ],
+    "relations": [
+      {
+        "action": "document.read",
+        "relation": "viewer",
+        "object_type": "document"
+      },
+      {
+        "action": "document.write",
+        "relation": "editor",
+        "object_type": "document"
+      }
+    ],
+    "pin": {
+      "store_id": "01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "authorization_model_id": "01JAB2C3D4E5F6G7H8J9K0MNPR",
+      "mapping_revision": "pact-rebac-1"
+    },
+    "subjects": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://gateway.northstar.example/environments/collaboration"
+        },
+        "principal": "https://idp.northstar.example/users/maya",
+        "subject_id": "u-0042"
+      },
+      {
+        "realm": {
+          "tenant_id": "globex",
+          "environment_id": "https://gateway.northstar.example/environments/collaboration"
+        },
+        "principal": "https://idp.northstar.example/users/maya",
+        "subject_id": "g-0042"
+      }
+    ],
+    "objects": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://gateway.northstar.example/environments/collaboration"
+        },
+        "resource": "https://docs.northstar.example/documents/orion-brief",
+        "object_id": "northstar.orion-brief"
+      },
+      {
+        "realm": {
+          "tenant_id": "globex",
+          "environment_id": "https://gateway.northstar.example/environments/collaboration"
+        },
+        "resource": "https://docs.northstar.example/documents/globex-plan",
+        "object_id": "globex.plan"
+      }
+    ],
+    "store_credential": "fga-preshared-7c1e9a3b5d2f",
+    "store": {
+      "id": "01JAB2C3D4E5F6G7H8J9K0MNPQ",
+      "credential": "fga-preshared-7c1e9a3b5d2f",
+      "models": [
+        {
+          "id": "01JAB2C3D4E5F6G7H8J9K0MNPR",
+          "file": "assets/model.fga"
+        }
+      ],
+      "tuples": [
+        {
+          "user": "project:northstar.orion",
+          "relation": "parent",
+          "object": "document:northstar.orion-brief"
+        },
+        {
+          "user": "user:u-0042",
+          "relation": "editor",
+          "object": "document:northstar.orion-brief"
+        }
+      ]
+    }
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.northstar.example/users/maya",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/collaboration"
+      },
+      "workload": "https://workloads.northstar.example/research-assistant",
+      "mechanism": "bearer"
+    },
+    "operation": {
+      "operation_id": "op-orion-brief-0001",
+      "environment_id": "https://gateway.northstar.example/environments/collaboration",
+      "principal_id": "https://idp.northstar.example/users/maya",
+      "action": "document.write",
+      "resources": [
+        "https://docs.northstar.example/documents/orion-brief"
+      ],
+      "method": "PATCH",
+      "target_uri": "https://gateway.northstar.example/documents/orion-brief",
+      "body_digest": "W19PD_87WBcxzBsTZvmkYy5lC1ZtmOV9cM4D7n4jAPw",
+      "headers": {
+        "content-type": "application/json"
+      }
+    }
+  },
+  "expect": {
+    "function": "authorize_native",
+    "outcome": "ALLOW",
+    "must_not_call": [
+      "execute"
+    ]
+  }
+}

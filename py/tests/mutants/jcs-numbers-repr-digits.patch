@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/core/jcs.py b/py/src/hop_top_pact/core/jcs.py
+index 4a76692..aebf6d5 100644
+--- a/py/src/hop_top_pact/core/jcs.py
++++ b/py/src/hop_top_pact/core/jcs.py
+@@ -153,6 +153,7 @@ def _number(f: float, path: list[str]) -> str:
+         return "0"
+     sign = "-" if f < 0 else ""
+     r = repr(abs(f))  # 1e-07, 1.5e+300, 123.456, 100.0, 5e-324
++    return sign + r
+     mantissa, _, exp = r.partition("e")
+     whole, _, frac = mantissa.partition(".")
+     raw = whole + frac

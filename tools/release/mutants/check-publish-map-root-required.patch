@@ -1,0 +1,11 @@
+--- a/tools/release/check-publish-map.py
++++ b/tools/release/check-publish-map.py
+@@ -196,7 +196,7 @@
+     except json.JSONDecodeError as e:
+         raise ParseError(f"{config}: {e}") from None
+     packages = cfg.get("packages")
+-    if not isinstance(packages, dict) or not packages:
++    if not isinstance(packages, dict) or not packages or "." not in packages:
+         raise ParseError(f"{config}: no 'packages' map")
+     components = {}
+     for path, pkg in packages.items():

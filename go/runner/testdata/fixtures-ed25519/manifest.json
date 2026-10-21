@@ -1,0 +1,25 @@
+{
+  "manifest_version": 1,
+  "entries": [
+    {
+      "id": "ed25519/negotiated",
+      "kind": "evaluate",
+      "scope": "runner",
+      "path": "ed25519/negotiated",
+      "expected": "expected/ed25519/negotiated/decision.json",
+      "outcome": "ADMISSIBLE",
+      "spec_map_row": "CL-7.2",
+      "draft_section": "7.2"
+    },
+    {
+      "id": "keys/ed25519",
+      "kind": "key",
+      "scope": "core",
+      "path": "keys/ed25519.jwk.json",
+      "expected": null,
+      "outcome": null,
+      "spec_map_row": "CL-C",
+      "draft_section": "C"
+    }
+  ]
+}

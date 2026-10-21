@@ -1,0 +1,44 @@
+%% PACT v1.0 — informative diagram for sections 14–16.
+%% Only qualified, attributable evidence updates contextual reputation.
+%% Admission failure alone is not automatically a negative reputation event.
+%% Observe mode requires native approval to activate a change; bounded autonomous
+%% mode permits activation only within preauthorized controls and release gates.
+%% Reputation scoring and requirement selection may use separate artifacts.
+%% Learning cannot expand native permissions, waive immutable approval rules,
+%% remove security holds, or convert a native denial into authorization.
+flowchart TB
+    accTitle: PACT reputation and bounded learning loop
+    accDescr: Qualified outcomes update contextual reputation and feed candidate learning artifacts. Independent evaluation, shadow observation, and policy authorization gate activation. Active versions influence future requirement contracts, while monitoring can freeze, tighten, or roll back within policy.
+
+    X["Gateway admission and observed execution"]
+    O["Qualify and deduplicate outcome evidence"]
+    R["Update contextual reputation"]
+    C["Candidate learning artifact"]
+    E["Independent evaluation and shadow observation"]
+    D{"Release gates and mode authorization satisfied?"}
+    A["Activate version atomically"]
+    K["Retain current authorized artifact"]
+    Q["Select future requirement contracts"]
+    M["Monitor active artifacts"]
+    B["Freeze, tighten, or roll back within policy"]
+    P["Signed learning policy and immutable base"]
+
+    X -->|Attributable observations| O
+    O -->|Qualified evidence| R
+    R -->|Contextual history| C
+    C -->|Versioned candidate| E
+    E -->|Independent evaluation evidence| D
+    P -.->|Mode, bounds, and release gates| D
+    D -->|Yes| A
+    D -->|No| K
+    A -->|Pin active policy and artifact digests| Q
+    K -->|Use current valid version| Q
+    R -->|Context input to authorized selection| Q
+    R -->|Signed snapshot when required| X
+    P -.->|Required controls and permitted adaptive sets| Q
+    Q -->|Effective requirements for a fresh exchange| X
+    A -->|Observe rollout and continuing behavior| M
+    M -->|Configured threshold breached| B
+    P -.->|Authorized response and fallback| B
+    B -->|Compatible version, conservative set, or deferral| Q
+    B -->|Invalidate affected outstanding contracts| X

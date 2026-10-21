@@ -1,0 +1,59 @@
+{
+  "case_version": 1,
+  "id": "IDENT-03.authenticate",
+  "title": "A user acting through another client authenticates with that client as the workload, not the enrolled client",
+  "draft": ["8.5", "17.1"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "identities": [
+      {
+        "ref": "user-via-enrolled-client",
+        "id": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:5d7e9f1a-2b3c-4d5e-8f60-718293a4b5c6",
+        "secret": "tok-client-1-0d4f8a2c6e91"
+      },
+      {
+        "ref": "user-via-other-client",
+        "id": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:9e8d7c6b-5a49-4382-9716-05f4e3d2c1b0",
+        "secret": "tok-client-2-b7e1d5a903c8"
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:5d7e9f1a-2b3c-4d5e-8f60-718293a4b5c6",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "operator_id": "https://identity.example/operators/finance-ops",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079940,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-0001"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.example/invoices/INV-1042",
+    "native_state_ref": "user-via-other-client"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "authenticated",
+    "principal": {
+      "id": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:9e8d7c6b-5a49-4382-9716-05f4e3d2c1b0"
+    }
+  }
+}

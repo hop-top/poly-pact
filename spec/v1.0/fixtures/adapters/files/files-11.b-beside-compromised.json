@@ -1,0 +1,182 @@
+{
+  "case_version": 1,
+  "id": "FILES-11.b-beside-compromised",
+  "title": "B keeps its own active record beside a compromised A (IM-20)",
+  "draft": [
+    "6.1",
+    "6.2",
+    "17.1"
+  ],
+  "workloads": "shared",
+  "native_state": {
+    "model": "files/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://files.acme.example/environments/fs01",
+      "origin": "https://files.acme.example",
+      "header_allowlist": []
+    },
+    "parameters": {
+      "context_max_age_seconds": 300,
+      "handle_max_lifetime_seconds": 300
+    },
+    "service_account": "svc",
+    "accounts": [
+      {
+        "ref": "alice",
+        "sid": "S-1-5-21-1004336348-1177238915-682003330-1105",
+        "display_name": "Alice Martin",
+        "groups": [
+          "S-1-5-21-1004336348-1177238915-682003330-513",
+          "S-1-5-21-1004336348-1177238915-682003330-1201"
+        ],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9hbGljZQ=="
+      },
+      {
+        "ref": "bob",
+        "sid": "S-1-5-21-1004336348-1177238915-682003330-1106",
+        "display_name": "Bob Okafor",
+        "groups": [
+          "S-1-5-21-1004336348-1177238915-682003330-513",
+          "S-1-5-21-1004336348-1177238915-682003330-1202"
+        ],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9ib2I="
+      },
+      {
+        "ref": "alice-2",
+        "sid": "S-1-5-21-1004336348-1177238915-682003330-1107",
+        "display_name": "Alice Martin",
+        "groups": [
+          "S-1-5-21-1004336348-1177238915-682003330-513"
+        ],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9hbGljZS0y"
+      },
+      {
+        "ref": "alice-other-domain",
+        "sid": "S-1-5-21-2718281828-3141592653-1414213562-1105",
+        "display_name": "Alice Martin",
+        "groups": [],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9hbGljZS1vdGhlci1kb21haW4="
+      },
+      {
+        "ref": "svc",
+        "sid": "S-1-5-21-1004336348-1177238915-682003330-1500",
+        "display_name": "svc-files-broker",
+        "groups": [
+          "S-1-5-21-1004336348-1177238915-682003330-513"
+        ],
+        "negotiate_token": "cGFjdC1maWxlcy1maXh0dXJlL25lZ290aWF0ZS9zdmM="
+      }
+    ],
+    "open_source_id": "fs01-ntfs-open",
+    "registry": [
+      {
+        "file_id": "report-q3",
+        "path": "D:\\Shares\\Reports\\q3-summary.txt",
+        "final_path": "\\\\?\\D:\\Shares\\Reports\\q3-summary.txt",
+        "volume_serial": "5c3a91e2d04b7f18",
+        "object_id": "000000000000000000030000000a41c7"
+      },
+      {
+        "file_id": "payroll-2026-09",
+        "path": "D:\\Shares\\Restricted\\payroll-2026-09.txt",
+        "final_path": "\\\\?\\D:\\Shares\\Restricted\\payroll-2026-09.txt",
+        "volume_serial": "5c3a91e2d04b7f18",
+        "object_id": "000000000000000000030000000a41d2"
+      }
+    ],
+    "objects": [
+      {
+        "path": "D:\\Shares\\Reports\\q3-summary.txt",
+        "final_path": "\\\\?\\D:\\Shares\\Reports\\q3-summary.txt",
+        "volume_serial": "5c3a91e2d04b7f18",
+        "object_id": "000000000000000000030000000a41c7",
+        "attributes": [],
+        "acl": [
+          {
+            "sid": "S-1-5-21-1004336348-1177238915-682003330-1201",
+            "effect": "allow",
+            "access": [
+              "read"
+            ]
+          },
+          {
+            "sid": "S-1-5-21-1004336348-1177238915-682003330-1500",
+            "effect": "allow",
+            "access": [
+              "read"
+            ]
+          }
+        ],
+        "content_b64": "Y29udGVudHMgb2YgcmVwb3J0LXEzCg=="
+      },
+      {
+        "path": "D:\\Shares\\Restricted\\payroll-2026-09.txt",
+        "final_path": "\\\\?\\D:\\Shares\\Restricted\\payroll-2026-09.txt",
+        "volume_serial": "5c3a91e2d04b7f18",
+        "object_id": "000000000000000000030000000a41d2",
+        "attributes": [],
+        "acl": [
+          {
+            "sid": "S-1-5-21-1004336348-1177238915-682003330-1500",
+            "effect": "allow",
+            "access": [
+              "read"
+            ]
+          }
+        ],
+        "content_b64": "Y29udGVudHMgb2YgcGF5cm9sbC0yMDI2LTA5Cg=="
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "acme",
+          "environment_id": "https://files.acme.example/environments/fs01"
+        },
+        "workload": "files:S-1-5-21-1004336348-1177238915-682003330:S-1-5-21-1004336348-1177238915-682003330-1105",
+        "agent_id": "https://agents.acme.example/report-reader",
+        "operator_id": "https://operators.acme.example/reporting-ops",
+        "holder_jkt": "_uE1G8wZHDLfh69S-vb3p9yo1pAXWqL5QWQmnlMbr5Y",
+        "status": "COMPROMISED",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079940,
+        "source_id": "files-enrollment-registry",
+        "source_ref": "enr-f-0101"
+      },
+      {
+        "realm": {
+          "tenant_id": "acme",
+          "environment_id": "https://files.acme.example/environments/fs01"
+        },
+        "workload": "files:S-1-5-21-1004336348-1177238915-682003330:S-1-5-21-1004336348-1177238915-682003330-1105",
+        "agent_id": "https://agents.acme.example/report-summarizer",
+        "operator_id": "https://operators.acme.example/reporting-ops",
+        "holder_jkt": "PFVDn1e3ctibf-fVG0L8ZVsHm3yh_BRZhS3XWNHxyx4",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079940,
+        "source_id": "files-enrollment-registry",
+        "source_ref": "enr-f-0102"
+      }
+    ]
+  },
+  "call": {
+    "realm": {
+      "tenant_id": "acme",
+      "environment_id": "https://files.acme.example/environments/fs01"
+    },
+    "workload": "files:S-1-5-21-1004336348-1177238915-682003330:S-1-5-21-1004336348-1177238915-682003330-1105",
+    "agent_id": "https://agents.acme.example/report-summarizer"
+  },
+  "expect": {
+    "function": "resolve_agent_binding",
+    "outcome": "bound",
+    "binding": {
+      "agent_id": "https://agents.acme.example/report-summarizer",
+      "operator_id": "https://operators.acme.example/reporting-ops",
+      "holder_jkt": "PFVDn1e3ctibf-fVG0L8ZVsHm3yh_BRZhS3XWNHxyx4",
+      "status": "ACTIVE"
+    }
+  }
+}

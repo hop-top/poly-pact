@@ -1,0 +1,6 @@
+{
+  "id": "vectors/strictjson/duplicate-key-escaped-form",
+  "input_text": "{\"operation_id\":\"invoice-read-operation-0001\",\"environment_id\":\"https://gateway.example/environments/finance\",\"principal_id\":\"https://identity.example/principals/alice\",\"action\":\"invoice.read\",\"resources\":[\"https://invoices.example/invoices/INV-1042\"],\"method\":\"GET\",\"target_uri\":\"https://gateway.example/invoices/INV-1042\",\"body_digest\":\"47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU\",\"headers\":{},\"\\u0061ction\":\"invoice.write\"}",
+  "expect": "reject",
+  "reason": "Member names action and \\u0061ction are the same name after unescaping. Decode target: OperationContext."
+}

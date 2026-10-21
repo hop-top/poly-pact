@@ -1,0 +1,8 @@
+# Rust toolchain of the hop-top-pact crate, kept with the package so that
+# only the jobs that build it install it. The Makefile rs-* targets and
+# `mise run install` run cargo from rs/, where this file applies. The
+# version is the latest stable release (docs/sdk/deps-rs.md), with the
+# components rs-lint needs.
+
+[tools]
+rust = { version = "1.99.1", components = "rustfmt,clippy" }

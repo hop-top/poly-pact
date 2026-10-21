@@ -1,0 +1,13 @@
+diff --git a/ts/src/adapter/adaptertest/load.ts b/ts/src/adapter/adaptertest/load.ts
+index 45ee321..fe929d8 100644
+--- a/ts/src/adapter/adaptertest/load.ts
++++ b/ts/src/adapter/adaptertest/load.ts
+@@ -730,7 +730,7 @@ export function loadCases(fixtures: FixtureTree, adapter = ''): Case[] {
+  * workloads shared by several agents (`shared` true) or does not.
+  */
+ export function appliesTo(c: Case, shared: boolean): boolean {
+-  if (c.workloads === WORKLOADS_SHARED) return shared;
++  if (c.workloads === WORKLOADS_SHARED) return true;
+   if (c.workloads === WORKLOADS_DEDICATED) return !shared;
+   return true;
+ }

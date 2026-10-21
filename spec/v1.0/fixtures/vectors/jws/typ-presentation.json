@@ -1,0 +1,22 @@
+{
+  "id": "vectors/jws/typ-presentation",
+  "description": "Presentation JWS (signer role holder) with the holder's public jwk in the protected header; its RFC 7638 thumbprint equals the expected holder_jkt, the Appendix C value.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtcHJlc2VudGF0aW9uK2p3dCIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6ImF4ZlI4dUVzUWtmNHZPYmxZNlJBOG5jRGZZRXQ2ek9nOUtFNVJkaVl3cFkiLCJ5IjoiVC1OQzR2NGFmNXVPNS10S2ZBLWVGaXZPTTFkck1WN095N1pBYURlX1VmVSJ9fQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy90eXAtcHJlc2VudGF0aW9uIn0.TCyeP77tExHi842RiTfSUUNQnFZO2SYyyuOV-IRLlgsGQAVPBnJWK9XUw8xO4IC-dSlQ6XC5t1uBnlavLW9LMw",
+  "expected_typ": null,
+  "trusted_keysets": {},
+  "expected_holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+  "decode_as": null,
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+    "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+    "kid": "test-holder-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": "{\"pact_version\":\"0.1\",\"jti\":\"vectors/jws/typ-presentation\"}"
+}

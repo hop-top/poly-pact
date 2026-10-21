@@ -1,0 +1,16 @@
+diff --git a/ts/src/adapter/freshness.ts b/ts/src/adapter/freshness.ts
+index 5a90c49..bda0366 100644
+--- a/ts/src/adapter/freshness.ts
++++ b/ts/src/adapter/freshness.ts
+@@ -282,7 +282,10 @@ export class Monotonic {
+     if (first === undefined && !(this.#seen.size < this.#limit)) {
+       return [CheckStatus.UNKNOWN, REASON_CODE.DEPENDENCY_UNAVAILABLE];
+     }
+-    if (first !== undefined && sec > first) return [CheckStatus.FAIL, REASON_CODE.RESTAMPED];
++    if (first !== undefined && sec > first) {
++      this.#seen.set(key, sec);
++      return [CheckStatus.FAIL, REASON_CODE.RESTAMPED];
++    }
+     this.#seen.set(key, sec);
+     return [CheckStatus.PASS, REASON_CODE.SATISFIED];
+   }

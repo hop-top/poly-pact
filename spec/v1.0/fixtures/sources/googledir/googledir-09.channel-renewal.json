@@ -1,0 +1,209 @@
+{
+  "case_version": 1,
+  "id": "GOOGLE-09.channel-renewal",
+  "title": "A channel is renewed before it expires, under a new id; the old channel is stopped and no longer accepted, and the new one delivers.",
+  "draft": [
+    "8.3",
+    "9.2",
+    "17.2",
+    "18"
+  ],
+  "now": 1792080000,
+  "source": {
+    "model": "googledir/1",
+    "source_id": "googledir-northstar",
+    "principal_prefix": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:",
+    "groups": [],
+    "transitive_groups": [],
+    "cache": {
+      "poll_interval_seconds": 900,
+      "max_age_seconds": 960,
+      "channel": {
+        "address": "https://pact.northstar.example/google/notify",
+        "token": "channel-secret-0001",
+        "ttl_seconds": 3600,
+        "renew_before_seconds": 300
+      }
+    },
+    "directory": {
+      "customer": "my_customer",
+      "users": [
+        {
+          "id": "118233047251904436211",
+          "primary_email": "avery@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436212",
+          "primary_email": "blake@northstar.example",
+          "aliases": [],
+          "suspended": true,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436213",
+          "primary_email": "casey@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": true
+        },
+        {
+          "id": "118233047251904436214",
+          "primary_email": "devon@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436215",
+          "primary_email": "emery@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        }
+      ],
+      "groups": [
+        {
+          "id": "grp-platform",
+          "members": [
+            "118233047251904436214"
+          ],
+          "groups": []
+        },
+        {
+          "id": "grp-eng",
+          "members": [
+            "118233047251904436211"
+          ],
+          "groups": [
+            "grp-platform"
+          ]
+        },
+        {
+          "id": "grp-all",
+          "members": [],
+          "groups": [
+            "grp-eng"
+          ]
+        },
+        {
+          "id": "grp-ops",
+          "members": [
+            "118233047251904436212"
+          ],
+          "groups": []
+        }
+      ]
+    }
+  },
+  "steps": [
+    {
+      "at": 1792080000,
+      "inbound": {
+        "tick": {}
+      },
+      "expect": {
+        "mode": "push",
+        "channel": 1,
+        "expires_at": 1792083600,
+        "sweeps": 1,
+        "error": false,
+        "stopped": []
+      }
+    },
+    {
+      "at": 1792080900,
+      "inbound": {
+        "tick": {}
+      },
+      "expect": {
+        "mode": "push",
+        "channel": 1,
+        "expires_at": 1792083600,
+        "sweeps": 2,
+        "error": false,
+        "stopped": []
+      }
+    },
+    {
+      "at": 1792083300,
+      "inbound": {
+        "tick": {}
+      },
+      "expect": {
+        "mode": "push",
+        "channel": 2,
+        "expires_at": 1792086900,
+        "sweeps": 3,
+        "error": false,
+        "stopped": [
+          1
+        ]
+      }
+    },
+    {
+      "at": 1792083310,
+      "inbound": {
+        "notify": {
+          "channel": 1,
+          "state": "update",
+          "user": "118233047251904436211"
+        }
+      },
+      "expect": {
+        "status": 404
+      }
+    },
+    {
+      "at": 1792083350,
+      "inbound": {
+        "admin": {
+          "op": "suspend",
+          "user": "118233047251904436211"
+        }
+      },
+      "expect": {}
+    },
+    {
+      "at": 1792083350,
+      "inbound": {
+        "notify": {
+          "channel": 2,
+          "state": "update",
+          "user": "118233047251904436211"
+        }
+      },
+      "expect": {
+        "status": 200
+      }
+    }
+  ],
+  "reads": [
+    {
+      "at": 1792083360,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "value",
+        "value": "disabled",
+        "observed_at": 1792083350,
+        "status_checked_at": 1792083350,
+        "source_id": "googledir-northstar"
+      }
+    },
+    {
+      "at": 1792083360,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436214",
+      "expect": {
+        "outcome": "value",
+        "value": "active",
+        "observed_at": 1792083300,
+        "status_checked_at": 1792083300,
+        "source_id": "googledir-northstar"
+      }
+    }
+  ]
+}

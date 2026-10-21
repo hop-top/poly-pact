@@ -1,0 +1,13 @@
+diff --git a/ts/src/runner/manifest/manifest.ts b/ts/src/runner/manifest/manifest.ts
+index f595bfe..e6f61ad 100644
+--- a/ts/src/runner/manifest/manifest.ts
++++ b/ts/src/runner/manifest/manifest.ts
+@@ -170,7 +170,7 @@ export class Manifest {
+       }
+     }
+     if (this.#versionText === undefined) add(ps, RULE_SHAPE, FILE_NAME, 'no manifest_version');
+-    else if (this.#versionText !== '1') {
++    else if (Number(this.#versionText) !== VERSION) {
+       add(ps, RULE_SHAPE, FILE_NAME, `manifest_version is ${this.#versionText}, want ${VERSION}`);
+     }
+     if (!Object.hasOwn(this.#top, 'entries')) {

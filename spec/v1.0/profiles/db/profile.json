@@ -1,0 +1,188 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "postgresql", "version": "3.0", "mapping_revision": "pact-db-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/api/v1/reports/{report_id}",
+      "action": "report.read",
+      "resource_mapping": "report:{report_id}, from the path parameter; report_id is 1 to 64 characters of ALPHA, DIGIT, and -; no query parameter is read and no body is accepted; the query registry entry (report.read, pact-db-1) runs SELECT report_id, body FROM public.customer_reports WHERE report_id = $1 with report_id bound as $1 under the login role mapped to the principal (illustrative route of the example I13 deployment; a deployment lists its own routes)"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "Broker front-door authentication stage before routing, under the integration profile the deployment names for it; produces the principal and the agent's workload; not defined by this profile"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup in the broker by the authenticated workload and the agent_id the request names; UNKNOWN when that agent has no record on the workload; whether the workload may carry more than one record is the choice of the front-door profile"},
+    {"function": "map_operation", "component": "Broker mapping stage at revision pact-db-1; selects the query registry entry by (action, mapping revision); an action with no entry is UNSUPPORTED_REQUIREMENT"},
+    {"function": "read_native_claim", "component": "Broker reads of the role and tenant registry for /attributes/environment/database_role and /attributes/environment/tenant_id, and of the delegation and task registry for /attributes/delegation/authority_ref"},
+    {"function": "check_context", "component": "Installed broker checks: native-principal-binding-v1, native-delegation-v1, and execution-identity-v1 with the declared class dedicated-role; applied again at execution by the connection verification on the actual connection"},
+    {"function": "authorize_native", "component": "The broker's native task policy for the original principal, then PostgreSQL privilege and row-policy checks during execution of the registered statement under the mapped login role, on a connection that passed the verification statements"},
+    {"function": "record_outcome", "component": "Broker outcome writer after the statement completes, is refused, or is not sent; zero rows is EXECUTION SUCCESS reliability with details empty (draft 14.5); the report carries the row count, never row content or hidden-row facts"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain of the database broker; to be supplied"},
+    {"component": "C02", "owner": "IAM owner and adapter owner", "what_exists": "Front-door authentication under the profile the deployment names, and the broker's reads of the role and tenant registry and of the delegation and task registry; to be supplied"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry with administrator-run enrollment, looked up by the agent's front-door workload and the presented agent_id; the contract and a memory backend exist, a durable backend is to be supplied"},
+    {"component": "C04", "owner": "Application and IAM owner", "what_exists": "Delegation and task registry binding user, agent, and report task, read through authority_ref; to be supplied, and its semantics depend on the delegation and execution-identity deliverable"},
+    {"component": "C05", "owner": "Adapter owner and database administrator", "what_exists": "Role and tenant registry, delegation and task registry, hold store, and the PostgreSQL catalog read by the verification statements; the catalog exists, the rest is to be supplied"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: the read route needs no external approval"},
+    {"component": "C07", "owner": "Adapter owner", "what_exists": "Mapper at revision pact-db-1 with the query registry of fixed statements; to be supplied"},
+    {"component": "C08", "owner": "Resource owner (database administrator)", "what_exists": "PostgreSQL 16 table privileges and row policies applied to the mapped login role during execution; exists in the deployment, the example I13 schema ran in the gated integration tier (OI-1, probe record)"},
+    {"component": "C09", "owner": "Gateway and platform owner", "what_exists": "Replay and receipt store; to be supplied"},
+    {"component": "C10", "owner": "Resource owner and evidence owner", "what_exists": "Broker outcome writer and an immutable record naming the connection role; the native source of that record is an open decision"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Policy registry holding the base requirements; registry only, no adaptation lifecycle; to be supplied"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "Revocation and hold store; to be supplied"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled evidence and audit store, and the secret store holding the login roles' credentials; credentials, row contents, and hidden-row facts are excluded from records; to be supplied"},
+    {"component": "C15", "owner": "Application and resource owner", "what_exists": "Per-role connection pools, connection lifetime, one statement per operation, and DISCARD ALL on release; to be supplied; no transactions or budgets because the route is read-only"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no containment, egress, or output control is claimed; data-use restrictions are labeled attested-only"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Execution under the table owner, a superuser, a BYPASSRLS role, a member of one of them, or a pool-administrator role instead of the mapped login role (broader-account fallback)",
+      "control": "closed",
+      "evidence": "The broker holds no such credential; every connection passes the verification statements (current_user and session_user equal the mapped role, role OID matches, not superuser, not BYPASSRLS, no elevated or login-role membership, owner differs and is not a role the mapped role belongs to, row security enabled and forced) before any registered statement; fixtures DB-02, DB-08, DB-10 (section 10 of profile.md)"
+    },
+    {
+      "path": "Reuse of a connection, its prepared statements, or its session state by another principal, role, tenant, or request",
+      "control": "closed",
+      "evidence": "One pool per login role, rollback and DISCARD ALL on release, verification on every acquisition, no session state set from request data; fixture DB-01"
+    },
+    {
+      "path": "Arbitrary SQL, a substituted statement, or SQL injected through a parameter",
+      "control": "closed",
+      "evidence": "Fixed statements of the query registry, request values sent only as extended-protocol Bind parameters, route grammar for report_id; fixtures DB-03, DB-04"
+    },
+    {
+      "path": "Writes through the broker: INSERT, UPDATE, DELETE, TRUNCATE, or any statement not in the query registry",
+      "control": "closed",
+      "evidence": "Only the read route exists, the registry holds one read statement, and the verification requires INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, and TRIGGER to be absent; fixtures DB-02, DB-03"
+    },
+    {
+      "path": "A direct database connection with the mapped login role's credential from outside the broker",
+      "control": "out_of_claim",
+      "evidence": "The credential stays in the broker's secret store and never reaches an agent, a profile, or a record; network reachability of the cluster is a deployment control with no negative fixture here; excluded in unsupported_forms"
+    },
+    {
+      "path": "Other clients of the same cluster: interactive sessions, reporting tools, other applications, standbys, logical replicas, backups, and exports",
+      "control": "out_of_claim",
+      "evidence": "Not a broker route; native privileges and row policies apply unchanged; excluded in unsupported_forms"
+    }
+  ],
+  "unsupported_forms": [
+    "Safe shared pooling, including one login role that switches with SET ROLE or SET LOCAL ROLE (handoff row I13): one login role per principal and one pool per role are claimed; role switching is pending the owner's decision",
+    "Arbitrary SQL (handoff row I13): only the fixed statements of the query registry run",
+    "Database engines other than PostgreSQL, PostgreSQL major versions other than 16, and products that implement the PostgreSQL protocol: no documentation for them was read",
+    "Any route other than the reference route of protected_routes, including every write: not listed, so not claimed",
+    "Relations other than ordinary tables in a registered statement (views, materialized views, partitioned tables, foreign tables): row-security behavior for them was not read, and the verification refuses any relkind other than r",
+    "Row policies whose expression reads a session setting set by the application or the adapter, or any value the agent supplies: the broker sets no session value",
+    "A login role shared by several principals, or a principal mapped to several login roles",
+    "A registered statement that calls a user-defined function, or that lets the request choose a table, column, sort key, or limit",
+    "Front-door authentication of the principal and the agent's workload: defined by the integration profile the deployment names, not by this profile",
+    "Enforced purpose or data-use restrictions: execution-control-v1 is not claimed, so any such restriction is labeled attested-only"
+  ],
+  "freshness": [
+    {
+      "source": "Broker role and tenant registry (principal to login role and tenant)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "PostgreSQL catalog read by the connection verification (connection role, role attributes, memberships, table owner, row-security flags, table privileges)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "PostgreSQL privilege and row-policy checks at statement execution",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Delegation and task registry (authority_ref)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Enrollment registry (agent and key binding status)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Security hold store",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "Broker role and tenant registry (principal to login role and tenant)",
+      "facts": ["roles"],
+      "live_check": {"available": true, "endpoint_class": "Broker registry lookup by realm and principal"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    }
+  ],
+  "attribute_sources": [
+    {
+      "source": "Broker role and tenant registry",
+      "category": "subject",
+      "attributes": ["/attributes/environment/tenant_id"],
+      "freshness": "Broker role and tenant registry (principal to login role and tenant)"
+    }
+  ],
+  "residual_limits": [
+    "Post-read: report data already returned to the agent is not recalled by a later revocation; execution-control-v1 is not claimed, so any purpose or data-use restriction is attested-only and no egress or output control is claimed",
+    "Revocation propagation: a change to the role and tenant registry, the delegation and task registry, the enrollment registry, or the hold store reaches the broker at the next evaluation within a 0 second status bound; a change of role attributes, memberships, ownership, row-security flags, or table privileges reaches the broker at the next connection acquisition; an operation already executed is not undone by revoking its receipt",
+    "Open connection: whether a REVOKE, a policy change, or an ALTER ROLE takes effect for the next statement on an open connection or for an already prepared statement is not established; no revocation of an open session is claimed, and the bound is connection_max_lifetime_seconds after the open",
+    "Verification window: a catalog change between the verification statements and the registered statement on the same connection is not seen by that operation and is caught at the next acquisition",
+    "Role OID reuse: the OID comparison does not detect a new role that receives the OID of a dropped one, if that can happen; the administrator's withdrawal of the registry record on DROP ROLE covers it",
+    "Policy correctness: the broker verifies that row security is enabled and forced, that the role is not elevated, and which table privileges it holds, not that the policy expressions are correct; their meaning is native and owned by the database administrator",
+    "Covert channels: referential integrity checks bypass row security; the route writes nothing and the role holds no REFERENCES; timing and result-size channels are not established",
+    "Executor evidence: no native source of an immutable record naming the connection role is established; the broker's record of the verification result is the evidence reference until one is named, and its qualification is open",
+    "Pool scale: one pool per principal multiplies connections; a role or cluster at its connection limit makes the operation fail closed with DEPENDENCY_UNAVAILABLE and DEFERRED"
+  ],
+  "fixtures": [
+    {"id": "adapters/db/db-01.role-first", "path": "fixtures/adapters/db/db-01.role-first.json"},
+    {"id": "adapters/db/db-01.role-second", "path": "fixtures/adapters/db/db-01.role-second.json"},
+    {"id": "adapters/db/db-01.tenant-second", "path": "fixtures/adapters/db/db-01.tenant-second.json"},
+    {"id": "adapters/db/db-03.no-registry-entry", "path": "fixtures/adapters/db/db-03.no-registry-entry.json"},
+    {"id": "adapters/db/db-03.query-endpoint", "path": "fixtures/adapters/db/db-03.query-endpoint.json"},
+    {"id": "adapters/db/db-03.sql-body", "path": "fixtures/adapters/db/db-03.sql-body.json"},
+    {"id": "adapters/db/db-03.sql-parameter", "path": "fixtures/adapters/db/db-03.sql-parameter.json"},
+    {"id": "adapters/db/db-04.at-limit", "path": "fixtures/adapters/db/db-04.at-limit.json"},
+    {"id": "adapters/db/db-04.in-grammar", "path": "fixtures/adapters/db/db-04.in-grammar.json"},
+    {"id": "adapters/db/db-04.out-of-grammar", "path": "fixtures/adapters/db/db-04.out-of-grammar.json"},
+    {"id": "adapters/db/db-04.outside-alphabet", "path": "fixtures/adapters/db/db-04.outside-alphabet.json"},
+    {"id": "adapters/db/db-04.too-long", "path": "fixtures/adapters/db/db-04.too-long.json"},
+    {"id": "adapters/db/db-05.empty-report", "path": "fixtures/adapters/db/db-05.empty-report.json"},
+    {"id": "adapters/db/db-07.denial-report", "path": "fixtures/adapters/db/db-07.denial-report.json"},
+    {"id": "adapters/db/db-08.claim-unavailable", "path": "fixtures/adapters/db/db-08.claim-unavailable.json"},
+    {"id": "adapters/db/db-08.mapped", "path": "fixtures/adapters/db/db-08.mapped.json"},
+    {"id": "adapters/db/db-08.no-credential", "path": "fixtures/adapters/db/db-08.no-credential.json"},
+    {"id": "adapters/db/db-08.no-record", "path": "fixtures/adapters/db/db-08.no-record.json"},
+    {"id": "adapters/db/db-08.registry-unavailable", "path": "fixtures/adapters/db/db-08.registry-unavailable.json"},
+    {"id": "adapters/db/schema", "path": "fixtures/adapters/db/schema.sql"}
+  ]
+}

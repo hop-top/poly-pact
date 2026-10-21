@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/adapter/adaptertest/checks_native.py b/py/src/hop_top_pact/adapter/adaptertest/checks_native.py
+--- a/py/src/hop_top_pact/adapter/adaptertest/checks_native.py
++++ b/py/src/hop_top_pact/adapter/adaptertest/checks_native.py
+@@ -146,7 +146,7 @@
+     e = r.case.expect
+     if not Verdict.is_valid(out.result):
+         r.fail(f"check result {out.result!r} is not PASS, FAIL or UNKNOWN")
+-    elif out.result != e.outcome:
++    elif out.result != e.outcome and out.result != Verdict.PASS:
+         r.fail(
+             f"check {check_id!r} returned {out.result} ({out.reason_code}), want"
+             f" {e.outcome}: a check the adapter did not perform is never PASS"

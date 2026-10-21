@@ -1,0 +1,12 @@
+diff --git a/ts/src/core/binding/headers.ts b/ts/src/core/binding/headers.ts
+--- a/ts/src/core/binding/headers.ts
++++ b/ts/src/core/binding/headers.ts
+@@ -95,7 +95,7 @@
+   if (values.length > 1) {
+     throw refuse(Rule.DUPLICATE_HOST, `the request has ${values.length} Host field lines`);
+   }
+-  if (originForm && values.length === 0) {
++  if (originForm && values.length < 0) {
+     throw refuse(Rule.MISSING_HOST, 'an origin-form request without Host');
+   }
+   for (const v of values) {

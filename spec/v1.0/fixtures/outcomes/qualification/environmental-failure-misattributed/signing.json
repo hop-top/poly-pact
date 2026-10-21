@@ -1,0 +1,5 @@
+{
+  "artifacts": [
+    {"decoded":"reports/execution-event-0001.json","signed":"signed/execution-event-0001.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"Z5zM8Okrqm5A4x-KXUztSg"}
+  ]
+}

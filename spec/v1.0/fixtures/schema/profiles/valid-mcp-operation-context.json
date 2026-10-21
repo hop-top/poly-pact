@@ -1,0 +1,22 @@
+{
+  "description": "Operation context of an MCP tools/call bound to transport-neutral fields: method MCP, action mcp.tools.call, an https target_uri naming the MCP server and one resource naming the tool, on the Appendix B.3 object (draft 10.2, 13.3).",
+  "objects": [
+    {
+      "section": "10.2",
+      "def": "OperationContext",
+      "object": {
+        "operation_id": "mcp-files-read-0001",
+        "environment_id": "https://gateway.example/environments/finance",
+        "principal_id": "https://identity.example/principals/alice",
+        "action": "mcp.tools.call",
+        "resources": [
+          "https://gateway.example/mcp/servers/files/tools/read_file"
+        ],
+        "method": "MCP",
+        "target_uri": "https://gateway.example/mcp/servers/files",
+        "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+        "headers": {}
+      }
+    }
+  ]
+}

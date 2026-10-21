@@ -1,0 +1,22 @@
+diff --git a/ts/src/core/jws/index.ts b/ts/src/core/jws/index.ts
+index bf16b6c..596d633 100644
+--- a/ts/src/core/jws/index.ts
++++ b/ts/src/core/jws/index.ts
+@@ -221,7 +221,7 @@ export class Verifier {
+ 
+     const rawHeader = segment(h64, 'protected header');
+     const { alg, typ, kid, members } = this.#parseHeader(rawHeader);
+-    if (this.typ !== '' && typ !== this.typ) {
++    if (false && this.typ !== '' && typ !== this.typ) {
+       throw fail(
+         Reason.TYP_MISMATCH,
+         `typ ${JSON.stringify(typ)}, want ${JSON.stringify(this.typ)}`,
+@@ -299,7 +299,7 @@ export class Verifier {
+       throw fail(Reason.ALG_UNSUPPORTED, describe('alg', m));
+     }
+     const typ = Object.hasOwn(m, 'typ') ? m.typ : undefined;
+-    if (typeof typ !== 'string' || typRole(typ) === undefined) {
++    if (typeof typ !== 'string') {
+       throw fail(Reason.TYP_UNSUPPORTED, describe('typ', m));
+     }
+     let kid = '';

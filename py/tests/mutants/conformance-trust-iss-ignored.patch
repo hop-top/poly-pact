@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/conformance/verify.py b/py/src/hop_top_pact/conformance/verify.py
+--- a/py/src/hop_top_pact/conformance/verify.py
++++ b/py/src/hop_top_pact/conformance/verify.py
+@@ -157,7 +157,7 @@
+                 return CaseError("payload iss is not a string")
+             keys: list[JWK] = []
+             for r in trust:
+-                if r.role != role or r.iss != (iss or ""):
++                if r.role != role:
+                     continue
+                 for k in r.keys:
+                     try:

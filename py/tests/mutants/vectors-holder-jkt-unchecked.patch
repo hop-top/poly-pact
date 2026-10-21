@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/vectors/_jws.py b/py/src/hop_top_pact/vectors/_jws.py
+index aada3eb..3ea65ec 100644
+--- a/py/src/hop_top_pact/vectors/_jws.py
++++ b/py/src/hop_top_pact/vectors/_jws.py
+@@ -298,7 +298,7 @@ def check_key_record(root: Path, r: Mapping[str, Any]) -> None:
+             f"{rel}: public point x={got.x} y={got.y},"
+             f" but scalar {n} times G is x={want.x} y={want.y}"
+         )
+-    if r["role"] == "holder":
++    if r["role"] == "nobody":
+         tp = jws.thumbprint(got)
+         if tp != APPENDIX_C_HOLDER_JKT:
+             raise Fail(

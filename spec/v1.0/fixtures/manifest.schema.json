@@ -1,0 +1,400 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PACT conformance fixture manifest",
+  "description": "The index of spec/v1.0/fixtures (see README.md). Three rules are not expressible here and are checked separately: ids are unique, entries are sorted by id in byte order, and the path of an adapter-case or source-case entry is its id followed by .json.",
+  "type": "object",
+  "properties": {
+    "manifest_version": {
+      "const": 1
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "required": [
+    "manifest_version",
+    "entries"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "description": "Two or three segments: <group>/<case> or <group>/<subgroup>/<case>. A segment is lowercase letters and digits joined by hyphens.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)?$"
+    },
+    "adapter_case_id": {
+      "description": "The id of an adapter-case entry, adapters/<adapter>/<case>. It follows the name of the case file, so its last two segments may also start with an underscore and contain dots.",
+      "type": "string",
+      "pattern": "^adapters/_?[a-z0-9]+(?:[-.][a-z0-9]+)*/_?[a-z0-9]+(?:[-.][a-z0-9]+)*$"
+    },
+    "adapter_case_path": {
+      "description": "The path of an adapter-case entry, the case file adapters/<adapter>/<case>.json.",
+      "type": "string",
+      "pattern": "^adapters/_?[a-z0-9]+(?:[-.][a-z0-9]+)*/_?[a-z0-9]+(?:[-.][a-z0-9]+)*\\.json$"
+    },
+    "source_case_id": {
+      "description": "The id of a source-case entry, sources/<source>/<case>. It follows the name of the case file, so its case segment may also contain dots.",
+      "type": "string",
+      "pattern": "^sources/[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:[-.][a-z0-9]+)*$"
+    },
+    "source_case_path": {
+      "description": "The path of a source-case entry, the case file sources/<source>/<case>.json.",
+      "type": "string",
+      "pattern": "^sources/[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:[-.][a-z0-9]+)*\\.json$"
+    },
+    "kind": {
+      "enum": [
+        "key",
+        "vector",
+        "schema",
+        "evaluate",
+        "outcomes",
+        "learning",
+        "adapter-case",
+        "adapter-asset",
+        "source-case",
+        "profile-invalid",
+        "transport",
+        "mcp",
+        "profile"
+      ]
+    },
+    "scope": {
+      "enum": [
+        "core",
+        "runner",
+        "adapter"
+      ]
+    },
+    "path": {
+      "description": "Relative to the directory of the manifest, / separated, no leading /, no empty, . or .. segment.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-][A-Za-z0-9._-]*(?:/[A-Za-z0-9_-][A-Za-z0-9._-]*)*$"
+    },
+    "outcome": {
+      "enum": [
+        "ADMISSIBLE",
+        "INADMISSIBLE",
+        "DEFERRED",
+        "ACCEPTED",
+        "REJECTED",
+        "QUALIFIED",
+        "UNQUALIFIED",
+        "DISPUTED",
+        "MATCH"
+      ]
+    },
+    "spec_map_row": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+(?:\\.[0-9]+)*)?$"
+    },
+    "draft_section": {
+      "type": "string",
+      "pattern": "^(?:[1-9][0-9]*|[A-Z])(?:\\.[1-9][0-9]*)*$"
+    },
+    "capability": {
+      "description": "An optional capability an entry tests (README.md, Optional capabilities): a feature the draft makes optional, such as Ed25519 negotiation (draft Section 7.2).",
+      "enum": [
+        "jws-ed25519"
+      ]
+    },
+    "capabilities": {
+      "description": "The optional capabilities an entry tests. An entry without the member is mandatory for every implementation; one with it applies only to an implementation that declares each capability it lists.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "conformance_profile_id": {
+      "description": "A conformance profile id: an entry of kind conformance in spec/v1.0/profiles/registry.json (draft Section 22.1).",
+      "enum": [
+        "full",
+        "single-owner"
+      ]
+    },
+    "conformance_profiles": {
+      "description": "The conformance profiles an entry runs under (README.md, Manifest entry fields). Absent means [\"full\"]. A run under a profile executes only the entries that list it.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/conformance_profile_id"
+      }
+    },
+    "transport_name": {
+      "description": "A transport profile id, as in claim.transport of spec/v1.0/profiles/integration-profile.schema.json (draft Section 21): https, the baseline HTTPS binding (draft Section 13), or stdio-ipc, the local IPC and stdio profile of draft Section 13.3 in spec/v1.0/profiles/registry.json.",
+      "enum": [
+        "https",
+        "stdio-ipc"
+      ]
+    },
+    "transports": {
+      "description": "The transport profiles an entry exercises (README.md, Manifest entry fields). Absent means [\"https\"].",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/transport_name"
+      }
+    },
+    "layer": {
+      "description": "How an entry over stdio-ipc is executed: transcript, a language-neutral frame sequence the runner executes; os, real operating-system facilities that a language-specific harness exercises. Only on an entry whose transport has stdio-ipc, and required on an entry of kind transport; absent, the entry applies to every layer.",
+      "enum": [
+        "transcript",
+        "os"
+      ]
+    },
+    "entry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "$ref": "#/$defs/adapter_case_id"
+            },
+            {
+              "$ref": "#/$defs/source_case_id"
+            }
+          ]
+        },
+        "kind": {
+          "$ref": "#/$defs/kind"
+        },
+        "scope": {
+          "$ref": "#/$defs/scope"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "expected": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/path"
+            }
+          ]
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/outcome"
+            }
+          ]
+        },
+        "spec_map_row": {
+          "$ref": "#/$defs/spec_map_row"
+        },
+        "draft_section": {
+          "$ref": "#/$defs/draft_section"
+        },
+        "capabilities": {
+          "$ref": "#/$defs/capabilities"
+        },
+        "conformance_profile": {
+          "$ref": "#/$defs/conformance_profiles"
+        },
+        "transport": {
+          "$ref": "#/$defs/transports"
+        },
+        "layer": {
+          "$ref": "#/$defs/layer"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "scope",
+        "path",
+        "expected",
+        "outcome",
+        "spec_map_row",
+        "draft_section"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "adapter-case"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/adapter_case_id"
+              },
+              "path": {
+                "$ref": "#/$defs/adapter_case_path"
+              }
+            }
+          },
+          "else": {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "source-case"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            "then": {
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/source_case_id"
+                },
+                "path": {
+                  "$ref": "#/$defs/source_case_path"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/id"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "layer"
+            ]
+          },
+          "then": {
+            "required": [
+              "transport"
+            ],
+            "properties": {
+              "transport": {
+                "description": "A layer applies only to the local transport profile: transport is not https alone.",
+                "not": {
+                  "items": {
+                    "const": "https"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "description": "An entry of kind transport is executed over the local transport and says who executes it: layer is required.",
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "transport"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "layer"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "transport",
+                  "profile"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "scope": {
+                "const": "runner"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "mcp",
+                  "source-case"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "scope": {
+                "const": "adapter"
+              }
+            }
+          }
+        }
+      ],
+      "if": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "key",
+              "adapter-asset",
+              "source-case"
+            ]
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "expected": {
+            "type": "null"
+          },
+          "outcome": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "expected": {
+            "$ref": "#/$defs/path"
+          },
+          "outcome": {
+            "$ref": "#/$defs/outcome"
+          }
+        }
+      }
+    }
+  }
+}

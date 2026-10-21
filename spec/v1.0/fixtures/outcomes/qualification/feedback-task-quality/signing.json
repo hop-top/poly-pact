@@ -1,0 +1,7 @@
+{
+  "artifacts": [
+    {"decoded":"reports/feedback-event-0001.json","signed":"signed/feedback-event-0001.jws","typ":"pact-outcome+jwt","signer":"evaluator","jti":"uW5OVIX9CmfQ1xbJYFyWjQ"},
+    {"decoded":"reports/feedback-event-0002.json","signed":"signed/feedback-event-0002.jws","typ":"pact-outcome+jwt","signer":"holder","jti":"9OhU66W03773UkjqEc4uQg"},
+    {"decoded":"reports/feedback-event-0003.json","signed":"signed/feedback-event-0003.jws","typ":"pact-outcome+jwt","signer":"evaluator","jti":"k0LCS1Ve6PSHDLxgXs_H4Q"}
+  ]
+}

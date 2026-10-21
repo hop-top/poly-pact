@@ -1,0 +1,14 @@
+diff --git a/ts/src/adapter/enroll/memory.ts b/ts/src/adapter/enroll/memory.ts
+index 6b3e0fc..2304135 100644
+--- a/ts/src/adapter/enroll/memory.ts
++++ b/ts/src/adapter/enroll/memory.ts
+@@ -238,9 +238,6 @@ export class MemoryRegistry implements Registry {
+       this.#refuse(entry, new EnrollError('REVOKED', JSON.stringify(agentId)));
+     }
+     const kk = keyKey(admin.realm, newJKT);
+-    if (this.#usedKeys.has(kk)) {
+-      this.#refuse(entry, new EnrollError('KEY_REUSE', JSON.stringify(newJKT)));
+-    }
+ 
+     row.binding = { ...row.binding, holderJKT: newJKT, observedAt: entry.at };
+     this.#usedKeys.add(kk);

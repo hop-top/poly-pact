@@ -1,0 +1,60 @@
+{
+  "case": "outcomes/mapping/incident-without-record",
+  "adversarial_claim": "A security authority's signature alone holds an agent, an incident of another operation holds this one, or a hold hides on a dimension.",
+  "subject_event_id": "security-event-0001",
+  "events": [
+    {
+      "event_id": "security-event-0001",
+      "report": "reports/security-event-0001.json",
+      "signed": "signed/security-event-0001.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "record-mismatch",
+      "contribution": {
+        "dimension": "none",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Confirmed incident': evidence_refs cites the confirmed incident record of its task and operation; this report cites none (14.2: the receiver verifies evidence references), so it is UNQUALIFIED and places no hold (14.6 rule 12, 15.4)."
+    },
+    {
+      "event_id": "security-event-0002",
+      "report": "reports/security-event-0002.json",
+      "signed": "signed/security-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "record-mismatch",
+      "contribution": {
+        "dimension": "none",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Confirmed incident', and 15.4: an authority reports each incident under the task and operation it concerns. The record cited is the incident of invoice-read-operation-0003, not of this report's operation, so the report is UNQUALIFIED and places no hold."
+    },
+    {
+      "event_id": "security-event-0003",
+      "report": "reports/security-event-0003.json",
+      "signed": "signed/security-event-0003.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "reporter-not-authorized",
+      "contribution": {
+        "dimension": "policy_adherence",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Confirmed incident', and 14.6 rule 12: a security authority's SECURITY report with another result or dimension than FAILURE on none is UNQUALIFIED and places no hold, so one authority cannot hold one task and operation twice through a second dimension (15.4)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

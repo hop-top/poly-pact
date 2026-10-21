@@ -1,0 +1,9 @@
+version: 1
+# Change applied after seed.ldif for LDAP-08.removed: the directory owner
+# removes removed-assistant from warehouse-readers.
+
+dn: cn=warehouse-readers,ou=groups,ou=hq,dc=northstar,dc=example
+changetype: modify
+delete: member
+member: uid=removed-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+-

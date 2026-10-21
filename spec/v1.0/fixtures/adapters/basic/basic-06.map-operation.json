@@ -1,0 +1,93 @@
+{
+  "case_version": 1,
+  "id": "BASIC-06.map-operation",
+  "title": "The operation context of a request with Basic credentials covers no Authorization header and no other header",
+  "draft": [
+    "10.2",
+    "19"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "credentials": [
+      {
+        "ref": "ops",
+        "user_id": "invoice-assistant-ops",
+        "password": "Tq7!harbor-lantern-42"
+      },
+      {
+        "ref": "ops-wrong-password",
+        "user_id": "invoice-assistant-ops",
+        "password": "Tq7!harbor-lantern-43"
+      },
+      {
+        "ref": "unknown-user",
+        "user_id": "invoice-assistant-0ps",
+        "password": "Tq7!harbor-lantern-42"
+      },
+      {
+        "ref": "approver",
+        "user_id": "legacy-approver",
+        "password": "Lm4:quarry:otter"
+      },
+      {
+        "ref": "batch",
+        "user_id": "legacy-batch",
+        "password": "batch\u0007bell-31"
+      },
+      {
+        "ref": "former",
+        "user_id": "former-assistant",
+        "password": "Zx9$willow-ember-07"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://invoices.northstar.example/invoices/INV-1041",
+    "native_state_ref": "ops",
+    "headers": {
+      "X-Request-Kind": "lookup"
+    }
+  },
+  "call": {
+    "principal": {
+      "id": "basic:legacy-accounts:20417",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/invoices"
+      },
+      "workload": "basic:legacy-accounts:20417",
+      "mechanism": "basic"
+    },
+    "mapping_version": "pact-basic-1"
+  },
+  "expect": {
+    "function": "map_operation",
+    "outcome": "mapped",
+    "leak_scan": {
+      "secrets": [
+        "Tq7!harbor-lantern-42",
+        "aW52b2ljZS1hc3Npc3RhbnQtb3BzOlRxNyFoYXJib3ItbGFudGVybi00Mg=="
+      ]
+    },
+    "operation": {
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "principal_id": "basic:legacy-accounts:20417",
+      "action": "invoice.read",
+      "resources": [
+        "invoice:INV-1041"
+      ],
+      "method": "GET",
+      "target_uri": "https://invoices.northstar.example/invoices/INV-1041",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  }
+}

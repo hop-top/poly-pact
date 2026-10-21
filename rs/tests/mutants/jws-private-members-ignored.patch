@@ -1,0 +1,11 @@
+--- a/rs/src/core/jws/jwk.rs
++++ b/rs/src/core/jws/jwk.rs
+@@ -78,7 +78,7 @@
+ fn parse_jwk_with(data: &[u8], algs: &Algorithms) -> Result<JWK, Error> {
+     let m: BTreeMap<String, serde_json::Value> = strictjson::unmarshal(data, Limits::default())
+         .map_err(|e| fail_by(Reason::JWKInvalid, "not a strict JSON object", e))?;
+-    if let Some(name) = PRIVATE_MEMBERS.iter().find(|n| m.contains_key(**n)) {
++    if let Some(name) = PRIVATE_MEMBERS.iter().find(|n| m.contains_key(**n) && false) {
+         return Err(fail(Reason::JWKPrivate, format!("member {name}")));
+     }
+     let mut k = JWK::default();

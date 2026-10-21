@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jcs/Jcs.php b/php/src/Core/Jcs/Jcs.php
+index 70298be..5ecfb82 100644
+--- a/php/src/Core/Jcs/Jcs.php
++++ b/php/src/Core/Jcs/Jcs.php
+@@ -88,7 +88,7 @@ final class Jcs
+                 throw self::fail(StrictJsonErrorKind::NON_FINITE, $path, \sprintf('%F is not a JSON number', $v));
+             }
+ 
+-            return Number::format($v);
++            return json_encode($v, \JSON_THROW_ON_ERROR);
+         }
+         if ($v instanceof JsonObject) {
+             self::enter($depth, $path);

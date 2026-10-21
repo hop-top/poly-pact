@@ -1,0 +1,17 @@
+// The workspace of the two Go modules of this repository: the library
+// hop.top/pact-go (./go) and the commands hop.top/pact (./cli). It
+// resolves hop.top/pact-go for the command module from this tree. Consumers of
+// either module never read this file, and neither mirror carries it.
+go 1.26.1
+
+use (
+	./go
+	./cli
+)
+
+// cli/go.mod requires hop.top/pact-go at the placeholder version below until
+// the library is released. Loading the module graph reads the go.mod of
+// every requirement, and that version exists nowhere, so the workspace
+// points it at the library here. Once a pact-go tag exists, cli/go.mod
+// requires that version and this replace is deleted (RELEASING.md).
+replace hop.top/pact-go v0.0.0-00010101000000-000000000000 => ./go

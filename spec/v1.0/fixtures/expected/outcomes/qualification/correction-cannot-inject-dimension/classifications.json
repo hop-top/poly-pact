@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/correction-cannot-inject-dimension",
+  "adversarial_claim": "A correction reports what its signer could not: an executor's quality report, unqualified, becomes a qualified positive task_quality unit when the executor corrects it.",
+  "subject_event_id": "correction-event-0002",
+  "events": [
+    {
+      "event_id": "quality-event-0001",
+      "report": "reports/quality-event-0001.json",
+      "signed": "signed/quality-event-0001.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "reporter-not-authorized",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.2: task quality is the observation of an authorized evaluator or task owner; a signer registered only as executor may not report QUALITY."
+    },
+    {
+      "event_id": "correction-event-0002",
+      "report": "reports/correction-event-0002.json",
+      "signed": "signed/correction-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "correction-mismatch",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.6 rule 10: the events a correction supersedes must be QUALIFIED or DISPUTED; quality-event-0001 is UNQUALIFIED, so the correction is UNQUALIFIED, supersedes nothing and adds nothing. A correction is classified as a report of the kind it corrects from its signer, so it cannot add what its signer could not report."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

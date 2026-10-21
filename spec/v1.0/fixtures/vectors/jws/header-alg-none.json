@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/header-alg-none",
+  "description": "alg none is prohibited (draft 7.2). The signature is a valid ES256 signature by the issuer key.",
+  "compact": "eyJhbGciOiJub25lIiwidHlwIjoicGFjdC1ldmlkZW5jZStqd3QiLCJraWQiOiJ0ZXN0LWlzc3Vlci1rZXktMSJ9.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9oZWFkZXItYWxnLW5vbmUifQ.2Lg7zzf4gyE8viyWAGL0POwNpoLu5RwKZhM0MSHEgkUUV8HPw9QJz_WYWmI_Mw9OOsRDsHCEioQKGhPMb59e4g",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "alg-unsupported",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

@@ -1,0 +1,69 @@
+{
+  "case_version": 1,
+  "id": "COMMON-03.target-uri",
+  "title": "The target URI is the configured origin plus the exact path and query",
+  "draft": ["10.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "HTTPS://Gateway.Example:443",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "mappings": [
+      {
+        "version": "map-1",
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/invoices/{id}",
+            "action": "invoice.read",
+            "resource": "https://invoices.example/invoices/{id}"
+          },
+          {
+            "method": "POST",
+            "path": "/invoices/{id}/approve",
+            "action": "invoice.approve",
+            "resource": "https://invoices.example/invoices/{id}"
+          }
+        ]
+      }
+    ],
+    "identities": [
+      {
+        "ref": "alice",
+        "id": "https://idp.acme.example/alice",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "https://workloads.acme.example/invoice-assistant",
+        "secret": "tok-alice-7f3a9c1e5b2d"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway-internal.local:8443/invoices/INV-1042?z=1&a=%2F%C3%A9~&a=2&b",
+    "headers": {
+      "Host": "attacker.example",
+      "Forwarded": "for=203.0.113.9;host=evil.example;proto=http",
+      "X-Forwarded-Host": "evil.example",
+      "X-Forwarded-Proto": "http",
+      "X-Forwarded-Port": "8080",
+      "X-Original-URL": "/admin"
+    }
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "mapping_version": "map-1"
+  },
+  "expect": {
+    "function": "map_operation",
+    "outcome": "mapped",
+    "operation": {"target_uri": "https://gateway.example/invoices/INV-1042?z=1&a=%2F%C3%A9~&a=2&b"}
+  }
+}

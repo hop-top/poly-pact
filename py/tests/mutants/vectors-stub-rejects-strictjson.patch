@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/vectors/_groups.py b/py/src/hop_top_pact/vectors/_groups.py
+index a290619..a05cfde 100644
+--- a/py/src/hop_top_pact/vectors/_groups.py
++++ b/py/src/hop_top_pact/vectors/_groups.py
+@@ -285,7 +285,7 @@ def run_strictjson(root: Path, e: Entry) -> None:
+         raise Fail(f"expect {v['expect']!r} does not agree with outcome {e.outcome!r}")
+     try:
+         strictjson.decode(data, OperationContext, strictjson.Limits())
+-    except strictjson.StrictJSONError as err:
++    except Exception as err:
+         if v["expect"] == "accept":
+             raise Fail(f"rejected ({err}), want accept") from err
+         return

@@ -1,0 +1,45 @@
+{
+  "case_version": 1,
+  "id": "IDENT-02.authenticate",
+  "title": "The same subject under another tenant of the issuer authenticates as a different principal",
+  "draft": ["8.5", "17.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "identities": [
+      {
+        "ref": "tenant-a-app",
+        "id": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "oauth:https%3A%2F%2Flogin.idp.example:7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01",
+        "secret": "tok-tenant-a-61f0c2d9e8b4"
+      },
+      {
+        "ref": "tenant-b-app",
+        "id": "oauth:https%3A%2F%2Flogin.idp.example:0b9e4f62-8d1a-4c3e-b7f5-6a2d9c1e8f30:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "oauth:https%3A%2F%2Flogin.idp.example:0b9e4f62-8d1a-4c3e-b7f5-6a2d9c1e8f30:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01",
+        "secret": "tok-tenant-b-a93e7b15c06d"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.example/invoices/INV-1042",
+    "native_state_ref": "tenant-b-app"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "authenticated",
+    "principal": {
+      "id": "oauth:https%3A%2F%2Flogin.idp.example:0b9e4f62-8d1a-4c3e-b7f5-6a2d9c1e8f30:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "oauth:https%3A%2F%2Flogin.idp.example:0b9e4f62-8d1a-4c3e-b7f5-6a2d9c1e8f30:3f2a9d54-0c1e-4d7e-8f1a-5b6c7d8e9f01"
+    }
+  }
+}

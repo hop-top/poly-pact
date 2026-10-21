@@ -1,0 +1,28 @@
+diff --git a/py/src/hop_top_pact/adapter/freshness.py b/py/src/hop_top_pact/adapter/freshness.py
+index b2c1c40..153845e 100644
+--- a/py/src/hop_top_pact/adapter/freshness.py
++++ b/py/src/hop_top_pact/adapter/freshness.py
+@@ -194,17 +194,18 @@ class Evaluator:
+ 
+         # A source clock ahead outranks everything, and an implausible time is
+         # never recorded as the baseline of a source record.
++        guard = CheckStatus.NOT_APPLICABLE
++        if self.guard is not None:
++            guard, _ = self.guard.check(claim)
++        if guard == CheckStatus.FAIL:
++            return CheckStatus.FAIL, ReasonCode.RESTAMPED
++
+         latest = now_us + skew // _ONE_US
+         if (observed is not None and observed > latest) or (
+             checked is not None and checked > latest
+         ):
+             return CheckStatus.FAIL, ReasonCode.CLOCK_AHEAD
+ 
+-        guard = CheckStatus.NOT_APPLICABLE
+-        if self.guard is not None:
+-            guard, _ = self.guard.check(claim)
+-        if guard == CheckStatus.FAIL:
+-            return CheckStatus.FAIL, ReasonCode.RESTAMPED
+ 
+         if (
+             observed is not None and _too_old(observed, now_us, start_us, rule.max_age_seconds)

@@ -1,0 +1,82 @@
+{
+  "case_version": 1,
+  "id": "SAML-09.no-session",
+  "title": "A valid credential of an enrolled agent, with no session ever created and no grant, gives no principal",
+  "draft": [
+    "17.1",
+    "8.5"
+  ],
+  "native_state": {
+    "model": "saml/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://portal.northstar.example/environments/purchasing",
+      "origin": "https://portal.northstar.example",
+      "header_allowlist": []
+    },
+    "sp": {
+      "entity_id": "https://portal.northstar.example/saml/metadata",
+      "trusted_idps": [
+        "https://idp.northstar.example/saml"
+      ]
+    },
+    "agents": [
+      {
+        "ref": "assistant",
+        "token": "brk-assistant-7Qm2xV9pL4tR8sW1",
+        "workload": "x-broker:portal-broker:client-assistant"
+      },
+      {
+        "ref": "reviewer",
+        "token": "brk-reviewer-3Hk8nB5cZ2yD6fJ0",
+        "workload": "x-broker:portal-broker:client-reviewer"
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://portal.northstar.example/environments/purchasing"
+        },
+        "workload": "x-broker:portal-broker:client-assistant",
+        "agent_id": "https://agents.northstar.example/purchasing-assistant",
+        "operator_id": "https://operators.northstar.example/procurement",
+        "holder_jkt": "NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792080000,
+        "source_id": "northstar-enrollment"
+      },
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://portal.northstar.example/environments/purchasing"
+        },
+        "workload": "x-broker:portal-broker:client-reviewer",
+        "agent_id": "https://agents.northstar.example/contract-reviewer",
+        "operator_id": "https://operators.northstar.example/legal",
+        "holder_jkt": "0ZcOCORZNYy-DWpqq30jZyJGHTN0d2HglBV3uiguA4I",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792080000,
+        "source_id": "northstar-enrollment"
+      }
+    ],
+    "events": [],
+    "grants": []
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://portal.northstar.example/broker/v1/tasks/task-5b21c0/records/SUP-1042",
+    "native_state_ref": "assistant"
+  },
+  "call": {},
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "CREDENTIAL_REJECTED",
+    "must_not_call": [
+      "execute"
+    ]
+  }
+}

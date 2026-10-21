@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/typ-unlisted",
+  "description": "typ pact-profile+jwt looks like a PACT type but is not in the draft 7.3 table.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtcHJvZmlsZStqd3QiLCJraWQiOiJ0ZXN0LWlzc3Vlci1rZXktMSJ9.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy90eXAtdW5saXN0ZWQifQ.dO8NXD0tZq5h7OAqzaOgzX3BQ24zVxXEG6JGLUSM4MF0a-XFJXsP2AajynbvmzV-LCr_zWVbZHpaiX4-9fVzEA",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "typ-unsupported",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

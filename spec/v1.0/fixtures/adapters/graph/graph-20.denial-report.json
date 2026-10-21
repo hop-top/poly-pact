@@ -1,0 +1,109 @@
+{
+  "case_version": 1,
+  "id": "GRAPH-20.denial-report",
+  "title": "An AUTHORIZATION FAILURE report of a GD1 operation names both actors in details and references the executor record; no token or credential in it (GR-29, GR-31)",
+  "draft": [
+    "14.2",
+    "14.5",
+    "19"
+  ],
+  "native_state": {
+    "model": "graph/1",
+    "gateway": {
+      "tenant_id": "northwind",
+      "environment_id": "https://mail.northwind.example/environments/production",
+      "origin": "https://mail.northwind.example",
+      "header_allowlist": [
+        "accept"
+      ]
+    },
+    "form": "delegated",
+    "entra": {
+      "tenant_id": "8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c",
+      "gateway_app_id": "3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7"
+    },
+    "registry": [
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://mail.northwind.example/environments/production"
+        },
+        "row": "GD1",
+        "class": "delegated-user",
+        "grant": "on_behalf_of",
+        "app_id": "3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7",
+        "service_principal_id": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+        "ref": "executor-registry:gd1:r7",
+        "changed_at": 1791993600
+      },
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://mail.northwind.example/environments/production"
+        },
+        "row": "GD2",
+        "class": "delegated-user",
+        "grant": "on_behalf_of",
+        "app_id": "3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7",
+        "service_principal_id": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+        "ref": "executor-registry:gd2:r7",
+        "changed_at": 1791993600
+      }
+    ],
+    "reporting": {
+      "issuer": "https://mail.northwind.example/reporters/graph-executor",
+      "audience": "https://reputation.northwind.example/service",
+      "kid": "executor-key-1"
+    }
+  },
+  "call": {
+    "observation": {
+      "event_id": "event-mail-0042-authorization",
+      "event_kind": "AUTHORIZATION",
+      "context": {
+        "tenant_id": "northwind",
+        "environment_id": "https://mail.northwind.example/environments/production",
+        "agent_id": "https://agents.northwind.example/mail-assistant",
+        "purpose_id": "mail-digest",
+        "action_class": "mail.message.list",
+        "resource_class": "mailbox",
+        "runtime_class": "managed"
+      },
+      "task_id": "native-task:mail-digest-0042",
+      "operation_id": "op-mail-list-0001",
+      "admission_receipt_id": null,
+      "observed_at": 1792079995,
+      "result": "FAILURE",
+      "dimension": "none",
+      "severity": "info",
+      "evidence_refs": [
+        "graph-executor:gd1:3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7:request-id:94fb3b52-452a-4535-a601-69e0a90e3aa2:1792079995"
+      ],
+      "attribution": {
+        "native_task_ref": "native-task:mail-digest-0042",
+        "independence_group": "group-1",
+        "causal_assessment": "UNKNOWN",
+        "assessment_ref": null
+      },
+      "supersedes": [],
+      "details": "original_actor oauth:https%3A%2F%2Flogin.microsoftonline.com%2F8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c%2Fv2.0:8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c:2b3c4d5e-6f70-4182-93a4-b5c6d7e8f901; downstream_actor delegated-user oauth:https%3A%2F%2Flogin.microsoftonline.com%2F8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c%2Fv2.0:8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c:3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7"
+    }
+  },
+  "expect": {
+    "function": "record_outcome",
+    "outcome": "signed",
+    "must_not_call": [
+      "token",
+      "execute"
+    ],
+    "leak_scan": {
+      "secrets": [
+        "obo-client-secret-7d41c09a",
+        "executor-client-secret-2f8e61b3",
+        "auditor-client-secret-91c3d5e0",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im53LWtleS0xIn0.eyJhdWQiOiIzZjFjOWEyZSJ9.c2lnbmF0dXJlLW9mLXRva2VuLWE",
+        "graph-token-b-5e1a7c93d2f04b68a1"
+      ]
+    }
+  }
+}

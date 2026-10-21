@@ -1,0 +1,11 @@
+--- a/rs/examples/vectors/jws_groups.rs
++++ b/rs/examples/vectors/jws_groups.rs
+@@ -297,7 +297,7 @@
+             got.x, got.y, want.x, want.y
+         ));
+     }
+-    if k.get("role").and_then(Value::as_str) == Some("holder") {
++    if k.get("role").and_then(Value::as_str) == Some("nobody") {
+         let tp = jws::thumbprint(&got).or_else(|err| fail(format!("{path}: {err}")))?;
+         if tp != APPENDIX_C_HOLDER_JKT {
+             return fail(format!("{path}: holder thumbprint {tp}, want Appendix C holder_jkt {APPENDIX_C_HOLDER_JKT}"));

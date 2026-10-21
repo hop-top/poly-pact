@@ -1,0 +1,11 @@
+--- a/rs/src/core/strictjson/de.rs
++++ b/rs/src/core/strictjson/de.rs
+@@ -83,7 +83,7 @@
+ 
+     fn integer<V2: Visitor<'a>>(self, visitor: V2) -> Result<V2::Value, DeError> {
+         match &self.node.v {
+-            V::Number(Number::Int(n)) if *n < 0 => {
++            V::Number(Number::Int(n)) if *n < 0 && false => {
+                 Err(self.here(DeError::new(Kind::Integer, format!("{n} is negative"))))
+             }
+             V::Number(Number::Int(n)) => visitor.visit_u64(*n as u64),

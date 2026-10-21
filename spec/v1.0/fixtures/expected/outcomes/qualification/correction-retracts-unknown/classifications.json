@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/correction-retracts-unknown",
+  "adversarial_claim": "An UNKNOWN correction is refused as invalid, or leaves the success it retracts in the score.",
+  "subject_event_id": "correction-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution completed with data returned': EXECUTION, SUCCESS, reliability. It contributes one positive unit until correction-event-0002 supersedes it (14.6 rule 10); at the end of the case it contributes nothing and is listed in superseded_event_ids, not qualified_event_ids (15.2)."
+    },
+    {
+      "event_id": "correction-event-0002",
+      "report": "reports/correction-event-0002.json",
+      "signed": "signed/correction-event-0002.jws",
+      "qualification": "QUALIFIED",
+      "reason": "correction",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft A.2: a CORRECTION carries the dimension of the events it supersedes whatever its result, so UNKNOWN on reliability is valid. Draft 14.6 rule 10: same task, operation, kind, dimension and reporter as the qualified event it supersedes, received after it; it cites an execution record of its task and operation that names the executor (14.2). With result UNKNOWN it retracts the success and, having zero weight (15.3), is listed in neither provenance array (15.2)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

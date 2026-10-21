@@ -1,0 +1,44 @@
+{
+  "case_version": 1,
+  "id": "COMMON-09.authorize-realm",
+  "title": "A policy rule for a principal in one realm does not allow a same-spelled principal of another",
+  "draft": ["8.5", "17.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "policy": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "alice",
+        "action": "invoice.approve",
+        "resource": "https://invoices.example/invoices/INV-1042",
+        "effect": "ALLOW"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "alice",
+      "realm": {"tenant_id": "globex", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "w-1",
+      "mechanism": "bearer"
+    },
+    "operation": {
+      "operation_id": "op-invoice-approve-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "alice",
+      "action": "invoice.approve",
+      "resources": ["https://invoices.example/invoices/INV-1042"],
+      "method": "POST",
+      "target_uri": "https://gateway.example/invoices/INV-1042/approve",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {"function": "authorize_native", "outcome": "not_allowed"}
+}

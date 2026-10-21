@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/conformance/__main__.py b/py/src/hop_top_pact/conformance/__main__.py
+--- a/py/src/hop_top_pact/conformance/__main__.py
++++ b/py/src/hop_top_pact/conformance/__main__.py
+@@ -76,7 +76,7 @@
+         fixtures, id = locate(Path(argv[1]).resolve())
+         lines: list[str] = []
+         for x in read(fixtures, id).exchanges:
+-            for _ in range(len(x.submissions) + len(x.handoff)):
++            for _ in range(len(x.submissions)):
+                 lines.append(problem(len(lines) + 1))
+     except (PactError, OSError) as e:
+         sys.stderr.write(f"evaluate: {message(e)}\n")

@@ -1,0 +1,68 @@
+{
+  "case_version": 1,
+  "id": "COMMON-11.resource-scoped",
+  "title": "A fact of a resource is read for a resource of the actual operation, not for another resource",
+  "draft": ["17.1", "10.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "approved_paths": ["/resource/classification"],
+    "claims": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "https://idp.acme.example/alice",
+        "path": "/resource/classification",
+        "resource": "https://invoices.example/invoices/INV-1041",
+        "value": "restricted",
+        "observed_at": 1792076400,
+        "source_id": "catalog-1",
+        "source_ref": "catalog-entry-1041"
+      },
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "https://idp.acme.example/alice",
+        "path": "/resource/classification",
+        "resource": "https://invoices.example/invoices/INV-1042",
+        "value": "internal",
+        "observed_at": 1792076400,
+        "source_id": "catalog-1",
+        "source_ref": "catalog-entry-1042"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "native_path": "/resource/classification",
+    "operation": {
+      "operation_id": "op-invoice-read-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://idp.acme.example/alice",
+      "action": "invoice.read",
+      "resources": ["https://invoices.example/invoices/INV-1042"],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": "internal",
+      "observed_at": 1792076400,
+      "source_id": "catalog-1",
+      "source_ref": "catalog-entry-1042"
+    }
+  }
+}

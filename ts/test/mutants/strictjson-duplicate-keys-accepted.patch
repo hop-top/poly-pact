@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/strictjson.ts b/ts/src/core/strictjson.ts
+index 934e578..88b95ef 100644
+--- a/ts/src/core/strictjson.ts
++++ b/ts/src/core/strictjson.ts
+@@ -503,7 +503,7 @@ class Walker {
+       this.path.push(key);
+       // Lone surrogates compare as U+FFFD, as Go decodes them.
+       const name = key.isWellFormed() ? key : key.toWellFormed();
+-      if (seen.has(name)) throw this.error('DUPLICATE_KEY', JSON.stringify(key));
++      // mutant: duplicate member names accepted
+       seen.add(name);
+       let target = child;
+       if (shape !== undefined) {

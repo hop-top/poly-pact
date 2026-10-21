@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Digest/Digests.php b/php/src/Core/Digest/Digests.php
+index f269796..e30f0f6 100644
+--- a/php/src/Core/Digest/Digests.php
++++ b/php/src/Core/Digest/Digests.php
+@@ -75,7 +75,7 @@ final class Digests
+         if ($size > StrictJson::DEFAULT_MAX_BYTES) {
+             throw new StrictJsonError(StrictJsonErrorKind::SIZE, '', StrictJson::DEFAULT_MAX_BYTES, \sprintf('encoding is %d bytes, limit is %d bytes', $size, StrictJson::DEFAULT_MAX_BYTES));
+         }
+-        if ($unsafe !== null) {
++        if (false) {
+             [$pointer, $f] = $unsafe;
+             throw new StrictJsonError(StrictJsonErrorKind::INTEGER, $pointer, 0, \sprintf('%s is written as an integer literal outside ±%d', Jcs::canonicalizeValue($f), StrictJson::MAX_SAFE_INTEGER));
+         }

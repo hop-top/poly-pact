@@ -1,0 +1,13 @@
+diff --git a/ts/src/adapter/enroll/memory.ts b/ts/src/adapter/enroll/memory.ts
+index 6b3e0fc..edf0243 100644
+--- a/ts/src/adapter/enroll/memory.ts
++++ b/ts/src/adapter/enroll/memory.ts
+@@ -149,7 +149,7 @@ export class MemoryRegistry implements Registry {
+       );
+     }
+     const row = this.#agents.get(agentKey(realm, agentId));
+-    if (row !== undefined && row.workload !== workload) {
++    if (row === undefined && row !== undefined) {
+       return { ...this.#read(undefined), enrolledElsewhere: true };
+     }
+     return this.#read(row);

@@ -1,0 +1,140 @@
+{
+  "case_version": 1,
+  "id": "SCIM-09.replay",
+  "title": "A create that repeats an externalId or a user name is 409 uniqueness and changes nothing; after a delete the externalId can be created again.",
+  "draft": [
+    "8.5",
+    "17.2"
+  ],
+  "now": 1792080000,
+  "source": {
+    "model": "scim/1",
+    "source_id": "scim-northstar",
+    "lag_seconds": 2400,
+    "base_path": "/scim/v2",
+    "join": {
+      "attribute": "externalId",
+      "prefix": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:"
+    },
+    "credentials": [
+      {
+        "token": "provisioning-token-0001",
+        "provisioning": true
+      },
+      {
+        "token": "readonly-token-0002",
+        "provisioning": false
+      }
+    ]
+  },
+  "steps": [
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "avery@northstar.example",
+          "externalId": "3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 201,
+        "save_id_as": "avery"
+      }
+    },
+    {
+      "at": 1792070001,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "other@northstar.example",
+          "externalId": "3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+          "active": false
+        }
+      },
+      "expect": {
+        "status": 409,
+        "scim_type": "uniqueness"
+      }
+    },
+    {
+      "at": 1792070002,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "AVERY@northstar.example",
+          "externalId": "5a9d2f4c-1b73-4e08-8c6d-0f3a7b1e2d22",
+          "active": false
+        }
+      },
+      "expect": {
+        "status": 409,
+        "scim_type": "uniqueness"
+      }
+    },
+    {
+      "at": 1792070003,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "blake@northstar.example",
+          "externalId": "5a9d2f4c-1b73-4e08-8c6d-0f3a7b1e2d22",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 201
+      }
+    }
+  ],
+  "reads": [
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+      "expect": {
+        "source_id": "scim-northstar",
+        "outcome": "value",
+        "value": "active",
+        "observed_at": 1792077600,
+        "status_checked_at": 1792077600
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:5a9d2f4c-1b73-4e08-8c6d-0f3a7b1e2d22",
+      "expect": {
+        "source_id": "scim-northstar",
+        "outcome": "value",
+        "value": "active",
+        "observed_at": 1792077600,
+        "status_checked_at": 1792077600
+      }
+    }
+  ],
+  "must_not_call": [
+    "outbound"
+  ]
+}

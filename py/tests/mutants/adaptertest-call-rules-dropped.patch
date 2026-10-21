@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/adapter/adaptertest/casefile.py b/py/src/hop_top_pact/adapter/adaptertest/casefile.py
+--- a/py/src/hop_top_pact/adapter/adaptertest/casefile.py
++++ b/py/src/hop_top_pact/adapter/adaptertest/casefile.py
+@@ -578,7 +578,7 @@
+             f"{c.id}: outcome {c.expect.outcome!r} is not defined for {f}"
+             f" (want one of {list(outcomes)})"
+         )
+-    for check in (_validate_request, _validate_call, _validate_expect):
++    for check in (_validate_request, _validate_expect):
+         problem = check(c, f)
+         if problem:
+             return f"{c.id}: {problem}"

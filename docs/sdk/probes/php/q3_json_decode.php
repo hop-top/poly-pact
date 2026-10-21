@@ -1,0 +1,9 @@
+<?php // Q3: what json_decode does with the inputs strict JSON must reject or keep exact. assoc mode with no flags vs object mode with JSON_BIGINT_AS_STRING; both add JSON_THROW_ON_ERROR to show the error.
+$show = fn($v) => preg_replace('/\s+/', ' ', is_float($v) ? var_export($v, true) . ' (float)' : (is_int($v) ? "$v (int)" : var_export($v, true)));
+function dec(string $t, bool $assoc, int $flags) { try { return json_decode($t, $assoc, 512, $flags | JSON_THROW_ON_ERROR); } catch (JsonException $e) { return 'ERR ' . $e->getCode() . ' ' . $e->getMessage(); } }
+$T = ['dup key' => '{"a":1,"a":2}', 'dup key, escaped' => '{"a":1,"a":2}', '1e999' => '1e999', '-1e999' => '-1e999', '1e-400' => '1e-400', 'NaN' => '[NaN]', 'Infinity' => '[Infinity]', '-Infinity' => '[-Infinity]',
+    'lone high \ud800' => '"\ud800"', 'lone low \udc00' => '"\udc00"', 'high + A' => '"\ud800A"', 'valid pair' => '"😀"', '2^53+1' => '9007199254740993', '2^53+1.0' => '9007199254740993.0',
+    'INT_MAX' => '9223372036854775807', 'INT_MAX+1' => '9223372036854775808', 'INT_MIN-1' => '-9223372036854775809', '30 digits' => '123456789012345678901234567890', '-0' => '-0', '-0.0' => '-0.0', '1.0' => '1.0', '1E2' => '1E2',
+    'key \u0000a' => '{"\u0000a":1}', 'numeric keys' => '{"0":"a","1":"b"}', 'empty object' => '{}', 'trailing {}' => '{} x', 'two values' => '{}{}', 'trailing ws' => "{}  \n", 'empty text' => '', 'BOM + {}' => "\xEF\xBB\xBF{}",
+    'ff in string' => "\"\xff\"", 'c0 af' => "\"\xc0\xaf\"", 'e2 82' => "\"\xe2\x82\"", 'ed a0 80' => "\"\xed\xa0\x80\"", 'f4 90 80 80' => "\"\xf4\x90\x80\x80\"", 'U+FFFE' => "\"\xef\xbf\xbe\"", 'raw U+0001' => "\"\x01\"", 'UTF-16LE' => "\xff\xfe{\x00}\x00"];
+foreach ($T as $label => $t) printf("%-17s assoc, flags 0: %-52s object, BIGINT_AS_STRING: %s\n", $label, substr($show(dec($t, true, 0)), 0, 52), substr($show(dec($t, false, JSON_BIGINT_AS_STRING)), 0, 60));

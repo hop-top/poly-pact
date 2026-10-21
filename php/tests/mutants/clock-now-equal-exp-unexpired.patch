@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Clock/Clocks.php b/php/src/Core/Clock/Clocks.php
+index ab9df89..8ff5799 100644
+--- a/php/src/Core/Clock/Clocks.php
++++ b/php/src/Core/Clock/Clocks.php
+@@ -93,7 +93,7 @@ final class Clocks
+             throw new ClockError(ClockErrorKind::ISSUED_IN_FUTURE, \sprintf('iat %d, now %d, skew %s', $iat, $sec, self::duration($skew)));
+         }
+         // now < exp exactly when its whole seconds are below exp.
+-        if ($sec >= $exp) {
++        if ($sec > $exp) {
+             throw new ClockError(ClockErrorKind::EXPIRED, \sprintf('exp %d, now %d', $exp, $sec));
+         }
+     }

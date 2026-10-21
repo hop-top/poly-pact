@@ -1,0 +1,105 @@
+{
+  "case_version": 1,
+  "id": "DB-08.mapped",
+  "title": "A principal mapped to a login role the broker holds a pool for passes at evaluation, without a connection",
+  "draft": [
+    "17.5",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "db/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://reports.northstar.example/environments/analytics",
+      "origin": "https://reports.northstar.example",
+      "header_allowlist": []
+    },
+    "cluster_id": "northstar-reports",
+    "installed": [
+      {
+        "revision": "pact-db-1",
+        "routes": [
+          "R1"
+        ],
+        "queries": [
+          "report.read"
+        ]
+      }
+    ],
+    "registry": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://reports.northstar.example/environments/analytics"
+        },
+        "principal": "https://idp.northstar.example/users/maya",
+        "login_role": "report_maya",
+        "role_oid": 16390,
+        "credential_ref": "secret-store:report_maya",
+        "tenant_id": "northstar",
+        "revision": "role-registry-r3",
+        "changed_at": 1792070000
+      },
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://reports.northstar.example/environments/analytics"
+        },
+        "principal": "https://idp.northstar.example/users/lee",
+        "login_role": "report_lee",
+        "role_oid": 16391,
+        "credential_ref": "secret-store:report_lee",
+        "tenant_id": "harbor-analytics",
+        "revision": "role-registry-r3",
+        "changed_at": 1792070000
+      }
+    ],
+    "credentials": [
+      {
+        "ref": "secret-store:report_maya",
+        "secret": "pg-pass-report-maya-5d1f9c"
+      },
+      {
+        "ref": "secret-store:report_lee",
+        "secret": "pg-pass-report-lee-8a2e47"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.northstar.example/users/maya",
+      "realm": {"tenant_id": "northstar", "environment_id": "https://reports.northstar.example/environments/analytics"},
+      "workload": "https://idp.northstar.example/clients/analytics-assistant",
+      "mechanism": "oauth"
+    },
+    "check_id": "execution-identity-v1",
+    "operation": {
+      "operation_id": "op-report-read-0001",
+      "environment_id": "https://reports.northstar.example/environments/analytics",
+      "principal_id": "https://idp.northstar.example/users/maya",
+      "action": "report.read",
+      "resources": [
+        "report:R-481"
+      ],
+      "method": "GET",
+      "target_uri": "https://reports.northstar.example/api/v1/reports/R-481",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {
+    "function": "check_context",
+    "outcome": "PASS",
+    "reason_code": "REQUIREMENT_SATISFIED",
+    "must_not_call": [
+      "connect",
+      "execute"
+    ],
+    "leak_scan": {
+      "secrets": [
+        "pg-pass-report-maya-5d1f9c",
+        "pg-pass-report-lee-8a2e47"
+      ]
+    }
+  }
+}

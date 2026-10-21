@@ -1,0 +1,174 @@
+{
+  "case_version": 1,
+  "id": "GOOGLE-11.stale-beyond-bound",
+  "title": "A cached fact is served with its own time while it is no older than the declared bound and not after: a suspension no sweep has seen yet is bounded, and past the bound the source cannot answer.",
+  "draft": [
+    "8.3",
+    "9.2",
+    "17.2",
+    "18"
+  ],
+  "now": 1792080000,
+  "source": {
+    "model": "googledir/1",
+    "source_id": "googledir-northstar",
+    "principal_prefix": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:",
+    "groups": [
+      "grp-eng"
+    ],
+    "transitive_groups": [],
+    "cache": {
+      "poll_interval_seconds": 900,
+      "max_age_seconds": 960,
+      "channel": {
+        "address": "https://pact.northstar.example/google/notify",
+        "token": "channel-secret-0001",
+        "ttl_seconds": 3600,
+        "renew_before_seconds": 300
+      }
+    },
+    "directory": {
+      "customer": "my_customer",
+      "users": [
+        {
+          "id": "118233047251904436211",
+          "primary_email": "avery@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436212",
+          "primary_email": "blake@northstar.example",
+          "aliases": [],
+          "suspended": true,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436213",
+          "primary_email": "casey@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": true
+        },
+        {
+          "id": "118233047251904436214",
+          "primary_email": "devon@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436215",
+          "primary_email": "emery@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        }
+      ],
+      "groups": [
+        {
+          "id": "grp-platform",
+          "members": [
+            "118233047251904436214"
+          ],
+          "groups": []
+        },
+        {
+          "id": "grp-eng",
+          "members": [
+            "118233047251904436211"
+          ],
+          "groups": [
+            "grp-platform"
+          ]
+        },
+        {
+          "id": "grp-all",
+          "members": [],
+          "groups": [
+            "grp-eng"
+          ]
+        },
+        {
+          "id": "grp-ops",
+          "members": [
+            "118233047251904436212"
+          ],
+          "groups": []
+        }
+      ]
+    }
+  },
+  "steps": [
+    {
+      "at": 1792080000,
+      "inbound": {
+        "tick": {}
+      },
+      "expect": {
+        "mode": "push",
+        "channel": 1,
+        "sweeps": 1,
+        "error": false
+      }
+    },
+    {
+      "at": 1792080100,
+      "inbound": {
+        "admin": {
+          "op": "suspend",
+          "user": "118233047251904436211"
+        }
+      },
+      "expect": {}
+    }
+  ],
+  "reads": [
+    {
+      "at": 1792080900,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "value",
+        "value": "active",
+        "observed_at": 1792080000,
+        "status_checked_at": 1792080000,
+        "source_id": "googledir-northstar"
+      }
+    },
+    {
+      "at": 1792080960,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "value",
+        "value": "active",
+        "observed_at": 1792080000,
+        "status_checked_at": 1792080000,
+        "source_id": "googledir-northstar"
+      }
+    },
+    {
+      "at": 1792080961,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "error",
+        "reason_code": "DEPENDENCY_UNAVAILABLE"
+      }
+    },
+    {
+      "at": 1792080961,
+      "native_path": "/principal/groups/grp-eng/member",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "value",
+        "value": true,
+        "observed_at": 1792080961,
+        "status_checked_at": 1792080961,
+        "source_id": "googledir-northstar"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jws/Jws.php b/php/src/Core/Jws/Jws.php
+index 2232070..d62200a 100644
+--- a/php/src/Core/Jws/Jws.php
++++ b/php/src/Core/Jws/Jws.php
+@@ -181,7 +181,7 @@ final class Jws
+     {
+         if ($k->algorithm() === self::ALG_ES256) {
+             $k->publicKey();
+-            $text = '{"crv":"' . $k->crv . '","kty":"' . $k->kty . '","x":"' . $k->x . '","y":"' . $k->y . '"}';
++            $text = '{"kty":"' . $k->kty . '","crv":"' . $k->crv . '","x":"' . $k->x . '","y":"' . $k->y . '"}';
+         } else {
+             self::okpX($k);
+             $text = '{"crv":"' . $k->crv . '","kty":"' . $k->kty . '","x":"' . $k->x . '"}';

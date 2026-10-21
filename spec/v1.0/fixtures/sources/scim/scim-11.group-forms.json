@@ -1,0 +1,370 @@
+{
+  "case_version": 1,
+  "id": "SCIM-11.group-forms",
+  "title": "Group members change by add, by remove with a value list as Entra sends it, by replace and by remove of all; a group with no externalId contributes no group id.",
+  "draft": [
+    "9.2",
+    "17.2",
+    "18"
+  ],
+  "now": 1792080000,
+  "source": {
+    "model": "scim/1",
+    "source_id": "scim-northstar",
+    "lag_seconds": 2400,
+    "base_path": "/scim/v2",
+    "join": {
+      "attribute": "externalId",
+      "prefix": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:"
+    },
+    "credentials": [
+      {
+        "token": "provisioning-token-0001",
+        "provisioning": true
+      },
+      {
+        "token": "readonly-token-0002",
+        "provisioning": false
+      }
+    ]
+  },
+  "steps": [
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "avery@northstar.example",
+          "externalId": "3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 201,
+        "save_id_as": "avery"
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "blake@northstar.example",
+          "externalId": "5a9d2f4c-1b73-4e08-8c6d-0f3a7b1e2d22",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 201,
+        "save_id_as": "blake"
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "casey@northstar.example",
+          "externalId": "7e1c4b8a-6f35-4d92-a0b7-2c9e5d3f1b33",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 201,
+        "save_id_as": "casey"
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Groups",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:Group"
+          ],
+          "displayName": "Finance",
+          "members": [],
+          "externalId": "d1a3c5e7-2b4f-4681-93a5-7c9e1b3d5f01"
+        }
+      },
+      "expect": {
+        "status": 201,
+        "save_id_as": "finance"
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Groups",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:Group"
+          ],
+          "displayName": "Audit",
+          "members": [],
+          "externalId": "e2b4d6f8-3c50-4792-84b6-8dae2c4e6012"
+        }
+      },
+      "expect": {
+        "status": 201,
+        "save_id_as": "audit"
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Groups",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:Group"
+          ],
+          "displayName": "Nameless",
+          "members": []
+        }
+      },
+      "expect": {
+        "status": 201,
+        "save_id_as": "nameless"
+      }
+    },
+    {
+      "at": 1792070010,
+      "inbound": {
+        "method": "PATCH",
+        "path": "/scim/v2/Groups/${finance}",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "Add",
+              "path": "members",
+              "value": [
+                {
+                  "value": "${avery}"
+                },
+                {
+                  "value": "${blake}"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expect": {
+        "status": 200
+      }
+    },
+    {
+      "at": 1792070020,
+      "inbound": {
+        "method": "PATCH",
+        "path": "/scim/v2/Groups/${finance}",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "Remove",
+              "path": "members",
+              "value": [
+                {
+                  "$ref": null,
+                  "value": "${blake}"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expect": {
+        "status": 200,
+        "body": {
+          "members": [
+            {
+              "value": "${avery}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "at": 1792070030,
+      "inbound": {
+        "method": "PATCH",
+        "path": "/scim/v2/Groups/${audit}",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "Replace",
+              "path": "members",
+              "value": [
+                {
+                  "value": "${blake}"
+                },
+                {
+                  "value": "${casey}"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expect": {
+        "status": 200
+      }
+    },
+    {
+      "at": 1792070040,
+      "inbound": {
+        "method": "PATCH",
+        "path": "/scim/v2/Groups/${nameless}",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "Add",
+              "path": "members",
+              "value": [
+                {
+                  "value": "${casey}"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expect": {
+        "status": 200
+      }
+    },
+    {
+      "at": 1792070050,
+      "inbound": {
+        "method": "PATCH",
+        "path": "/scim/v2/Groups/${audit}",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "Remove",
+              "path": "members"
+            }
+          ]
+        }
+      },
+      "expect": {
+        "status": 200,
+        "body": {
+          "members": []
+        }
+      }
+    },
+    {
+      "at": 1792070060,
+      "inbound": {
+        "method": "PATCH",
+        "path": "/scim/v2/Groups/${finance}",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "Add",
+              "path": "members",
+              "value": [
+                {
+                  "value": "no-such-user"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expect": {
+        "status": 400,
+        "scim_type": "invalidValue"
+      }
+    }
+  ],
+  "reads": [
+    {
+      "at": 1792080000,
+      "native_path": "/principal/group_ids",
+      "principal": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+      "expect": {
+        "source_id": "scim-northstar",
+        "outcome": "value",
+        "value": [
+          "d1a3c5e7-2b4f-4681-93a5-7c9e1b3d5f01"
+        ],
+        "observed_at": 1792077600,
+        "status_checked_at": 1792077600
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/group_ids",
+      "principal": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:5a9d2f4c-1b73-4e08-8c6d-0f3a7b1e2d22",
+      "expect": {
+        "source_id": "scim-northstar",
+        "outcome": "value",
+        "value": [],
+        "observed_at": 1792077600,
+        "status_checked_at": 1792077600
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/group_ids",
+      "principal": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:7e1c4b8a-6f35-4d92-a0b7-2c9e5d3f1b33",
+      "expect": {
+        "source_id": "scim-northstar",
+        "outcome": "value",
+        "value": [],
+        "observed_at": 1792077600,
+        "status_checked_at": 1792077600
+      }
+    }
+  ],
+  "must_not_call": [
+    "outbound"
+  ]
+}

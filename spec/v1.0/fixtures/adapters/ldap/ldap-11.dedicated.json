@@ -1,0 +1,90 @@
+{
+  "case_version": 1,
+  "id": "LDAP-11.dedicated",
+  "title": "The one enrollment of a directory account binds its agent with the enrolled holder key",
+  "draft": [
+    "6.1",
+    "6.2",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "ldap/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/inventory",
+      "origin": "https://inventory.northstar.example",
+      "header_allowlist": []
+    },
+    "login_realm": "hq",
+    "directories": [
+      {
+        "name": "northstar-ldap",
+        "seed": "assets/seed.ldif"
+      }
+    ],
+    "realms": [
+      {
+        "realm_id": "hq",
+        "kind": "openldap",
+        "directory": "northstar-ldap",
+        "user_bases": [
+          "ou=people,ou=hq,dc=northstar,dc=example"
+        ],
+        "group_bases": [
+          "ou=groups,ou=hq,dc=northstar,dc=example"
+        ],
+        "account_class": "inetOrgPerson",
+        "group_class": "groupOfNames",
+        "login_attribute": "uid",
+        "lookup": {
+          "dn": "uid=pact-lookup,ou=service,ou=people,ou=hq,dc=northstar,dc=example",
+          "password": "Lu9!amber-gate-58"
+        },
+        "denied_principals": [
+          "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001109"
+        ],
+        "sentinel": {
+          "account": "5c0e8a1e-3b7d-4f2a-9c61-000000001108",
+          "group": "5c0e8a1e-3b7d-4f2a-9c61-000000001204"
+        },
+        "direct_groups": true,
+        "nested": "none"
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://gateway.northstar.example/environments/inventory"
+        },
+        "workload": "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001101",
+        "agent_id": "https://agents.northstar.example/inventory-assistant",
+        "operator_id": "https://operators.northstar.example/inventory-ops",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1792076400,
+        "status_checked_at": 1792079995,
+        "source_id": "enrollment-registry",
+        "source_ref": "enrollment-0001"
+      }
+    ]
+  },
+  "call": {
+    "realm": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/inventory"
+    },
+    "workload": "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001101",
+    "agent_id": "https://agents.northstar.example/inventory-assistant"
+  },
+  "expect": {
+    "function": "resolve_agent_binding",
+    "outcome": "bound",
+    "binding": {
+      "agent_id": "https://agents.northstar.example/inventory-assistant",
+      "operator_id": "https://operators.northstar.example/inventory-ops",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "status": "ACTIVE"
+    }
+  }
+}

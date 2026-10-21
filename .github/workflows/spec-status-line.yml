@@ -1,0 +1,25 @@
+name: spec-status-line
+
+# Rewrites the `**Status:**` line (bold, in the first fifteen lines) of
+# every Markdown document under spec/v1.0/, and of spec/README.md, from the
+# release channel when release-please opens or updates a labelled release
+# PR (-alpha.N -> Draft, -beta.N -> Pre-release, -rc.N -> Release
+# Candidate, unsuffixed -> General Availability), and pushes the change to
+# the PR branch as the release bot. Gated on the release label; a release
+# PR for a package component (pact-go, pact, pact-ts, pact-py) is a no-op because
+# its package path is not a spec directory. The script lives in
+# hop-top/.github.
+
+on:
+  pull_request:
+    types: [labeled, opened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  status-line:
+    uses: hop-top/.github/.github/workflows/spec-status-line.yml@v0
+    secrets:
+      RELEASE_BOT_APP_ID: ${{ secrets.RELEASE_BOT_APP_ID }}
+      RELEASE_BOT_PRIVATE_KEY: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}

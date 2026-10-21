@@ -1,0 +1,48 @@
+{
+  "case_version": 1,
+  "id": "COMMON-04.original-time",
+  "title": "ObservedAt and StatusCheckedAt are the times the source gave, not the time of the read",
+  "draft": ["8.3", "17.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "approved_paths": ["/attributes/environment/roles"],
+    "claims": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "https://idp.acme.example/alice",
+        "path": "/attributes/environment/roles",
+        "value": ["approver", "viewer"],
+        "source_id": "directory-1",
+        "source_ref": "dir-entry-17",
+        "observed_at": 1792076400,
+        "status_checked_at": 1792079970
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "native_path": "/attributes/environment/roles"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": ["approver", "viewer"],
+      "observed_at": 1792076400,
+      "status_checked_at": 1792079970,
+      "source_id": "directory-1",
+      "source_ref": "dir-entry-17"
+    }
+  }
+}

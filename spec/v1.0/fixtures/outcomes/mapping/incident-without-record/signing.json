@@ -1,0 +1,7 @@
+{
+  "artifacts": [
+    {"decoded":"reports/security-event-0001.json","signed":"signed/security-event-0001.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"EXiZiK3zOsFDqMZ6Sm8Eyg"},
+    {"decoded":"reports/security-event-0002.json","signed":"signed/security-event-0002.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"nUtNzav773mhIH8y_wrWnQ"},
+    {"decoded":"reports/security-event-0003.json","signed":"signed/security-event-0003.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"dxUdrhJk7IUOEzar-nkj5A"}
+  ]
+}

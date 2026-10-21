@@ -1,0 +1,7 @@
+<?php // Q6: runtime facts (version, platform, ini values the probes depend on) and the extensions the probe programs call into, found by tokenizing every program in this directory.
+echo 'PHP ', PHP_VERSION, ' ', PHP_SAPI, ' ', PHP_OS, ' int size ', PHP_INT_SIZE, ' ', OPENSSL_VERSION_TEXT, ' PCRE ', PCRE_VERSION, ' jit ', var_export(PCRE_JIT_SUPPORT, true), ' ', php_ini_loaded_file() ?: 'no php.ini', "\n";
+foreach (['serialize_precision', 'precision', 'pcre.backtrack_limit', 'pcre.jit', 'memory_limit', 'zend.assertions', 'display_errors', 'error_reporting', 'allow_url_fopen', 'disable_functions'] as $k) echo " $k=", var_export(ini_get($k), true);
+echo "\nloaded extensions: ", implode(' ', array_map('strtolower', get_loaded_extensions())), "\n"; $ext = [];
+foreach (glob(__DIR__ . '/*.php') as $f) { $t = array_values(array_filter(token_get_all(file_get_contents($f)), fn($x) => !is_array($x) || !in_array($x[0], [T_WHITESPACE, T_COMMENT])));
+    foreach ($t as $i => $x) if (is_array($x) && $x[0] === T_STRING && ($t[$i + 1] ?? null) === '(' && !(is_array($t[$i - 1] ?? null) && in_array($t[$i - 1][0], [T_OBJECT_OPERATOR, T_DOUBLE_COLON, T_FUNCTION, T_NEW, T_NULLSAFE_OBJECT_OPERATOR])) && function_exists($x[1])) $ext[strtolower((new ReflectionFunction($x[1]))->getExtensionName())][$x[1]] = 1; }
+ksort($ext); foreach ($ext as $e => $fns) { ksort($fns); echo str_pad($e, 10), implode(' ', array_keys($fns)), "\n"; }

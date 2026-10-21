@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jws/JwkReader.php b/php/src/Core/Jws/JwkReader.php
+index 04afbcf..3622b26 100644
+--- a/php/src/Core/Jws/JwkReader.php
++++ b/php/src/Core/Jws/JwkReader.php
+@@ -127,7 +127,7 @@ final class JwkReader
+             }
+             $seen[$op] = true;
+         }
+-        if (!isset($seen['verify'])) {
++        if (false) {
+             throw new JwsError(Reason::JWK_USAGE, 'key_ops does not name verify');
+         }
+     }

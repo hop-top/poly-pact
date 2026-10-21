@@ -1,0 +1,158 @@
+{
+  "case_version": 1,
+  "id": "GRAPH-14.other-resource",
+  "title": "Preflight step 1 finds an app role assignment outside the empty allowlist (other-resource): the parallel grant fails closed, FAIL with EXECUTOR_MISMATCH (GR-18, GR-21)",
+  "draft": [
+    "17.5",
+    "18"
+  ],
+  "native_state": {
+    "model": "graph/1",
+    "gateway": {
+      "tenant_id": "northwind",
+      "environment_id": "https://mail.northwind.example/environments/production",
+      "origin": "https://mail.northwind.example",
+      "header_allowlist": [
+        "accept"
+      ]
+    },
+    "form": "application",
+    "entra": {
+      "tenant_id": "8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c",
+      "gateway_app_id": "3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7"
+    },
+    "executor_app_id": "9e8d7c6b-5a49-4382-a1b0-c9d8e7f6a5b4",
+    "registry": [
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://mail.northwind.example/environments/production"
+        },
+        "row": "GA1",
+        "workload": "https://workloads.northwind.example/mail-digest",
+        "class": "registered-app-executor",
+        "grant": "client_credentials",
+        "app_id": "9e8d7c6b-5a49-4382-a1b0-c9d8e7f6a5b4",
+        "service_principal_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+        "mailbox_id": "0f9e8d7c-6b5a-4493-8271-605f4e3d2c1b",
+        "ref": "executor-registry:ga1:mail-digest:r7",
+        "changed_at": 1791993600
+      },
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://mail.northwind.example/environments/production"
+        },
+        "row": "GA2",
+        "workload": "https://workloads.northwind.example/mail-digest",
+        "class": "registered-app-executor",
+        "grant": "client_credentials",
+        "app_id": "9e8d7c6b-5a49-4382-a1b0-c9d8e7f6a5b4",
+        "service_principal_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+        "mailbox_id": "0f9e8d7c-6b5a-4493-8271-605f4e3d2c1b",
+        "ref": "executor-registry:ga2:mail-digest:r7",
+        "changed_at": 1791993600
+      }
+    ],
+    "preflight": {
+      "allowlist": [],
+      "runs": [
+        {
+          "at": 1792072700,
+          "assignment_pages": [
+            []
+          ],
+          "rbac": {
+            "identity": "9e8d7c6b-5a49-4382-a1b0-c9d8e7f6a5b4",
+            "resource": "0f9e8d7c-6b5a-4493-8271-605f4e3d2c1b",
+            "ran_at": 1792072700,
+            "rows": [
+              {
+                "RoleName": "Application Mail.Read",
+                "GrantedPermissions": "Mail.Read",
+                "AllowedResourceScope": "Mail Digest Mailboxes",
+                "ScopeType": "CustomRecipientScope",
+                "InScope": "True"
+              }
+            ]
+          }
+        },
+        {
+          "at": 1792079900,
+          "assignment_pages": [
+            [
+              {
+                "id": "UxOIjjUXr0WvIe4TRFgqTY4z9Wu5KxpBtlEpoTGjw-A",
+                "createdDateTime": "2026-10-01T09:00:00Z",
+                "appRoleId": "11111111-aaaa-4bbb-8ccc-000000000009",
+                "principalDisplayName": "mail-digest-executor",
+                "principalId": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+                "principalType": "ServicePrincipal",
+                "resourceDisplayName": "Office 365 Exchange Online",
+                "resourceId": "2222aaaa-3333-4bbb-8ccc-dddd0000eeee"
+              }
+            ]
+          ],
+          "rbac": {
+            "identity": "9e8d7c6b-5a49-4382-a1b0-c9d8e7f6a5b4",
+            "resource": "0f9e8d7c-6b5a-4493-8271-605f4e3d2c1b",
+            "ran_at": 1792079900,
+            "rows": [
+              {
+                "RoleName": "Application Mail.Read",
+                "GrantedPermissions": "Mail.Read",
+                "AllowedResourceScope": "Mail Digest Mailboxes",
+                "ScopeType": "CustomRecipientScope",
+                "InScope": "True"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "call": {
+    "principal": {
+      "id": "https://workloads.northwind.example/mail-digest",
+      "realm": {"tenant_id": "northwind", "environment_id": "https://mail.northwind.example/environments/production"},
+      "workload": "https://workloads.northwind.example/mail-digest",
+      "mechanism": "mtls"
+    },
+    "check_id": "execution-identity-v1",
+    "operation": {
+      "operation_id": "op-mail-list-0001",
+      "environment_id": "https://mail.northwind.example/environments/production",
+      "principal_id": "https://workloads.northwind.example/mail-digest",
+      "action": "mail.message.list",
+      "resources": [
+        "mailbox:0f9e8d7c-6b5a-4493-8271-605f4e3d2c1b"
+      ],
+      "method": "GET",
+      "target_uri": "https://mail.northwind.example/mailbox/messages?$select=id,subject,body&$top=10",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    },
+    "intent": {
+      "intent_id": "intent-0042",
+      "purpose_id": "mail-digest",
+      "description": "",
+      "task_id": "native-task:mail-digest-0042"
+    }
+  },
+  "expect": {
+    "function": "check_context",
+    "outcome": "FAIL",
+    "reason_code": "EXECUTOR_MISMATCH",
+    "must_not_call": [
+      "token",
+      "execute"
+    ],
+    "leak_scan": {
+      "secrets": [
+        "obo-client-secret-7d41c09a",
+        "executor-client-secret-2f8e61b3",
+        "auditor-client-secret-91c3d5e0"
+      ]
+    }
+  }
+}

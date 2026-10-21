@@ -1,0 +1,630 @@
+{
+  "now": 1792080000,
+  "clock_skew_seconds": 5,
+  "data_policy": {
+    "qualification_policy_id": "pact-qualification-v1",
+    "ingestion_window_seconds": 604800,
+    "positive_weight_cap_per_task": 1,
+    "maximum_failure_weight": 5,
+    "task_attribution_source": "native-task-registry",
+    "reporter_independence_policy_id": "pact-reporter-independence-v1"
+  },
+  "reputation_service": {
+    "service_id": "https://reputation.example/finance",
+    "tenant_id": "acme",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "visibility": "execution",
+  "trust": [
+    {
+      "iss": "https://executor.example/finance",
+      "role": "reporter",
+      "reporter_role": "executor",
+      "keys": [
+        "keys/executor.jwk.json"
+      ]
+    }
+  ],
+  "executor_classes": [
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0001",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0002",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0003",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0004",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0005",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0006",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0007",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0008",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0009",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0010",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0011",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0012",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0013",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0014",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0015",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0016",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0017",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0018",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0019",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0020",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0021",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0022",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0023",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0024",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0025",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0026",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0027",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0028",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0029",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0030",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0031",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0032",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0033",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0034",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0035",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0036",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0037",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0038",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0039",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0040",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0041",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0042",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0043",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0044",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0045",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0046",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0047",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0048",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0049",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0050",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0051",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0052",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0053",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0054",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0055",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0056",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0057",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0058",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0059",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0060",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0061",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0062",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0063",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0064",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0065",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0066",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0067",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0068",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0069",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0070",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0071",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0072",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0073",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0074",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0075",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0076",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0077",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0078",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0079",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0080",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0081",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0082",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0083",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0084",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0085",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0086",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0087",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0088",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0089",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0090",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0091",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0092",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0093",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0094",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0095",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0096",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0097",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0098",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0099",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0100",
+      "class": "delegated-user"
+    }
+  ]
+}

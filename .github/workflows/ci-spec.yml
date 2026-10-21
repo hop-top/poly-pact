@@ -1,0 +1,190 @@
+name: ci-spec
+
+on:
+  push:
+    branches: [main, next, 'release/*']
+    paths:
+      - "spec/**"
+      - "docs/**"
+      - "scripts/**"
+      - "tools/spec/**"
+      - "tools/parity/**"
+      - "mise.toml"
+      - "Makefile"
+      - ".lychee.toml"
+      - ".github/workflows/ci-spec.yml"
+      # The manifest job also runs pactfix check manifest (make spec-parity).
+      # pactfix is in the command module cli/, built with the library
+      # through go.work.
+      - "go/go.mod"
+      - "go.work"
+      - "cli/go.mod"
+      - "cli/go.sum"
+      - "go/core/strictjson/**"
+      - "go/runner/manifest/**"
+      - "cli/internal/**"
+      - "cli/pactfix/**"
+  pull_request:
+    paths:
+      - "spec/**"
+      - "docs/**"
+      - "scripts/**"
+      - "tools/spec/**"
+      - "tools/parity/**"
+      - "mise.toml"
+      - "Makefile"
+      - ".lychee.toml"
+      - ".github/workflows/ci-spec.yml"
+      # The manifest job also runs pactfix check manifest (make spec-parity).
+      # pactfix is in the command module cli/, built with the library
+      # through go.work.
+      - "go/go.mod"
+      - "go.work"
+      - "cli/go.mod"
+      - "cli/go.sum"
+      - "go/core/strictjson/**"
+      - "go/runner/manifest/**"
+      - "cli/internal/**"
+      - "cli/pactfix/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  # Each job installs only the tools it uses (install_args below). Without
+  # these, `mise exec` would go on to install every other pin in mise.toml,
+  # php included, which builds from source.
+  MISE_AUTO_INSTALL: "false"
+  MISE_EXEC_AUTO_INSTALL: "false"
+
+# The job names are required-check names for branch protection: do not rename.
+jobs:
+  schema:
+    name: Spec / Schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: python
+          cache: true
+
+      - name: Meta-validate the schema
+        # Creates tools/spec/.venv from tools/spec/requirements.txt first.
+        run: make spec-validate
+
+  together:
+    name: Spec / Move together
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The script needs the merge base and the commits of the pull request.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Draft and schema change together
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: scripts/check-spec-together.sh "$BASE_SHA" "$HEAD_SHA"
+
+  examples:
+    name: Spec / Examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: python
+          cache: true
+
+      - name: Check the JSON blocks in spec/v1.0/examples
+        run: make spec-examples
+
+  links:
+    name: Spec / Links
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: python lychee
+          cache: true
+
+      - name: Check spec and docs links and spec self-containment
+        run: make spec-links
+
+  map:
+    name: Spec / Map
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: python
+          cache: true
+
+      - name: Check spec/v1.0/spec-map.md against the draft and the fixtures
+        # Passes with a NOTICE while spec/v1.0/spec-map.md is absent.
+        run: make spec-map
+
+  manifest:
+    name: Spec / Manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: python go
+          cache: true
+
+      - name: Check spec/v1.0/fixtures/manifest.json
+        # The manifest rules, then the JSON Schema. Creates tools/spec/.venv
+        # from tools/spec/requirements.txt first.
+        run: make spec-manifest
+
+      - name: Python and Go manifest checks agree
+        # Builds pactfix and runs both checkers on broken copies of
+        # spec/v1.0/fixtures, at least one per rule.
+        run: make spec-parity
+
+      - name: Parity gates classify every manifest row
+        # Every (scope, kind, prefix) of the manifest has a row in
+        # tools/parity/gates.json, and every row has entries.
+        run: make parity-rows

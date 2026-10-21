@@ -1,0 +1,19 @@
+{
+  "description": "ConformanceDeclaration payload with the unknown member roles_note: the declaration rejects additional members (draft 7.1, A.1).",
+  "objects": [
+    {
+      "section": "22.1",
+      "def": "ConformanceDeclaration",
+      "object": {
+        "conformance_profile": "single-owner",
+        "version": "0.1",
+        "omitted_roles": [
+          "reputation",
+          "learning"
+        ],
+        "owner": "https://owner.example/issuer",
+        "roles_note": "x"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/core/binding/_headers.py b/py/src/hop_top_pact/core/binding/_headers.py
+--- a/py/src/hop_top_pact/core/binding/_headers.py
++++ b/py/src/hop_top_pact/core/binding/_headers.py
+@@ -93,7 +93,7 @@
+     is refused.
+     """
+     values = [v for name, v in lines if lower_ascii(name) == "host"]
+-    if len(values) > 1:
++    if len(values) > 2:
+         raise refuse(Rule.DUPLICATE_HOST, f"the request has {len(values)} Host field lines")
+     if origin_form and not values:
+         raise refuse(Rule.MISSING_HOST, "an origin-form request without Host")

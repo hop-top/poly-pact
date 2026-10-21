@@ -1,0 +1,1213 @@
+{
+  "tasks": [
+    {
+      "task_id": "native-task:september-summary-007",
+      "agent_id": "https://identity.example/agents/invoice-assistant",
+      "operator_id": "https://identity.example/operators/acme",
+      "principal_id": "https://identity.example/principals/alice",
+      "independence_group": "native-task-group:september-summary-007"
+    }
+  ],
+  "records": {
+    "native-execution-log:finance-read-0001": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0001",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079881
+    },
+    "native-execution-log:finance-read-0002": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0002",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079882
+    },
+    "native-execution-log:finance-read-0003": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0003",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079883
+    },
+    "native-execution-log:finance-read-0004": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0004",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079884
+    },
+    "native-execution-log:finance-read-0005": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0005",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079885
+    },
+    "native-execution-log:finance-read-0006": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0006",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079886
+    },
+    "native-execution-log:finance-read-0007": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0007",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079887
+    },
+    "native-execution-log:finance-read-0008": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0008",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079888
+    },
+    "native-execution-log:finance-read-0009": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0009",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079889
+    },
+    "native-execution-log:finance-read-0010": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0010",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079890
+    },
+    "native-execution-log:finance-read-0011": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0011",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079891
+    },
+    "native-execution-log:finance-read-0012": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0012",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079892
+    },
+    "native-execution-log:finance-read-0013": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0013",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079893
+    },
+    "native-execution-log:finance-read-0014": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0014",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079894
+    },
+    "native-execution-log:finance-read-0015": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0015",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079895
+    },
+    "native-execution-log:finance-read-0016": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0016",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079896
+    },
+    "native-execution-log:finance-read-0017": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0017",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079897
+    },
+    "native-execution-log:finance-read-0018": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0018",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079898
+    },
+    "native-execution-log:finance-read-0019": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0019",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079899
+    },
+    "native-execution-log:finance-read-0020": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0020",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079900
+    },
+    "native-execution-log:finance-read-0021": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0021",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079901
+    },
+    "native-execution-log:finance-read-0022": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0022",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079902
+    },
+    "native-execution-log:finance-read-0023": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0023",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079903
+    },
+    "native-execution-log:finance-read-0024": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0024",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079904
+    },
+    "native-execution-log:finance-read-0025": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0025",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079905
+    },
+    "native-execution-log:finance-read-0026": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0026",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079906
+    },
+    "native-execution-log:finance-read-0027": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0027",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079907
+    },
+    "native-execution-log:finance-read-0028": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0028",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079908
+    },
+    "native-execution-log:finance-read-0029": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0029",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079909
+    },
+    "native-execution-log:finance-read-0030": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0030",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079910
+    },
+    "native-execution-log:finance-read-0031": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0031",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079911
+    },
+    "native-execution-log:finance-read-0032": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0032",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079912
+    },
+    "native-execution-log:finance-read-0033": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0033",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079913
+    },
+    "native-execution-log:finance-read-0034": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0034",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079914
+    },
+    "native-execution-log:finance-read-0035": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0035",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079915
+    },
+    "native-execution-log:finance-read-0036": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0036",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079916
+    },
+    "native-execution-log:finance-read-0037": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0037",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079917
+    },
+    "native-execution-log:finance-read-0038": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0038",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079918
+    },
+    "native-execution-log:finance-read-0039": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0039",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079919
+    },
+    "native-execution-log:finance-read-0040": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0040",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079920
+    },
+    "native-execution-log:finance-read-0041": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0041",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079921
+    },
+    "native-execution-log:finance-read-0042": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0042",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079922
+    },
+    "native-execution-log:finance-read-0043": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0043",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079923
+    },
+    "native-execution-log:finance-read-0044": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0044",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079924
+    },
+    "native-execution-log:finance-read-0045": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0045",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079925
+    },
+    "native-execution-log:finance-read-0046": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0046",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079926
+    },
+    "native-execution-log:finance-read-0047": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0047",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079927
+    },
+    "native-execution-log:finance-read-0048": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0048",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079928
+    },
+    "native-execution-log:finance-read-0049": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0049",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079929
+    },
+    "native-execution-log:finance-read-0050": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0050",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079930
+    },
+    "native-execution-log:finance-read-0051": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0051",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079931
+    },
+    "native-execution-log:finance-read-0052": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0052",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079932
+    },
+    "native-execution-log:finance-read-0053": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0053",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079933
+    },
+    "native-execution-log:finance-read-0054": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0054",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079934
+    },
+    "native-execution-log:finance-read-0055": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0055",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079935
+    },
+    "native-execution-log:finance-read-0056": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0056",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079936
+    },
+    "native-execution-log:finance-read-0057": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0057",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079937
+    },
+    "native-execution-log:finance-read-0058": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0058",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079938
+    },
+    "native-execution-log:finance-read-0059": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0059",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079939
+    },
+    "native-execution-log:finance-read-0060": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0060",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079940
+    },
+    "native-execution-log:finance-read-0061": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0061",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079941
+    },
+    "native-execution-log:finance-read-0062": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0062",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079942
+    },
+    "native-execution-log:finance-read-0063": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0063",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079943
+    },
+    "native-execution-log:finance-read-0064": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0064",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079944
+    },
+    "native-execution-log:finance-read-0065": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0065",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079945
+    },
+    "native-execution-log:finance-read-0066": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0066",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079946
+    },
+    "native-execution-log:finance-read-0067": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0067",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079947
+    },
+    "native-execution-log:finance-read-0068": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0068",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079948
+    },
+    "native-execution-log:finance-read-0069": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0069",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079949
+    },
+    "native-execution-log:finance-read-0070": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0070",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079950
+    },
+    "native-execution-log:finance-read-0071": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0071",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079951
+    },
+    "native-execution-log:finance-read-0072": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0072",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079952
+    },
+    "native-execution-log:finance-read-0073": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0073",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079953
+    },
+    "native-execution-log:finance-read-0074": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0074",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079954
+    },
+    "native-execution-log:finance-read-0075": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0075",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079955
+    },
+    "native-execution-log:finance-read-0076": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0076",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079956
+    },
+    "native-execution-log:finance-read-0077": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0077",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079957
+    },
+    "native-execution-log:finance-read-0078": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0078",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079958
+    },
+    "native-execution-log:finance-read-0079": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0079",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079959
+    },
+    "native-execution-log:finance-read-0080": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0080",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079960
+    },
+    "native-execution-log:finance-read-0081": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0081",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079961
+    },
+    "native-execution-log:finance-read-0082": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0082",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079962
+    },
+    "native-execution-log:finance-read-0083": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0083",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079963
+    },
+    "native-execution-log:finance-read-0084": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0084",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079964
+    },
+    "native-execution-log:finance-read-0085": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0085",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079965
+    },
+    "native-execution-log:finance-read-0086": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0086",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079966
+    },
+    "native-execution-log:finance-read-0087": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0087",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079967
+    },
+    "native-execution-log:finance-read-0088": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0088",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079968
+    },
+    "native-execution-log:finance-read-0089": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0089",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079969
+    },
+    "native-execution-log:finance-read-0090": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0090",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079970
+    },
+    "native-execution-log:finance-read-0091": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0091",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079971
+    },
+    "native-execution-log:finance-read-0092": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0092",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079972
+    },
+    "native-execution-log:finance-read-0093": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0093",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079973
+    },
+    "native-execution-log:finance-read-0094": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0094",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079974
+    },
+    "native-execution-log:finance-read-0095": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0095",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079975
+    },
+    "native-execution-log:finance-read-0096": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0096",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079976
+    },
+    "native-execution-log:finance-read-0097": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0097",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079977
+    },
+    "native-execution-log:finance-read-0098": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0098",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079978
+    },
+    "native-execution-log:finance-read-0099": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0099",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079979
+    },
+    "native-execution-log:finance-read-0100": {
+      "kind": "execution",
+      "state": "completed",
+      "returned": "data",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0100",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079980
+    }
+  }
+}

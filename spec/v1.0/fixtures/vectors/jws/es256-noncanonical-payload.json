@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/es256-noncanonical-payload",
+  "description": "Payload with white space, unsorted members, a \\u escape, an escaped solidus, a raw non-ASCII character and the number 1.50. The signature covers these exact bytes: a verifier that re-serializes the payload fails, and the decoded payload must be returned unchanged.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC1pc3N1ZXIta2V5LTEifQ.ewogICJqdGkiIDogInZlY3RvcnMvandzL2VzMjU2LW5vbmNhbm9uaWNhbC1wYXlsb2FkIiwKICAicGFjdF92ZXJzaW9uIjoiMC4xIiwKICAibm90ZSI6ICJjYWZcdTAwZTkgXC8gY2Fmw6kiLAogICJhbW91bnQiOiAxLjUwCn0.g3gWCNJ7E4VfvZruFanmmhRAXjRe7iqoma6sQbDyHAlg6sKb2PHO7SdPywxSKlEzxj8Wn0Mhw4cMXKJ0L-WxOg",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": "{\n  \"jti\" : \"vectors/jws/es256-noncanonical-payload\",\n  \"pact_version\":\"0.1\",\n  \"note\": \"caf\\u00e9 \\/ café\",\n  \"amount\": 1.50\n}"
+}

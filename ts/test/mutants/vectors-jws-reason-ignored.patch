@@ -1,0 +1,13 @@
+diff --git a/ts/src/vectors/run-jws.ts b/ts/src/vectors/run-jws.ts
+index 376f34a..5211cef 100644
+--- a/ts/src/vectors/run-jws.ts
++++ b/ts/src/vectors/run-jws.ts
+@@ -131,7 +131,7 @@ export function runJWS(root: string, e: Entry, core: Core): void {
+     }
+     return;
+   }
+-  if (reason !== rejectReason)
++  if (reason === '' && rejectReason === '')
+     throw new Error(`reason ${JSON.stringify(reason)}, want ${JSON.stringify(rejectReason)}`);
+ }
+ 

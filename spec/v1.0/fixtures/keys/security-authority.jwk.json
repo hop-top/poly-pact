@@ -1,0 +1,9 @@
+{
+  "kty": "EC",
+  "crv": "P-256",
+  "x": "6mjXtv7fC3GHiTjVHXH4cp4Ky4wsbfiz156KS5CUnuA",
+  "y": "KidEyXLJ_OeHAUqWSo6gyE1xT-qk3oI_6FoiSk3QSPo",
+  "kid": "test-security-authority-key-1",
+  "alg": "ES256",
+  "use": "sig"
+}

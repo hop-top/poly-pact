@@ -1,0 +1,13 @@
+diff --git a/ts/src/conformance/verify.ts b/ts/src/conformance/verify.ts
+index db65fa4..1d7a883 100644
+--- a/ts/src/conformance/verify.ts
++++ b/ts/src/conformance/verify.ts
+@@ -130,7 +130,7 @@ function trusted(
+       const iss = typeof claims.iss === 'string' ? claims.iss : '';
+       const set: JWK[] = [];
+       for (const r of trust) {
+-        if (r.role !== role || r.iss !== iss) continue;
++        if (r.role !== role) continue;
+         for (const k of r.keys) {
+           const b = new Uint8Array(readFileSync(under(fixtures, k)));
+           let jwk: JWK;

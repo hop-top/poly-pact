@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/async-accept-then-complete",
+  "adversarial_claim": "An asynchronous export is counted twice, once when the request is accepted and again when it completes, or the completion is discarded as a duplicate of the acceptance.",
+  "subject_event_id": "execution-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "none",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Asynchronous request accepted': EXECUTION, UNKNOWN, none; zero weight; new event_id. Draft 15.3: UNKNOWN contributes zero weight."
+    },
+    {
+      "event_id": "execution-event-0002",
+      "report": "reports/execution-event-0002.json",
+      "signed": "signed/execution-event-0002.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Asynchronous completion observed': EXECUTION, SUCCESS, reliability; counts toward reliability; separate event_id; the deduplication tuple differs by dimension (14.3), so it is not a duplicate of the acceptance. The completion record names the declared executor (14.2)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 1,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

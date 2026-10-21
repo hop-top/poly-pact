@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/runner/manifest/files.py b/py/src/hop_top_pact/runner/manifest/files.py
+index a1c6819..68c6ddb 100644
+--- a/py/src/hop_top_pact/runner/manifest/files.py
++++ b/py/src/hop_top_pact/runner/manifest/files.py
+@@ -59,7 +59,7 @@ def _locate(root: str, real_root: str, rel: str) -> str:
+         return "is a dangling symbolic link"
+     except OSError as err:
+         return f"cannot be resolved: {err}"
+-    if not real.startswith(real_root.rstrip(os.sep) + os.sep):
++    if not real.startswith(os.path.abspath(root) + os.sep):
+         return "resolves outside the fixture directory"
+     return ""
+ 

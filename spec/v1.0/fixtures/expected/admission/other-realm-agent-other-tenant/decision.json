@@ -1,0 +1,4 @@
+{
+  "transport_code": "INVALID_PROOF",
+  "reason": "gateway and native authentication are in tenant globex and the signed artifacts name acme, as in admission/wrong-tenant, but the presented agent has no record in the authenticated realm globex (UNKNOWN, no report): it is enrolled only in another realm, which the adapter does not search (identity mapping IM-7, IM-11, section 8 row 2). Holder binding, 11.3 step 2, precedes the realm comparison of step 3, so the first failing step gives INVALID_PROOF before an authenticated evaluation (12.2, 13.4), not the CONTEXT_MISMATCH of step 3; no receipt"
+}

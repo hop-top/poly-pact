@@ -1,0 +1,215 @@
+version: 1
+# Directory content of the LDAP adapter cases: two realms, hq and branch, in
+# one OpenLDAP 2.6 database. Each entry states its entryUUID, which a harness
+# loads with the Relax Rules control or with slapadd, so that the expected
+# identifiers of the cases hold. memberOf is not stated: the memberof overlay
+# maintains it from the member values of the groups. The passwords are test
+# values in clear text; they serve no deployment.
+
+dn: dc=northstar,dc=example
+objectClass: dcObject
+objectClass: organization
+dc: northstar
+o: Northstar
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000000001
+
+dn: ou=hq,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: hq
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001000
+
+dn: ou=people,ou=hq,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: people
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001001
+
+dn: ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: warehouse
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001002
+
+dn: ou=retail,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: retail
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001003
+
+dn: ou=service,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: service
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001004
+
+dn: ou=groups,ou=hq,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: groups
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001005
+
+dn: uid=inventory-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: inventory-assistant
+cn: Inventory Assistant
+sn: Assistant
+displayName: Inventory Assistant
+userPassword: Wh7!lantern-stock-21
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001101
+
+dn: uid=inventory-assistant-retail,ou=retail,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: inventory-assistant-retail
+cn: Inventory Assistant
+sn: Assistant
+displayName: Inventory Assistant
+userPassword: Wh7!lantern-stock-21
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001102
+
+dn: uid=disabled-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: disabled-assistant
+cn: Disabled Assistant
+sn: Assistant
+userPassword: Dz3!cedar-frost-64
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001103
+pwdAccountLockedTime: 000001010000Z
+
+dn: uid=locked-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: locked-assistant
+cn: Locked Assistant
+sn: Assistant
+userPassword: Lk8!marble-tide-19
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001104
+pwdAccountLockedTime: 20261015120000Z
+
+dn: uid=reset-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: reset-assistant
+cn: Reset Assistant
+sn: Assistant
+userPassword: Rs5!copper-reed-72
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001105
+pwdReset: TRUE
+
+dn: uid=expired-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: expired-assistant
+cn: Expired Assistant
+sn: Assistant
+userPassword: Ex6!garnet-wind-33
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001106
+pwdEndTime: 20261001000000Z
+
+dn: uid=removed-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: removed-assistant
+cn: Removed Assistant
+sn: Assistant
+userPassword: Rm2!slate-brook-47
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001107
+
+dn: uid=pact-sentinel,ou=service,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: pact-sentinel
+cn: PACT Sentinel
+sn: Sentinel
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001108
+pwdAccountLockedTime: 000001010000Z
+pwdReset: TRUE
+pwdStartTime: 20260101000000Z
+pwdEndTime: 20360101000000Z
+
+dn: uid=pact-lookup,ou=service,ou=people,ou=hq,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: pact-lookup
+cn: PACT Lookup
+sn: Lookup
+userPassword: Lu9!amber-gate-58
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001109
+
+dn: cn=warehouse-readers,ou=groups,ou=hq,dc=northstar,dc=example
+objectClass: groupOfNames
+cn: warehouse-readers
+description: Inventory readers of the warehouses
+member: uid=inventory-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+member: uid=disabled-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+member: uid=removed-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001201
+
+dn: cn=retail-readers,ou=groups,ou=hq,dc=northstar,dc=example
+objectClass: groupOfNames
+cn: retail-readers
+member: uid=inventory-assistant-retail,ou=retail,ou=people,ou=hq,dc=northstar,dc=example
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001202
+
+dn: cn=stock-auditors,ou=groups,ou=hq,dc=northstar,dc=example
+objectClass: groupOfNames
+cn: stock-auditors
+member: uid=inventory-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001203
+
+dn: cn=pact-sentinel-group,ou=groups,ou=hq,dc=northstar,dc=example
+objectClass: groupOfNames
+cn: pact-sentinel-group
+member: uid=pact-sentinel,ou=service,ou=people,ou=hq,dc=northstar,dc=example
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001204
+
+dn: cn=pact-sentinel-parent,ou=groups,ou=hq,dc=northstar,dc=example
+objectClass: groupOfNames
+cn: pact-sentinel-parent
+member: cn=pact-sentinel-group,ou=groups,ou=hq,dc=northstar,dc=example
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000001205
+
+dn: ou=branch,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: branch
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000002000
+
+dn: ou=people,ou=branch,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: people
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000002001
+
+dn: ou=groups,ou=branch,dc=northstar,dc=example
+objectClass: organizationalUnit
+ou: groups
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000002002
+
+dn: uid=inventory-assistant,ou=people,ou=branch,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: inventory-assistant
+cn: Inventory Assistant
+sn: Assistant
+displayName: Inventory Assistant
+userPassword: Br2!quarry-stock-55
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000002101
+
+dn: uid=pact-sentinel,ou=people,ou=branch,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: pact-sentinel
+cn: PACT Sentinel
+sn: Sentinel
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000002108
+pwdAccountLockedTime: 000001010000Z
+pwdReset: TRUE
+pwdStartTime: 20260101000000Z
+pwdEndTime: 20360101000000Z
+
+dn: uid=pact-lookup,ou=people,ou=branch,dc=northstar,dc=example
+objectClass: inetOrgPerson
+uid: pact-lookup
+cn: PACT Lookup
+sn: Lookup
+userPassword: Lb4!birch-vale-26
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000002109
+
+dn: cn=warehouse-readers,ou=groups,ou=branch,dc=northstar,dc=example
+objectClass: groupOfNames
+cn: warehouse-readers
+description: Inventory readers of the warehouses
+member: uid=inventory-assistant,ou=people,ou=branch,dc=northstar,dc=example
+member: uid=inventory-assistant,ou=warehouse,ou=people,ou=hq,dc=northstar,dc=example
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000002201
+
+dn: cn=pact-sentinel-group,ou=groups,ou=branch,dc=northstar,dc=example
+objectClass: groupOfNames
+cn: pact-sentinel-group
+member: uid=pact-sentinel,ou=people,ou=branch,dc=northstar,dc=example
+entryUUID: 5c0e8a1e-3b7d-4f2a-9c61-000000002204

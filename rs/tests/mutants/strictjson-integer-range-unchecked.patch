@@ -1,0 +1,11 @@
+--- a/rs/src/core/strictjson/parse.rs
++++ b/rs/src/core/strictjson/parse.rs
+@@ -277,7 +277,7 @@
+             };
+         }
+         match lit.parse::<i64>() {
+-            Ok(n) if (-MAX_SAFE_INTEGER..=MAX_SAFE_INTEGER).contains(&n) => Ok(Number::Int(n)),
++            Ok(n) => Ok(Number::Int(n)),
+             _ => Err(Error {
+                 offset: start,
+                 ..self.fail(Kind::Integer, format!("{lit} is outside ±{MAX_SAFE_INTEGER}"))

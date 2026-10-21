@@ -1,0 +1,11 @@
+--- a/rs/src/core/limits.rs
++++ b/rs/src/core/limits.rs
+@@ -156,7 +156,7 @@
+ 
+     /// Checks the length in UTF-8 bytes of an intent's description.
+     pub fn validate_intent(&self, intent: &Intent) -> Result<(), LimitError> {
+-        exceeds(KEY_MAX_DESCRIPTION_BYTES, intent.description.len(), self.description_bytes)
++        exceeds(KEY_MAX_DESCRIPTION_BYTES, intent.description.chars().count(), self.description_bytes)
+     }
+ 
+     /// Checks the decoded payload size of one evidence or reputation artifact.

@@ -1,0 +1,11 @@
+diff --git a/ts/src/vectors/run-binding.ts b/ts/src/vectors/run-binding.ts
+--- a/ts/src/vectors/run-binding.ts
++++ b/ts/src/vectors/run-binding.ts
+@@ -93,6 +93,7 @@
+   };
+   const environmentId = stringOf(c.environment_id, 'config.environment_id');
+   if (configError) {
++    if (configError) return;
+     try {
+       core.validateConfig(cfg);
+     } catch (err) {

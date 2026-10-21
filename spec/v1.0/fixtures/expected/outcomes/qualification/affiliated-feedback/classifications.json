@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/affiliated-feedback",
+  "adversarial_claim": "An affiliated evaluator's praise counts when sent as feedback instead of a quality report.",
+  "subject_event_id": "feedback-event-0001",
+  "events": [
+    {
+      "event_id": "feedback-event-0001",
+      "report": "reports/feedback-event-0001.json",
+      "signed": "signed/feedback-event-0001.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "affiliated-evaluator",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.6 rule 6: an evaluator affiliated with the agent's operator, according to the configured affiliation registry, has its positive QUALITY and FEEDBACK reports classified UNQUALIFIED."
+    },
+    {
+      "event_id": "feedback-event-0002",
+      "report": "reports/feedback-event-0002.json",
+      "signed": "signed/feedback-event-0002.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 1
+      },
+      "rationale": "Draft 14.6 rule 6: the affiliated evaluator's negative reports are unaffected. Draft 14.5, row 'Verified feedback': FEEDBACK FAILURE on task_quality citing the completed assessment it conveys; causal_assessment AGENT, one attributable failure (rules 8 and 9)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 1
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

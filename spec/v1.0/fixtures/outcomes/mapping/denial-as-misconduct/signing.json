@@ -1,0 +1,6 @@
+{
+  "artifacts": [
+    {"decoded":"reports/authorization-event-0001.json","signed":"signed/authorization-event-0001.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"h8l4X5-jXR8hXBy0IHF-jg"},
+    {"decoded":"reports/authorization-event-0002.json","signed":"signed/authorization-event-0002.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"NCwEHb9F3v-aOp9txXJGXg"}
+  ]
+}

@@ -1,0 +1,12 @@
+diff --git a/ts/src/core/jws/es256.ts b/ts/src/core/jws/es256.ts
+index a893b93..be401d2 100644
+--- a/ts/src/core/jws/es256.ts
++++ b/ts/src/core/jws/es256.ts
+@@ -54,6 +54,6 @@ export function signES256(key: KeyObject, signingInput: string): Uint8Array {
+     dsaEncoding: 'ieee-p1363',
+   });
+   const s = int(sig.subarray(32));
+-  if (s > HALF_N) octets32(N - s).copy(sig, 32);
++  if (false && s > HALF_N) octets32(N - s).copy(sig, 32);
+   return new Uint8Array(sig.buffer, sig.byteOffset, sig.byteLength);
+ }

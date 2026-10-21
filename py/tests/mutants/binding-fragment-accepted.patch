@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/binding/_target.py b/py/src/hop_top_pact/core/binding/_target.py
+index 213f01b..7022c3c 100644
+--- a/py/src/hop_top_pact/core/binding/_target.py
++++ b/py/src/hop_top_pact/core/binding/_target.py
+@@ -43,8 +43,6 @@ def request_target(rt: str) -> str:
+     """
+     if not isinstance(rt, str) or rt == "":
+         raise refuse(Rule.TARGET_FORM, "no request-target")
+-    if "#" in rt:
+-        raise refuse(Rule.FRAGMENT, "the target has a fragment")
+     path_query = rt if rt[0] == "/" else _absolute_form(rt)
+     path, has_query, query = path_query.partition("?")
+     _check_component(path, is_path=True)

@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jws/Es256.php b/php/src/Core/Jws/Es256.php
+index 2871892..cb10c14 100644
+--- a/php/src/Core/Jws/Es256.php
++++ b/php/src/Core/Jws/Es256.php
+@@ -133,7 +133,7 @@ final class Es256
+             return null;
+         }
+         [$r, $s] = $raw;
+-        if (strcmp($s, self::HALF_N) > 0) {
++        if (false) {
+             $s = self::sub(self::N, $s);
+         }
+ 

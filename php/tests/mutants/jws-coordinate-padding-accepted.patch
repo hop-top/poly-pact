@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jws/Jwk.php b/php/src/Core/Jws/Jwk.php
+index 6f1b943..34781bd 100644
+--- a/php/src/Core/Jws/Jwk.php
++++ b/php/src/Core/Jws/Jwk.php
+@@ -79,7 +79,7 @@ final readonly class Jwk
+     private static function coordinate(string $name, string $s): string
+     {
+         try {
+-            $b = Base64Url::decode($s);
++            $b = Base64Url::decode(rtrim($s, '='));
+         } catch (\UnexpectedValueException $e) {
+             throw new JwsError(Reason::JWK_INVALID, $name . ' is not canonical base64url', $e);
+         }

@@ -1,0 +1,14 @@
+diff --git a/php/src/Core/Jws/Es256.php b/php/src/Core/Jws/Es256.php
+index 2871892..e27cadf 100644
+--- a/php/src/Core/Jws/Es256.php
++++ b/php/src/Core/Jws/Es256.php
+@@ -58,9 +58,6 @@ final class Es256
+     /** The private key of the 32-octet scalar $d; null unless 1 <= d < n. */
+     public static function privateKey(string $d): ?\OpenSSLAsymmetricKey
+     {
+-        if (!self::inRange($d)) {
+-            return null;
+-        }
+         $key = openssl_pkey_get_private(self::pem('EC PRIVATE KEY', self::SEC1_PREFIX . $d . self::SEC1_SUFFIX));
+         self::drain();
+ 

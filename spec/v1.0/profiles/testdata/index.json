@@ -1,0 +1,112 @@
+{
+  "description": "Blocks for two parts of integration-profile.schema.json: claim blocks for the claim object, one valid and six invalid, and attribute source blocks for one entry of attribute_sources, one valid and five invalid. Validate each file against the subschema at the JSON Pointer in the case's schema_pointer, or in the top-level schema_pointer when the case has none, resolved inside spec/v1.0/profiles/integration-profile.schema.json, so that the schema's $defs apply. An invalid block must fail with exactly the listed errors: instance_pointer is the RFC 6901 location in the block, keyword the failing JSON Schema keyword.",
+  "schema": "../integration-profile.schema.json",
+  "schema_pointer": "/properties/claim",
+  "cases": [
+    {
+      "file": "claim-valid.json",
+      "valid": true,
+      "reason": "both new fields present, every value in its enum, both arrays non-empty"
+    },
+    {
+      "file": "claim-invalid-missing-transport.json",
+      "valid": false,
+      "reason": "transport is absent",
+      "errors": [
+        {"instance_pointer": "", "keyword": "required"}
+      ]
+    },
+    {
+      "file": "claim-invalid-missing-conformance.json",
+      "valid": false,
+      "reason": "conformance_profile is absent",
+      "errors": [
+        {"instance_pointer": "", "keyword": "required"}
+      ]
+    },
+    {
+      "file": "claim-invalid-conformance-lite.json",
+      "valid": false,
+      "reason": "conformance_profile names lite, which is not a conformance profile id in the registry",
+      "errors": [
+        {"instance_pointer": "/conformance_profile/0", "keyword": "enum"}
+      ]
+    },
+    {
+      "file": "claim-invalid-transport-tcp.json",
+      "valid": false,
+      "reason": "transport_profile names tcp, which is neither https nor stdio-ipc",
+      "errors": [
+        {"instance_pointer": "/transport/0/transport_profile", "keyword": "enum"}
+      ]
+    },
+    {
+      "file": "claim-invalid-empty-arrays.json",
+      "valid": false,
+      "reason": "conformance_profile and transport are both empty; each needs at least one entry",
+      "errors": [
+        {"instance_pointer": "/conformance_profile", "keyword": "minItems"},
+        {"instance_pointer": "/transport", "keyword": "minItems"}
+      ]
+    },
+    {
+      "file": "claim-invalid-unknown-key.json",
+      "valid": false,
+      "reason": "profile is not a claim key; the claim object is closed, and the bare word profile is never a JSON key",
+      "errors": [
+        {"instance_pointer": "", "keyword": "additionalProperties"}
+      ]
+    },
+    {
+      "file": "attribute-source-valid.json",
+      "schema_pointer": "/$defs/attributeSource",
+      "valid": true,
+      "reason": "all four keys present, category environment, two approved native paths, freshness non-empty text"
+    },
+    {
+      "file": "attribute-source-invalid-missing-category.json",
+      "schema_pointer": "/$defs/attributeSource",
+      "valid": false,
+      "reason": "category is absent",
+      "errors": [
+        {"instance_pointer": "", "keyword": "required"}
+      ]
+    },
+    {
+      "file": "attribute-source-invalid-unknown-category.json",
+      "schema_pointer": "/$defs/attributeSource",
+      "valid": false,
+      "reason": "category names action, which is not a category: OperationContext.action carries the action",
+      "errors": [
+        {"instance_pointer": "/category", "keyword": "enum"}
+      ]
+    },
+    {
+      "file": "attribute-source-invalid-empty-attributes.json",
+      "schema_pointer": "/$defs/attributeSource",
+      "valid": false,
+      "reason": "attributes is empty; a source answers at least one path",
+      "errors": [
+        {"instance_pointer": "/attributes", "keyword": "minItems"}
+      ]
+    },
+    {
+      "file": "attribute-source-invalid-non-path.json",
+      "schema_pointer": "/$defs/attributeSource",
+      "valid": false,
+      "reason": "environment.network_zone is a dotted name, not an approved native path: a path starts with a slash and separates its segments with slashes",
+      "errors": [
+        {"instance_pointer": "/attributes/0", "keyword": "pattern"}
+      ]
+    },
+    {
+      "file": "attribute-source-invalid-unknown-key.json",
+      "schema_pointer": "/$defs/attributeSource",
+      "valid": false,
+      "reason": "max_age_seconds is not an attribute source key; the object is closed, and the bounds belong to the freshness entry that freshness names",
+      "errors": [
+        {"instance_pointer": "", "keyword": "additionalProperties"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "manifest_version": 1,
+  "entries": [
+    {
+      "id": "keys/validator",
+      "kind": "key",
+      "scope": "core",
+      "path": "keys/validator.jwk.json",
+      "expected": null,
+      "outcome": null,
+      "spec_map_row": "CL-C",
+      "draft_section": "C"
+    },
+    {
+      "id": "v2/concurrent-replay",
+      "kind": "evaluate",
+      "scope": "runner",
+      "path": "v2/concurrent-replay",
+      "expected": "expected/v2/concurrent-replay/decision.json",
+      "outcome": "REJECTED",
+      "spec_map_row": "CL-7.5",
+      "draft_section": "7.5"
+    },
+    {
+      "id": "v2/handoff",
+      "kind": "evaluate",
+      "scope": "runner",
+      "path": "v2/handoff",
+      "expected": "expected/v2/handoff/decision.json",
+      "outcome": "REJECTED",
+      "spec_map_row": "CL-11.5",
+      "draft_section": "11.5"
+    },
+    {
+      "id": "v2/replay",
+      "kind": "evaluate",
+      "scope": "runner",
+      "path": "v2/replay",
+      "expected": "expected/v2/replay/decision.json",
+      "outcome": "REJECTED",
+      "spec_map_row": "CL-7.5",
+      "draft_section": "7.5"
+    },
+    {
+      "id": "v2/sequence",
+      "kind": "evaluate",
+      "scope": "runner",
+      "path": "v2/sequence",
+      "expected": "expected/v2/sequence/exchanges/2/decision.json",
+      "outcome": "ADMISSIBLE",
+      "spec_map_row": "CL-17.3.1",
+      "draft_section": "17.3.1"
+    }
+  ]
+}

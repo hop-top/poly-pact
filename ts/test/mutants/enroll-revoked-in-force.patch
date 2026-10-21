@@ -1,0 +1,13 @@
+diff --git a/ts/src/adapter/enroll/memory.ts b/ts/src/adapter/enroll/memory.ts
+index 6b3e0fc..25b5a59 100644
+--- a/ts/src/adapter/enroll/memory.ts
++++ b/ts/src/adapter/enroll/memory.ts
+@@ -303,7 +303,7 @@ export class MemoryRegistry implements Registry {
+   // record that is not REVOKED, a COMPROMISED one included (IM-18).
+   #inForce(realm: Realm, workload: Workload): number {
+     const rows = this.#byWork.get(workKey(realm, workload)) ?? [];
+-    return rows.filter((r) => r.binding.status !== BindingStatus.REVOKED).length;
++    return rows.length;
+   }
+ 
+   // The binding of row confirmed as of now, or the UNKNOWN binding for no row.

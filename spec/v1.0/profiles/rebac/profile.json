@@ -1,0 +1,177 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "openfga-http", "version": "1.x; server release pinned per environment and recorded by probe P-1", "mapping_revision": "pact-rebac-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/documents/{document_id}",
+      "action": "document.read, relation viewer",
+      "resource_mapping": "document:<object-id>, where the mapping registry maps the native document identifier from the path parameter in the realm of the authenticated principal (RB-4, RB-6)"
+    },
+    {
+      "method": "PATCH",
+      "path_pattern": "/documents/{document_id}",
+      "action": "document.write, relation editor",
+      "resource_mapping": "document:<object-id> as for the read route; the request body and consequential headers are part of the bound operation (RB-5, RB-18)"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "Gateway login stage, before routing, through the deployment's existing identity mechanism; produces the principal in that mechanism's namespace"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup inside the gateway, by the realm, the authenticated workload, and the agent ID that the presentation names; whether a workload may carry more than one record is the choice of the authenticating profile"},
+    {"function": "map_operation", "component": "Gateway mapping stage, mapping revision pact-rebac-1; selects the document object (RB-6) and the relation from the versioned relation table (RB-5)"},
+    {"function": "read_native_claim", "component": "Lookup in the authenticated request context and the installed configuration for principal_id, tenant_id, and the delegation authority reference; the relationship store is not read through this function"},
+    {"function": "check_context", "component": "Installed gateway checks native-principal-binding-v1, native-delegation-v1, and execution-identity-v1"},
+    {"function": "authorize_native", "component": "The gateway's Check call to the pinned OpenFGA store with the pinned model, consistency HIGHER_CONSISTENCY, and the mapped subject of the original principal (RB-1 to RB-13, RB-19)"},
+    {"function": "record_outcome", "component": "Gateway outcome writer after the Check and after execution; the document service audit log identifies the executor"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain; to be supplied by the deployment"},
+    {"component": "C02", "owner": "IAM owner and adapter owner", "what_exists": "The deployment's identity mechanism and the adapter implementing authorize_native for this profile; the identity mechanism is to be supplied, the adapter is go/adapters/rebac in the reference implementation"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry; to be supplied, a reference registry exists in the Go package go/adapter/enroll"},
+    {"component": "C04", "owner": "Collaboration platform owner", "what_exists": "The collaboration system's record of the principal-to-agent task authorization; required, assumed by the sample, binding rules belong to the delegation work of finding G03"},
+    {"component": "C05", "owner": "Resource owner and adapter owner", "what_exists": "OpenFGA store (the Check) and the enrollment registry; to be supplied"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: read and edit of a document need no external approval in this claim"},
+    {"component": "C07", "owner": "Adapter owner", "what_exists": "Mapping registry holding the pin record, relation table, and subject and object mappings; to be supplied, specified by this profile"},
+    {"component": "C08", "owner": "Resource owner", "what_exists": "OpenFGA store with the pinned model and tuples, and the document service; to be supplied"},
+    {"component": "C09", "owner": "Platform owner", "what_exists": "Replay and receipt store; to be supplied"},
+    {"component": "C10", "owner": "Resource owner", "what_exists": "Gateway outcome writer and document service audit log; to be supplied"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Policy registry holding the base requirements; registry only, no adaptation lifecycle, and reputation and learning cannot change the relation table or the pin (RB-18)"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "Revocation and hold store; to be supplied"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled evidence and audit store; to be supplied"},
+    {"component": "C15", "owner": "none", "what_exists": "Not used: no budget or transaction limit is claimed; the document service keeps its own idempotency control for the edit"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no runtime attestation or data-use guarantee is claimed"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Another legitimate sharing path in the native model: a remaining direct share, membership of another project, or a public grant, after one path is removed",
+      "control": "equivalent",
+      "evidence": "The Check evaluates the full pinned model, so every path the model grants meets the same authorize_native point and the same decision (RB-14); fixture REBAC-05"
+    },
+    {
+      "path": "View-then-edit: using an allowed viewer decision, or a read-bound admission, to edit the same document",
+      "control": "equivalent",
+      "evidence": "The edit is a separate operation that meets all enforcement points again with relation editor (RB-18); fixtures REBAC-07 and REBAC-08"
+    },
+    {
+      "path": "Relationship data supplied by the agent: a profile or evidence claim naming a membership, a contextual_tuples value, a store id, a model id, or a tenant in the request",
+      "control": "closed",
+      "evidence": "None of them is read as a tuple, a pin, or a mapping (RB-3, RB-8); fixtures REBAC-01, REBAC-02, REBAC-03"
+    },
+    {
+      "path": "A document of another tenant presented through this tenant's mapping",
+      "control": "closed",
+      "evidence": "The registry entry of a document belongs to one realm, and a mismatch sends no Check (RB-4); fixture REBAC-09"
+    },
+    {
+      "path": "Direct request to the document service that skips the gateway",
+      "control": "out_of_claim",
+      "evidence": "Excluded in unsupported_forms: this profile does not establish network or credential separation between the agent and the document service; a deployment that closes it adds its own control and negative fixture"
+    },
+    {
+      "path": "Direct calls from the agent to the OpenFGA API (Check, Read, Expand, ListObjects, or Write)",
+      "control": "out_of_claim",
+      "evidence": "Excluded in unsupported_forms: this profile does not establish that the agent has no route or credential to the store API (RB-16, probe P-5); a deployment that closes it adds its own control and negative fixture"
+    }
+  ],
+  "unsupported_forms": [
+    "Universal relationships: any relationship model or store, or one fixed graph semantics, treated as covered: only a configured store and a pinned model are claimed, and the model's meaning belongs to the native system (RB-1, RB-14)",
+    "Instantaneous propagation of a relationship change: a change reaches the gateway at the next Check within the store's own consistency, bounded as stated in freshness and residual_limits and subject to probes P-1 and P-2",
+    "Writing, changing, or deleting relationships through PACT, an agent, a profile claim, evidence, a receipt, or an outcome report: relationship writes are application-only (RB-16)",
+    "Contextual tuples supplied by the agent, or taken from a profile or evidence claim: only gateway-derived tuples are allowed (RB-7, RB-8)",
+    "Listing, searching, or filtering documents with ListObjects, Expand, or Read, and reading relationships as profile field values: only the Check decides (RB-15)",
+    "An agent as a relationship subject, or an agent acting under relationships of its own: the subject is the delegating principal's mapped subject (RB-19)",
+    "Check user values that are usersets or wildcards, and cross-store Checks: the adapter sends only the mapped user:<subject-id> to the one pinned store (RB-6)",
+    "Models that use conditions, a Check context object, or conditioned tuples: no gateway-derived context is specified and the adapter sends none",
+    "The trusted sidecar/service deployment form: only the in-gateway form is claimed",
+    "Shared accounts as a way to tell agents apart: the relationship decision is per delegating principal and cannot distinguish agents, and each agent needs its own enrollment",
+    "Network or credential separation between the agent and the document service or the store API: a deployment control with no negative fixture in this profile (bypass_paths, out_of_claim)",
+    "Any route other than the two in protected_routes: not listed, so not claimed"
+  ],
+  "freshness": [
+    {
+      "source": "OpenFGA Check decision (authorize_native)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Enrollment registry (agent and key binding status)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "OpenFGA Check decision (authorize_native)",
+      "facts": ["groups", "roles"],
+      "live_check": {"available": true, "endpoint_class": "relationship store Check API"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    }
+  ],
+  "attribute_sources": [],
+  "residual_limits": [
+    "Post-read: document data already returned to the agent is not recalled by a later tuple removal or revocation, and an applied edit is not undone; no egress or data-use control is claimed; disclosed with no bound",
+    "Revocation propagation, relationship store: a tuple change reaches the gateway at the next Check, with consistency HIGHER_CONSISTENCY against the OpenFGA datastore as the consistency domain; 0 s after the datastore commit if probes P-1 and P-2 pass, otherwise the observed replication lag; removing one tuple removes one path only and a remaining path keeps the decision allowed (RB-14); instantaneous global propagation is not demonstrated",
+    "Revocation propagation, enrollment registry: a rotation, revocation, or compromise mark reaches the gateway at the next evaluation, 0 s within the registry's own consistency, or the registry's declared replication delay",
+    "Revocation propagation, pin and mapping changes: a new pin record, relation table, or mapping takes effect in a gateway instance when it loads the configuration; the rollout time is the deployment's and is not established here",
+    "Check-to-execution gap: the Check and the document service's operation are not atomic, and a relationship that changes between them is honored by the operation already allowed; disclosed with no bound",
+    "Remaining sharing paths: removing membership, or one share, leaves every other path in force; removing all paths is a native act of the sharing service",
+    "No observation reference: the Check returns no revision or consistency token, so the decision has no source reference and a re-stamp cannot be detected for it; the integration rests on the store's committed state at the time of the read",
+    "Tuples outlive the principal: tuples naming a subject id remain until the application removes them, and the registry never reassigns a subject id, so a later principal does not inherit them",
+    "Contextual tuples from token claims: a tuple derived from a token claim lasts until the token expires even if the claim changes; the deployment declares that lifetime in its own freshness entry",
+    "Store credential scope: the documentation read does not establish how one OpenFGA credential is limited to Check; open, probe P-5"
+  ],
+  "fixtures": [
+    {"id": "adapters/rebac/model", "path": "fixtures/adapters/rebac/assets/model.fga"},
+    {"id": "adapters/rebac/model-next", "path": "fixtures/adapters/rebac/assets/model-next.fga"},
+    {"id": "adapters/rebac/rebac-01.other-environment", "path": "fixtures/adapters/rebac/rebac-01.other-environment.json"},
+    {"id": "adapters/rebac/rebac-01.other-tenant", "path": "fixtures/adapters/rebac/rebac-01.other-tenant.json"},
+    {"id": "adapters/rebac/rebac-02.pinned-model", "path": "fixtures/adapters/rebac/rebac-02.pinned-model.json"},
+    {"id": "adapters/rebac/rebac-02.query-model-id", "path": "fixtures/adapters/rebac/rebac-02.query-model-id.json"},
+    {"id": "adapters/rebac/rebac-03.header-claim", "path": "fixtures/adapters/rebac/rebac-03.header-claim.json"},
+    {"id": "adapters/rebac/rebac-03.query-claim", "path": "fixtures/adapters/rebac/rebac-03.query-claim.json"},
+    {"id": "adapters/rebac/rebac-04.added-membership", "path": "fixtures/adapters/rebac/rebac-04.added-membership.json"},
+    {"id": "adapters/rebac/rebac-04.stale-membership", "path": "fixtures/adapters/rebac/rebac-04.stale-membership.json"},
+    {"id": "adapters/rebac/rebac-05.direct-share", "path": "fixtures/adapters/rebac/rebac-05.direct-share.json"},
+    {"id": "adapters/rebac/rebac-05.no-remaining-path", "path": "fixtures/adapters/rebac/rebac-05.no-remaining-path.json"},
+    {"id": "adapters/rebac/rebac-06.allowed-string", "path": "fixtures/adapters/rebac/rebac-06.allowed-string.json"},
+    {"id": "adapters/rebac/rebac-06.bad-request", "path": "fixtures/adapters/rebac/rebac-06.bad-request.json"},
+    {"id": "adapters/rebac/rebac-06.conflict", "path": "fixtures/adapters/rebac/rebac-06.conflict.json"},
+    {"id": "adapters/rebac/rebac-06.duplicate-allowed", "path": "fixtures/adapters/rebac/rebac-06.duplicate-allowed.json"},
+    {"id": "adapters/rebac/rebac-06.forbidden", "path": "fixtures/adapters/rebac/rebac-06.forbidden.json"},
+    {"id": "adapters/rebac/rebac-06.no-allowed", "path": "fixtures/adapters/rebac/rebac-06.no-allowed.json"},
+    {"id": "adapters/rebac/rebac-06.not-found", "path": "fixtures/adapters/rebac/rebac-06.not-found.json"},
+    {"id": "adapters/rebac/rebac-06.not-json", "path": "fixtures/adapters/rebac/rebac-06.not-json.json"},
+    {"id": "adapters/rebac/rebac-06.server-error", "path": "fixtures/adapters/rebac/rebac-06.server-error.json"},
+    {"id": "adapters/rebac/rebac-06.throttled", "path": "fixtures/adapters/rebac/rebac-06.throttled.json"},
+    {"id": "adapters/rebac/rebac-06.timeout", "path": "fixtures/adapters/rebac/rebac-06.timeout.json"},
+    {"id": "adapters/rebac/rebac-06.unauthenticated", "path": "fixtures/adapters/rebac/rebac-06.unauthenticated.json"},
+    {"id": "adapters/rebac/rebac-06.unreachable", "path": "fixtures/adapters/rebac/rebac-06.unreachable.json"},
+    {"id": "adapters/rebac/rebac-07.edit-maps-write", "path": "fixtures/adapters/rebac/rebac-07.edit-maps-write.json"},
+    {"id": "adapters/rebac/rebac-07.read-context-for-edit", "path": "fixtures/adapters/rebac/rebac-07.read-context-for-edit.json"},
+    {"id": "adapters/rebac/rebac-08.editor", "path": "fixtures/adapters/rebac/rebac-08.editor.json"},
+    {"id": "adapters/rebac/rebac-08.unlisted-action", "path": "fixtures/adapters/rebac/rebac-08.unlisted-action.json"},
+    {"id": "adapters/rebac/rebac-08.viewer-only", "path": "fixtures/adapters/rebac/rebac-08.viewer-only.json"},
+    {"id": "adapters/rebac/rebac-09.other-tenant-document", "path": "fixtures/adapters/rebac/rebac-09.other-tenant-document.json"},
+    {"id": "adapters/rebac/rebac-09.unregistered-document", "path": "fixtures/adapters/rebac/rebac-09.unregistered-document.json"},
+    {"id": "adapters/rebac/rebac-10", "path": "fixtures/adapters/rebac/rebac-10.json"},
+    {"id": "adapters/rebac/rebac-11", "path": "fixtures/adapters/rebac/rebac-11.json"},
+    {"id": "adapters/rebac/rebac-12", "path": "fixtures/adapters/rebac/rebac-12.json"}
+  ]
+}

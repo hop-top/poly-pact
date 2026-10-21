@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/adapter/_errors.py b/py/src/hop_top_pact/adapter/_errors.py
+index 65d84c1..a8f73fe 100644
+--- a/py/src/hop_top_pact/adapter/_errors.py
++++ b/py/src/hop_top_pact/adapter/_errors.py
+@@ -168,7 +168,7 @@ class NativeDenial(InvalidProof):
+         return DenialReason.CREDENTIAL_REJECTED
+ 
+     def _message(self) -> str:
+-        return "adapter: " + _DENIED + self.public_reason().value
++        return "adapter: " + _DENIED + (self.reason or self.public_reason().value)
+ 
+     def __repr__(self) -> str:
+         return f"NativeDenial({self.public_reason().value!r})"

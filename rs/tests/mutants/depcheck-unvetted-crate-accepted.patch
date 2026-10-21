@@ -1,0 +1,11 @@
+--- a/rs/tests/depcheck.rs
++++ b/rs/tests/depcheck.rs
+@@ -326,7 +326,7 @@
+         let (g, w) = (&got[t], &want[t]);
+         for (k, d) in g {
+             match w.get(k) {
+-                None => problems.push(format!("{name}: [{t}] {k} is not vetted")),
++                None => {}
+                 Some(v) if v != d => problems.push(format!("{name}: [{t}] {k} is {d:?}, vetted {v:?}")),
+                 Some(_) => {}
+             }

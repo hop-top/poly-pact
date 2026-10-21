@@ -1,0 +1,18 @@
+[
+  {
+    "id": "holder-scalar-1",
+    "description": "Appendix C holder key: private scalar 1 as a 32-octet big-endian d; the public point is d times the P-256 base point.",
+    "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE",
+    "expected_x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+    "expected_y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+    "expected_thumbprint": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M"
+  },
+  {
+    "id": "issuer-scalar-2",
+    "description": "Appendix C issuer key: private scalar 2 as a 32-octet big-endian d; the public point is d times the P-256 base point.",
+    "d": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI",
+    "expected_x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "expected_y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "expected_thumbprint": "AhqHzaYXA5MzmDCrsseUsVBGKyfhDhvekx0THjH_xIE"
+  }
+]

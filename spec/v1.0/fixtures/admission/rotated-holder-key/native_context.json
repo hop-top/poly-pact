@@ -1,0 +1,64 @@
+{
+  "authenticated": {
+    "principal_id": "https://identity.example/principals/alice",
+    "agent_id": "https://identity.example/agents/invoice-assistant",
+    "operator_id": "https://identity.example/operators/acme",
+    "tenant_id": "acme",
+    "holder_jkt": "ahxE1XEYqxvLIZy3r4nx9RE4E0683KndykyuZTK9xQg",
+    "binding_status": "active",
+    "authenticated_at": 1792080000
+  },
+  "native_claims": [
+    {
+      "native_path": "/principal/id",
+      "value": "https://identity.example/principals/alice",
+      "observed_at": 1792080000,
+      "status_checked_at": 1792080000,
+      "source_id": "configured-finance-validator-v1"
+    },
+    {
+      "native_path": "/principal/roles",
+      "value": [
+        "finance-reader"
+      ],
+      "observed_at": 1792080000,
+      "status_checked_at": 1792080000,
+      "source_id": "configured-finance-validator-v1"
+    },
+    {
+      "native_path": "/task/approval_ref",
+      "value": "native-approval:september-summary-007",
+      "observed_at": 1792080000,
+      "status_checked_at": 1792080000,
+      "source_id": "configured-finance-validator-v1"
+    }
+  ],
+  "approval": {
+    "ref": "native-approval:september-summary-007",
+    "state": "approved",
+    "agent_id": "https://identity.example/agents/invoice-assistant",
+    "principal_id": "https://identity.example/principals/alice",
+    "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+    "task_id": "native-task:september-summary-007",
+    "status_checked_at": 1792080000
+  },
+  "delegation": {
+    "authority_ref": "native-approval:september-summary-007",
+    "principal_id": "https://identity.example/principals/alice",
+    "task_id": "native-task:september-summary-007",
+    "state": "active",
+    "observed_at": 1792080000
+  },
+  "executor": {
+    "class": "delegated-user",
+    "principal_id": "https://identity.example/principals/alice"
+  },
+  "evidence_status": {
+    "runtime-attestation:finance-agent-0001": {
+      "status": "valid",
+      "checked_at": 1792080000
+    }
+  },
+  "security_holds": [],
+  "authorize": true
+}

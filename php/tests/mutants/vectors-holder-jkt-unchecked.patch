@@ -1,0 +1,13 @@
+diff --git a/php/src/Vectors/Group/KeyGroup.php b/php/src/Vectors/Group/KeyGroup.php
+index edfb588..fddb6ee 100644
+--- a/php/src/Vectors/Group/KeyGroup.php
++++ b/php/src/Vectors/Group/KeyGroup.php
+@@ -129,7 +129,7 @@ final class KeyGroup implements Group
+         if ($got->x !== $want->x || $got->y !== $want->y) {
+             throw new Fail(\sprintf('%s: public point x=%s y=%s, but scalar %s times G is x=%s y=%s', $rel, $got->x, $got->y, $scalar, $want->x, $want->y));
+         }
+-        if ($r->get('role') === 'holder') {
++        if ($r->get('role') === 'nobody') {
+             $tp = Jws::thumbprint($got)->value;
+             if ($tp !== self::APPENDIX_C_HOLDER_JKT) {
+                 throw new Fail(\sprintf('%s: holder thumbprint %s, want Appendix C holder_jkt %s', $rel, $tp, self::APPENDIX_C_HOLDER_JKT));

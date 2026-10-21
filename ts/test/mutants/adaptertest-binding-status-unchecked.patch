@@ -1,0 +1,13 @@
+diff --git a/ts/src/adapter/adaptertest/checks-identity.ts b/ts/src/adapter/adaptertest/checks-identity.ts
+index 6782fd4..c4ded4c 100644
+--- a/ts/src/adapter/adaptertest/checks-identity.ts
++++ b/ts/src/adapter/adaptertest/checks-identity.ts
+@@ -203,7 +203,7 @@ export async function binding(r: Run): Promise<void> {
+         r.failf(`resolveAgentBinding rejected with ${errorText(err)}, want an active binding`);
+         return;
+       }
+-      if (b?.status !== BindingStatus.ACTIVE) {
++      if (b?.status !== BindingStatus.ACTIVE && b?.status !== BindingStatus.REVOKED) {
+         r.failf(`binding status is ${b?.status}, want ACTIVE`);
+       }
+       checkRecord(r, b as AgentBinding, e.binding);

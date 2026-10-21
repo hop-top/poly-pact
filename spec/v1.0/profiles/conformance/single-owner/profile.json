@@ -1,0 +1,151 @@
+{
+  "kind": "conformance",
+  "id": "single-owner",
+  "version": "0.1",
+  "doc": "spec/v1.0/profiles/conformance/single-owner/profile.md",
+  "roles": {
+    "mandatory": ["holder", "gateway", "validator"],
+    "absent": ["reputation", "learning"],
+    "colocation_allowed": true
+  },
+  "constraints": [
+    {
+      "id": "C1",
+      "requirement": "SO-DEF-1",
+      "statement": "Exactly one owner trust root.",
+      "scope": "config",
+      "predicates": [
+        {"op": "non_empty", "path": "/owner/owner_issuers"},
+        {
+          "op": "each",
+          "path": "/trust",
+          "where": {"op": "in", "path": "/role", "values": ["requirement-publisher", "validator", "enrollment-authority", "hold-authority"]},
+          "require": [{"op": "member_of", "path": "/iss", "set": "/owner/owner_issuers"}]
+        },
+        {"op": "member_of", "path": "/validator/iss", "set": "/owner/owner_issuers"},
+        {
+          "op": "each",
+          "path": "/trust",
+          "where": {"op": "const", "path": "/role", "value": "issuer"},
+          "require": [
+            {
+              "op": "any",
+              "predicates": [
+                {"op": "member_of", "path": "/iss", "set": "/owner/owner_issuers"},
+                {
+                  "op": "listed",
+                  "set": "/owner/evidence_issuers",
+                  "key": "/iss",
+                  "require": [
+                    {"op": "const", "path": "/owner_trusted", "value": true},
+                    {"op": "subset", "path": "self:/claim_paths", "of": "/claim_paths"}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C2",
+      "requirement": "SO-DEF-1",
+      "statement": "Exactly one environment.",
+      "scope": "config",
+      "predicates": [
+        {"op": "count", "path": "/owner/environment_ids", "equals": 1},
+        {"op": "equal", "path": "/owner/environment_ids/0", "to": "/gateway/environment_id"}
+      ]
+    },
+    {
+      "id": "C3",
+      "requirement": "SO-DEF-1",
+      "statement": "Exactly one realm: one tenant_id and environment_id pair.",
+      "scope": "config",
+      "predicates": [
+        {"op": "count", "path": "/owner/realms", "equals": 1},
+        {"op": "equal", "path": "/owner/realms/0/tenant_id", "to": "/gateway/tenant_id"},
+        {"op": "equal", "path": "/owner/realms/0/environment_id", "to": "/gateway/environment_id"}
+      ]
+    },
+    {
+      "id": "C4",
+      "requirement": "SO-DEF-4",
+      "statement": "Every agent enrollment was made by the owner; self-registration is off.",
+      "scope": "config",
+      "predicates": [
+        {"op": "const", "path": "/owner/self_registration", "value": false},
+        {
+          "op": "each",
+          "path": "/owner/enrollments",
+          "require": [
+            {"op": "member_of", "path": "/enrolled_by", "set": "/owner/owner_issuers"},
+            {
+              "op": "listed",
+              "set": "/trust",
+              "key": "/iss",
+              "self_key": "/enrolled_by",
+              "require": [{"op": "const", "path": "/role", "value": "enrollment-authority"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C5",
+      "requirement": "SO-DEF-3",
+      "statement": "Approval issuers are owner issuers.",
+      "scope": "evidence",
+      "predicates": [
+        {
+          "op": "any",
+          "predicates": [
+            {"op": "not", "predicate": {"op": "const", "path": "/evidence/kind", "value": "approval"}},
+            {"op": "member_of", "path": "/evidence/iss", "set": "/owner/owner_issuers"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "R2",
+      "requirement": "SO-ROLE-2",
+      "statement": "No reputation service, learning controller or learning policy authority is trusted.",
+      "scope": "config",
+      "predicates": [
+        {
+          "op": "each",
+          "path": "/trust",
+          "require": [{"op": "not", "predicate": {"op": "in", "path": "/role", "values": ["reputation-service", "learning-controller", "policy-authority"]}}]
+        }
+      ]
+    }
+  ],
+  "extension": {
+    "id": "pact-conformance-profile-v1",
+    "payload_def": "spec/v1.0/schemas/pact.schema.json#/$defs/ConformanceDeclaration",
+    "value": {
+      "conformance_profile": "single-owner",
+      "version": "0.1",
+      "omitted_roles": ["reputation", "learning"]
+    },
+    "owner_member_of": "/owner/owner_issuers",
+    "appears_in": [
+      "GatewayMetadata.extensions",
+      "GatewayMetadata.extensions_supported",
+      "RequirementContract.extensions",
+      "AdmissionAttestation.extensions"
+    ],
+    "copies_differ": "CONTEXT_MISMATCH",
+    "contract_without_declaration": "CONTEXT_MISMATCH"
+  },
+  "endpoints": [
+    {"endpoint": "requirements", "behavior": "unchanged"},
+    {"endpoint": "evaluate", "behavior": "unchanged"},
+    {"endpoint": "outcomes", "behavior": "audit_only"},
+    {"endpoint": "receipts_query", "behavior": "unchanged"},
+    {"endpoint": "reputation_query", "behavior": "reject", "problem_code": "UNSUPPORTED_REQUIREMENT", "status": 422, "state_change": false},
+    {"endpoint": "learning_artifacts", "behavior": "reject", "problem_code": "UNSUPPORTED_REQUIREMENT", "status": 422, "state_change": false},
+    {"endpoint": "learning_events", "behavior": "reject", "problem_code": "UNSUPPORTED_REQUIREMENT", "status": 422, "state_change": false}
+  ],
+  "applicability": "applicability.json"
+}

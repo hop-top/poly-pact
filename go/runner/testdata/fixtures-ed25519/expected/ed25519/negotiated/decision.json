@@ -1,0 +1,1 @@
+{"decision":"ADMISSIBLE","transport_code":null,"checks":[{"check_id":"nonce","result":"PASS","reason_code":"REQUIREMENT_SATISFIED"}],"receipt":{"typ":"pact-admission+jwt","signer":"keys/ed25519.jwk.json","claims":{"aud":"https://gateway.example/finance","holder_jkt":"xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M"},"exp_max":1792080060}}

@@ -1,0 +1,57 @@
+{
+  "id": "vectors/binding/bind-08-body-spaced",
+  "description": "The same JSON with white space after each colon and comma: other bytes, so body_digest and the digest differ from bind-08-body-compact.",
+  "config": {
+    "origin": "https://gateway.example",
+    "header_allowlist": [
+      "if-match",
+      "x-dry-run"
+    ],
+    "normalization_id": "finance-header-normalization-1",
+    "mapping_version": "finance-http-1",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "request": {
+    "method": "POST",
+    "raw_request_uri": "/invoices/INV-1042/approve",
+    "headers": [
+      {
+        "name": "Host",
+        "value": "gateway.example"
+      },
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      },
+      {
+        "name": "Content-Length",
+        "value": "39"
+      }
+    ],
+    "body_b64": "eyJhbW91bnQiOiAiMTIwLjAwIiwgImN1cnJlbmN5IjogIkVVUiJ9"
+  },
+  "operation_id": "invoice-approve-operation-0001",
+  "principal_id": "https://identity.example/principals/alice",
+  "action": "invoice.approve",
+  "resources": [
+    "https://invoices.example/invoices/INV-1042"
+  ],
+  "expect": {
+    "operation_context": {
+      "operation_id": "invoice-approve-operation-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://identity.example/principals/alice",
+      "action": "invoice.approve",
+      "resources": [
+        "https://invoices.example/invoices/INV-1042"
+      ],
+      "method": "POST",
+      "target_uri": "https://gateway.example/invoices/INV-1042/approve",
+      "body_digest": "L6vdzUWGddiW2E0MUhzYXMrcKwQd45gwTNUj0C6EtL0",
+      "headers": {
+        "content-type": "application/json"
+      }
+    }
+  },
+  "expect_operation_digest": "3ft5IaB2u0qDEG5eolUbjIeY2Og9uNfAS2yiK6e5G14"
+}

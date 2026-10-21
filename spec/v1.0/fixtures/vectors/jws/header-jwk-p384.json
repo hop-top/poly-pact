@@ -1,0 +1,19 @@
+{
+  "id": "vectors/jws/header-jwk-p384",
+  "description": "The embedded jwk is a P-384 key (private scalar 2 on P-384), and the signature is a 96-octet ECDSA P-384 signature over SHA-256 of the signing input. ES256 is P-256 only; expected_holder_jkt is this key's RFC 7638 thumbprint, so only the curve is wrong.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtcHJlc2VudGF0aW9uK2p3dCIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6IlAtMzg0IiwieCI6IkNObVpCWHVqMHRscEpnQkZ4VnVYOElrQ1dWbW05RFRXVWRJSDBaLTVicDVQNE9odXZnNWstRnVXcWNkU2xkOWgiLCJ5Ijoiam9EeC1sc2JQTzIzdi1qZl9XMjZkTEoxMkhXOGJNUS1rRTVRWHlWcXRDVmZfVVBwVFRuaUxXRlFIbkFLbEE2QSJ9fQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9oZWFkZXItandrLXAzODQifQ.6Rq7iVlbHmFSgBGjEW1JxwHaSVPUDwu7bcZZLmGB7y-nSqA53CA_Kpz08kyuKBUM-ooErOW9ZgjooHH5Yd6meSUTE5Djgl88GfREL8bameiea4O9BcVntVV4QtGWUXoN",
+  "expected_typ": null,
+  "trusted_keysets": {},
+  "expected_holder_jkt": "RJeIyeZx-uMuuFmPQfS7sxrKAPa7I7moF1bysQHuh5s",
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "jwk-curve",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-384",
+    "x": "CNmZBXuj0tlpJgBFxVuX8IkCWVmm9DTWUdIH0Z-5bp5P4Ohuvg5k-FuWqcdSld9h",
+    "y": "joDx-lsbPO23v-jf_W26dLJ12HW8bMQ-kE5QXyVqtCVf_UPpTTniLWFQHnAKlA6A"
+  },
+  "signature_valid": null,
+  "expected_payload": null
+}

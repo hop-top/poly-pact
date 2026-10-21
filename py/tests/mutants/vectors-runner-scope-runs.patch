@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/vectors/_common.py b/py/src/hop_top_pact/vectors/_common.py
+index 9328200..2916b3c 100644
+--- a/py/src/hop_top_pact/vectors/_common.py
++++ b/py/src/hop_top_pact/vectors/_common.py
+@@ -67,7 +67,7 @@ def prefix(e: Entry) -> str:
+ 
+ def runs(e: Entry) -> bool:
+     """Whether the harness runs the entry: a run kind outside scope runner."""
+-    return e.scope != manifest.Scope.RUNNER and e.kind in RUN_KINDS
++    return e.kind in RUN_KINDS
+ 
+ 
+ def _reject_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:

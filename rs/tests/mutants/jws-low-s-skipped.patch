@@ -1,0 +1,9 @@
+--- a/rs/src/core/jws/mod.rs
++++ b/rs/src/core/jws/mod.rs
+@@ -340,6 +340,5 @@
+     let sig: Signature = key
+         .try_sign_with_rng(&mut SysRng, signing_input.as_bytes())
+         .map_err(|e| fail_by(Reason::SigningKey, "random nonce", e))?;
+-    let sig = sig.normalize_s();
+     Ok(format!("{signing_input}.{}", encode(&sig.to_bytes())))
+ }

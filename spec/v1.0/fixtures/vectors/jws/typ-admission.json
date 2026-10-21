@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/typ-admission",
+  "description": "typ pact-admission+jwt requires signer role validator (draft 7.3); kid is resolved in the key set trusted for that role.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtYWRtaXNzaW9uK2p3dCIsImtpZCI6InRlc3QtdmFsaWRhdG9yLWtleS0xIn0.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy90eXAtYWRtaXNzaW9uIn0.gg0xCoY3-URViWsTVOgaIjQ-uwAI_uL4boaytzJe2w0MZkEm6Y6ig_JkNPSmDo82R8qSqFPJVA2-C3Ls1rOxiw",
+  "expected_typ": "pact-admission+jwt",
+  "trusted_keysets": {
+    "validator": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "sBoXKnakYCyS0yQsuJfd4wJMdA3rshW0xrCq6Twikak",
+        "y": "6FwQdDI32tVv7A4t-6cDeRwA93Acfha9_XxIU4_Hf-I",
+        "kid": "test-validator-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "sBoXKnakYCyS0yQsuJfd4wJMdA3rshW0xrCq6Twikak",
+    "y": "6FwQdDI32tVv7A4t-6cDeRwA93Acfha9_XxIU4_Hf-I",
+    "kid": "test-validator-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": "{\"pact_version\":\"0.1\",\"jti\":\"vectors/jws/typ-admission\"}"
+}

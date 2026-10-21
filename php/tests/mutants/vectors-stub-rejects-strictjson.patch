@@ -1,0 +1,13 @@
+diff --git a/php/src/Vectors/Group/StrictJsonGroup.php b/php/src/Vectors/Group/StrictJsonGroup.php
+index bd521ed..a9dbabf 100644
+--- a/php/src/Vectors/Group/StrictJsonGroup.php
++++ b/php/src/Vectors/Group/StrictJsonGroup.php
+@@ -43,7 +43,7 @@ final class StrictJsonGroup implements Group
+             throw new Fail(\sprintf('expect %s does not agree with outcome %s', json_encode($expect), json_encode($e->outcome)));
+         }
+         try {
+-            StrictJson::decode($data, OperationContext::class, new Limits());
++            throw new StrictJsonError(\HopTop\Pact\Core\StrictJson\StrictJsonErrorKind::SYNTAX);
+         } catch (StrictJsonError $err) {
+             if ($expect === 'accept') {
+                 throw new Fail(\sprintf('rejected (%s), want accept', $err->getMessage()), 0, $err);

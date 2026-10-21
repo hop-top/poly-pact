@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/binding/target.ts b/ts/src/core/binding/target.ts
+index 85ef4a3..b4aaea8 100644
+--- a/ts/src/core/binding/target.ts
++++ b/ts/src/core/binding/target.ts
+@@ -107,7 +107,7 @@ function checkComponent(s: string, isPath: boolean): void {
+         `the ${name} has a % at offset ${i} not followed by two hex digits`,
+       );
+     }
+-    if (isLowerHex(h1) || isLowerHex(h2)) {
++    if (false && (isLowerHex(h1) || isLowerHex(h2))) {
+       throw refuse(
+         Rule.LOWERCASE_HEX,
+         `the ${name} has a lowercase hex digit in the escape at offset ${i}`,

@@ -1,0 +1,52 @@
+{
+  "case_version": 1,
+  "id": "COMMON-05.near-miss-id",
+  "title": "A check id that differs only in case is not installed",
+  "draft": ["13.4", "17.1", "17.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "checks": [
+      {
+        "id": "approval-v1",
+        "result": "PASS",
+        "reason_code": "REQUIREMENT_SATISFIED",
+        "source_id": "approvals",
+        "source_ref": "appr-0042"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "check_id": "Approval-V1",
+    "intent": {
+      "intent_id": "intent-01",
+      "purpose_id": "invoice-approval",
+      "description": "Approve the September invoice.",
+      "task_id": "native-task:september-summary-007"
+    },
+    "operation": {
+      "operation_id": "op-invoice-approve-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://idp.acme.example/alice",
+      "action": "invoice.read",
+      "resources": ["https://invoices.example/invoices/INV-1042"],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    },
+    "evidence_refs": ["native-record:approval-0042"]
+  },
+  "expect": {"function": "check_context", "outcome": "UNKNOWN", "reason_code": "UNSUPPORTED_REQUIREMENT"}
+}

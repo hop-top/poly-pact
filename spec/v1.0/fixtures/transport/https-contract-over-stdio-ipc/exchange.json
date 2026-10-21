@@ -1,0 +1,9 @@
+{
+  "presentations": [
+    {
+      "signed": "signed/presentation.jws",
+      "jti": "AglkVTPooQGdcNcjJUMOnQ",
+      "transport": "stdio-ipc"
+    }
+  ]
+}

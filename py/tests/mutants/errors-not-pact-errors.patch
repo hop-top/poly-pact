@@ -1,0 +1,26 @@
+diff --git a/py/src/hop_top_pact/core/clock.py b/py/src/hop_top_pact/core/clock.py
+index 1892b67..c046963 100644
+--- a/py/src/hop_top_pact/core/clock.py
++++ b/py/src/hop_top_pact/core/clock.py
+@@ -143,7 +143,7 @@ _MESSAGES: Final = {
+ }
+ 
+ 
+-class ClockError(PactError):
++class ClockError(Exception):
+     """A time check failed for kind; detail names the values compared."""
+ 
+     def __init__(self, kind: ClockErrorKind, detail: str = "") -> None:
+diff --git a/py/src/hop_top_pact/core/limits.py b/py/src/hop_top_pact/core/limits.py
+index 5a933ba..ed778cb 100644
+--- a/py/src/hop_top_pact/core/limits.py
++++ b/py/src/hop_top_pact/core/limits.py
+@@ -88,7 +88,7 @@ _MESSAGES: Final = {
+ }
+ 
+ 
+-class LimitError(PactError):
++class LimitError(Exception):
+     """A limit check failed, naming the limit.
+ 
+     key is the section 20.1 metadata key of the limit, such as

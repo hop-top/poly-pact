@@ -1,0 +1,352 @@
+[
+  {
+    "id": "authority-and-path",
+    "input": "https://example.com/",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3: scheme, \"//\" authority, path-abempty \"/\"; section 3.2.2 reg-name.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "empty-path",
+    "input": "https://example.com",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.3: path-abempty may be empty after an authority.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "uppercase-scheme-and-host",
+    "input": "HTTPS://EXAMPLE.COM/",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.1: scheme starts with ALPHA, either case; section 3.2.2: reg-name allows unreserved letters of either case.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "scheme-characters",
+    "input": "a+b-c.d:x",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.1: scheme = ALPHA *( ALPHA / DIGIT / \"+\" / \"-\" / \".\" ); section 3.3 path-rootless \"x\".",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "no-authority",
+    "input": "mailto:a@example.com",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3: hier-part path-rootless; section 3.3: \"@\" is a pchar.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "scheme-only",
+    "input": "https:",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3: hier-part may be path-empty (section 3.3: path-empty = 0<pchar>).",
+    "ajv_formats_differs": true
+  },
+  {
+    "id": "empty-host",
+    "input": "https://",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.2.2: reg-name = *( unreserved / pct-encoded / sub-delims ) may be empty; section 3.3 path-abempty empty.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "single-slash-path",
+    "input": "https:/a/b",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.3: path-absolute = \"/\" [ segment-nz *( \"/\" segment ) ], no authority.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "port-out-of-range",
+    "input": "https://example.com:99999/",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.2.3: port = *DIGIT; the grammar sets no upper bound.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "port-empty",
+    "input": "https://example.com:/",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.2.3: port = *DIGIT may be empty; the \":\" may then be present.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "userinfo",
+    "input": "https://user:pw@example.com/",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.2.1: userinfo = *( unreserved / pct-encoded / sub-delims / \":\" ) before \"@\".",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "ipv4-host",
+    "input": "https://192.0.2.1/",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.2.2: host = IPv4address.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "ipv6-host",
+    "input": "https://[2001:db8::1]/",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.2.2: host = IP-literal, an IPv6address in brackets.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pct-encoded-space",
+    "input": "https://example.com/a%20b",
+    "expect": "accept",
+    "reason": "RFC 3986 section 2.1: pct-encoded = \"%\" HEXDIG HEXDIG; section 3.3: pct-encoded is a pchar.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pct-encoded-hex-case",
+    "input": "https://example.com/%7e%7E",
+    "expect": "accept",
+    "reason": "RFC 3986 section 2.1: uppercase and lowercase hexadecimal digits are equivalent; both are HEXDIG.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pct-encoded-unreserved",
+    "input": "https://example.com/%41",
+    "expect": "accept",
+    "reason": "RFC 3986 section 2.3: an encoded unreserved octet should not be produced but is valid syntax, equivalent to \"A\".",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pct-encoded-utf8",
+    "input": "https://example.com/%C3%A9",
+    "expect": "accept",
+    "reason": "RFC 3986 section 2.1: any octet may be pct-encoded.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "unreserved",
+    "input": "https://example.com/a-._~z09",
+    "expect": "accept",
+    "reason": "RFC 3986 section 2.3: unreserved = ALPHA / DIGIT / \"-\" / \".\" / \"_\" / \"~\".",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "sub-delims-in-path",
+    "input": "https://example.com/!$&'()*+,;=:@",
+    "expect": "accept",
+    "reason": "RFC 3986 section 2.2 sub-delims; section 3.3: pchar = unreserved / pct-encoded / sub-delims / \":\" / \"@\".",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "empty-segment",
+    "input": "https://example.com/a//b",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.3: segment = *pchar may be empty.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "query",
+    "input": "https://example.com/a?q=1/2?3",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.4: query = *( pchar / \"/\" / \"?\" ).",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "fragment",
+    "input": "https://example.com/a#f/?x",
+    "expect": "accept",
+    "reason": "RFC 3986 section 3.5: fragment = *( pchar / \"/\" / \"?\" ); JSON Schema format uri is the URI production, which allows a fragment.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "space-in-path",
+    "input": "http://example.com/a b",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2.1 and 3.3: SP is not a pchar; it must be written %20.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "non-ascii-in-path",
+    "input": "http://example.com/\u00e9",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2 and 3.3: a URI is US-ASCII; \u00e9 is not a pchar (an IRI, RFC 3987, is not a URI).",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pct-not-hex",
+    "input": "https://example.com/%zz",
+    "expect": "reject",
+    "reason": "RFC 3986 section 2.1: \"%\" must be followed by two HEXDIG.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "backslash",
+    "input": "http://a/b\\c",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2.2, 2.3 and 3.3: \"\\\" is neither reserved nor unreserved, so not a pchar.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pct-one-digit",
+    "input": "https://example.com/%2",
+    "expect": "reject",
+    "reason": "RFC 3986 section 2.1: pct-encoded needs two HEXDIG.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pct-no-digit",
+    "input": "https://example.com/a%",
+    "expect": "reject",
+    "reason": "RFC 3986 section 2.1: a lone \"%\" is not pct-encoded.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pct-not-hex-in-host",
+    "input": "https://ex%zzample.com/",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2.1 and 3.2.2: reg-name allows only valid pct-encoded.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "tab-in-path",
+    "input": "https://example.com/a\tb",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.3: HTAB is not a pchar.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "line-feed-at-end",
+    "input": "https://example.com/\n",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.3: LF is not a pchar, also as the last character.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "dquote-in-path",
+    "input": "https://example.com/a\"b",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2 and 3.3: DQUOTE is not a URI character.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "braces-in-path",
+    "input": "https://example.com/a{b}",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2 and 3.3: \"{\" and \"}\" are not URI characters.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "pipe-in-path",
+    "input": "https://example.com/a|b",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2 and 3.3: \"|\" is not a URI character.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "caret-in-query",
+    "input": "https://example.com/?q=a^b",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.4: \"^\" is not a pchar, \"/\" or \"?\".",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "second-hash",
+    "input": "https://example.com/a#b#c",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.5: fragment does not contain \"#\".",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "port-not-digits",
+    "input": "https://example.com:80a/",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.2.3: port = *DIGIT. Sections 3 and 3.3: \"//\" always begins an authority, and a path without one cannot begin with \"//\", so no other parse exists.",
+    "ajv_formats_differs": true
+  },
+  {
+    "id": "space-in-host",
+    "input": "https://exa mple.com/",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.2.2: SP is not in reg-name.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "unclosed-ip-literal",
+    "input": "https://[2001:db8::1/",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.2.2: IP-literal needs \"]\", and \"[\" is not in reg-name.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "ip-literal-without-authority",
+    "input": "https:/[::1]",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.3: without \"//\" there is no authority; the path-absolute segment cannot hold \"[\" or \"]\" (section 2.2: gen-delims, not pchar).",
+    "ajv_formats_differs": true
+  },
+  {
+    "id": "scheme-starts-with-digit",
+    "input": "1http://example.com/",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.1: scheme starts with ALPHA.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "underscore-in-scheme",
+    "input": "ht_tp://example.com/",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.1: \"_\" is not a scheme character.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "empty-scheme",
+    "input": ":a",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.1: scheme has at least one ALPHA.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "relative-path",
+    "input": "example.com/a",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 3 and 4.2: no scheme, so a relative reference, not a URI.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "relative-absolute-path",
+    "input": "/a/b",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 3 and 4.2: a relative reference, not a URI.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "empty-string",
+    "input": "",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3: a URI has a scheme and \":\".",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "kelvin-sign-in-path",
+    "input": "https://example.com/\u212a",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2 and 3.3: U+212A KELVIN SIGN is not US-ASCII; a case-insensitive Unicode match folds it into [a-z].",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "long-s-in-path",
+    "input": "https://example.com/\u017f",
+    "expect": "reject",
+    "reason": "RFC 3986 sections 2 and 3.3: U+017F LATIN SMALL LETTER LONG S is not US-ASCII; a case-insensitive Unicode match folds it into [a-z].",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "kelvin-sign-in-host",
+    "input": "https://\u212aexample.com/",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.2.2: reg-name is US-ASCII; U+212A is not unreserved.",
+    "ajv_formats_differs": false
+  },
+  {
+    "id": "non-ascii-digit-in-port",
+    "input": "https://example.com:\u0661/",
+    "expect": "reject",
+    "reason": "RFC 3986 section 3.2.3: port = *DIGIT, and DIGIT is %x30-39 (RFC 5234 Appendix B.1); U+0661 ARABIC-INDIC DIGIT ONE is not.",
+    "ajv_formats_differs": false
+  }
+]

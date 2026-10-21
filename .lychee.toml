@@ -1,0 +1,14 @@
+# lychee config for `make spec-links`: local links in spec/ and docs/ only.
+#
+# Keys here exist and behave the same in lychee 0.18 and 0.24 (pinned in
+# mise.toml). The Makefile passes two flags on the command line instead, because
+# a config file cannot carry them across those versions: 0.18 ignores `offline`
+# in a config file and then checks remote URLs over the network, and
+# `include_fragments` is a boolean in 0.18 but a string in 0.24, which rejects a
+# boolean. 0.24 also rejects unknown keys, so add a key only after trying it on
+# both versions.
+
+# Links inside code spans and fenced code blocks are not links.
+include_verbatim = false
+
+no_progress = true

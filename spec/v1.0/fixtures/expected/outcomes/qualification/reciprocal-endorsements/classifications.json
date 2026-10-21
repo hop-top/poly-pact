@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/reciprocal-endorsements",
+  "adversarial_claim": "Two operators endorse each other's agents through the evaluators they run, and both positive assessments count as independent task_quality evidence.",
+  "subject_event_id": "quality-event-0001",
+  "events": [
+    {
+      "event_id": "quality-event-0001",
+      "report": "reports/quality-event-0001.json",
+      "signed": "signed/quality-event-0001.jws",
+      "qualification": "DISPUTED",
+      "reason": "reciprocal-endorsement",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.6 rule 7: the evaluator's own agent (ledger-reviewer, evaluator_agents) was evaluated within the ingestion window by an evaluator that the invoice assistant's operator runs (quality-event-0002), so both positive reports are DISPUTED pending review. QUALIFIED until quality-event-0002 arrives; DISPUTED at the end of the case. Excluded from positive reputation (14.4) and not listed in qualified_event_ids (15.2)."
+    },
+    {
+      "event_id": "quality-event-0002",
+      "report": "reports/quality-event-0002.json",
+      "signed": "signed/quality-event-0002.jws",
+      "qualification": "DISPUTED",
+      "reason": "reciprocal-endorsement",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.6 rule 7: the other positive report of the reciprocal endorsement; DISPUTED pending review (14.4)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

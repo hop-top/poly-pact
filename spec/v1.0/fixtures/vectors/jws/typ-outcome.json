@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/typ-outcome",
+  "description": "typ pact-outcome+jwt requires signer role reporter (draft 7.3); kid is resolved in the key set trusted for that role. The issuer test key stands in for this role, which has no test key of its own.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3Qtb3V0Y29tZStqd3QiLCJraWQiOiJ0ZXN0LWlzc3Vlci1rZXktMSJ9.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy90eXAtb3V0Y29tZSJ9.dagk1yl1WusbQzTgIk1DfINSvLCa2mW_CAV1PlwuhfNLxwTsUmkt2dAI5Odff_oFWh8h3WV8X-2oDvMcCZBBcw",
+  "expected_typ": "pact-outcome+jwt",
+  "trusted_keysets": {
+    "reporter": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": "{\"pact_version\":\"0.1\",\"jti\":\"vectors/jws/typ-outcome\"}"
+}

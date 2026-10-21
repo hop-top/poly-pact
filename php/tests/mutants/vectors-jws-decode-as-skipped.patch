@@ -1,0 +1,13 @@
+diff --git a/php/src/Vectors/Group/JwsGroup.php b/php/src/Vectors/Group/JwsGroup.php
+index 5ef0938..f0ec8e3 100644
+--- a/php/src/Vectors/Group/JwsGroup.php
++++ b/php/src/Vectors/Group/JwsGroup.php
+@@ -141,7 +141,7 @@ final class JwsGroup implements Group
+         $payload = '';
+         try {
+             $payload = $verifier->verify(Fixtures::str($v->get('compact'), 'compact'))->payload;
+-            if ($decodeAs !== null) {
++            if (false) {
+                 $got = self::decodeArtifact(Fixtures::str($decodeAs, 'decode_as'), $payload);
+             }
+         } catch (Fail $f) {

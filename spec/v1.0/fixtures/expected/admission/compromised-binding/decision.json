@@ -1,0 +1,40 @@
+{
+  "decision": "INADMISSIBLE",
+  "transport_code": null,
+  "checks": [
+    {
+      "check_id": "agent-holder-binding",
+      "result": "FAIL",
+      "reason_code": "SECURITY_HOLD"
+    }
+  ],
+  "receipt": {
+    "typ": "pact-admission+jwt",
+    "signer": "keys/validator.jwk.json",
+    "claims": {
+      "pact_version": "0.1",
+      "iss": "https://trust.example/issuers/finance",
+      "sub": "https://identity.example/agents/invoice-assistant",
+      "aud": "https://gateway.example/finance",
+      "iat": 1792080000,
+      "tenant_id": "acme",
+      "presentation_id": "iNSxC64P6px0VyhnIOGn3A",
+      "operation_id": "invoice-read-operation-0001",
+      "principal_id": "https://identity.example/principals/alice",
+      "environment_id": "https://gateway.example/environments/finance",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "profile_digest": "b6pNI8i5pX5MtuxkaBw0M-4tmzdkGsHVS_Kyji7_uOU",
+      "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+      "operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+      "requirements_digest": "EbFb1HJG6H23-4vR9WIfP5ifErkZCPbiPQiwNJ_Ek2c",
+      "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+      "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+      "decision": "INADMISSIBLE",
+      "terminal_reason": "COMPLETED",
+      "mode": "enforced"
+    },
+    "exp_max": 1792080060
+  },
+  "executed": false,
+  "reason": "the binding of the presented agent on the authenticated workload is COMPROMISED and the presentation is signed with its holder_jkt: the record is in force (identity mapping IM-18), so the presenter is the enrolled agent and the evaluation is authenticated (11.3 step 2, 12.2). The compromise mark is a security hold on that agent (6.4: a compromise event triggers the configured security hold; 13.4 SECURITY_HOLD), so agent-holder-binding is FAIL with SECURITY_HOLD and the decision INADMISSIBLE (identity mapping section 8 row 5). security_holds is empty: the binding status alone carries the hold, whatever the hold store already lists (18: propagation is not instantaneous). security-hold and security-hold-v1 are not constrained"
+}

@@ -1,0 +1,14 @@
+diff --git a/ts/src/core/clock.ts b/ts/src/core/clock.ts
+index 77913db..914b19c 100644
+--- a/ts/src/core/clock.ts
++++ b/ts/src/core/clock.ts
+@@ -300,8 +300,7 @@ export function checkPresentation(
+ // Infinity when it is later than 2^53-1 ms and so has no exact value.
+ function instant(sec: number, extraMs: number): number {
+   if (sec > MAX_INSTANT_SECOND) return Number.POSITIVE_INFINITY;
+-  const ms = sec * 1000 + extraMs;
+-  return ms <= Number.MAX_SAFE_INTEGER ? ms : Number.POSITIVE_INFINITY;
++  return sec * 1000 + extraMs;
+ }
+ 
+ // A claim clamped into 0..2^53-1; a value that is no number at all is

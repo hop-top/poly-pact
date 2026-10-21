@@ -1,0 +1,12 @@
+{
+  "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+  "modes": ["enforced"],
+  "presentation_transports": ["adapter-envelope"],
+  "adapters": [
+    {"protocol": "example-ipc", "version": "1.0", "mapping_revision": "ex-map-r1"}
+  ],
+  "conformance_profile": ["full"],
+  "transport": [
+    {"transport_profile": "tcp", "version": "0.1"}
+  ]
+}

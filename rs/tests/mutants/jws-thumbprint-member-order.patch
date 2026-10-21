@@ -1,0 +1,10 @@
+--- a/rs/src/core/jws/jwk.rs
++++ b/rs/src/core/jws/jwk.rs
+@@ -212,6 +212,6 @@
+     }
+     k.public_key()?;
+     // The values are base64url and fixed ASCII names: nothing needs escaping.
+-    let input = format!(r#"{{"crv":"{}","kty":"{}","x":"{}","y":"{}"}}"#, k.crv, k.kty, k.x, k.y);
++    let input = format!(r#"{{"kty":"{}","crv":"{}","x":"{}","y":"{}"}}"#, k.kty, k.crv, k.x, k.y);
+     Ok(Digest(URL_SAFE_NO_PAD.encode(Sha256::digest(input.as_bytes()))))
+ }

@@ -1,0 +1,31 @@
+{
+  "tasks": [
+    {
+      "task_id": "native-task:september-summary-007",
+      "agent_id": "https://identity.example/agents/invoice-assistant",
+      "operator_id": "https://identity.example/operators/acme",
+      "principal_id": "https://identity.example/principals/alice",
+      "independence_group": "native-task-group:september-summary-007"
+    }
+  ],
+  "records": {
+    "native-review:september-summary-007/read-0001": {
+      "kind": "assessment",
+      "state": "completed",
+      "returned": null,
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0001",
+      "executor": null,
+      "observed_at": 1792079980
+    },
+    "native-review:september-summary-007/read-0002": {
+      "kind": "assessment",
+      "state": "completed",
+      "returned": null,
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0002",
+      "executor": null,
+      "observed_at": 1792079980
+    }
+  }
+}

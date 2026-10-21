@@ -1,0 +1,242 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "graph-delegated-obo", "version": "v1.0", "mapping_revision": "pact-graph-1"},
+      {"protocol": "graph-app-only", "version": "v1.0", "mapping_revision": "pact-graph-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/mail/messages",
+      "action": "mail.message.list",
+      "resource_mapping": "Row GD1, form D: mailbox:{principal_id} from the authenticated user principal; the query must equal $select=id,subject,body&$top=10 octet for octet; translated to GET https://graph.microsoft.com/v1.0/me/messages?$select=id,subject,body&$top=10 under token B obtained by on-behalf-of from the request's token A (delegated-user)"
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/mail/messages",
+      "action": "mail.message.list",
+      "resource_mapping": "Row GD2, form D continuation: mailbox:{principal_id}; the only query parameter is page_token (22 to 128 base64url characters) naming a continuation record of the same task, principal, agent, row, and mapping version; the recorded @odata.nextLink is sent unchanged only if its origin is https://graph.microsoft.com, its path is /v1.0/me/messages, and it keeps the pinned $select and $top"
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/mailbox/messages",
+      "action": "mail.message.list",
+      "resource_mapping": "Row GA1, form A: mailbox:{registered-mailbox-id} from the executor binding of the authenticated workload, never from request data or profile attributes; the query must equal $select=id,subject,body&$top=10; translated to GET https://graph.microsoft.com/v1.0/users/{registered-mailbox-id}/messages?$select=id,subject,body&$top=10 under an app-only token of the workload's executor application (registered-app-executor), only while its grant preflight passes"
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/mailbox/messages",
+      "action": "mail.message.list",
+      "resource_mapping": "Row GA2, form A continuation: mailbox:{registered-mailbox-id}; page_token as GD2; the recorded @odata.nextLink is sent unchanged only if its origin is https://graph.microsoft.com, its path is /v1.0/users/{registered-mailbox-id}/messages, and it keeps the pinned $select and $top"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "Inherited: form D rows by form E of the oauth profile (token A, a delegated Entra ID v2.0 access token for the gateway API); form A rows by the workload integration profile the deployment names; this profile authenticates no request itself"},
+    {"function": "resolve_agent_binding", "component": "Inherited from the authenticating profile: enrollment registry lookup for the realm, the authenticated workload, and the agent the presentation names"},
+    {"function": "map_operation", "component": "Gateway mapping stage at mapping revision pact-graph-1: rows GD1, GD2, GA1, GA2 with exact constant queries and page_token continuations; no system query option is taken from the request"},
+    {"function": "read_native_claim", "component": "Executor registry, approved path /graph/execution_app_id for form A rows only"},
+    {"function": "check_context", "component": "native-delegation-v1 over the native task registry (opaque authority_ref); execution-identity-v1 over the executor registry and, for form A, the latest grant preflight; native-principal-binding-v1 is evaluated by the validator"},
+    {"function": "authorize_native", "component": "Form D: the gateway API's delegated scope and the gateway's mailbox policy for the user; form A: the gateway's policy that the workload's executor binding covers the row; then Microsoft Graph and Exchange Online decide on token B, and a refusal is final"},
+    {"function": "record_outcome", "component": "Gateway outcome writer: AUTHORIZATION and EXECUTION reports name the original and the downstream actor in details and reference the executor's immutable request record in evidence_refs"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain; to be supplied"},
+    {"component": "C02", "owner": "IAM owner and adapter owner", "what_exists": "Inherited inbound adapters (oauth profile form E; the named workload profile) and the executor registry claim reader, ReadNativeClaim of the reference implementation go/adapters/graph"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry of the authenticating profile; executor application registrations and credential lifecycle in Microsoft Entra ID; to be supplied"},
+    {"component": "C04", "owner": "Application and IAM owner", "what_exists": "Native task and delegation registry under the opaque authority_ref, supplied by the deployment; its structure waits for the delegation binding model of finding G03"},
+    {"component": "C05", "owner": "Adapter owner", "what_exists": "Executor registry, grant preflight results, task registry, hold store; to be supplied"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: the read rows declare no external approval; consent is native"},
+    {"component": "C07", "owner": "Adapter owner", "what_exists": "Mapper at revision pact-graph-1 with the translation table of the profile: MapOperation and Adapter.Execute of go/adapters/graph"},
+    {"component": "C08", "owner": "Resource owner", "what_exists": "Executor using the on-behalf-of flow and the client credentials grant, Microsoft Graph List messages, and Exchange Online mailbox authorization including RBAC for Applications; the executor is Adapter.Execute of go/adapters/graph, with one TokenAcquirer per adapter"},
+    {"component": "C09", "owner": "Gateway and platform owner", "what_exists": "Replay, receipt, and continuation record store shared by every replica; to be supplied"},
+    {"component": "C10", "owner": "Resource owner", "what_exists": "Gateway outcome writer and the executor's native request records with the Graph request-id; to be supplied"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Policy registry holding the base requirements; registry only; to be supplied"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "Enrollment status, hold store, and the grant preflight, whose failure stops form A rows; to be supplied"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled store of executor records and preflight outputs that holds no token or credential; to be supplied"},
+    {"component": "C15", "owner": "Gateway and platform owner", "what_exists": "Continuation records bound to the task, one downstream attempt per operation, and the task ledger of the multi-operation profile, which reserves each page against the budget of its native task: Config.Tasks of go/adapters/graph, with NewPager and ListingRoute; the task registry and a ledger store shared by every replica to be supplied"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no containment control is claimed; runtime.isolation is attested-only"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Downstream requests outside the translation table: a model-chosen URL, /v1.0/users/{other} in form D, another mailbox or /me in form A, $search, $filter, $batch, another operation",
+      "control": "closed",
+      "evidence": "Constant downstream origin, path, and query per row; exact gateway query; cases GRAPH-01, GRAPH-02, GRAPH-11, GRAPH-12"
+    },
+    {
+      "path": "A forged continuation or an @odata.nextLink pointing to another host, path, or query, or recorded for another task, principal, agent, row, or mapping version",
+      "control": "closed",
+      "evidence": "Continuation records under request-binding RB-57 and RB-58 plus the origin, path, and pinned-option comparison; cases GRAPH-09, GRAPH-10"
+    },
+    {
+      "path": "Fallback to a broader credential: app-only after a failed on-behalf-of exchange, another application's credentials after a native denial, a cached token of another operation",
+      "control": "closed",
+      "evidence": "execution-identity-v1 returns FAIL with EXECUTOR_MISMATCH; one token exchange per form D operation; no fallback rule; cases GRAPH-04 to GRAPH-08, GRAPH-17"
+    },
+    {
+      "path": "A parallel unscoped Entra application grant that lets the form A executor read mailboxes outside its Exchange RBAC scope",
+      "control": "closed",
+      "evidence": "Grant preflight over servicePrincipals/{id}/appRoleAssignments and Test-ServicePrincipalAuthorization; a parallel grant withdraws the claim and execution-identity-v1 fails closed; cases GRAPH-14 to GRAPH-16"
+    },
+    {
+      "path": "Delegated access to another user's mail through shared folders or mailbox delegation",
+      "control": "closed",
+      "evidence": "Form D rows have the constant downstream path /v1.0/me/messages; case GRAPH-02"
+    },
+    {
+      "path": "The PACT endpoints that require native authentication, such as POST /pact/v0.1/requirements",
+      "control": "equivalent",
+      "evidence": "Served through the same inherited authenticate_native and the same mapping rows; case GRAPH-21"
+    },
+    {
+      "path": "The agent's own access to Microsoft Graph or Exchange Online with any token its client can obtain",
+      "control": "out_of_claim",
+      "evidence": "Excluded in unsupported_forms: Microsoft Graph is not PACT-aware (handoff row I02/I03); no negative fixture applies"
+    },
+    {
+      "path": "Use of the gateway application's, executor application's, or auditor's credential outside the gateway",
+      "control": "out_of_claim",
+      "evidence": "Excluded in unsupported_forms; deployment requirement DR4 keeps the credentials in protected stores; no negative fixture applies"
+    },
+    {
+      "path": "Other mailboxes inside the executor application's RBAC scope, reached with its credential outside the translation rows",
+      "control": "out_of_claim",
+      "evidence": "Excluded in unsupported_forms; deployment requirement DR3 bounds the scope, whose breadth the test cmdlet cannot show (open item OI-5)"
+    }
+  ],
+  "unsupported_forms": [
+    "Microsoft Graph being PACT-aware, or PACT enforcement by Graph (handoff row I02/I03): Graph decides on token B only",
+    "Protection of bypass routes outside the gateway (handoff row I02/I03)",
+    "Borrowed user rights in app-only execution (handoff row I08)",
+    "Mailbox narrowing by profile declaration (handoff row I08): the mailbox boundary is the native RBAC scope that the preflight verifies",
+    "/me in app-only execution: no form A row has a user context",
+    "Fallback from on-behalf-of to app-only, or to any broader credential",
+    "Application access policies as the mailbox boundary: RBAC for Applications replaces them",
+    "Graph permissions or operations other than delegated Mail.Read and List messages, and any write",
+    "$filter, $search, $orderby, or $expand built from request data: the query is a constant",
+    "Reusing token B across operations or principals",
+    "Exchange Web Services, SMTP, and protocols other than Microsoft Graph",
+    "National and sovereign clouds",
+    "Executor applications shared by several workloads",
+    "Use of executor or auditor credentials outside the gateway, excluded by its out_of_claim control in bypass_paths",
+    "Agents' direct access to Graph, excluded by its out_of_claim control in bypass_paths",
+    "Mailboxes inside the RBAC scope other than the registered one, excluded by its out_of_claim control in bypass_paths",
+    "Any route other than GD1, GD2, GA1, and GA2: not listed, so not claimed",
+    "An enforced data-use restriction after a read: execution-control-v1 is not installed"
+  ],
+  "freshness": [
+    {
+      "source": "G1 Executor registry (row to executor class, executor application, registered mailbox)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "G2 Native task and delegation registry (authority_ref)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "G3 Grant preflight result of the executor application (form A)",
+      "observation": "snapshot",
+      "max_age_seconds": 300,
+      "status_max_age_seconds": 300,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [],
+  "attribute_sources": [
+    {
+      "source": "Executor registry",
+      "category": "subject",
+      "attributes": ["/graph/execution_app_id"],
+      "freshness": "G1 Executor registry (row to executor class, executor application, registered mailbox)"
+    }
+  ],
+  "residual_limits": [
+    "Post-read: mail already returned to the agent is not recalled by a later revocation, and no egress or data-use control is claimed; disclosed with no bound",
+    "Revocation propagation, form D: each operation runs a new on-behalf-of exchange, so a disabled user or withdrawn consent is seen at the next operation in the identity platform's own consistency; token A's window is the oauth profile's lifetime bound",
+    "Revocation propagation, form A: a parallel grant added after a preflight is found at the next preflight (P = 300 s); Exchange applies RBAC changes within 30 minutes to 2 hours; app role assignment reads may lag; a cached app-only token stays valid up to its expires_in",
+    "Executor and task registries: changes take effect at the next evaluation, within each store's consistency domain",
+    "RBAC attestation: step 2 of the preflight reads the operator's recorded run of Test-ServicePrincipalAuthorization, which is a cmdlet only; an attestation older than P stops form A",
+    "Scope breadth: Test-ServicePrincipalAuthorization shows whether the registered mailbox is in scope, not which other mailboxes are",
+    "Token B contents: the gateway never reads token B; in form D only the response scope is checked, and in form A grants are observed only through the preflight",
+    "Directory roles: permissions granted to the executor through Entra built-in roles are not read by the preflight (probe P7)",
+    "Page size: $top=10 requests ten items and a page may hold fewer",
+    "Deployment controls: DR1 to DR5 are not observable by the fixtures and rest on the deployer's written statement"
+  ],
+  "fixtures": [
+    {"id": "adapters/graph/graph-01.app-exact-query", "path": "fixtures/adapters/graph/graph-01.app-exact-query.json"},
+    {"id": "adapters/graph/graph-01.app-reordered", "path": "fixtures/adapters/graph/graph-01.app-reordered.json"},
+    {"id": "adapters/graph/graph-01.app-search", "path": "fixtures/adapters/graph/graph-01.app-search.json"},
+    {"id": "adapters/graph/graph-01.encoded-dollar", "path": "fixtures/adapters/graph/graph-01.encoded-dollar.json"},
+    {"id": "adapters/graph/graph-01.exact-query", "path": "fixtures/adapters/graph/graph-01.exact-query.json"},
+    {"id": "adapters/graph/graph-01.extra-parameter", "path": "fixtures/adapters/graph/graph-01.extra-parameter.json"},
+    {"id": "adapters/graph/graph-01.filter", "path": "fixtures/adapters/graph/graph-01.filter.json"},
+    {"id": "adapters/graph/graph-01.no-query", "path": "fixtures/adapters/graph/graph-01.no-query.json"},
+    {"id": "adapters/graph/graph-01.orderby", "path": "fixtures/adapters/graph/graph-01.orderby.json"},
+    {"id": "adapters/graph/graph-01.reordered", "path": "fixtures/adapters/graph/graph-01.reordered.json"},
+    {"id": "adapters/graph/graph-01.search", "path": "fixtures/adapters/graph/graph-01.search.json"},
+    {"id": "adapters/graph/graph-01.top-eleven", "path": "fixtures/adapters/graph/graph-01.top-eleven.json"},
+    {"id": "adapters/graph/graph-02.binding-names-mailbox", "path": "fixtures/adapters/graph/graph-02.binding-names-mailbox.json"},
+    {"id": "adapters/graph/graph-02.mailbox-header", "path": "fixtures/adapters/graph/graph-02.mailbox-header.json"},
+    {"id": "adapters/graph/graph-02.other-user-path", "path": "fixtures/adapters/graph/graph-02.other-user-path.json"},
+    {"id": "adapters/graph/graph-02.user-parameter", "path": "fixtures/adapters/graph/graph-02.user-parameter.json"},
+    {"id": "adapters/graph/graph-06.binding-client-credentials", "path": "fixtures/adapters/graph/graph-06.binding-client-credentials.json"},
+    {"id": "adapters/graph/graph-06.binding-grant-only", "path": "fixtures/adapters/graph/graph-06.binding-grant-only.json"},
+    {"id": "adapters/graph/graph-06.binding-other-app", "path": "fixtures/adapters/graph/graph-06.binding-other-app.json"},
+    {"id": "adapters/graph/graph-06.delegated-binding", "path": "fixtures/adapters/graph/graph-06.delegated-binding.json"},
+    {"id": "adapters/graph/graph-09.app-other-path", "path": "fixtures/adapters/graph/graph-09.app-other-path.json"},
+    {"id": "adapters/graph/graph-09.dropped-select", "path": "fixtures/adapters/graph/graph-09.dropped-select.json"},
+    {"id": "adapters/graph/graph-09.other-host", "path": "fixtures/adapters/graph/graph-09.other-host.json"},
+    {"id": "adapters/graph/graph-09.other-path", "path": "fixtures/adapters/graph/graph-09.other-path.json"},
+    {"id": "adapters/graph/graph-09.other-principal", "path": "fixtures/adapters/graph/graph-09.other-principal.json"},
+    {"id": "adapters/graph/graph-09.other-row", "path": "fixtures/adapters/graph/graph-09.other-row.json"},
+    {"id": "adapters/graph/graph-09.other-version", "path": "fixtures/adapters/graph/graph-09.other-version.json"},
+    {"id": "adapters/graph/graph-09.token-grammar", "path": "fixtures/adapters/graph/graph-09.token-grammar.json"},
+    {"id": "adapters/graph/graph-09.unknown-token", "path": "fixtures/adapters/graph/graph-09.unknown-token.json"},
+    {"id": "adapters/graph/graph-10.app-continuation", "path": "fixtures/adapters/graph/graph-10.app-continuation.json"},
+    {"id": "adapters/graph/graph-10.continuation", "path": "fixtures/adapters/graph/graph-10.continuation.json"},
+    {"id": "adapters/graph/graph-11.binding-no-mailbox", "path": "fixtures/adapters/graph/graph-11.binding-no-mailbox.json"},
+    {"id": "adapters/graph/graph-11.workload-on-delegated-route", "path": "fixtures/adapters/graph/graph-11.workload-on-delegated-route.json"},
+    {"id": "adapters/graph/graph-12.app-mailbox-header", "path": "fixtures/adapters/graph/graph-12.app-mailbox-header.json"},
+    {"id": "adapters/graph/graph-12.app-mailbox-parameter", "path": "fixtures/adapters/graph/graph-12.app-mailbox-parameter.json"},
+    {"id": "adapters/graph/graph-12.other-workload-mailbox", "path": "fixtures/adapters/graph/graph-12.other-workload-mailbox.json"},
+    {"id": "adapters/graph/graph-13.claim-delegated", "path": "fixtures/adapters/graph/graph-13.claim-delegated.json"},
+    {"id": "adapters/graph/graph-13.claim-registered", "path": "fixtures/adapters/graph/graph-13.claim-registered.json"},
+    {"id": "adapters/graph/graph-13.shared-app", "path": "fixtures/adapters/graph/graph-13.shared-app.json"},
+    {"id": "adapters/graph/graph-13.shared-app-claim", "path": "fixtures/adapters/graph/graph-13.shared-app-claim.json"},
+    {"id": "adapters/graph/graph-14.graph-mail-read", "path": "fixtures/adapters/graph/graph-14.graph-mail-read.json"},
+    {"id": "adapters/graph/graph-14.graph-mail-readbasic-all", "path": "fixtures/adapters/graph/graph-14.graph-mail-readbasic-all.json"},
+    {"id": "adapters/graph/graph-14.graph-mail-readwrite", "path": "fixtures/adapters/graph/graph-14.graph-mail-readwrite.json"},
+    {"id": "adapters/graph/graph-14.other-resource", "path": "fixtures/adapters/graph/graph-14.other-resource.json"},
+    {"id": "adapters/graph/graph-14.second-page", "path": "fixtures/adapters/graph/graph-14.second-page.json"},
+    {"id": "adapters/graph/graph-15.extra-row", "path": "fixtures/adapters/graph/graph-15.extra-row.json"},
+    {"id": "adapters/graph/graph-15.no-row", "path": "fixtures/adapters/graph/graph-15.no-row.json"},
+    {"id": "adapters/graph/graph-15.not-in-scope", "path": "fixtures/adapters/graph/graph-15.not-in-scope.json"},
+    {"id": "adapters/graph/graph-15.organization-scope", "path": "fixtures/adapters/graph/graph-15.organization-scope.json"},
+    {"id": "adapters/graph/graph-15.unknown-scope-type", "path": "fixtures/adapters/graph/graph-15.unknown-scope-type.json"},
+    {"id": "adapters/graph/graph-16.inside-settle-window", "path": "fixtures/adapters/graph/graph-16.inside-settle-window.json"},
+    {"id": "adapters/graph/graph-16.no-preflight", "path": "fixtures/adapters/graph/graph-16.no-preflight.json"},
+    {"id": "adapters/graph/graph-16.older-than-p", "path": "fixtures/adapters/graph/graph-16.older-than-p.json"},
+    {"id": "adapters/graph/graph-16.settled", "path": "fixtures/adapters/graph/graph-16.settled.json"},
+    {"id": "adapters/graph/graph-16.unable-to-run", "path": "fixtures/adapters/graph/graph-16.unable-to-run.json"},
+    {"id": "adapters/graph/graph-20.denial-report", "path": "fixtures/adapters/graph/graph-20.denial-report.json"},
+    {"id": "adapters/graph/graph-20.execution-report", "path": "fixtures/adapters/graph/graph-20.execution-report.json"},
+    {"id": "adapters/graph/graph-21.map-no-binding", "path": "fixtures/adapters/graph/graph-21.map-no-binding.json"},
+    {"id": "adapters/graph/graph-21.no-binding", "path": "fixtures/adapters/graph/graph-21.no-binding.json"},
+    {"id": "adapters/graph/graph-22.map-registry-unavailable", "path": "fixtures/adapters/graph/graph-22.map-registry-unavailable.json"},
+    {"id": "adapters/graph/graph-22.registry-unavailable", "path": "fixtures/adapters/graph/graph-22.registry-unavailable.json"}
+  ]
+}

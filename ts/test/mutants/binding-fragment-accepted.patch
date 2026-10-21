@@ -1,0 +1,12 @@
+diff --git a/ts/src/core/binding/target.ts b/ts/src/core/binding/target.ts
+index 85ef4a3..994c9ef 100644
+--- a/ts/src/core/binding/target.ts
++++ b/ts/src/core/binding/target.ts
+@@ -17,7 +17,6 @@ const utf8 = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
+  * encodings and dot segments are refused.
+  */
+ export function requestTarget(rt: string): string {
+-  if (rt.includes('#')) throw refuse(Rule.FRAGMENT, 'the target has a fragment');
+   let pathQuery: string;
+   if (rt === '') {
+     throw refuse(Rule.TARGET_FORM, 'no request-target');

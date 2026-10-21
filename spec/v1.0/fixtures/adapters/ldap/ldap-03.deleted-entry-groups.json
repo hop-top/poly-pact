@@ -1,0 +1,81 @@
+{
+  "case_version": 1,
+  "id": "LDAP-03.deleted-entry-groups",
+  "title": "An authenticated account whose entry was deleted has no groups",
+  "draft": [
+    "17.1",
+    "17.2",
+    "8.3"
+  ],
+  "native_state": {
+    "model": "ldap/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/inventory",
+      "origin": "https://inventory.northstar.example",
+      "header_allowlist": []
+    },
+    "login_realm": "hq",
+    "directories": [
+      {
+        "name": "northstar-ldap",
+        "seed": "assets/seed.ldif",
+        "changes": [
+          "assets/ldap-03.delete-entry.ldif"
+        ]
+      }
+    ],
+    "realms": [
+      {
+        "realm_id": "hq",
+        "kind": "openldap",
+        "directory": "northstar-ldap",
+        "user_bases": [
+          "ou=people,ou=hq,dc=northstar,dc=example"
+        ],
+        "group_bases": [
+          "ou=groups,ou=hq,dc=northstar,dc=example"
+        ],
+        "account_class": "inetOrgPerson",
+        "group_class": "groupOfNames",
+        "login_attribute": "uid",
+        "lookup": {
+          "dn": "uid=pact-lookup,ou=service,ou=people,ou=hq,dc=northstar,dc=example",
+          "password": "Lu9!amber-gate-58"
+        },
+        "denied_principals": [
+          "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001109"
+        ],
+        "sentinel": {
+          "account": "5c0e8a1e-3b7d-4f2a-9c61-000000001108",
+          "group": "5c0e8a1e-3b7d-4f2a-9c61-000000001204"
+        },
+        "direct_groups": true,
+        "nested": "none"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001102",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/inventory"
+      },
+      "workload": "ldap:hq:5c0e8a1e-3b7d-4f2a-9c61-000000001102",
+      "mechanism": "ldap-simple-bind"
+    },
+    "native_path": "/principal/group_ids"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": [],
+      "observed_at": 1792080000,
+      "status_checked_at": 1792080000,
+      "source_id": "ldap:hq:groups:pact-ldap-groups-direct-1",
+      "source_ref": "5c0e8a1e-3b7d-4f2a-9c61-000000001102@1792080000"
+    }
+  }
+}

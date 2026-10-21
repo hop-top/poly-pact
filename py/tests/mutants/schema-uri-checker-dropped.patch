@@ -1,0 +1,10 @@
+diff --git a/py/src/hop_top_pact/core/schema.py b/py/src/hop_top_pact/core/schema.py
+index 325ab1c..fff8410 100644
+--- a/py/src/hop_top_pact/core/schema.py
++++ b/py/src/hop_top_pact/core/schema.py
+@@ -80,5 +80,4 @@ def _is_uri(instance: object) -> bool:
+ def format_checker() -> FormatChecker:
+     """Return a new format checker carrying format uri only, for a Draft 2020-12 validator."""
+     checker = FormatChecker(formats=())
+-    checker.checks("uri")(_is_uri)
+     return checker

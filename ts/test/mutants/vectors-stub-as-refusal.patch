@@ -1,0 +1,13 @@
+diff --git a/ts/src/vectors/fixture.ts b/ts/src/vectors/fixture.ts
+index 4b20fb2..b7f4489 100644
+--- a/ts/src/vectors/fixture.ts
++++ b/ts/src/vectors/fixture.ts
+@@ -40,7 +40,7 @@ export class Skipped extends Error {
+  * error of the module under test.
+  */
+ export function rethrowStub(err: unknown): void {
+-  if (err instanceof NotImplementedError) throw err;
++  if (err instanceof NotImplementedError && err === null) throw err;
+ }
+ 
+ /** The message of a thrown value. */

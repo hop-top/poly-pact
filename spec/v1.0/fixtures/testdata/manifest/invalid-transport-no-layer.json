@@ -1,0 +1,16 @@
+{
+  "manifest_version": 1,
+  "entries": [
+    {
+      "id": "transport/stdio-framing",
+      "kind": "transport",
+      "scope": "runner",
+      "path": "transport/stdio-framing",
+      "expected": "expected/transport/stdio-framing/transcript.json",
+      "outcome": "ACCEPTED",
+      "spec_map_row": "CL-13.3",
+      "draft_section": "13.3",
+      "transport": ["stdio-ipc"]
+    }
+  ]
+}

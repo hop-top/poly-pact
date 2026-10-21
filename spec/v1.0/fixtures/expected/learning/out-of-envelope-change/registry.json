@@ -1,0 +1,17 @@
+{
+  "artifacts": {},
+  "active": [],
+  "acknowledgments": [],
+  "rejections": [
+    {
+      "step": 1,
+      "code": "LEARNING_REJECTED",
+      "reason_codes": [
+        "CONTROL_NOT_ADAPTIVE"
+      ]
+    }
+  ],
+  "holds": [],
+  "reevaluation_required": [],
+  "subject": "/rejections/0"
+}

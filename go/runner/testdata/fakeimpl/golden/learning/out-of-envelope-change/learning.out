@@ -1,0 +1,1 @@
+{"acknowledgments":[],"active":[],"artifacts":{},"holds":[],"reevaluation_required":[],"rejections":[{"code":"LEARNING_REJECTED","problem":{"code":"LEARNING_REJECTED","extensions":{"reason_codes":["CONTROL_NOT_ADAPTIVE"]},"request_id":"rej-1","status":409,"title":"LEARNING_REJECTED","type":"about:blank"},"reason_codes":["CONTROL_NOT_ADAPTIVE"],"step":1}]}

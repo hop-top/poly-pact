@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/binding/_target.py b/py/src/hop_top_pact/core/binding/_target.py
+index 213f01b..a7decff 100644
+--- a/py/src/hop_top_pact/core/binding/_target.py
++++ b/py/src/hop_top_pact/core/binding/_target.py
+@@ -120,8 +120,6 @@ def _check_component(s: str, *, is_path: bool) -> None:
+                 Rule.ENCODED_UNRESERVED,
+                 f"the {name} encodes the unreserved character {chr(b)!r} at offset {i}",
+             )
+-        if is_path and b == 0x2F:
+-            raise refuse(Rule.ENCODED_SLASH, f"the path has an encoded slash at offset {i}")
+         decoded.append(b)
+         i += 3
+     try:

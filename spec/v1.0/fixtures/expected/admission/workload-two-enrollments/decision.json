@@ -1,0 +1,4 @@
+{
+  "transport_code": "UNSUPPORTED_REQUIREMENT",
+  "reason": "the authenticated workload holds more than one enrollment in force under a profile without shared workloads (identity mapping IM-19, section 8 last row): resolve_agent_binding selects none, whichever agent ID the request names, and reports UNSUPPORTED_REQUIREMENT (draft 17.1). No binding is established at 11.3 step 2, before an authenticated evaluation (12.2), UNSUPPORTED_REQUIREMENT (13.4), never DEFERRED; no receipt; operator alert"
+}

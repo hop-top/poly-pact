@@ -1,0 +1,47 @@
+{
+  "id": "vectors/binding/bind-02-query-order-ab",
+  "description": "Query a=1&b=2, the first of a pair: target_uri keeps the query as sent.",
+  "config": {
+    "origin": "https://gateway.example",
+    "header_allowlist": [
+      "if-match",
+      "x-dry-run"
+    ],
+    "normalization_id": "finance-header-normalization-1",
+    "mapping_version": "finance-http-1",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "request": {
+    "method": "GET",
+    "raw_request_uri": "/invoices/INV-1042?a=1&b=2",
+    "headers": [
+      {
+        "name": "Host",
+        "value": "gateway.example"
+      }
+    ],
+    "body_b64": ""
+  },
+  "operation_id": "invoice-read-operation-0001",
+  "principal_id": "https://identity.example/principals/alice",
+  "action": "invoice.read",
+  "resources": [
+    "https://invoices.example/invoices/INV-1042"
+  ],
+  "expect": {
+    "operation_context": {
+      "operation_id": "invoice-read-operation-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://identity.example/principals/alice",
+      "action": "invoice.read",
+      "resources": [
+        "https://invoices.example/invoices/INV-1042"
+      ],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042?a=1&b=2",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect_operation_digest": "JOyDapTBot9sWiB6USHNypAE4Vf4LODvIuNsJm4mVXw"
+}

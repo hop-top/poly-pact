@@ -1,0 +1,11 @@
+diff --git a/py/src/hop_top_pact/vectors/_groups.py b/py/src/hop_top_pact/vectors/_groups.py
+--- a/py/src/hop_top_pact/vectors/_groups.py
++++ b/py/src/hop_top_pact/vectors/_groups.py
+@@ -138,6 +138,7 @@
+         max_body=BINDING_MAX_BODY,
+     )
+     if config_error:
++        return
+         try:
+             cfg.validate()
+         except binding.RequestError as err:

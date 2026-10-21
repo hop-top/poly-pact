@@ -1,0 +1,152 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "http-basic", "version": "rfc7617", "mapping_revision": "pact-basic-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/invoices/{id}",
+      "action": "invoice.read",
+      "resource_mapping": "invoice:{id}, from the path parameter exactly as received, with the authenticated principal basic:{store-id}:{account-id}; the query string, the empty body digest and the target URI from the configured HTTPS origin are bound, and the department of the invoice is resolved by the native permission lookup, never taken from the request"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "Gateway authentication stage, before routing and before any PACT function: checks the gateway enforcement marker, then verifies the Basic credentials of the Authorization header against the account database; runs at requirement-contract issuance and again at the protected request"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup inside the gateway, by the authenticated account and the agent the presentation names; an account with more than one enrollment in force is a configuration error"},
+    {"function": "map_operation", "component": "Gateway mapping stage, mapping revision pact-basic-1, after authentication and before PACT evaluation"},
+    {"function": "read_native_claim", "component": "Account database lookup at the approved native paths /principal/id and /principal/roles"},
+    {"function": "check_context", "component": "Installed gateway check purpose-operation-v1, which admits the invoice.read operation only; an unknown check ID returns UNKNOWN"},
+    {"function": "authorize_native", "component": "Gateway native invoice permission lookup for the authenticated account, after PACT evaluation and before execution; a native denial is final"},
+    {"function": "record_outcome", "component": "Gateway outcome writer, after the native decision; declares no visibility of execution unless the backend reports it"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain of the PACT-aware gateway; the adapter functions exist in the reference implementation, the validator and the deployment filter chain are to be supplied"},
+    {"component": "C02", "owner": "Account store owner and adapter owner", "what_exists": "Existing account database and Basic credential verification; exists. The adapter functions authenticate_native and read_native_claim over it exist in the reference implementation"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry with administrator-run enrollment and key lifecycle; the registry contract and an in-memory backend exist, a production backend is to be supplied by the deployment"},
+    {"component": "C04", "owner": "none", "what_exists": "Not used: each agent acts under its own account, no delegation or task authority is claimed"},
+    {"component": "C05", "owner": "Adapter owner", "what_exists": "Account database, enrollment registry and security hold store as the status sources; the databases exist, the lookups through the adapter are to be supplied"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: the claimed read route declares no external approval; a deployment whose native policy requires one for the route is outside the claim"},
+    {"component": "C07", "owner": "Adapter owner", "what_exists": "Operation and purpose mapper at revision pact-basic-1; exists in the reference implementation, the installed purposes are deployment configuration"},
+    {"component": "C08", "owner": "Invoice service owner", "what_exists": "Existing invoice backend and account permission lookup, which preserve the native account restrictions; exists"},
+    {"component": "C09", "owner": "Platform owner", "what_exists": "Replay and receipt state shared and atomic across gateway replicas; to be supplied by the deployment"},
+    {"component": "C10", "owner": "Invoice service owner", "what_exists": "Gateway outcome writer for admission and native authorization, and the backend audit log for execution; the writer is to be supplied, the audit log exists"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed; a deployment that applies reputation supplies it separately"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Current authorized policy and artifact registry holding the base requirements; to be supplied by the deployment, registry only with no adaptation lifecycle"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "Revocation and security hold store, read with a fresh check for each evaluation; to be supplied by the deployment"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled evidence and audit store that never holds credentials; to be supplied by the deployment"},
+    {"component": "C15", "owner": "none", "what_exists": "Not used: the claimed route is a read, with no transactions or budgets"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no containment control is claimed, so runtime.isolation is attested-only (draft section 17.4)"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Direct request to the backend invoice service, bypassing the gateway",
+      "control": "closed",
+      "evidence": "Deployment requirement DR1: network policy admits only the gateway as a source, or gateway-to-backend mutual TLS; evidence field: backend rejects connections lacking gateway client certificate. Adapter-level specialization: a request without the gateway enforcement marker is rejected before any credential is evaluated; fixture group BASIC-03"
+    },
+    {
+      "path": "Any route other than the one in protected_routes, on the gateway or the backend, including every list and write operation",
+      "control": "out_of_claim",
+      "evidence": "Not listed in protected_routes, so not claimed; excluded in unsupported_forms"
+    },
+    {
+      "path": "Use of the account's Basic credentials against any system other than through the gateway, such as another application that accepts the same account",
+      "control": "out_of_claim",
+      "evidence": "The credentials are computed from the user-id and the password alone (RFC 7617 section 2), so they authenticate wherever the account is accepted; excluded in unsupported_forms (credential forwarding outside the path). The backend case is the first path above"
+    },
+    {
+      "path": "Access to invoice data through the account database, administrative consoles or batch jobs",
+      "control": "out_of_claim",
+      "evidence": "Not a route of the claim; the claim covers only the route in protected_routes"
+    }
+  ],
+  "unsupported_forms": [
+    "Shared-password agent distinction or enforcement on an unchanged server: only a dedicated account behind the controlled gateway is the established design, a shared Basic password distinguishes no agent, and an unchanged Basic server cannot evaluate PACT because a client adds a profile header",
+    "Shared accounts: one dedicated account per agent, the default of identity-mapping section 5, and an account with more than one enrollment in force is a configuration error",
+    "Digest authentication, and every authentication scheme other than Basic: the adapter declares http-basic at rfc7617 only",
+    "Credential forwarding outside the path: use of the account's Basic credentials anywhere other than through the gateway; the backend is closed by DR1, every other system is out of claim",
+    "Any route other than the one in protected_routes, including every list and write operation: not listed, so not claimed",
+    "Cleartext HTTP, or any transport other than https: only the https transport profile is claimed",
+    "A declared executor identity class under draft section 17.5 and the execution-identity-v1 check: not installed, so no claim is made about the identity class under which the backend runs the read",
+    "An enforced data-use or purpose restriction on invoice data after it is read: execution-control-v1 is not installed, so runtime.isolation is attested-only (draft section 17.4)"
+  ],
+  "freshness": [
+    {
+      "source": "Account database lookup (identity, roles, account state)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Enrollment registry (agent and key binding status)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Security hold store",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "Account database lookup (identity, roles, account state)",
+      "facts": ["identity", "roles", "account_state"],
+      "live_check": {"available": true, "endpoint_class": "account database query"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    }
+  ],
+  "attribute_sources": [],
+  "residual_limits": [
+    "Post-read: invoice data already returned to the agent is not recalled by a later revocation, and no egress or data-use control is claimed; runtime.isolation is attested-only (draft section 17.4); disclosed here with no bound",
+    "Revocation propagation: a disabled account, a removed role, a revoked, rotated or compromised binding and a security hold take effect at the next evaluation, with a bound of 0 s, only when each source is read from its authoritative primary with no cache; a replicated or cached source declares its own lag and the bound is that lag; an operation already executed is not undone by revoking its receipt",
+    "Credential reuse outside the path: a leaked password gives native access to the backend and to any other system that accepts the account, unless that system is closed to it; a leaked password alone does not produce an admissible presentation, because the holder key is separate; the backend is closed by DR1 and every other system is out of claim",
+    "Source reference: account database claims carry no source reference, so the monotonic guard of the freshness profile does not compare them and the integration rests on the account database's own clock",
+    "Deployment controls: DR1 to DR6 are deployment requirements that the adapter fixtures cannot observe; the adapter-level marker check is a specialization, not evidence that the network control is in place"
+  ],
+  "fixtures": [
+    {"id": "adapters/basic/basic-01.colon-in-password", "path": "fixtures/adapters/basic/basic-01.colon-in-password.json"},
+    {"id": "adapters/basic/basic-01.control-character", "path": "fixtures/adapters/basic/basic-01.control-character.json"},
+    {"id": "adapters/basic/basic-01.disabled-account", "path": "fixtures/adapters/basic/basic-01.disabled-account.json"},
+    {"id": "adapters/basic/basic-01.malformed-base64", "path": "fixtures/adapters/basic/basic-01.malformed-base64.json"},
+    {"id": "adapters/basic/basic-01.no-colon", "path": "fixtures/adapters/basic/basic-01.no-colon.json"},
+    {"id": "adapters/basic/basic-01.no-credential", "path": "fixtures/adapters/basic/basic-01.no-credential.json"},
+    {"id": "adapters/basic/basic-01.other-scheme", "path": "fixtures/adapters/basic/basic-01.other-scheme.json"},
+    {"id": "adapters/basic/basic-01.unknown-user", "path": "fixtures/adapters/basic/basic-01.unknown-user.json"},
+    {"id": "adapters/basic/basic-01.valid", "path": "fixtures/adapters/basic/basic-01.valid.json"},
+    {"id": "adapters/basic/basic-01.wrong-password", "path": "fixtures/adapters/basic/basic-01.wrong-password.json"},
+    {"id": "adapters/basic/basic-03.direct", "path": "fixtures/adapters/basic/basic-03.direct.json"},
+    {"id": "adapters/basic/basic-03.forged-marker", "path": "fixtures/adapters/basic/basic-03.forged-marker.json"},
+    {"id": "adapters/basic/basic-06.check-outcome", "path": "fixtures/adapters/basic/basic-06.check-outcome.json"},
+    {"id": "adapters/basic/basic-06.denial", "path": "fixtures/adapters/basic/basic-06.denial.json"},
+    {"id": "adapters/basic/basic-06.map-error", "path": "fixtures/adapters/basic/basic-06.map-error.json"},
+    {"id": "adapters/basic/basic-06.map-operation", "path": "fixtures/adapters/basic/basic-06.map-operation.json"},
+    {"id": "adapters/basic/basic-06.record-outcome", "path": "fixtures/adapters/basic/basic-06.record-outcome.json"},
+    {"id": "adapters/basic/basic-07.dedicated", "path": "fixtures/adapters/basic/basic-07.dedicated.json"},
+    {"id": "adapters/basic/basic-07.two-agents-a", "path": "fixtures/adapters/basic/basic-07.two-agents-a.json"},
+    {"id": "adapters/basic/basic-07.two-agents-b", "path": "fixtures/adapters/basic/basic-07.two-agents-b.json"},
+    {"id": "adapters/basic/basic-08.authenticated-attributes-ignored", "path": "fixtures/adapters/basic/basic-08.authenticated-attributes-ignored.json"},
+    {"id": "adapters/basic/basic-08.mapped-roles", "path": "fixtures/adapters/basic/basic-08.mapped-roles.json"},
+    {"id": "adapters/basic/basic-08.principal-id", "path": "fixtures/adapters/basic/basic-08.principal-id.json"},
+    {"id": "adapters/basic/basic-08.store-down", "path": "fixtures/adapters/basic/basic-08.store-down.json"},
+    {"id": "adapters/basic/basic-08.unapproved-path", "path": "fixtures/adapters/basic/basic-08.unapproved-path.json"},
+    {"id": "adapters/basic/basic-08.untranslated-role", "path": "fixtures/adapters/basic/basic-08.untranslated-role.json"},
+    {"id": "adapters/basic/basic-09.other-department", "path": "fixtures/adapters/basic/basic-09.other-department.json"},
+    {"id": "adapters/basic/basic-09.same-department", "path": "fixtures/adapters/basic/basic-09.same-department.json"}
+  ]
+}

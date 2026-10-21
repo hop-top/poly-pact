@@ -1,0 +1,18 @@
+{
+  "case_version": 1,
+  "id": "TOY-03.event-time",
+  "title": "A push that carries its own time is read with that time, not restamped",
+  "draft": ["8.3", "17.2"],
+  "now": 1792080000,
+  "source": {"model": "toy/1", "source_id": "toy-signals", "lag_seconds": 0, "paths": ["/principal/account_state"]},
+  "steps": [
+    {"at": 1792070000, "inbound": {"op": "put", "principal": "x-toy:acme:7a1f", "path": "/principal/account_state", "value": "disabled", "event_time": 1792069990}}
+  ],
+  "reads": [
+    {"at": 1792079000, "native_path": "/principal/account_state", "principal": "x-toy:acme:7a1f",
+     "expect": {"outcome": "value", "value": "disabled", "observed_at": 1792069990, "status_checked_at": 1792069990}},
+    {"at": 1792080000, "native_path": "/principal/account_state", "principal": "x-toy:acme:other",
+     "intent": {"intent_id": "i-1", "purpose_id": "https://policies.example/purposes/p", "description": "d"},
+     "expect": {"outcome": "error", "reason_code": "MISSING_FIELD"}}
+  ]
+}

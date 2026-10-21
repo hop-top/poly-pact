@@ -1,0 +1,197 @@
+{
+  "artifacts": {
+    "signed/artifacts/baseline-e-v1.jws": "RETIRED",
+    "signed/artifacts/baseline-s-v1.jws": "RETIRED",
+    "signed/artifacts/baseline-a-v1.jws": "RETIRED",
+    "signed/artifacts/baseline-r-v1.jws": "RETIRED",
+    "signed/artifacts/baseline-g-v1.jws": "RETIRED",
+    "signed/artifacts/baseline-f-v1.jws": "EVALUATED"
+  },
+  "active": [
+    {
+      "context": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+        "action_class": "invoice.read",
+        "resource_class": "department-finance-invoice",
+        "runtime_class": "managed-v1"
+      },
+      "artifact": null
+    },
+    {
+      "context": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+        "action_class": "invoice.read",
+        "resource_class": "department-finance-ledger",
+        "runtime_class": "managed-v1"
+      },
+      "artifact": null
+    },
+    {
+      "context": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+        "action_class": "invoice.read",
+        "resource_class": "department-finance-payables",
+        "runtime_class": "managed-v1"
+      },
+      "artifact": null
+    },
+    {
+      "context": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+        "action_class": "invoice.read",
+        "resource_class": "department-finance-receivables",
+        "runtime_class": "managed-v1"
+      },
+      "artifact": null
+    },
+    {
+      "context": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+        "action_class": "invoice.read",
+        "resource_class": "department-finance-budget",
+        "runtime_class": "managed-v1"
+      },
+      "artifact": null
+    }
+  ],
+  "acknowledgments": [
+    {
+      "step": 1,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 2,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 3,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 4,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 5,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 6,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 7,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 8,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 9,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 10,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 11,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 12,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 13,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 14,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 15,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 16,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 17,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 18,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 19,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 20,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 21,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 22,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 23,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 24,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 25,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 26,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 27,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 28,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 29,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 30,
+      "status": "ACCEPTED"
+    }
+  ],
+  "rejections": [],
+  "holds": [],
+  "reevaluation_required": []
+}

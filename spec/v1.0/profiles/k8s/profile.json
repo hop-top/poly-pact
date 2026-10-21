@@ -1,0 +1,256 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "kubernetes-serviceaccount", "version": "authentication.k8s.io/v1+authorization.k8s.io/v1", "mapping_revision": "pact-k8s-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/api/v1/deployments",
+      "action": "deployments.list",
+      "resource_mapping": "https://k8s.example/clusters/{cluster-id}/apis/apps/v1/namespaces/operations/deployments, with cluster-id from the cluster entry and the namespace a constant of the row; no query parameter, body, or allowlisted header; translated to GET /apis/apps/v1/namespaces/operations/deployments (reference route of the example I10 deployment)"
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/v1/deployments/{name}",
+      "action": "deployments.get",
+      "resource_mapping": "https://k8s.example/clusters/{cluster-id}/apis/apps/v1/namespaces/operations/deployments/{name}, name of 1 to 253 lowercase letters, digits, hyphens, and dots, beginning and ending with a letter or digit; translated to GET /apis/apps/v1/namespaces/operations/deployments/{name} (reference route of the example I10 deployment)"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "Gateway authentication stage: TokenReview at the pinned API server with spec.audiences exactly the gateway audience, status.audiences required to contain it, service accounts of claimed namespaces only, pod-bound tokens only, uid compared with the registered account, then the agent pod check; workload k8s:{cluster-id}:system:serviceaccount:{namespace}:{name}"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup for the realm, the workload, and the agent the presentation names; one registered account per agent"},
+    {"function": "map_operation", "component": "Gateway mapping stage at mapping revision pact-k8s-1 with the baseline request binding; namespace constant per row"},
+    {"function": "read_native_claim", "component": "Adapter, approved paths /attributes/environment/principal_id, /attributes/environment/namespace, and /attributes/environment/cluster_id only"},
+    {"function": "check_context", "component": "Installed check execution-identity-v1 with the executor class dedicated-role, confirmed by a SelfSubjectReview with the executor's token"},
+    {"function": "authorize_native", "component": "The API server's authorization of the executor's request under the registered account, which is the original principal; only while a passing RBAC preflight is within its interval"},
+    {"function": "record_outcome", "component": "Gateway outcome writer after the executor's response; admission, the API server's decision, and the observed execution are recorded separately"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "The operations gateway and its in-gateway validator; to be supplied"},
+    {"component": "C02", "owner": "Cluster administrator and adapter owner", "what_exists": "TokenReview and pod reads at the pinned API server, which exist; the adapter of this profile is go/adapters/k8s; the gateway account limited to tokenreviews create, subjectaccessreviews create, and pods get, to be supplied"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry, looked up by realm, workload, and the agent the presentation names, with the registered accounts and their uid; the contract and an in-memory backend exist, a durable backend is to be supplied"},
+    {"component": "C04", "owner": "Resource owner", "what_exists": "The deployment's native release-observation task reference of example I10; not supplied by this profile, and the authority_ref field stays with the deployment"},
+    {"component": "C05", "owner": "Cluster administrator and adapter owner", "what_exists": "The API server for reviews, pod reads, and the preflight, which exists; the enrollment registry and the cluster entry, to be supplied"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: the read routes need no external approval"},
+    {"component": "C07", "owner": "Adapter owner", "what_exists": "Mapper and fixed translation rows of the two reference routes: MapOperation and Executor of go/adapters/k8s, which exist"},
+    {"component": "C08", "owner": "Cluster administrator and resource owner", "what_exists": "The executor, Executor of go/adapters/k8s, which exists; its pod running as the registered account with only its projected API-audience token, to be supplied; the API server's authorization, which exists"},
+    {"component": "C09", "owner": "Gateway and platform owner", "what_exists": "Replay and receipt store of the gateway; to be supplied"},
+    {"component": "C10", "owner": "Resource owner", "what_exists": "Gateway outcome writer and the API server's audit log; to be supplied"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Policy registry holding the base requirements; registry only, no adaptation lifecycle; to be supplied"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "Enrollment status and the hold store, to be supplied; native token invalidation by pod deletion, which exists"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled audit store; no token enters PACT artifacts, logs, or reputation records; to be supplied"},
+    {"component": "C15", "owner": "none", "what_exists": "Not used: read routes, no transactions or budgets"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no runtime attestation or data-use guarantee is claimed"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "The agent calls the Kubernetes API directly with a token of the registered account from its own pod",
+      "control": "closed",
+      "evidence": "The agent pod check keeps every API-audience token out of the agent pod, and the preflight denies token minting and Secret reads to the registered account; cases K8S-06 and K8S-08"
+    },
+    {
+      "path": "The agent obtains the executor's token by exec into the executor pod or by running a pod as the registered account",
+      "control": "closed",
+      "evidence": "The preflight denies running pods, exec into pods, and token minting to the registered account; case K8S-08"
+    },
+    {
+      "path": "Identity or impersonation headers sent through the gateway",
+      "control": "closed",
+      "evidence": "Impersonate-* and X-Remote-* headers are ignored, removed, and never forwarded, and the preflight denies impersonation; case K8S-01"
+    },
+    {
+      "path": "The gateway account's credential or another broader credential used for the downstream request",
+      "control": "closed",
+      "evidence": "The executor holds only the registered account's projected token and the gateway credential never reaches it; the preflight runs for the gateway account too; cases K8S-07 and K8S-12"
+    },
+    {
+      "path": "A token from another cluster, or a request to another API server",
+      "control": "closed",
+      "evidence": "Every review and request goes to the pinned API server with the gateway audience; case K8S-03"
+    },
+    {
+      "path": "The PACT endpoints that require native authentication, such as POST /pact/v0.1/requirements",
+      "control": "equivalent",
+      "evidence": "They authenticate through the same token review, pod check, and enrollment rules; case K8S-02"
+    },
+    {
+      "path": "Other pods running as the registered account created by principals other than the agent, and token Secrets of the account",
+      "control": "out_of_claim",
+      "evidence": "The gateway cannot inventory every creator of pods or Secrets in the namespace; excluded in unsupported_forms and recorded in residual_limits (open item O4); no negative fixture applies"
+    },
+    {
+      "path": "Node-level access to the tokens of pods on a node, and other users of the cluster acting on the same resources",
+      "control": "out_of_claim",
+      "evidence": "Not agents of this claim and not mediated by the gateway; excluded in unsupported_forms; no negative fixture applies"
+    }
+  ],
+  "unsupported_forms": [
+    "Universal interception of Kubernetes API access (handoff row I10): only requests through the gateway's routes are claimed",
+    "Arbitrary impersonation (handoff row I10): the executor never impersonates and the preflight denies the verb",
+    "Absence of other additive grants from one YAML snippet (handoff row I10): RBAC is additive, and the preflight checks a finite list at a time",
+    "Users other than service accounts, such as OpenID Connect, X.509, static, and webhook token users: only service accounts map to a workload",
+    "Legacy token Secrets, unbound tokens, and offline JWT validation: only reviewed, pod-bound tokens are accepted",
+    "Shared service accounts: one registered account per agent, the default of identity-mapping section 5; a workload with more than one enrollment in force is a configuration error (KR-10)",
+    "More than one cluster per cluster entry, and namespaces outside the claimed set: cluster and namespace are pinned",
+    "Watch, selectors, paging, and every verb other than the get and list of the two rows: the rows send fixed requests only",
+    "Authorization through webhooks or modes whose inputs the preflight does not reproduce: the preflight sets no extra, and a webhook can cache decisions",
+    "Any field of the I10 profile other than principal_id, namespace, and cluster_id, such as the delegation authority_ref and the runtime isolation evidence: supplied by the deployment outside this profile",
+    "Any route other than the two reference routes of protected_routes: not listed, so not claimed",
+    "Pods and Secrets of the registered account created by others, node-level access, and other users: excluded by their out_of_claim control in bypass_paths"
+  ],
+  "freshness": [
+    {
+      "source": "Caller token as the pinned API server's TokenReview reports it",
+      "observation": "snapshot",
+      "max_age_seconds": 3600,
+      "status_max_age_seconds": 60,
+      "outage": "defer"
+    },
+    {
+      "source": "Enrollment registry (workload to agent and holder key binding)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Cluster entry and registered accounts (gateway configuration)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Agent pod as the pinned API server returns it",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "RBAC preflight of the registered account and the gateway account",
+      "observation": "snapshot",
+      "max_age_seconds": 360,
+      "status_max_age_seconds": 360,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "Caller token as the pinned API server's TokenReview reports it",
+      "facts": ["identity", "account_state"],
+      "live_check": {"available": true, "endpoint_class": "TokenReview at the pinned API server"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 60,
+      "value_semantics": "cached_snapshot"
+    },
+    {
+      "source": "Enrollment registry (workload to agent and holder key binding)",
+      "facts": ["identity", "account_state"],
+      "live_check": {"available": true, "endpoint_class": "Enrollment registry lookup"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    }
+  ],
+  "attribute_sources": [
+    {
+      "source": "Caller token as the pinned API server's TokenReview reports it",
+      "category": "subject",
+      "attributes": ["/attributes/environment/namespace"],
+      "freshness": "Caller token as the pinned API server's TokenReview reports it"
+    },
+    {
+      "source": "Cluster entry and registered accounts (gateway configuration)",
+      "category": "subject",
+      "attributes": ["/attributes/environment/cluster_id"],
+      "freshness": "Cluster entry and registered accounts (gateway configuration)"
+    }
+  ],
+  "residual_limits": [
+    "Post-read: deployment data already returned to the agent is not recalled by a later revocation, and no egress or data-use control is claimed; disclosed here with no bound",
+    "Revocation propagation, caller token: no specific mechanism invalidates a TokenRequest token; deleting the pod expires its bound tokens, and a token stays valid until then or until it expires; B = 60 s after deletion (illustrative, probe P3)",
+    "Revocation propagation, enrollment: a revocation or compromise mark reaches the gateway within the 0 second status bound of the registry, inside the consistency of the registry backend",
+    "Revocation propagation, native permission: a RoleBinding removed after admission takes effect at the API server's next authorization of the executor's request, within the cluster's own authorization consistency (probe P4)",
+    "Additive grants between preflights: a grant added after a passing preflight, directly or by ClusterRole aggregation, is not seen until the next preflight, within P + R = 360 s (illustrative)",
+    "Finite forbidden list: the preflight checks the listed actions only, and another grant not on the list is not detected",
+    "Other pods and Secrets of the registered account: pods that the agent did not create and token Secrets of the account can hold API-audience tokens that the gateway does not see (open item O4)",
+    "Preflight inputs: the preflight sets no extra, so an authorizer that decides on extra is not exercised (open item O5)",
+    "Token audience: a token minted with both the gateway audience and an API server audience would also be usable against the API server, and the review shows only the intersection with the requested audiences (open item O3)"
+  ],
+  "fixtures": [
+    {"id": "adapters/k8s/k8s-01.impersonation-headers", "path": "fixtures/adapters/k8s/k8s-01.impersonation-headers.json"},
+    {"id": "adapters/k8s/k8s-01.own-token", "path": "fixtures/adapters/k8s/k8s-01.own-token.json"},
+    {"id": "adapters/k8s/k8s-02.empty-audiences", "path": "fixtures/adapters/k8s/k8s-02.empty-audiences.json"},
+    {"id": "adapters/k8s/k8s-02.lacks-gateway-audience", "path": "fixtures/adapters/k8s/k8s-02.lacks-gateway-audience.json"},
+    {"id": "adapters/k8s/k8s-02.other-audience", "path": "fixtures/adapters/k8s/k8s-02.other-audience.json"},
+    {"id": "adapters/k8s/k8s-02.requirements-endpoint", "path": "fixtures/adapters/k8s/k8s-02.requirements-endpoint.json"},
+    {"id": "adapters/k8s/k8s-03.other-cluster-token", "path": "fixtures/adapters/k8s/k8s-03.other-cluster-token.json"},
+    {"id": "adapters/k8s/k8s-03.other-cluster-workload", "path": "fixtures/adapters/k8s/k8s-03.other-cluster-workload.json"},
+    {"id": "adapters/k8s/k8s-04.missing-groups", "path": "fixtures/adapters/k8s/k8s-04.missing-groups.json"},
+    {"id": "adapters/k8s/k8s-04.not-service-account", "path": "fixtures/adapters/k8s/k8s-04.not-service-account.json"},
+    {"id": "adapters/k8s/k8s-04.recreated-account", "path": "fixtures/adapters/k8s/k8s-04.recreated-account.json"},
+    {"id": "adapters/k8s/k8s-04.same-name-other-namespace", "path": "fixtures/adapters/k8s/k8s-04.same-name-other-namespace.json"},
+    {"id": "adapters/k8s/k8s-04.unclaimed-namespace", "path": "fixtures/adapters/k8s/k8s-04.unclaimed-namespace.json"},
+    {"id": "adapters/k8s/k8s-04.unregistered-account", "path": "fixtures/adapters/k8s/k8s-04.unregistered-account.json"},
+    {"id": "adapters/k8s/k8s-05.no-pod-claims", "path": "fixtures/adapters/k8s/k8s-05.no-pod-claims.json"},
+    {"id": "adapters/k8s/k8s-05.pod-name-not-identity", "path": "fixtures/adapters/k8s/k8s-05.pod-name-not-identity.json"},
+    {"id": "adapters/k8s/k8s-05.two-pod-names", "path": "fixtures/adapters/k8s/k8s-05.two-pod-names.json"},
+    {"id": "adapters/k8s/k8s-06.automount-true", "path": "fixtures/adapters/k8s/k8s-06.automount-true.json"},
+    {"id": "adapters/k8s/k8s-06.automount-unset", "path": "fixtures/adapters/k8s/k8s-06.automount-unset.json"},
+    {"id": "adapters/k8s/k8s-06.gateway-audience-projection", "path": "fixtures/adapters/k8s/k8s-06.gateway-audience-projection.json"},
+    {"id": "adapters/k8s/k8s-06.other-account", "path": "fixtures/adapters/k8s/k8s-06.other-account.json"},
+    {"id": "adapters/k8s/k8s-06.pod-not-found", "path": "fixtures/adapters/k8s/k8s-06.pod-not-found.json"},
+    {"id": "adapters/k8s/k8s-06.pod-uid-mismatch", "path": "fixtures/adapters/k8s/k8s-06.pod-uid-mismatch.json"},
+    {"id": "adapters/k8s/k8s-06.projected-api-audience", "path": "fixtures/adapters/k8s/k8s-06.projected-api-audience.json"},
+    {"id": "adapters/k8s/k8s-06.projected-no-audience", "path": "fixtures/adapters/k8s/k8s-06.projected-no-audience.json"},
+    {"id": "adapters/k8s/k8s-07.gateway-token", "path": "fixtures/adapters/k8s/k8s-07.gateway-token.json"},
+    {"id": "adapters/k8s/k8s-07.impersonation", "path": "fixtures/adapters/k8s/k8s-07.impersonation.json"},
+    {"id": "adapters/k8s/k8s-07.kubeconfig", "path": "fixtures/adapters/k8s/k8s-07.kubeconfig.json"},
+    {"id": "adapters/k8s/k8s-07.recreated-account", "path": "fixtures/adapters/k8s/k8s-07.recreated-account.json"},
+    {"id": "adapters/k8s/k8s-07.registered-account", "path": "fixtures/adapters/k8s/k8s-07.registered-account.json"},
+    {"id": "adapters/k8s/k8s-07.token-missing", "path": "fixtures/adapters/k8s/k8s-07.token-missing.json"},
+    {"id": "adapters/k8s/k8s-07.token-refused", "path": "fixtures/adapters/k8s/k8s-07.token-refused.json"},
+    {"id": "adapters/k8s/k8s-08.aggregated-patch", "path": "fixtures/adapters/k8s/k8s-08.aggregated-patch.json"},
+    {"id": "adapters/k8s/k8s-08.cluster-list", "path": "fixtures/adapters/k8s/k8s-08.cluster-list.json"},
+    {"id": "adapters/k8s/k8s-08.pod-exec", "path": "fixtures/adapters/k8s/k8s-08.pod-exec.json"},
+    {"id": "adapters/k8s/k8s-08.secrets-get", "path": "fixtures/adapters/k8s/k8s-08.secrets-get.json"},
+    {"id": "adapters/k8s/k8s-08.token-create", "path": "fixtures/adapters/k8s/k8s-08.token-create.json"},
+    {"id": "adapters/k8s/k8s-09.authorization-unavailable", "path": "fixtures/adapters/k8s/k8s-09.authorization-unavailable.json"},
+    {"id": "adapters/k8s/k8s-09.evaluation-error", "path": "fixtures/adapters/k8s/k8s-09.evaluation-error.json"},
+    {"id": "adapters/k8s/k8s-09.gateway-review-no-groups", "path": "fixtures/adapters/k8s/k8s-09.gateway-review-no-groups.json"},
+    {"id": "adapters/k8s/k8s-10.bad-name", "path": "fixtures/adapters/k8s/k8s-10.bad-name.json"},
+    {"id": "adapters/k8s/k8s-10.get", "path": "fixtures/adapters/k8s/k8s-10.get.json"},
+    {"id": "adapters/k8s/k8s-10.label-selector", "path": "fixtures/adapters/k8s/k8s-10.label-selector.json"},
+    {"id": "adapters/k8s/k8s-10.list", "path": "fixtures/adapters/k8s/k8s-10.list.json"},
+    {"id": "adapters/k8s/k8s-10.other-namespace", "path": "fixtures/adapters/k8s/k8s-10.other-namespace.json"},
+    {"id": "adapters/k8s/k8s-10.resource-version", "path": "fixtures/adapters/k8s/k8s-10.resource-version.json"},
+    {"id": "adapters/k8s/k8s-10.watch", "path": "fixtures/adapters/k8s/k8s-10.watch.json"},
+    {"id": "adapters/k8s/k8s-11.binding-present", "path": "fixtures/adapters/k8s/k8s-11.binding-present.json"},
+    {"id": "adapters/k8s/k8s-11.binding-removed", "path": "fixtures/adapters/k8s/k8s-11.binding-removed.json"},
+    {"id": "adapters/k8s/k8s-11.no-gateway-substitution", "path": "fixtures/adapters/k8s/k8s-11.no-gateway-substitution.json"},
+    {"id": "adapters/k8s/k8s-12.gateway-impersonate", "path": "fixtures/adapters/k8s/k8s-12.gateway-impersonate.json"},
+    {"id": "adapters/k8s/k8s-12.gateway-secrets-get", "path": "fixtures/adapters/k8s/k8s-12.gateway-secrets-get.json"},
+    {"id": "adapters/k8s/k8s-12.gateway-token-create", "path": "fixtures/adapters/k8s/k8s-12.gateway-token-create.json"},
+    {"id": "adapters/k8s/k8s-13.claim-cluster", "path": "fixtures/adapters/k8s/k8s-13.claim-cluster.json"},
+    {"id": "adapters/k8s/k8s-13.claim-namespace", "path": "fixtures/adapters/k8s/k8s-13.claim-namespace.json"},
+    {"id": "adapters/k8s/k8s-13.claim-principal", "path": "fixtures/adapters/k8s/k8s-13.claim-principal.json"},
+    {"id": "adapters/k8s/k8s-13.claim-unapproved", "path": "fixtures/adapters/k8s/k8s-13.claim-unapproved.json"},
+    {"id": "adapters/k8s/k8s-13.pod-read-down", "path": "fixtures/adapters/k8s/k8s-13.pod-read-down.json"},
+    {"id": "adapters/k8s/k8s-13.registry-down", "path": "fixtures/adapters/k8s/k8s-13.registry-down.json"},
+    {"id": "adapters/k8s/k8s-13.tokenreview-down", "path": "fixtures/adapters/k8s/k8s-13.tokenreview-down.json"},
+    {"id": "adapters/k8s/k8s-14.dedicated", "path": "fixtures/adapters/k8s/k8s-14.dedicated.json"},
+    {"id": "adapters/k8s/k8s-14.two-agents-a", "path": "fixtures/adapters/k8s/k8s-14.two-agents-a.json"},
+    {"id": "adapters/k8s/k8s-14.two-agents-b", "path": "fixtures/adapters/k8s/k8s-14.two-agents-b.json"}
+  ]
+}

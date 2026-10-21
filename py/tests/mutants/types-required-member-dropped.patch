@@ -1,0 +1,20 @@
+diff --git a/py/src/hop_top_pact/core/types.py b/py/src/hop_top_pact/core/types.py
+index 0f253c3..15ed515 100644
+--- a/py/src/hop_top_pact/core/types.py
++++ b/py/src/hop_top_pact/core/types.py
+@@ -237,7 +237,6 @@ class RequirementContract:
+     context_checks: tuple[str, ...]
+     learning_policy_digest: str
+     learning_artifact_digest: str
+-    nonce: str
+     mode: Mode
+     extensions: JSONObject | None = None
+ 
+@@ -265,7 +264,6 @@ class RequirementContract:
+             "learning_artifact_digest": Member(
+                 "learning_artifact_digest", "string", True, False, None
+             ),
+-            "nonce": Member("nonce", "string", True, False, None),
+             "mode": Member("mode", "string", True, False, None),
+             "extensions": Member("extensions", "object", False, False, None),
+         }

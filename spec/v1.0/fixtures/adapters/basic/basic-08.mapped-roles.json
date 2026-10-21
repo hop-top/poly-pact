@@ -1,0 +1,48 @@
+{
+  "case_version": 1,
+  "id": "BASIC-08.mapped-roles",
+  "title": "The roles are the account's native roles through the approved translation; a native role with no translation is dropped",
+  "draft": [
+    "8.4",
+    "17.2"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "role_map": {
+      "AP_READER": "invoice-reader",
+      "AP_APPROVER": "invoice-approver"
+    },
+    "accounts_answered_at": 1792079998
+  },
+  "call": {
+    "principal": {
+      "id": "basic:legacy-accounts:20511",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/invoices"
+      },
+      "workload": "basic:legacy-accounts:20511",
+      "mechanism": "basic"
+    },
+    "native_path": "/principal/roles"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": [
+        "invoice-reader"
+      ],
+      "observed_at": 1792079998,
+      "status_checked_at": 1792079998,
+      "source_id": "legacy-accounts"
+    }
+  }
+}

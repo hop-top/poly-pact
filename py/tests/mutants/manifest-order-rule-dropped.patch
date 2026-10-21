@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/runner/manifest/entry.py b/py/src/hop_top_pact/runner/manifest/entry.py
+index a42863b..85a3e34 100644
+--- a/py/src/hop_top_pact/runner/manifest/entry.py
++++ b/py/src/hop_top_pact/runner/manifest/entry.py
+@@ -243,7 +243,7 @@ class Manifest:
+                 )
+             else:
+                 first[e.id] = i
+-            if i > 0 and self.entries[i - 1].id > e.id:
++            if False:
+                 ps.add(
+                     RULE_ORDER,
+                     e.id,

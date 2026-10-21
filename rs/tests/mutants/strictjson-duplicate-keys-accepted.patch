@@ -1,0 +1,11 @@
+--- a/rs/src/core/strictjson/parse.rs
++++ b/rs/src/core/strictjson/parse.rs
+@@ -172,7 +172,7 @@
+             }
+             let key = self.string()?;
+             self.path.push(key.clone());
+-            if !seen.insert(key.clone()) {
++            if false && !seen.insert(key.clone()) {
+                 return Err(self.fail(Kind::DuplicateKey, format!("{key:?}")));
+             }
+             self.ws();

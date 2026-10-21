@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jws/Verifier.php b/php/src/Core/Jws/Verifier.php
+index 596db9e..776b424 100644
+--- a/php/src/Core/Jws/Verifier.php
++++ b/php/src/Core/Jws/Verifier.php
+@@ -121,7 +121,7 @@ final readonly class Verifier
+         }
+ 
+         $sig = self::segment($s64, 'signature');
+-        if (\strlen($sig) !== Es256::SIGNATURE_OCTETS) {
++        if (!\in_array(\strlen($sig), [Es256::SIGNATURE_OCTETS - 1, Es256::SIGNATURE_OCTETS], true)) {
+             throw new JwsError(Reason::SIGNATURE_LENGTH, \sprintf('%d octets, want %d', \strlen($sig), Es256::SIGNATURE_OCTETS));
+         }
+ 

@@ -1,0 +1,11 @@
+--- a/rs/src/core/clock.rs
++++ b/rs/src/core/clock.rs
+@@ -265,7 +265,7 @@
+ /// `now`.
+ pub fn check_presentation_age(iat: i64, now: SystemTime) -> Result<(), Error> {
+     check_range("iat", iat)?;
+-    if nanos(now) > sec_nanos(iat) + dur_nanos(PRESENTATION_VALIDITY) {
++    if nanos(now) >= sec_nanos(iat) + dur_nanos(PRESENTATION_VALIDITY) {
+         return Err(fail(Kind::TooOld, format!("iat {iat}, now {}", unix(now))));
+     }
+     Ok(())

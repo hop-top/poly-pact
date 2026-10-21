@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/evaluator-policy-adherence",
+  "adversarial_claim": "An evaluator's assessment of policy adherence is ignored, or counts only when it is negative.",
+  "subject_event_id": "quality-event-0001",
+  "events": [
+    {
+      "event_id": "quality-event-0001",
+      "report": "reports/quality-event-0001.json",
+      "signed": "signed/quality-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "policy_adherence",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Independent assessment of policy adherence': QUALITY reported by an evaluator, SUCCESS, policy_adherence; counts positively. It cites a completed assessment of the task (14.2); the evaluator did not execute the task and is not affiliated with its operator (14.6 rules 5 and 6)."
+    },
+    {
+      "event_id": "feedback-event-0002",
+      "report": "reports/feedback-event-0002.json",
+      "signed": "signed/feedback-event-0002.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "policy_adherence",
+        "positive": 0,
+        "negative": 1
+      },
+      "rationale": "Draft 14.5, row 'Independent assessment of policy adherence': FEEDBACK reported by an evaluator, FAILURE, policy_adherence; causal_assessment AGENT, so one attributable failure (14.6 rules 8 and 9). Its tuple differs from the QUALITY report's by event_kind (14.6 rule 4)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 1,
+      "negative": 1
+    }
+  }
+}

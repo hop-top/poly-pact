@@ -1,0 +1,38 @@
+{
+  "description": "Invalid integration profiles for the profile validator. Each file is spec/v1.0/profiles/example.profile.json with one defect. Validate a file against spec/v1.0/profiles/integration-profile.schema.json and, only when it is schema-valid, apply the profile lint of spec/v1.0/profiles/README.md, with spec/ as the base of fixture paths and spec/v1.0/fixtures/manifest.json as the registry of fixture ids. Each file must fail with exactly the listed errors: instance_pointer is the RFC 6901 location in the file, keyword the failing JSON Schema keyword, lint the failing lint rule.",
+  "schema": "../../profiles/integration-profile.schema.json",
+  "cases": [
+    {
+      "file": "invalid-missing-bypass-control.json",
+      "valid": false,
+      "reason": "the first bypass path has no control",
+      "errors": [
+        {"instance_pointer": "/bypass_paths/0", "keyword": "required"}
+      ]
+    },
+    {
+      "file": "invalid-empty-unsupported-forms.json",
+      "valid": false,
+      "reason": "unsupported_forms is empty; a profile states at least one wider claim it does not establish",
+      "errors": [
+        {"instance_pointer": "/unsupported_forms", "keyword": "minItems"}
+      ]
+    },
+    {
+      "file": "invalid-dangling-fixture-path.json",
+      "valid": false,
+      "reason": "the fixture id is registered in the manifest (it is this file's own entry), but its path names no file under spec/",
+      "errors": [
+        {"instance_pointer": "/fixtures/0/path", "lint": "fixture-path"}
+      ]
+    },
+    {
+      "file": "invalid-attribute-freshness.json",
+      "valid": false,
+      "reason": "the attribute source names the freshness entry Directory account state, but the entry's source is Directory account state (enabled or disabled); the name must match exactly",
+      "errors": [
+        {"instance_pointer": "/attribute_sources/0/freshness", "lint": "attribute-freshness"}
+      ]
+    }
+  ]
+}

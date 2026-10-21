@@ -1,0 +1,3 @@
+[{"file":"signed/policies/finance.jws","kind":"policy","received_at":1792080000},
+ {"file":"signed/artifacts/baseline-v1.jws","kind":"artifact","received_at":1792080000},
+ {"file":"signed/events/learning-evaluated-event-0001.jws","kind":"event","received_at":1792080060}]

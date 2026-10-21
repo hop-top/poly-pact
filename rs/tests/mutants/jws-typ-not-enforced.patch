@@ -1,0 +1,11 @@
+--- a/rs/src/core/jws/mod.rs
++++ b/rs/src/core/jws/mod.rs
+@@ -278,7 +278,7 @@
+     let alg =
+         string("alg").filter(|a| algs.accepts(a)).ok_or_else(|| fail(Reason::AlgUnsupported, describe("alg", &m)))?;
+     let typ = string("typ")
+-        .filter(|t| typ_role(t).is_some())
++        .filter(|_| true)
+         .ok_or_else(|| fail(Reason::TypUnsupported, describe("typ", &m)))?;
+     let kid = match m.get("kid") {
+         None => String::new(),

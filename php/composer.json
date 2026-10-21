@@ -1,0 +1,67 @@
+{
+    "name": "hop-top/pact",
+    "description": "PHP SDK of the PACT protocol: wire types, strict JSON, JCS, digests and ES256 JWS",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "pact",
+        "agents",
+        "jws",
+        "jcs",
+        "rfc8785",
+        "es256"
+    ],
+    "homepage": "https://github.com/hop-top/poly-pact",
+    "support": {
+        "issues": "https://github.com/hop-top/poly-pact/issues",
+        "source": "https://github.com/hop-top/poly-pact/tree/next/php"
+    },
+    "require": {
+        "php": ">=8.4",
+        "ext-hash": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pcre": "*",
+        "opis/json-schema": "2.6.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "3.95.27",
+        "phpstan/phpstan": "2.3.1",
+        "phpunit/phpunit": "13.4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "HopTop\\Pact\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HopTop\\Pact\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.4.1"
+        },
+        "sort-packages": true,
+        "allow-plugins": false,
+        "process-timeout": 0
+    },
+    "scripts": {
+        "test": "phpunit",
+        "lint": [
+            "php-cs-fixer check --diff",
+            "phpstan analyse --no-progress --memory-limit=1G",
+            "@php scripts/gen-types.php --check"
+        ],
+        "fix": "php-cs-fixer fix",
+        "vectors": "@php scripts/vectors.php"
+    },
+    "scripts-descriptions": {
+        "test": "Run the PHPUnit suite",
+        "lint": "Check the code style and run PHPStan",
+        "fix": "Apply the code style",
+        "vectors": "Print the shared-vector results as NDJSON"
+    }
+}

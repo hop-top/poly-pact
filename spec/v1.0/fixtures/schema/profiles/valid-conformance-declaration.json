@@ -1,0 +1,18 @@
+{
+  "description": "The ConformanceDeclaration payload of a single-owner deployment: profile single-owner 0.1, omitted roles reputation and learning, and the owner (draft 21, 22.1, A.2).",
+  "objects": [
+    {
+      "section": "22.1",
+      "def": "ConformanceDeclaration",
+      "object": {
+        "conformance_profile": "single-owner",
+        "version": "0.1",
+        "omitted_roles": [
+          "reputation",
+          "learning"
+        ],
+        "owner": "https://owner.example/issuer"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "case_version": 1,
+  "id": "COMMON-04.future-observed-at",
+  "title": "A claim whose observation time is beyond now plus the skew is refused with DEPENDENCY_UNAVAILABLE, never passed on with that time or a clamped one",
+  "draft": ["7.5", "8.3", "13.4", "A.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "approved_paths": ["/attributes/environment/roles"],
+    "claims": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "https://idp.acme.example/alice",
+        "path": "/attributes/environment/roles",
+        "value": ["approver", "viewer"],
+        "source_id": "directory-1",
+        "source_ref": "dir-entry-17",
+        "observed_at": 1792083600,
+        "status_checked_at": 1792079970
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "native_path": "/attributes/environment/roles"
+  },
+  "expect": {"function": "read_native_claim", "outcome": "error", "reason_code": "DEPENDENCY_UNAVAILABLE"}
+}

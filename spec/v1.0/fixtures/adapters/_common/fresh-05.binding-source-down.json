@@ -1,0 +1,37 @@
+{
+  "case_version": 1,
+  "id": "FRESH-05.binding-source-down",
+  "title": "An enrollment source that cannot answer gives DEPENDENCY_UNAVAILABLE, not the binding it last held",
+  "draft": ["18", "13.4", "17.1"],
+  "now": 1792080000,
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "enrollments": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "https://workloads.acme.example/invoice-assistant",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "operator_id": "https://identity.example/operators/finance-ops",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079990,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-0001"
+      }
+    ],
+    "unavailable_sources": ["enrollment-registry"]
+  },
+  "call": {
+    "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+    "workload": "https://workloads.acme.example/invoice-assistant",
+    "agent_id": "https://identity.example/agents/invoice-assistant"
+  },
+  "expect": {"function": "resolve_agent_binding", "outcome": "error", "reason_code": "DEPENDENCY_UNAVAILABLE"}
+}

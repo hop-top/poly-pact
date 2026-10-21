@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PACT conformance runner report (pactc/v1)",
+  "description": "Output of pactc run --json: the check of the fixture manifest, then one result per selected manifest entry, in manifest order. The lockstep test schema_test.go of package hop.top/pact-go/runner keeps this schema and the runner in agreement.",
+  "type": "object",
+  "required": ["schema", "summary", "manifest", "fixtures"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "description": "Report format identifier.",
+      "const": "pactc/v1"
+    },
+    "summary": {
+      "description": "Counts of PASS, FAIL and SKIP over the manifest check and every fixture result. pactc exits 0 only when fail is 0.",
+      "type": "object",
+      "required": ["pass", "fail", "skip"],
+      "additionalProperties": false,
+      "properties": {
+        "pass": { "type": "integer", "minimum": 0 },
+        "fail": { "type": "integer", "minimum": 0 },
+        "skip": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "manifest": {
+      "description": "Check of manifest.json against its field rules and against the fixture directory. A file that no entry covers is a manifest-incomplete problem.",
+      "type": "object",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL"]
+        },
+        "details": {
+          "description": "One problem per item, \"[rule] where: message\". Omitted when there is none.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "capabilities": {
+      "description": "Optional capabilities the implementation declared with --capability, sorted, each once; empty when none (spec/v1.0/fixtures/README.md, Optional capabilities). An entry that tests a capability not declared here is SKIP, never PASS.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "enum": ["jws-ed25519"] }
+    },
+    "profile": {
+      "description": "Conformance profile of the run, set with --profile (default full): an entry of kind conformance in spec/v1.0/profiles/registry.json. Only the entries that list it ran; absent conformance_profile means [\"full\"] (spec/v1.0/fixtures/README.md, Manifest entry fields).",
+      "type": "string",
+      "enum": ["full", "single-owner"]
+    },
+    "transport": {
+      "description": "Transport profiles of the run, set with --transport (default https), each once in the order https, stdio-ipc. Only the entries whose transport shares one with them ran; absent transport means [\"https\"].",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "enum": ["https", "stdio-ipc"] }
+    },
+    "by_profile": {
+      "description": "Summary of the run by conformance profile, with one member: the run's profile, and the roles it claims. It counts the entries of a kind the runner handles that the --fixture selectors select. A run that selects none exits 3: an empty run is never green.",
+      "type": "object",
+      "propertyNames": { "enum": ["full", "single-owner"] },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["selected", "skipped_not_applicable", "skipped_unsupported", "pass", "fail"],
+        "additionalProperties": false,
+        "properties": {
+          "selected": { "description": "Entries that list the profile and share a transport with the run; each has a result in fixtures.", "type": "integer", "minimum": 0 },
+          "skipped_not_applicable": { "description": "Entries outside the profile or the transports of the run: never run and never PASS.", "type": "integer", "minimum": 0 },
+          "skipped_unsupported": { "description": "Selected entries that are SKIP: no command for their verb, no check yet, or an optional capability not declared.", "type": "integer", "minimum": 0 },
+          "pass": { "description": "Selected entries that are PASS.", "type": "integer", "minimum": 0 },
+          "fail": { "description": "Selected entries that are FAIL.", "type": "integer", "minimum": 0 },
+          "roles_claimed": {
+            "description": "Conformance roles the profile claims, in the order of the table of draft Section 22.1: its five roles minus the omitted_roles of the profile's ConformanceDeclaration (spec/v1.0/schemas/pact.schema.json, $defs). full claims all five; single-owner omits Reputation and Learning. Additive: emitted on every member, not required.",
+            "type": "array",
+            "minItems": 3,
+            "uniqueItems": true,
+            "items": { "type": "string", "enum": ["Holder", "Gateway", "Validator", "Reputation", "Learning"] }
+          }
+        }
+      }
+    },
+    "fixtures": {
+      "description": "One result per selected manifest entry of a kind the runner handles.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "verb", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Manifest id of the entry.",
+            "type": "string"
+          },
+          "verb": {
+            "description": "Verb that ran the entry, named after its kind.",
+            "type": "string",
+            "enum": ["evaluate", "outcomes", "learning", "schema"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PASS", "FAIL", "SKIP"]
+          },
+          "details": {
+            "description": "Differences found for a FAIL, or the reason for a SKIP. Omitted on PASS.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "skipped": {
+            "description": "Sub-checks of a PASS or FAIL entry that were not run, one per item with its reason, such as the receipt query without --receipt-cmd. Omitted when none.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "capabilities": {
+            "description": "Optional capabilities the entry tests, from its manifest entry. Omitted for a mandatory entry.",
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "enum": ["jws-ed25519"] }
+          }
+        }
+      }
+    }
+  }
+}

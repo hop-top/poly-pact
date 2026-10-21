@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/clock.py b/py/src/hop_top_pact/core/clock.py
+index 053da6c..e811199 100644
+--- a/py/src/hop_top_pact/core/clock.py
++++ b/py/src/hop_top_pact/core/clock.py
+@@ -242,7 +242,7 @@ def check_window(iat: int, nbf: int, exp: int, now: datetime, skew: timedelta) -
+     if iat > latest:
+         raise ClockError(ClockErrorKind.ISSUED_IN_FUTURE, f"iat {iat}, now {now_sec}, skew {skew}")
+     # now < exp exactly when its whole seconds are below exp.
+-    if now_sec >= exp:
++    if now_sec > exp:
+         raise ClockError(ClockErrorKind.EXPIRED, f"exp {exp}, now {now_sec}")
+ 
+ 

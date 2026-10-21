@@ -1,0 +1,51 @@
+[
+  {
+    "id": "empty-body",
+    "input_kind": "bytes",
+    "input": "",
+    "expected_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+    "spec_defect": false,
+    "appendix_value": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU"
+  },
+  {
+    "id": "intent-b2",
+    "input_kind": "object",
+    "input": {
+      "intent_id": "intent-september-invoices-007",
+      "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+      "description": "Read the approved September invoice to prepare the department summary.",
+      "task_id": "native-task:september-summary-007"
+    },
+    "expected_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+    "spec_defect": false,
+    "appendix_value": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M"
+  },
+  {
+    "id": "operation-b3",
+    "input_kind": "object",
+    "input": {
+      "operation_id": "invoice-read-operation-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://identity.example/principals/alice",
+      "action": "invoice.read",
+      "resources": [
+        "https://invoices.example/invoices/INV-1042"
+      ],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    },
+    "expected_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+    "spec_defect": false,
+    "appendix_value": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0"
+  },
+  {
+    "id": "evidence-jws-appendix-c",
+    "input_kind": "artifact",
+    "input": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC1pc3N1ZXIta2V5LTEifQ.ewogICJwYWN0X3ZlcnNpb24iOiAiMC4xIiwKICAiaXNzIjogImh0dHBzOi8vdHJ1c3QuZXhhbXBsZS9pc3N1ZXJzL2ZpbmFuY2UiLAogICJzdWIiOiAiaHR0cHM6Ly9pZGVudGl0eS5leGFtcGxlL2FnZW50cy9pbnZvaWNlLWFzc2lzdGFudCIsCiAgImF1ZCI6ICJodHRwczovL2dhdGV3YXkuZXhhbXBsZS9maW5hbmNlIiwKICAianRpIjogIjdvSlEtM2JnbExOTFJ4OFRwejI3NVEiLAogICJpYXQiOiAxNzkyMDgwMDAwLAogICJuYmYiOiAxNzkyMDgwMDAwLAogICJleHAiOiAxNzkyMDgwMzAwLAogICJ0ZW5hbnRfaWQiOiAiYWNtZSIsCiAgImVudmlyb25tZW50X2lkIjogImh0dHBzOi8vZ2F0ZXdheS5leGFtcGxlL2Vudmlyb25tZW50cy9maW5hbmNlIiwKICAiaG9sZGVyX2prdCI6ICJ4eDBCY0Etd01vaHc4YXRZREpPZTZwZUdNb2RrbEcyd1JIQmxYSE12bDBNIiwKICAia2luZCI6ICJydW50aW1lIiwKICAiY2xhaW1zIjogWwogICAgewogICAgICAicGF0aCI6ICIvYXR0cmlidXRlcy9ydW50aW1lL2lzb2xhdGlvbiIsCiAgICAgICJ2YWx1ZSI6ICJtYW5hZ2VkIgogICAgfQogIF0sCiAgInN0YXR1c19yZWYiOiAicnVudGltZS1hdHRlc3RhdGlvbjpmaW5hbmNlLWFnZW50LTAwMDEiCn0.qiZpXOwu5RsEaJCAf5fXXlID8gFjHR_B4alE_jHMCa0Y6ZpW2tjNpzz3m47WCO65PiKiOsw6l3isryCAQZvQtw",
+    "expected_digest": "Q90FB56ijbX15bjQ5209BILzltWYLpjBIwIxBU7I748",
+    "spec_defect": false,
+    "appendix_value": null
+  }
+]

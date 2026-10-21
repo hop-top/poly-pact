@@ -1,0 +1,45 @@
+# OS and editor noise
+.DS_Store
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Go
+go/bin/
+go.work.sum
+coverage.out
+
+# TypeScript
+node_modules/
+ts/dist/
+ts/coverage/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+py/build/
+py/dist/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Rust
+target/
+
+# PHP
+vendor/
+.phpunit.cache/
+.phpunit.result.cache
+
+# Shared build outputs
+bin/
+dist/
+coverage/
+
+# Spec tooling virtualenv (make spec-validate)
+tools/spec/.venv/

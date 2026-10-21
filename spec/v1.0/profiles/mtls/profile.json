@@ -1,0 +1,230 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "mtls", "version": "1.3", "mapping_revision": "pact-mtls-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/api/v1/reconciliation/records/{record_id}",
+      "action": "reconciliation.record.read",
+      "resource_mapping": "reconciliation-record:{record_id}, from the path parameter; the business unit of the record is checked by native authorization and not by this profile"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "TLS 1.3 listener of the gateway and the adapter's evaluation of each request (MTLS-1 to MTLS-7, MTLS-13 to MTLS-26)"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup for each request (MTLS-8)"},
+    {"function": "map_operation", "component": "Gateway mapping stage, mapping revision pact-mtls-1; the request mapping of the route is installed by the deployment"},
+    {"function": "read_native_claim", "component": "Adapter for /attributes/environment/workload_id (MTLS-30); other approved paths from the sources the deployment installs"},
+    {"function": "check_context", "component": "The checks the deployment installs; none of this profile, since native-principal-binding-v1 is evaluated by the validator (MTLS-31)"},
+    {"function": "authorize_native", "component": "Reconciliation API's existing record permissions for the authenticated workload"},
+    {"function": "record_outcome", "component": "Gateway outcome writer, after execution"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and request path; to be supplied"},
+    {"component": "C02", "owner": "IAM owner and adapter owner", "what_exists": "TLS 1.3 listener with client authentication, the mTLS adapter of these rules, and the snapshot store; listener exists in the deployment; the adapter and its snapshot store are go/adapters/mtls"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry, administrator-run enrollment, and the pinned CA set; registry contract exists, production store to be supplied"},
+    {"component": "C04", "owner": "none", "what_exists": "Not used: the workload acts as itself, no delegation"},
+    {"component": "C05", "owner": "PKI owner and adapter owner", "what_exists": "The private CA's list publication, the enrollment registry, and the gateway configuration; publication exists in the deployment; snapshot adoption is Adopt of go/adapters/mtls, the fetch is to be supplied"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: the read route needs no external approval"},
+    {"component": "C07", "owner": "Adapter and application owner", "what_exists": "Mapper for the route; to be supplied, request-binding rules are outside this profile"},
+    {"component": "C08", "owner": "Resource owner", "what_exists": "Reconciliation API and its record permissions; exists in the scenario"},
+    {"component": "C09", "owner": "Gateway and platform owner", "what_exists": "Replay and receipt store; to be supplied"},
+    {"component": "C10", "owner": "Resource owner", "what_exists": "Gateway outcome writer and the API's audit log; to be supplied"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Policy registry holding the base requirements; to be supplied as a registry only, no adaptation lifecycle"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "List snapshots, the connection status record and closing, enrollment status, and the hold store; snapshots, record and closing exist in go/adapters/mtls, the hold store is to be supplied"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled audit store, including security telemetry about ignored headers; to be supplied"},
+    {"component": "C15", "owner": "none", "what_exists": "Not used: read route, no transactions or budgets"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no runtime attestation or data-use guarantee is claimed"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Direct request to the reconciliation API, bypassing the gateway",
+      "control": "closed",
+      "evidence": "The API's listener admits only the gateway's workload certificate and network policy admits only the gateway as a source. No fixture: a deployment control; the adapter-level bypass is MTLS-06 and COMMON-02.direct"
+    },
+    {
+      "path": "Connection to a terminated listener without passing through the terminator",
+      "control": "closed",
+      "evidence": "MTLS-23: the listener requires the terminator's certificate and refuses any other peer, with or without a valid agent certificate; cases MTLS-02 and MTLS-06"
+    },
+    {
+      "path": "Forwarded-identity headers: the forwarded-certificate header on a direct listener or from a peer that is not allowlisted, the ssl-client-* family, and any other header that names a client",
+      "control": "closed",
+      "evidence": "MTLS-24 and MTLS-26: only Cert of the forwarded-certificate header of an allowlisted terminator is read, and every other such header is ignored and removed; cases MTLS-01, MTLS-02, MTLS-03, MTLS-05, and MTLS-07"
+    },
+    {
+      "path": "Cleartext HTTP, or a TLS version below 1.3, on a claimed route",
+      "control": "closed",
+      "evidence": "MTLS-1: no such listener exists; case MTLS-08"
+    },
+    {
+      "path": "A resumed TLS session",
+      "control": "closed",
+      "evidence": "MTLS-17: no tickets are issued or accepted and a resumed connection is refused; case MTLS-17"
+    },
+    {
+      "path": "A connection reused for many requests, or multiplexed, including after the status bound",
+      "control": "equivalent",
+      "evidence": "Every request passes the same enforcement points, with the identity re-read for the request (MTLS-18) and the connection status record (MTLS-19); cases MTLS-15 and MTLS-16"
+    },
+    {
+      "path": "Other listeners on the gateway host, such as health, metrics, or administration",
+      "control": "out_of_claim",
+      "evidence": "Not claimed; excluded in unsupported_forms"
+    },
+    {
+      "path": "The PACT endpoints of draft section 13.2 on the same listener that require native authentication, such as POST /pact/v0.1/requirements",
+      "control": "equivalent",
+      "evidence": "Served through the same listener and authenticate_native, so MTLS-1 to MTLS-31 apply to them; case MTLS-23"
+    }
+  ],
+  "unsupported_forms": [
+    "OAuth certificate-bound access tokens (RFC 8705 section 3) and OAuth mutual-TLS client authentication (RFC 8705 section 2): the certificate authenticates the workload and nothing more, and no token is read or checked against the certificate (MTLS-28)",
+    "SPIFFE and SPIRE: no SVID validation, no trust-domain bundles, and no Workload API; a certificate that carries a spiffe:// URI is treated as an opaque URI name of its pinned CA (MTLS-7)",
+    "Insecure peer-header forwarding, and every terminator form other than the Envoy forwarded-certificate header in text format: only MTLS-24 is accepted, and the ssl-client-* headers of nginx-based proxies are not specified in wire version 0.1 and are ignored (MTLS-26)",
+    "OCSP, fetched or stapled; delta, scoped, and indirect revocation lists; discovery of lists through certificate extensions: status is complete lists from configured locations (MTLS-10, MTLS-12)",
+    "TLS versions below 1.3, and every resumed session: MTLS-1 and MTLS-17",
+    "Telling agents apart when they share one certificate or workload identifier: one certificate-derived workload per agent, the default of identity-mapping section 5, and a workload with more than one enrollment in force is a configuration error (MTLS-8)",
+    "Identity from subject text, from the common name, or from other name kinds (email address, IP address, other names, directory names), and wildcard names: MTLS-6 and MTLS-7",
+    "Re-authentication or status refresh inside an open connection: the status record of a connection is never refreshed (MTLS-19)",
+    "Any field of the I07 profile other than the workload identifier, such as the business-unit mapping, the runtime isolation attestation, and the purpose and operation relation: supplied by the deployment outside this profile, and only /attributes/environment/workload_id is claimed (MTLS-30)",
+    "Any route other than the one in protected_routes: not listed, so not claimed",
+    "Other listeners on the gateway host: excluded by their out_of_claim control in bypass_paths"
+  ],
+  "freshness": [
+    {
+      "source": "Peer certificate status: the list snapshot of the issuing pinned CA, bound to the connection that presented the certificate",
+      "observation": "snapshot",
+      "max_age_seconds": 360,
+      "status_max_age_seconds": 360,
+      "outage": "defer"
+    },
+    {
+      "source": "Enrollment registry (workload to agent and holder key binding)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Pinned CA set and terminator allowlist (gateway configuration)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "Peer certificate status: the list snapshot of the issuing pinned CA, bound to the connection that presented the certificate",
+      "facts": ["identity", "account_state"],
+      "live_check": {"available": false},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 360,
+      "value_semantics": "cached_snapshot"
+    },
+    {
+      "source": "Enrollment registry (workload to agent and holder key binding)",
+      "facts": ["identity", "account_state"],
+      "live_check": {"available": true, "endpoint_class": "enrollment registry lookup"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    }
+  ],
+  "attribute_sources": [],
+  "residual_limits": [
+    "Post-read: reconciliation data already returned to the agent is not recalled by a later revocation of a certificate or an enrollment, an executed operation is not undone by revoking its receipt, and no egress or data-use control is claimed; disclosed here with no bound",
+    "Revocation propagation, certificate: a revocation reaches a new connection, and every request on a terminated listener, within the publication interval plus the refresh lag of the reference configuration (360 s) after the decision to revoke; an open direct connection is ended within the status bound after the publication of the list that carries it (660 s after the decision) and serves requests on the status of an older list until then",
+    "Revocation propagation, enrollment: revocation, compromise mark, and rotation take effect at the next request, within the consistency domain of the registry",
+    "Revocation propagation, pinned CA set and terminator allowlist: withdrawal takes effect at the next request after the configuration is reloaded; the reload time is declared by the deployment",
+    "Name reuse: the identifier names a subject alternative name that a CA can issue to another subject after the workload is retired, and the enrollment then applies to the new holder of the name; a TLS-only impostor still fails the holder-key proof, and an administrator revokes the enrollment of a retired workload before its name is reissued",
+    "Terminated listener: the gateway verifies the certificate and its status from the forwarded Cert but cannot verify that the end client proved possession of its key to the terminator or see the age of that connection, and relies on the terminator obligations of MTLS-27; a terminator that passes on a header the client supplied defeats the identity",
+    "TLS key compromise: between the theft of a TLS key and the propagation of its revocation a thief can authenticate as the workload natively but cannot sign a PACT presentation, because the holder key is distinct",
+    "Revocation list transport: an attacker on the path can withhold lists or replay older ones; lists are signed by the pinned CA, withholding ends in DEFERRED once the snapshot is older than the status bound, and a replayed older list is not adopted over a newer one",
+    "Clock: a CA clock behind the adapter's clock only makes lists look older and fails closed, and one ahead by more than the 5 s skew makes the list unusable; no grace applies to expiry"
+  ],
+  "fixtures": [
+    {"id": "adapters/mtls/mtls-01.direct-listener-header-ignored", "path": "fixtures/adapters/mtls/mtls-01.direct-listener-header-ignored.json"},
+    {"id": "adapters/mtls/mtls-02.not-allowlisted", "path": "fixtures/adapters/mtls/mtls-02.not-allowlisted.json"},
+    {"id": "adapters/mtls/mtls-03.absent", "path": "fixtures/adapters/mtls/mtls-03.absent.json"},
+    {"id": "adapters/mtls/mtls-03.forwarded", "path": "fixtures/adapters/mtls/mtls-03.forwarded.json"},
+    {"id": "adapters/mtls/mtls-03.two-cert-pairs", "path": "fixtures/adapters/mtls/mtls-03.two-cert-pairs.json"},
+    {"id": "adapters/mtls/mtls-03.two-certificates", "path": "fixtures/adapters/mtls/mtls-03.two-certificates.json"},
+    {"id": "adapters/mtls/mtls-03.two-elements", "path": "fixtures/adapters/mtls/mtls-03.two-elements.json"},
+    {"id": "adapters/mtls/mtls-03.undecodable", "path": "fixtures/adapters/mtls/mtls-03.undecodable.json"},
+    {"id": "adapters/mtls/mtls-04.expired", "path": "fixtures/adapters/mtls/mtls-04.expired.json"},
+    {"id": "adapters/mtls/mtls-04.no-client-auth", "path": "fixtures/adapters/mtls/mtls-04.no-client-auth.json"},
+    {"id": "adapters/mtls/mtls-04.unpinned-ca", "path": "fixtures/adapters/mtls/mtls-04.unpinned-ca.json"},
+    {"id": "adapters/mtls/mtls-04.unpinned-intermediate", "path": "fixtures/adapters/mtls/mtls-04.unpinned-intermediate.json"},
+    {"id": "adapters/mtls/mtls-05.authenticate", "path": "fixtures/adapters/mtls/mtls-05.authenticate.json"},
+    {"id": "adapters/mtls/mtls-05.binding", "path": "fixtures/adapters/mtls/mtls-05.binding.json"},
+    {"id": "adapters/mtls/mtls-07.direct", "path": "fixtures/adapters/mtls/mtls-07.direct.json"},
+    {"id": "adapters/mtls/mtls-07.terminated", "path": "fixtures/adapters/mtls/mtls-07.terminated.json"},
+    {"id": "adapters/mtls/mtls-08.cleartext", "path": "fixtures/adapters/mtls/mtls-08.cleartext.json"},
+    {"id": "adapters/mtls/mtls-08.tls12", "path": "fixtures/adapters/mtls/mtls-08.tls12.json"},
+    {"id": "adapters/mtls/mtls-09.binding", "path": "fixtures/adapters/mtls/mtls-09.binding.json"},
+    {"id": "adapters/mtls/mtls-10.tls-key-reported", "path": "fixtures/adapters/mtls/mtls-10.tls-key-reported.json"},
+    {"id": "adapters/mtls/mtls-11.any-purpose-only", "path": "fixtures/adapters/mtls/mtls-11.any-purpose-only.json"},
+    {"id": "adapters/mtls/mtls-11.ca-asserted", "path": "fixtures/adapters/mtls/mtls-11.ca-asserted.json"},
+    {"id": "adapters/mtls/mtls-11.cert-sign-key-usage", "path": "fixtures/adapters/mtls/mtls-11.cert-sign-key-usage.json"},
+    {"id": "adapters/mtls/mtls-11.dns-blank", "path": "fixtures/adapters/mtls/mtls-11.dns-blank.json"},
+    {"id": "adapters/mtls/mtls-11.dns-lowercased", "path": "fixtures/adapters/mtls/mtls-11.dns-lowercased.json"},
+    {"id": "adapters/mtls/mtls-11.dns-trailing-dot", "path": "fixtures/adapters/mtls/mtls-11.dns-trailing-dot.json"},
+    {"id": "adapters/mtls/mtls-11.dns-underscore", "path": "fixtures/adapters/mtls/mtls-11.dns-underscore.json"},
+    {"id": "adapters/mtls/mtls-11.dns-wildcard", "path": "fixtures/adapters/mtls/mtls-11.dns-wildcard.json"},
+    {"id": "adapters/mtls/mtls-11.expired", "path": "fixtures/adapters/mtls/mtls-11.expired.json"},
+    {"id": "adapters/mtls/mtls-11.issuer-expired", "path": "fixtures/adapters/mtls/mtls-11.issuer-expired.json"},
+    {"id": "adapters/mtls/mtls-11.listener-realm", "path": "fixtures/adapters/mtls/mtls-11.listener-realm.json"},
+    {"id": "adapters/mtls/mtls-11.no-digital-signature", "path": "fixtures/adapters/mtls/mtls-11.no-digital-signature.json"},
+    {"id": "adapters/mtls/mtls-11.no-eku", "path": "fixtures/adapters/mtls/mtls-11.no-eku.json"},
+    {"id": "adapters/mtls/mtls-11.no-san", "path": "fixtures/adapters/mtls/mtls-11.no-san.json"},
+    {"id": "adapters/mtls/mtls-11.not-before-within-skew", "path": "fixtures/adapters/mtls/mtls-11.not-before-within-skew.json"},
+    {"id": "adapters/mtls/mtls-11.not-yet-valid", "path": "fixtures/adapters/mtls/mtls-11.not-yet-valid.json"},
+    {"id": "adapters/mtls/mtls-11.other-san-kind", "path": "fixtures/adapters/mtls/mtls-11.other-san-kind.json"},
+    {"id": "adapters/mtls/mtls-11.pinned-ca-as-leaf", "path": "fixtures/adapters/mtls/mtls-11.pinned-ca-as-leaf.json"},
+    {"id": "adapters/mtls/mtls-11.server-auth-only", "path": "fixtures/adapters/mtls/mtls-11.server-auth-only.json"},
+    {"id": "adapters/mtls/mtls-11.two-sans", "path": "fixtures/adapters/mtls/mtls-11.two-sans.json"},
+    {"id": "adapters/mtls/mtls-11.unpinned-ca", "path": "fixtures/adapters/mtls/mtls-11.unpinned-ca.json"},
+    {"id": "adapters/mtls/mtls-11.unpinned-intermediate", "path": "fixtures/adapters/mtls/mtls-11.unpinned-intermediate.json"},
+    {"id": "adapters/mtls/mtls-11.uri-empty", "path": "fixtures/adapters/mtls/mtls-11.uri-empty.json"},
+    {"id": "adapters/mtls/mtls-11.uri-not-normalized", "path": "fixtures/adapters/mtls/mtls-11.uri-not-normalized.json"},
+    {"id": "adapters/mtls/mtls-11.uri-relative", "path": "fixtures/adapters/mtls/mtls-11.uri-relative.json"},
+    {"id": "adapters/mtls/mtls-11.uri-space", "path": "fixtures/adapters/mtls/mtls-11.uri-space.json"},
+    {"id": "adapters/mtls/mtls-11.valid", "path": "fixtures/adapters/mtls/mtls-11.valid.json"},
+    {"id": "adapters/mtls/mtls-12.authenticate", "path": "fixtures/adapters/mtls/mtls-12.authenticate.json"},
+    {"id": "adapters/mtls/mtls-12.binding", "path": "fixtures/adapters/mtls/mtls-12.binding.json"},
+    {"id": "adapters/mtls/mtls-13.certificate-hold", "path": "fixtures/adapters/mtls/mtls-13.certificate-hold.json"},
+    {"id": "adapters/mtls/mtls-13.key-compromise", "path": "fixtures/adapters/mtls/mtls-13.key-compromise.json"},
+    {"id": "adapters/mtls/mtls-13.unspecified", "path": "fixtures/adapters/mtls/mtls-13.unspecified.json"},
+    {"id": "adapters/mtls/mtls-14.at-bound", "path": "fixtures/adapters/mtls/mtls-14.at-bound.json"},
+    {"id": "adapters/mtls/mtls-14.forwarded-stale", "path": "fixtures/adapters/mtls/mtls-14.forwarded-stale.json"},
+    {"id": "adapters/mtls/mtls-14.no-snapshot", "path": "fixtures/adapters/mtls/mtls-14.no-snapshot.json"},
+    {"id": "adapters/mtls/mtls-14.stale-snapshot", "path": "fixtures/adapters/mtls/mtls-14.stale-snapshot.json"},
+    {"id": "adapters/mtls/mtls-17.resumed", "path": "fixtures/adapters/mtls/mtls-17.resumed.json"},
+    {"id": "adapters/mtls/mtls-18.other-ca-binding", "path": "fixtures/adapters/mtls/mtls-18.other-ca-binding.json"},
+    {"id": "adapters/mtls/mtls-18.other-ca", "path": "fixtures/adapters/mtls/mtls-18.other-ca.json"},
+    {"id": "adapters/mtls/mtls-18.renewed", "path": "fixtures/adapters/mtls/mtls-18.renewed.json"},
+    {"id": "adapters/mtls/mtls-18.same-key-other-name", "path": "fixtures/adapters/mtls/mtls-18.same-key-other-name.json"},
+    {"id": "adapters/mtls/mtls-18.same-subject-other-name", "path": "fixtures/adapters/mtls/mtls-18.same-subject-other-name.json"},
+    {"id": "adapters/mtls/mtls-19.compromised", "path": "fixtures/adapters/mtls/mtls-19.compromised.json"},
+    {"id": "adapters/mtls/mtls-19.registry-down", "path": "fixtures/adapters/mtls/mtls-19.registry-down.json"},
+    {"id": "adapters/mtls/mtls-19.revoked", "path": "fixtures/adapters/mtls/mtls-19.revoked.json"},
+    {"id": "adapters/mtls/mtls-20.ca-withdrawn", "path": "fixtures/adapters/mtls/mtls-20.ca-withdrawn.json"},
+    {"id": "adapters/mtls/mtls-22.bearer-other-cnf", "path": "fixtures/adapters/mtls/mtls-22.bearer-other-cnf.json"},
+    {"id": "adapters/mtls/mtls-22.bearer-same-cnf", "path": "fixtures/adapters/mtls/mtls-22.bearer-same-cnf.json"},
+    {"id": "adapters/mtls/mtls-24.dedicated", "path": "fixtures/adapters/mtls/mtls-24.dedicated.json"},
+    {"id": "adapters/mtls/mtls-24.two-agents-a", "path": "fixtures/adapters/mtls/mtls-24.two-agents-a.json"},
+    {"id": "adapters/mtls/mtls-24.two-agents-b", "path": "fixtures/adapters/mtls/mtls-24.two-agents-b.json"}
+  ]
+}

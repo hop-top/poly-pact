@@ -1,0 +1,824 @@
+{
+  "description": "The decoded objects of the Appendix B worked finance-gateway example, B.1 to B.11 and B.13, copied verbatim from the draft. Each validates against its definition of the Appendix A.3 schema, selected by the JWS typ of a signed artifact (draft 7.3, A.1) or named by def for an unsigned object.",
+  "objects": [
+    {
+      "section": "B.1",
+      "def": "AgentProfile",
+      "object": {
+        "profile_id": "finance-profile-view-0001",
+        "revision": 1,
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "operator_id": "https://identity.example/operators/acme",
+        "tenant_id": "acme",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "created_at": 1792080000,
+        "expires_at": 1792083600,
+        "attributes": {
+          "environment": {
+            "principal_id": "https://identity.example/principals/alice",
+            "roles": [
+              "finance-reader"
+            ]
+          },
+          "delegation": {
+            "authority_ref": "native-approval:september-summary-007"
+          },
+          "runtime": {
+            "isolation": "managed"
+          },
+          "reputation": {
+            "context": {
+              "tenant_id": "acme",
+              "environment_id": "https://gateway.example/environments/finance",
+              "agent_id": "https://identity.example/agents/invoice-assistant",
+              "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+              "action_class": "invoice.read",
+              "resource_class": "department-finance-invoice",
+              "runtime_class": "managed-v1"
+            },
+            "dimensions": {
+              "reliability": {
+                "score_bps": 9259,
+                "confidence_bps": 5555,
+                "independent_tasks": 25,
+                "qualified_events": 25,
+                "newest_event_at": 1792080000
+              },
+              "task_quality": {
+                "score_bps": 9000,
+                "confidence_bps": 4736,
+                "independent_tasks": 18,
+                "qualified_events": 18,
+                "newest_event_at": 1792080000
+              },
+              "policy_adherence": {
+                "score_bps": 8750,
+                "confidence_bps": 2307,
+                "independent_tasks": 6,
+                "qualified_events": 6,
+                "newest_event_at": 1792080000
+              }
+            },
+            "evidence_cutoff": 1792080000,
+            "provenance_digest": "te9wb7ClTY1tDWP7q_-ntYdCZnoXNwTH70GkmId2QBA",
+            "scoring_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+            "scoring_policy_revision": "finance-scoring-1",
+            "security_status": "CLEAR",
+            "hold_refs": []
+          }
+        }
+      }
+    },
+    {
+      "section": "B.2",
+      "def": "Intent",
+      "object": {
+        "intent_id": "intent-september-invoices-007",
+        "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+        "description": "Read the approved September invoice to prepare the department summary.",
+        "task_id": "native-task:september-summary-007"
+      }
+    },
+    {
+      "section": "B.3",
+      "def": "OperationContext",
+      "object": {
+        "operation_id": "invoice-read-operation-0001",
+        "environment_id": "https://gateway.example/environments/finance",
+        "principal_id": "https://identity.example/principals/alice",
+        "action": "invoice.read",
+        "resources": [
+          "https://invoices.example/invoices/INV-1042"
+        ],
+        "method": "GET",
+        "target_uri": "https://gateway.example/invoices/INV-1042",
+        "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+        "headers": {}
+      }
+    },
+    {
+      "section": "B.4",
+      "typ": "pact-requirements+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://trust.example/issuers/finance",
+        "sub": "https://identity.example/agents/invoice-assistant",
+        "aud": "https://gateway.example/finance",
+        "jti": "zIMh1jdcSU0EP90CYPIbwA",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792080060,
+        "tenant_id": "acme",
+        "contract_id": "contract-finance-0001",
+        "environment_id": "https://gateway.example/environments/finance",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+        "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+        "base_revision": "finance-base-3",
+        "selected_set": "supervised",
+        "field_rules": [
+          {
+            "rule_id": "principal",
+            "path": "/attributes/environment/principal_id",
+            "schema": {
+              "type": "string"
+            },
+            "source": "native",
+            "comparison": "equal",
+            "allowed_issuers": [],
+            "native_path": "/principal/id",
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          },
+          {
+            "rule_id": "roles",
+            "path": "/attributes/environment/roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "contains": {
+                "const": "finance-reader"
+              }
+            },
+            "source": "native",
+            "comparison": "equal",
+            "allowed_issuers": [],
+            "native_path": "/principal/roles",
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          },
+          {
+            "rule_id": "supervisor-approval",
+            "path": "/attributes/delegation/authority_ref",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source": "native",
+            "comparison": "equal",
+            "allowed_issuers": [],
+            "native_path": "/task/approval_ref",
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          },
+          {
+            "rule_id": "isolation",
+            "path": "/attributes/runtime/isolation",
+            "schema": {
+              "const": "managed"
+            },
+            "source": "evidence",
+            "comparison": "equal",
+            "allowed_issuers": [
+              "https://trust.example/issuers/finance"
+            ],
+            "native_path": null,
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          },
+          {
+            "rule_id": "reputation-status",
+            "path": "/attributes/reputation/security_status",
+            "schema": {
+              "const": "CLEAR"
+            },
+            "source": "evidence",
+            "comparison": "equal",
+            "allowed_issuers": [
+              "https://reputation.example/finance"
+            ],
+            "native_path": null,
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          }
+        ],
+        "context_checks": [
+          "native-principal-binding-v1",
+          "purpose-operation-v1",
+          "native-delegation-v1",
+          "security-hold-v1"
+        ],
+        "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+        "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+        "nonce": "N8WrKpg8XNb9Wh_QuWlHbw",
+        "mode": "enforced"
+      }
+    },
+    {
+      "section": "B.5",
+      "typ": "pact-evidence+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://trust.example/issuers/finance",
+        "sub": "https://identity.example/agents/invoice-assistant",
+        "aud": "https://gateway.example/finance",
+        "jti": "7oJQ-3bglLNLRx8Tpz275Q",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792080300,
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "kind": "runtime",
+        "claims": [
+          {
+            "path": "/attributes/runtime/isolation",
+            "value": "managed"
+          }
+        ],
+        "status_ref": "runtime-attestation:finance-agent-0001"
+      }
+    },
+    {
+      "section": "B.6",
+      "typ": "pact-reputation+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://reputation.example/finance",
+        "sub": "https://identity.example/agents/invoice-assistant",
+        "aud": "https://gateway.example/finance",
+        "jti": "VW7HSF227CWWBU7wN09Q5A",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792080300,
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "value": {
+          "context": {
+            "tenant_id": "acme",
+            "environment_id": "https://gateway.example/environments/finance",
+            "agent_id": "https://identity.example/agents/invoice-assistant",
+            "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+            "action_class": "invoice.read",
+            "resource_class": "department-finance-invoice",
+            "runtime_class": "managed-v1"
+          },
+          "dimensions": {
+            "reliability": {
+              "score_bps": 9259,
+              "confidence_bps": 5555,
+              "independent_tasks": 25,
+              "qualified_events": 25,
+              "newest_event_at": 1792080000
+            },
+            "task_quality": {
+              "score_bps": 9000,
+              "confidence_bps": 4736,
+              "independent_tasks": 18,
+              "qualified_events": 18,
+              "newest_event_at": 1792080000
+            },
+            "policy_adherence": {
+              "score_bps": 8750,
+              "confidence_bps": 2307,
+              "independent_tasks": 6,
+              "qualified_events": 6,
+              "newest_event_at": 1792080000
+            }
+          },
+          "evidence_cutoff": 1792080000,
+          "provenance_digest": "te9wb7ClTY1tDWP7q_-ntYdCZnoXNwTH70GkmId2QBA",
+          "scoring_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+          "scoring_policy_revision": "finance-scoring-1",
+          "security_status": "CLEAR",
+          "hold_refs": []
+        }
+      }
+    },
+    {
+      "section": "B.7",
+      "typ": "pact-admission+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://trust.example/issuers/finance",
+        "sub": "https://identity.example/agents/invoice-assistant",
+        "aud": "https://gateway.example/finance",
+        "jti": "bzKGCRDKD7KiDH_aFDZmsA",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792080060,
+        "tenant_id": "acme",
+        "presentation_id": "v6wxT-_cB0Ua8Xkqgcuu2g",
+        "operation_id": "invoice-read-operation-0001",
+        "principal_id": "https://identity.example/principals/alice",
+        "environment_id": "https://gateway.example/environments/finance",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "profile_digest": "b6pNI8i5pX5MtuxkaBw0M-4tmzdkGsHVS_Kyji7_uOU",
+        "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+        "operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+        "requirements_digest": "NBT3fg3NrXBiyMdcOvQaAXqX0ZmkSaO8daKT1HPZZ8A",
+        "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+        "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+        "decision": "ADMISSIBLE",
+        "terminal_reason": "COMPLETED",
+        "mode": "enforced",
+        "checks": [
+          {
+            "check_id": "native-authentication",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-native-authentication"
+          },
+          {
+            "check_id": "agent-holder-binding",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-agent-holder-binding"
+          },
+          {
+            "check_id": "contract-validity",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-contract-validity"
+          },
+          {
+            "check_id": "nonce",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": null,
+            "status_checked_at": null,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": null
+          },
+          {
+            "check_id": "operation-binding",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-operation-binding"
+          },
+          {
+            "check_id": "intent-binding",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-intent-binding"
+          },
+          {
+            "check_id": "profile-validity",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-profile-validity"
+          },
+          {
+            "check_id": "evidence-validity",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-evidence-validity"
+          },
+          {
+            "check_id": "reputation-context",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [
+              "VW7HSF227CWWBU7wN09Q5A"
+            ],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-selection-record:example-selection"
+          },
+          {
+            "check_id": "security-hold",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-security-hold"
+          },
+          {
+            "check_id": "active-policy",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-active-policy"
+          },
+          {
+            "check_id": "principal",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-principal"
+          },
+          {
+            "check_id": "roles",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-roles"
+          },
+          {
+            "check_id": "supervisor-approval",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-supervisor-approval"
+          },
+          {
+            "check_id": "isolation",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [
+              "7oJQ-3bglLNLRx8Tpz275Q"
+            ],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-isolation"
+          },
+          {
+            "check_id": "reputation-status",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-reputation-status"
+          },
+          {
+            "check_id": "native-principal-binding-v1",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-native-principal-binding-v1"
+          },
+          {
+            "check_id": "purpose-operation-v1",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-purpose-operation-v1"
+          },
+          {
+            "check_id": "native-delegation-v1",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-native-delegation-v1"
+          },
+          {
+            "check_id": "security-hold-v1",
+            "result": "PASS",
+            "reason_code": "REQUIREMENT_SATISFIED",
+            "checked_at": 1792080000,
+            "source_observed_at": 1792080000,
+            "status_checked_at": 1792080000,
+            "evidence_ids": [],
+            "source_id": "configured-finance-validator-v1",
+            "source_ref": "configured-validation-record:example-security-hold-v1"
+          }
+        ]
+      }
+    },
+    {
+      "section": "B.8",
+      "typ": "pact-outcome+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://trust.example/issuers/finance",
+        "sub": "https://identity.example/agents/invoice-assistant",
+        "aud": "https://reputation.example/finance",
+        "jti": "JaY-UqmPb9qmGH2lWaCjpQ",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792080300,
+        "tenant_id": "acme",
+        "event_id": "execution-event-0001",
+        "environment_id": "https://gateway.example/environments/finance",
+        "task_id": "native-task:september-summary-007",
+        "operation_id": "invoice-read-operation-0001",
+        "admission_receipt_id": "bzKGCRDKD7KiDH_aFDZmsA",
+        "observed_at": 1792080000,
+        "reporter_role": "executor",
+        "context": {
+          "tenant_id": "acme",
+          "environment_id": "https://gateway.example/environments/finance",
+          "agent_id": "https://identity.example/agents/invoice-assistant",
+          "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+          "action_class": "invoice.read",
+          "resource_class": "department-finance-invoice",
+          "runtime_class": "managed-v1"
+        },
+        "event_kind": "EXECUTION",
+        "result": "SUCCESS",
+        "dimension": "reliability",
+        "severity": "info",
+        "evidence_refs": [
+          "native-execution-log:finance-read-0001"
+        ],
+        "attribution": {
+          "native_task_ref": "native-task:september-summary-007",
+          "independence_group": "native-task-group:september-summary-007",
+          "causal_assessment": "AGENT",
+          "assessment_ref": null
+        },
+        "supersedes": [],
+        "details": "Native authorization allowed the invoice read and the resource service confirmed completion."
+      }
+    },
+    {
+      "section": "B.9",
+      "typ": "pact-learning-policy+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://trust.example/issuers/finance",
+        "sub": "https://gateway.example/environments/finance",
+        "aud": "https://learning.example/finance",
+        "jti": "gjQS0erLZ5ViIOUylZ8BBA",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792166400,
+        "tenant_id": "acme",
+        "policy_id": "finance-admission-learning-v1",
+        "environment_id": "https://gateway.example/environments/finance",
+        "mode": "bounded_autonomous",
+        "controller_ids": [
+          "https://learning.example/controllers/finance"
+        ],
+        "base_revision": "finance-base-3",
+        "conservative_set": "supervised",
+        "allowed_requirement_sets": [
+          "supervised",
+          "established"
+        ],
+        "adaptive_fields": [
+          {
+            "control_id": "supervisor-approval-required",
+            "value_schema": {
+              "type": "boolean"
+            },
+            "allow_relaxation": true
+          }
+        ],
+        "permitted_artifact_types": [
+          "baseline",
+          "score",
+          "requirement_selector"
+        ],
+        "permitted_implementation_ids": [
+          "beta-decay-v1",
+          "finance-selector-v1"
+        ],
+        "data_policy": {
+          "qualification_policy_id": "pact-qualification-v1",
+          "ingestion_window_seconds": 604800,
+          "positive_weight_cap_per_task": 1,
+          "maximum_failure_weight": 5,
+          "task_attribution_source": "native-task-registry",
+          "reporter_independence_policy_id": "pact-reporter-independence-v1"
+        },
+        "evaluation_policy": {
+          "minimum_independent_tasks": 100,
+          "minimum_observation_seconds": 604800,
+          "minimum_shadow_seconds": 86400,
+          "holdout_policy_id": "time-separated-holdout-v1",
+          "immutable_test_suite_digests": [
+            "I7Z5M225iXt94t2aNsPS_YEN07CyAkcn_SuW7d057Sg"
+          ],
+          "metric_bounds": {
+            "native-denial-override-count": {
+              "direction": "upper",
+              "value": 0
+            },
+            "admission-regression-rate": {
+              "direction": "upper",
+              "value": 0.01
+            }
+          },
+          "maximum_rollout_percent": 10,
+          "required_evaluator_ids": [
+            "https://learning.example/evaluators/independent"
+          ],
+          "rollback_condition_ids": [
+            "any-native-denial-override",
+            "qualified-regression-limit"
+          ]
+        },
+        "hold_clearance_authorities": [
+          "https://security.example/finance"
+        ]
+      }
+    },
+    {
+      "section": "B.10",
+      "typ": "pact-learning-artifact+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://learning.example/controllers/finance",
+        "sub": "https://learning.example/artifacts/baseline-v1",
+        "aud": "https://learning.example/finance",
+        "jti": "x8XB1wxd7EQWq2FYr9CyIw",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792166400,
+        "tenant_id": "acme",
+        "artifact_id": "https://learning.example/artifacts/baseline-v1",
+        "version": "1",
+        "model_type": "baseline",
+        "implementation_id": "beta-decay-v1",
+        "content_digest": "pQQCoOLBo6OHIhzTsWX9ljJ8rvjczaRL36wCrVVU5_A",
+        "source_data_manifest_digest": "Tb1bltn4m5rkxOVTBtmNx5ziPlW91bWe75DMsC-VDCc",
+        "feature_schema_digest": "X_S1c0g3IwnKjerYmkCyRQLV2oJ3J348zXuj3Hv7o_o",
+        "training_configuration_digest": "kZjEABtBB3GQX676atzKTT-7Y2JmiIl-Y8agfKpUYiI",
+        "evaluation_report_digest": "MJCmRyAqRLSoUsyDHBrLsp4LlUufQyMxfyCsxdX7zVc",
+        "intended_contexts": [
+          {
+            "tenant_id": "acme",
+            "environment_id": "https://gateway.example/environments/finance",
+            "agent_id": "https://identity.example/agents/invoice-assistant",
+            "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+            "action_class": "invoice.read",
+            "resource_class": "department-finance-invoice",
+            "runtime_class": "managed-v1"
+          }
+        ],
+        "base_revision": "finance-base-3",
+        "parent_artifact_digest": null,
+        "output_controls": [
+          "supervisor-approval-required"
+        ],
+        "artifact_store_ref": "configured-store:baseline-v1"
+      }
+    },
+    {
+      "section": "B.11",
+      "typ": "pact-learning-event+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://learning.example/controllers/finance",
+        "sub": "https://learning.example/artifacts/baseline-v1",
+        "aud": "https://learning.example/finance",
+        "jti": "c0-w6hRMSr11xeR5OIVitg",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792080300,
+        "tenant_id": "acme",
+        "event_id": "learning-shadow-event-0001",
+        "environment_id": "https://gateway.example/environments/finance",
+        "artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+        "previous_artifact_digest": null,
+        "policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+        "transition": "SHADOW",
+        "expected_state": "EVALUATED",
+        "expected_active_digest": null,
+        "activate_artifact_digest": null,
+        "effective_at": 1792080000,
+        "scope_contexts": [
+          {
+            "tenant_id": "acme",
+            "environment_id": "https://gateway.example/environments/finance",
+            "agent_id": "https://identity.example/agents/invoice-assistant",
+            "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+            "action_class": "invoice.read",
+            "resource_class": "department-finance-invoice",
+            "runtime_class": "managed-v1"
+          }
+        ],
+        "evaluation_refs": [
+          "configured-evaluation-store:example-report"
+        ],
+        "reason_codes": [
+          "EVALUATION_GATES_PASSED"
+        ]
+      }
+    },
+    {
+      "section": "B.13",
+      "def": "GatewayMetadata",
+      "object": {
+        "gateway_id": "https://gateway.example/finance",
+        "environment_id": "https://gateway.example/environments/finance",
+        "wire_versions": [
+          "0.1"
+        ],
+        "jws_algorithms": [
+          "ES256"
+        ],
+        "endpoints": {
+          "requirements": "https://gateway.example/pact/v0.1/requirements",
+          "evaluate": "https://gateway.example/pact/v0.1/evaluate",
+          "outcomes": "https://gateway.example/pact/v0.1/outcomes",
+          "reputation_query": "https://gateway.example/pact/v0.1/reputation/query",
+          "learning_artifacts": "https://gateway.example/pact/v0.1/learning/artifacts",
+          "learning_events": "https://gateway.example/pact/v0.1/learning/events",
+          "receipts_query": "https://gateway.example/pact/v0.1/receipts/query"
+        },
+        "jwks_uri": "https://gateway.example/.well-known/jwks.json",
+        "operation_mapping_version": "finance-http-1",
+        "extensions_supported": [],
+        "modes": [
+          "enforced"
+        ],
+        "presentation_transports": [
+          "header",
+          "adapter-envelope",
+          "gateway-evaluate"
+        ],
+        "limits": {
+          "max_presentation_bytes": 262144,
+          "max_artifact_payload_bytes": 32768,
+          "max_profile_bytes": 32768,
+          "max_evidence_artifacts": 32,
+          "max_field_rules": 128,
+          "max_json_depth": 16,
+          "max_resources": 256,
+          "max_description_bytes": 4096,
+          "contract_validity_seconds": 60,
+          "presentation_validity_seconds": 60,
+          "evaluation_seconds": 30,
+          "clock_skew_seconds": 5,
+          "replay_retention_seconds": 65,
+          "max_header_presentation_bytes": 8192,
+          "max_envelope_presentation_bytes": 262144,
+          "max_evaluate_presentation_bytes": 262144
+        },
+        "protected_header_names": [
+          "if-match",
+          "x-dry-run"
+        ],
+        "header_normalization_id": "finance-header-normalization-1",
+        "adapters": [
+          {
+            "protocol": "mcp",
+            "version": "2025-11-25",
+            "mapping_revision": "finance-mcp-1"
+          }
+        ]
+      }
+    }
+  ]
+}

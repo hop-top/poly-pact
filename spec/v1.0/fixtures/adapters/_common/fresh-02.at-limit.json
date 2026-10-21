@@ -1,0 +1,55 @@
+{
+  "case_version": 1,
+  "id": "FRESH-02.at-limit",
+  "title": "Ages equal to the check's limits pass: a limit bounds the age inclusively",
+  "draft": ["9.2", "7.5", "17.1"],
+  "now": 1792080000,
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "checks": [
+      {
+        "id": "native-delegation-v1",
+        "result": "PASS",
+        "reason_code": "REQUIREMENT_SATISFIED",
+        "source_id": "delegation-service",
+        "source_ref": "deleg-0042",
+        "observed_at": 1792079700,
+        "status_checked_at": 1792079970,
+        "freshness": {"max_age_seconds": 300, "status_max_age_seconds": 30}
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "check_id": "native-delegation-v1",
+    "intent": {
+      "intent_id": "intent-01",
+      "purpose_id": "invoice-approval",
+      "description": "Approve the September invoice.",
+      "task_id": "native-task:september-summary-007"
+    },
+    "operation": {
+      "operation_id": "op-invoice-approve-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://idp.acme.example/alice",
+      "action": "invoice.read",
+      "resources": ["https://invoices.example/invoices/INV-1042"],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {"function": "check_context", "outcome": "PASS", "reason_code": "REQUIREMENT_SATISFIED"}
+}

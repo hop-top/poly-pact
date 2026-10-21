@@ -1,0 +1,12 @@
+diff --git a/php/src/Core/Schema/Schema.php b/php/src/Core/Schema/Schema.php
+index 26f0c19..4c2a0f0 100644
+--- a/php/src/Core/Schema/Schema.php
++++ b/php/src/Core/Schema/Schema.php
+@@ -131,7 +131,6 @@ final class Schema
+             throw new \RuntimeException('schema: the vendored schema is not an object opis can hold');
+         }
+         $v = new Validator(null, 1 << 16, false);
+-        $v->parser()->getFormatResolver()?->register('string', 'uri', new UriFormat());
+         $v->resolver()?->registerRaw($schema, $id);
+         self::$id = $id;
+         self::$defs = $defs->names();

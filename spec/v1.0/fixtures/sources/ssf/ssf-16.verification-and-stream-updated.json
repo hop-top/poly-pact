@@ -1,0 +1,156 @@
+{
+  "case_version": 1,
+  "id": "SSF-16.verification-and-stream-updated",
+  "title": "Verification and stream-updated events are reported and change no account state",
+  "draft": ["17.2", "18"],
+  "now": 1792080000,
+  "source": {
+    "issuers": [
+      {
+        "audience": "https://rx.example.com/ssf",
+        "issuer": "https://tx.example.com",
+        "jwks": {
+          "keys": [
+            {
+              "alg": "ES256",
+              "crv": "P-256",
+              "kid": "test-issuer-key-1",
+              "kty": "EC",
+              "use": "sig",
+              "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+              "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E"
+            }
+          ]
+        }
+      }
+    ],
+    "mappings": [
+      {
+        "format": "iss_sub",
+        "issuer": "https://tx.example.com",
+        "local": "7a1f",
+        "subject_iss": "https://tx.example.com",
+        "value": "u-1"
+      },
+      {
+        "format": "iss_sub",
+        "issuer": "https://tx.example.com",
+        "local": "9c2e",
+        "subject_iss": "https://tx.example.com",
+        "value": "u-2"
+      },
+      {
+        "format": "opaque",
+        "issuer": "https://tx.example.com",
+        "local": "5b3d",
+        "value": "o-1"
+      },
+      {
+        "format": "email",
+        "issuer": "https://tx.example.com",
+        "local": "4d4d",
+        "value": "ada@example.com"
+      }
+    ],
+    "model": "ssf/1",
+    "principal_prefix": "oauth:https%3A%2F%2Fidp.example.com:t1:",
+    "source_id": "ssf-northstar"
+  },
+  "steps": [
+    {
+      "at": 1792079940,
+      "inbound": {
+        "push": {
+          "decoded": {
+            "claims": {
+              "aud": "https://rx.example.com/ssf",
+              "events": {
+                "https://schemas.openid.net/secevent/ssf/event-type/verification": {
+                  "state": "probe-1"
+                }
+              },
+              "iat": 1792079940,
+              "iss": "https://tx.example.com",
+              "jti": "v-1",
+              "sub_id": {
+                "format": "opaque",
+                "id": "stream-1"
+              }
+            },
+            "header": {
+              "alg": "ES256",
+              "kid": "test-issuer-key-1",
+              "typ": "secevent+jwt"
+            },
+            "signed_by": "issuer"
+          },
+          "set": "eyJhbGciOiJFUzI1NiIsImtpZCI6InRlc3QtaXNzdWVyLWtleS0xIiwidHlwIjoic2VjZXZlbnQrand0In0.eyJhdWQiOiJodHRwczovL3J4LmV4YW1wbGUuY29tL3NzZiIsImV2ZW50cyI6eyJodHRwczovL3NjaGVtYXMub3BlbmlkLm5ldC9zZWNldmVudC9zc2YvZXZlbnQtdHlwZS92ZXJpZmljYXRpb24iOnsic3RhdGUiOiJwcm9iZS0xIn19LCJpYXQiOjE3OTIwNzk5NDAsImlzcyI6Imh0dHBzOi8vdHguZXhhbXBsZS5jb20iLCJqdGkiOiJ2LTEiLCJzdWJfaWQiOnsiZm9ybWF0Ijoib3BhcXVlIiwiaWQiOiJzdHJlYW0tMSJ9fQ.VO3H5UkpRMCwLeNKEWmIh4wrSRF1Rb9mDDxWt7HHA0kBH3JUSxTAhE4vrb6T9wyguIgLZ-PYl8JgVgwnYRaHWA"
+        }
+      },
+      "expect": {
+        "status": 202,
+        "telemetry": [
+          "verification"
+        ]
+      }
+    },
+    {
+      "at": 1792079950,
+      "inbound": {
+        "push": {
+          "decoded": {
+            "claims": {
+              "aud": "https://rx.example.com/ssf",
+              "events": {
+                "https://schemas.openid.net/secevent/ssf/event-type/stream-updated": {
+                  "reason": "maintenance",
+                  "status": "paused"
+                }
+              },
+              "iat": 1792079950,
+              "iss": "https://tx.example.com",
+              "jti": "v-2",
+              "sub_id": {
+                "format": "opaque",
+                "id": "stream-1"
+              }
+            },
+            "header": {
+              "alg": "ES256",
+              "kid": "test-issuer-key-1",
+              "typ": "secevent+jwt"
+            },
+            "signed_by": "issuer"
+          },
+          "set": "eyJhbGciOiJFUzI1NiIsImtpZCI6InRlc3QtaXNzdWVyLWtleS0xIiwidHlwIjoic2VjZXZlbnQrand0In0.eyJhdWQiOiJodHRwczovL3J4LmV4YW1wbGUuY29tL3NzZiIsImV2ZW50cyI6eyJodHRwczovL3NjaGVtYXMub3BlbmlkLm5ldC9zZWNldmVudC9zc2YvZXZlbnQtdHlwZS9zdHJlYW0tdXBkYXRlZCI6eyJyZWFzb24iOiJtYWludGVuYW5jZSIsInN0YXR1cyI6InBhdXNlZCJ9fSwiaWF0IjoxNzkyMDc5OTUwLCJpc3MiOiJodHRwczovL3R4LmV4YW1wbGUuY29tIiwianRpIjoidi0yIiwic3ViX2lkIjp7ImZvcm1hdCI6Im9wYXF1ZSIsImlkIjoic3RyZWFtLTEifX0.Ns6hN3W4Ju3egGwqCfTrNQ16VGy5tmdNfjW4INfXIZbzNUUSAyROnSd7aqOA_3m8S9wZ3u8yUEXMKLAX6svorQ"
+        }
+      },
+      "expect": {
+        "status": 202,
+        "telemetry": [
+          "stream-updated"
+        ]
+      }
+    }
+  ],
+  "reads": [
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Fidp.example.com:t1:7a1f",
+      "expect": {
+        "outcome": "error",
+        "reason_code": "MISSING_FIELD"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Fidp.example.com:t1:5b3d",
+      "expect": {
+        "outcome": "error",
+        "reason_code": "MISSING_FIELD"
+      }
+    }
+  ]
+}

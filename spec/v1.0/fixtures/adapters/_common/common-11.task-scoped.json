@@ -1,0 +1,66 @@
+{
+  "case_version": 1,
+  "id": "COMMON-11.task-scoped",
+  "title": "A fact of a task is read for the task of the declared intent, not for another task",
+  "draft": ["17.1", "10.1"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "approved_paths": ["/delegation/authority_ref"],
+    "claims": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "https://idp.acme.example/alice",
+        "path": "/delegation/authority_ref",
+        "task_id": "native-task:september-summary-006",
+        "value": "grant-006",
+        "observed_at": 1792076400,
+        "status_checked_at": 1792079970,
+        "source_id": "task-broker",
+        "source_ref": "grant-record-006"
+      },
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "principal": "https://idp.acme.example/alice",
+        "path": "/delegation/authority_ref",
+        "task_id": "native-task:september-summary-007",
+        "value": "grant-007",
+        "observed_at": 1792076400,
+        "status_checked_at": 1792079970,
+        "source_id": "task-broker",
+        "source_ref": "grant-record-007"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "native_path": "/delegation/authority_ref",
+    "intent": {
+      "intent_id": "intent-september-invoices-007",
+      "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+      "description": "Read the approved September invoice to prepare the department summary.",
+      "task_id": "native-task:september-summary-007"
+    }
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": "grant-007",
+      "observed_at": 1792076400,
+      "status_checked_at": 1792079970,
+      "source_id": "task-broker",
+      "source_ref": "grant-record-007"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/visibility-unavailable",
+  "adversarial_claim": "A gateway that cannot observe execution fills the gap with assumed success: EXECUTION SUCCESS on reliability with no native record of the execution.",
+  "subject_event_id": "execution-event-0001",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "none",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution visibility unavailable': EXECUTION, UNKNOWN, none; zero weight; evidence_refs is empty and the gateway profile declares absent visibility (config visibility none). Draft 14.1: missing execution visibility MUST be declared. Draft 17.1: record_outcome yields a signed outcome or a declared absence of execution visibility."
+    },
+    {
+      "event_id": "execution-event-0002",
+      "report": "reports/execution-event-0002.json",
+      "signed": "signed/execution-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "no-executor-record",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.2 and A.2: an EXECUTION OutcomeReport MUST reference, in evidence_refs, an immutable native record identifying the actual executor; this one references none. Draft 14.1: missing execution visibility MUST NOT be filled with assumed success."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "artifacts": [
+    {"decoded":"reports/admission-event-0001.json","signed":"signed/admission-event-0001.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"nibLnjHzvuhgVwHxSOhPZg"},
+    {"decoded":"reports/admission-event-0002.json","signed":"signed/admission-event-0002.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"ETrWqIQ223aZQXDeGt6gMg"}
+  ]
+}

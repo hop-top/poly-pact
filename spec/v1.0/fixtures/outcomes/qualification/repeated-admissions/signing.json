@@ -1,0 +1,11 @@
+{
+  "artifacts": [
+    {"decoded":"reports/admission-event-0001.json","signed":"signed/admission-event-0001.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"eCOWVDh0iR_dpkl9aeE_GQ"},
+    {"decoded":"reports/admission-event-0002.json","signed":"signed/admission-event-0002.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"Xmp45jmwzK--083aUX8mMw"},
+    {"decoded":"reports/admission-event-0003.json","signed":"signed/admission-event-0003.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"w56j4AXN_bmDV6PstHFMoA"},
+    {"decoded":"reports/admission-event-0004.json","signed":"signed/admission-event-0004.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"P3jd6DiP4bsEudn-TX7eWQ"},
+    {"decoded":"reports/admission-event-0005.json","signed":"signed/admission-event-0005.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"DoZZpUhDpOy80ADKidczzw"},
+    {"decoded":"reports/admission-event-0006.json","signed":"signed/admission-event-0006.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"fEGwxGfttFfi0V0e_cC_lQ"},
+    {"decoded":"reports/admission-event-0007.json","signed":"signed/admission-event-0007.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"OZhsC3BBuG5ysG-3D7OqBg"}
+  ]
+}

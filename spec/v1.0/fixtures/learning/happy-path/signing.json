@@ -1,0 +1,9 @@
+{
+  "artifacts": [
+    {"decoded":"policies/finance.json","signed":"signed/policies/finance.jws","typ":"pact-learning-policy+jwt","signer":"issuer","jti":"uJH3Rn37ipicMXjuTYcD8A","exp":1794672000},
+    {"decoded":"artifacts/baseline-v1.json","signed":"signed/artifacts/baseline-v1.jws","typ":"pact-learning-artifact+jwt","signer":"learning-controller","jti":"jF0MeTU5tt5i4CJEmxDbWA","exp":1794672000},
+    {"decoded":"events/learning-evaluated-event-0001.json","signed":"signed/events/learning-evaluated-event-0001.jws","typ":"pact-learning-event+jwt","signer":"learning-controller","jti":"dY_Lprj41aR2MQtMnh0mPA","iat":1792080060,"exp":1792080360,"digests":{"/artifact_digest":"signed/artifacts/baseline-v1.jws","/policy_digest":"signed/policies/finance.jws"}},
+    {"decoded":"events/learning-shadow-event-0001.json","signed":"signed/events/learning-shadow-event-0001.jws","typ":"pact-learning-event+jwt","signer":"learning-controller","jti":"jU84cprIha1K2sZkWXXFuA","iat":1792080120,"exp":1792080420,"digests":{"/artifact_digest":"signed/artifacts/baseline-v1.jws","/policy_digest":"signed/policies/finance.jws"}},
+    {"decoded":"events/learning-active-event-0001.json","signed":"signed/events/learning-active-event-0001.jws","typ":"pact-learning-event+jwt","signer":"learning-controller","jti":"mYusV_9x29_7CkZKiHhrHg","iat":1792166580,"exp":1792166880,"digests":{"/artifact_digest":"signed/artifacts/baseline-v1.jws","/policy_digest":"signed/policies/finance.jws","/activate_artifact_digest":"signed/artifacts/baseline-v1.jws"}}
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "transport_code": "INVALID_PROOF",
+  "reason": "the binding of the presented agent on the authenticated workload is REVOKED, with the presented key (identity mapping IM-18, IM-29, section 8 row 4): a revoked record is not in force, so no current enrolled binding exists (draft 6.2, 11.2). Holder binding fails at 11.3 step 2, before an authenticated evaluation (12.2), INVALID_PROOF (13.4), no receipt"
+}

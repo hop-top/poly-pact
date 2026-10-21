@@ -1,0 +1,11 @@
+--- a/rs/src/core/schema.rs
++++ b/rs/src/core/schema.rs
+@@ -91,7 +91,7 @@
+     }
+     let v = jsonschema::options()
+         .with_draft(Draft::Draft202012)
+-        .should_validate_formats(true)
++        .should_validate_formats(false)
+         .with_format("uri", uri_format)
+         .build(&root)
+         .map_err(|e| Error::Schema { def: def.to_string(), issues: vec![issue(&e)] })?;

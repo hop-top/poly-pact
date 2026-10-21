@@ -1,0 +1,11 @@
+diff --git a/ts/src/core/binding/config.ts b/ts/src/core/binding/config.ts
+--- a/ts/src/core/binding/config.ts
++++ b/ts/src/core/binding/config.ts
+@@ -136,7 +136,6 @@
+     case 'upgrade':
+     case 'signature':
+     case 'signature-input':
+-    case 'host':
+       return true;
+   }
+   return name.startsWith('pact-') || name.startsWith('proxy-');

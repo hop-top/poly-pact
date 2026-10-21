@@ -1,0 +1,102 @@
+{
+  "now": 1792080000,
+  "clock_skew_seconds": 5,
+  "data_policy": {
+    "qualification_policy_id": "pact-qualification-v1",
+    "ingestion_window_seconds": 604800,
+    "positive_weight_cap_per_task": 1,
+    "maximum_failure_weight": 5,
+    "task_attribution_source": "native-task-registry",
+    "reporter_independence_policy_id": "pact-reporter-independence-v1"
+  },
+  "reputation_service": {
+    "service_id": "https://reputation.example/finance",
+    "tenant_id": "acme",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "visibility": "execution",
+  "trust": [
+    {
+      "iss": "https://executor.example/finance",
+      "role": "reporter",
+      "reporter_role": "executor",
+      "keys": [
+        "keys/executor.jwk.json"
+      ]
+    }
+  ],
+  "executor_classes": [
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0001",
+      "operation_id": "invoice-read-operation-0001",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0002",
+      "operation_id": "invoice-read-operation-0002",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0003",
+      "operation_id": "invoice-read-operation-0003",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0004",
+      "operation_id": "invoice-read-operation-0004",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0005",
+      "operation_id": "invoice-read-operation-0005",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0006",
+      "operation_id": "invoice-read-operation-0006",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0007",
+      "operation_id": "invoice-read-operation-0007",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0008",
+      "operation_id": "invoice-read-operation-0008",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0009",
+      "operation_id": "invoice-read-operation-0009",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0010",
+      "operation_id": "invoice-read-operation-0010",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0011",
+      "operation_id": "invoice-read-operation-0011",
+      "class": "delegated-user"
+    },
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:invoice-review-0012",
+      "operation_id": "invoice-read-operation-0012",
+      "class": "delegated-user"
+    }
+  ]
+}

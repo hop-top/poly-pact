@@ -1,0 +1,17 @@
+{
+  "artifacts": [
+    {"decoded":"reports/execution-event-0001.json","signed":"signed/execution-event-0001.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"t3nLrj1CVfO_KswXEpwYwA"},
+    {"decoded":"reports/execution-event-0002.json","signed":"signed/execution-event-0002.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"YQkygSnJ7eSsIqiCq_BK1Q"},
+    {"decoded":"reports/execution-event-0003.json","signed":"signed/execution-event-0003.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"jN_hb5RqEeJ_4vMoT5woIw"},
+    {"decoded":"reports/execution-event-0004.json","signed":"signed/execution-event-0004.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"F7hfTZ72SDUQM9ZvNq0G2A"},
+    {"decoded":"reports/execution-event-0005.json","signed":"signed/execution-event-0005.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"CvkCIwom1AENVSLMrFjlqQ"},
+    {"decoded":"reports/execution-event-0006.json","signed":"signed/execution-event-0006.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"ClYPGweqCXgxLvByfEzlBQ"},
+    {"decoded":"reports/execution-event-0007.json","signed":"signed/execution-event-0007.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"flK96kVabRrZBMoVtvVQ_A"},
+    {"decoded":"reports/execution-event-0008.json","signed":"signed/execution-event-0008.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"UCbJVr10ow8lNKRH3feHVg"},
+    {"decoded":"reports/execution-event-0009.json","signed":"signed/execution-event-0009.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"3_ulANvnBC6yY1uA1H9KXw"},
+    {"decoded":"reports/execution-event-0010.json","signed":"signed/execution-event-0010.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"bTVcN36QERU-D-zXuAutCg"},
+    {"decoded":"reports/security-event-0001.json","signed":"signed/security-event-0001.jws","typ":"pact-outcome+jwt","signer":"security-authority","jti":"Mqo9Xpt75KHv4wTvEdDOJQ"},
+    {"decoded":"reports/remediation-event-0001.json","signed":"signed/remediation-event-0001.jws","typ":"pact-outcome+jwt","signer":"issuer","jti":"33KbkIGljSsoZwxyHeoahg","iat":1826640000,"exp":1826640300},
+    {"decoded":"reports/remediation-event-0002.json","signed":"signed/remediation-event-0002.jws","typ":"pact-outcome+jwt","signer":"security-authority","jti":"ipLSk_SJBkmr7O9XiP0bOw","iat":1826640060,"exp":1826640360}
+  ]
+}

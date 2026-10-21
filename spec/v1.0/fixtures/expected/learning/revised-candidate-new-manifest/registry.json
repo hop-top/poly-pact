@@ -1,0 +1,38 @@
+{
+  "artifacts": {
+    "signed/artifacts/baseline-v1.jws": "RETIRED",
+    "signed/artifacts/baseline-v1-r2.jws": "CANDIDATE"
+  },
+  "active": [
+    {
+      "context": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "purpose_id": "https://policies.example/purposes/invoice-summary/v1",
+        "action_class": "invoice.read",
+        "resource_class": "department-finance-invoice",
+        "runtime_class": "managed-v1"
+      },
+      "artifact": null
+    }
+  ],
+  "acknowledgments": [
+    {
+      "step": 1,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 2,
+      "status": "ACCEPTED"
+    },
+    {
+      "step": 3,
+      "status": "ACCEPTED"
+    }
+  ],
+  "rejections": [],
+  "holds": [],
+  "reevaluation_required": [],
+  "subject": "/acknowledgments/2"
+}

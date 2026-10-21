@@ -1,0 +1,13 @@
+diff --git a/php/src/Vectors/SchemaCase/SchemaCase.php b/php/src/Vectors/SchemaCase/SchemaCase.php
+index f039794..6091e9f 100644
+--- a/php/src/Vectors/SchemaCase/SchemaCase.php
++++ b/php/src/Vectors/SchemaCase/SchemaCase.php
+@@ -220,7 +220,7 @@ final readonly class SchemaCase
+                 throw new SchemaCaseError($where . ': exactly one of typ and def');
+             }
+             if (\is_string($def)) {
+-                $docs[] = new SchemaDocument('', $def, self::encode($object));
++                $docs[] = new SchemaDocument('', $def, '{"a":' . self::encode($object) . '}');
+                 continue;
+             }
+             \assert(\is_string($typ));

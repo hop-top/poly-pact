@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jws/Verifier.php b/php/src/Core/Jws/Verifier.php
+index 596db9e..30f2da4 100644
+--- a/php/src/Core/Jws/Verifier.php
++++ b/php/src/Core/Jws/Verifier.php
+@@ -91,7 +91,7 @@ final readonly class Verifier
+ 
+         $rawHeader = self::segment($h64, 'protected header');
+         [$header, $role, $members] = $this->parseHeader($rawHeader);
+-        if ($this->typ !== '' && $header->typ !== $this->typ) {
++        if (false && $header->typ !== $this->typ) {
+             throw new JwsError(Reason::TYP_MISMATCH, \sprintf('typ %s, want %s', Text::quote($header->typ), Text::quote($this->typ)));
+         }
+         if ($role === Role::HOLDER) {

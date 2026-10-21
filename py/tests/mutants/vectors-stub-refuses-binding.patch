@@ -1,0 +1,15 @@
+diff --git a/py/src/hop_top_pact/vectors/_groups.py b/py/src/hop_top_pact/vectors/_groups.py
+index b9a43c4..e1fdcef 100644
+--- a/py/src/hop_top_pact/vectors/_groups.py
++++ b/py/src/hop_top_pact/vectors/_groups.py
+@@ -129,9 +129,7 @@ def run_binding(root: Path, e: Entry) -> None:
+     resources = tuple(string(r, "resources") for r in v["resources"])
+     try:
+         op = binding.from_request(cfg, req, v["principal_id"], v["action"], resources)
+-    except binding.RequestError as err:
+-        if err.kind is not binding.RequestErrorKind.INVALID_REQUEST:
+-            raise Fail(f"{err}: not a refused request") from err
++    except Exception as err:
+         if accept:
+             raise Fail(f"refused ({err}), want an operation context") from err
+         return

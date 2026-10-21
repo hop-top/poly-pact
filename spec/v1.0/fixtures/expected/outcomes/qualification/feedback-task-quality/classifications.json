@@ -1,0 +1,60 @@
+{
+  "case": "outcomes/qualification/feedback-task-quality",
+  "adversarial_claim": "Verified feedback does not count, or an agent's self-feedback counts positively, or feedback needs no evidence.",
+  "subject_event_id": "feedback-event-0001",
+  "events": [
+    {
+      "event_id": "feedback-event-0001",
+      "report": "reports/feedback-event-0001.json",
+      "signed": "signed/feedback-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Verified feedback': FEEDBACK reported by an evaluator, SUCCESS, task_quality; it cites the completed assessment it conveys and counts as an assessment does (14.2; 14.6 rules 5 to 9). One positive unit (15.3)."
+    },
+    {
+      "event_id": "feedback-event-0002",
+      "report": "reports/feedback-event-0002.json",
+      "signed": "signed/feedback-event-0002.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Verified feedback', from the agent itself as a diagnostic (14.2): it needs no record, and a success has zero weight (14.6 rule 11; 14.3: self-declared confidence earns no positive reputation). It is not listed (15.2)."
+    },
+    {
+      "event_id": "feedback-event-0003",
+      "report": "reports/feedback-event-0003.json",
+      "signed": "signed/feedback-event-0003.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "no-assessment-record",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Verified feedback': from an evaluator it cites the completed assessment it conveys; this report cites none (14.2: tied to an observed task), so a positive unit would rest on the signer's word alone."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 1,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

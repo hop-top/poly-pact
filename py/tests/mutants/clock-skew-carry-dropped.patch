@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/clock.py b/py/src/hop_top_pact/core/clock.py
+index 053da6c..26e6e81 100644
+--- a/py/src/hop_top_pact/core/clock.py
++++ b/py/src/hop_top_pact/core/clock.py
+@@ -236,7 +236,7 @@ def check_window(iat: int, nbf: int, exp: int, now: datetime, skew: timedelta) -
+     now_sec, now_us = _split(now)
+     # now + skew as whole seconds; a claim is a whole second, so claim <=
+     # now + skew exactly when claim <= latest.
+-    latest = now_sec + (now_us + skew_us) // _US
++    latest = now_sec + skew_us // _US
+     if nbf > latest:
+         raise ClockError(ClockErrorKind.NOT_YET_VALID, f"nbf {nbf}, now {now_sec}, skew {skew}")
+     if iat > latest:

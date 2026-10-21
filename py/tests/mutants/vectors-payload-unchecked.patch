@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/vectors/_jws.py b/py/src/hop_top_pact/vectors/_jws.py
+index aada3eb..3c09f5f 100644
+--- a/py/src/hop_top_pact/vectors/_jws.py
++++ b/py/src/hop_top_pact/vectors/_jws.py
+@@ -138,7 +138,7 @@ def run_jws(root: Path, e: Entry) -> None:
+         if got is not None:
+             raise Fail(f"rejected ({got}), want accept")
+         want = v["expected_payload"]
+-        if not isinstance(want, str) or payload != want.encode("utf-8"):
++        if not isinstance(want, str):
+             raise Fail(f"payload {payload!r} differs from expected_payload")
+         return
+     if got != want_reason:

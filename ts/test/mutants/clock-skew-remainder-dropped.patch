@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/clock.ts b/ts/src/core/clock.ts
+index 77913db..7a40286 100644
+--- a/ts/src/core/clock.ts
++++ b/ts/src/core/clock.ts
+@@ -213,7 +213,7 @@ export function checkWindow(
+   const [sec, ms] = split(now);
+   // now + skew is latest + a fraction of a second; an integer claim is
+   // later than it exactly when it is later than latest.
+-  const latest = sec + Math.floor((ms + skewMs) / 1000);
++  const latest = sec + Math.floor(skewMs / 1000);
+   if (!(nbf <= latest)) {
+     throw new ClockError(
+       'NOT_YET_VALID',

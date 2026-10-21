@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/jws/__init__.py b/py/src/hop_top_pact/core/jws/__init__.py
+index 44ad305..151af01 100644
+--- a/py/src/hop_top_pact/core/jws/__init__.py
++++ b/py/src/hop_top_pact/core/jws/__init__.py
+@@ -459,7 +459,7 @@ def sign(header: Header, payload: bytes, key: ec.EllipticCurvePrivateKey | None)
+     text = _header_text(ALG_ES256, header.typ, header.kid, embedded)
+     signing_input = base64url.encode(text) + "." + base64url.encode(payload)
+     r, s = decode_dss_signature(key.sign(signing_input.encode("ascii"), ec.ECDSA(hashes.SHA256())))
+-    if s > _N >> 1:
++    if False:
+         s = _N - s
+     sig = r.to_bytes(_COORDINATE_OCTETS, "big") + s.to_bytes(_COORDINATE_OCTETS, "big")
+     return signing_input + "." + base64url.encode(sig)

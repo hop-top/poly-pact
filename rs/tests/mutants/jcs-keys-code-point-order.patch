@@ -1,0 +1,11 @@
+--- a/rs/src/core/jcs.rs
++++ b/rs/src/core/jcs.rs
+@@ -103,7 +103,7 @@
+         V::Object(members) => {
+             let mut sorted: Vec<(Vec<u16>, &(String, Node))> =
+                 members.iter().map(|m| (m.0.encode_utf16().collect(), m)).collect();
+-            sorted.sort_by(|a, b| a.0.cmp(&b.0));
++            sorted.sort_by(|a, b| a.1.0.cmp(&b.1.0));
+             out.push('{');
+             for (i, (_, (name, value))) in sorted.into_iter().enumerate() {
+                 if i > 0 {

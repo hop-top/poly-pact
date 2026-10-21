@@ -1,0 +1,134 @@
+{
+  "case_version": 1,
+  "id": "MTLS-05.binding",
+  "title": "The agent of B presented on workload C has no binding there and is reported enrolled for another workload",
+  "draft": [
+    "6.1",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "mtls/1",
+    "listener": {
+      "role": "direct",
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.acme.example/environments/reconciliation"
+    },
+    "status_bound_seconds": 360,
+    "authorities": [
+      {
+        "ref": "workload-ca",
+        "subject_cn": "Acme Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/workload-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "partner-ca",
+        "subject_cn": "Partner Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/partner-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "host-ca",
+        "subject_cn": "Acme Host CA 2026",
+        "key_seed": "pact-mtls-fixture/host-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      }
+    ],
+    "pinned_cas": [
+      {
+        "ca_id": "workload-ca-2026",
+        "authority": "workload-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "partner-ca-2026",
+        "authority": "partner-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "host-ca-2026",
+        "authority": "host-ca",
+        "san_kind": "dns"
+      }
+    ],
+    "peers": [
+      {
+        "ref": "report-runner",
+        "issuer": "workload-ca",
+        "serial": 4099,
+        "subject_cn": "report-runner",
+        "uris": [
+          "spiffe://acme.example/ns/finance/sa/report-runner"
+        ],
+        "dns_names": [],
+        "not_before": 1791993600,
+        "not_after": 1794672000,
+        "ext_key_usage": [
+          "client_auth"
+        ],
+        "key_usage": [
+          "digital_signature"
+        ],
+        "key_seed": "pact-mtls-fixture/report-runner"
+      }
+    ],
+    "snapshots": [
+      {
+        "ca_id": "workload-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "partner-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "host-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "acme",
+          "environment_id": "https://gateway.acme.example/environments/reconciliation"
+        },
+        "workload": "mtls:workload-ca-2026:uri:spiffe%3A%2F%2Facme.example%2Fns%2Ffinance%2Fsa%2Fledger-writer",
+        "agent_id": "https://agents.acme.example/ledger-assistant",
+        "operator_id": "https://operators.acme.example/finance-ops",
+        "holder_jkt": "rQmPLX0s-894UwAHHSNUO4AbHu6Ki1KCgkrJlR4fO-s",
+        "status": "ACTIVE",
+        "observed_at": 1791475200,
+        "status_checked_at": 1792079970,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-0002"
+      }
+    ]
+  },
+  "call": {
+    "realm": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.acme.example/environments/reconciliation"
+    },
+    "workload": "mtls:workload-ca-2026:uri:spiffe%3A%2F%2Facme.example%2Fns%2Ffinance%2Fsa%2Freport-runner",
+    "agent_id": "https://agents.acme.example/ledger-assistant"
+  },
+  "expect": {
+    "function": "resolve_agent_binding",
+    "outcome": "unknown",
+    "binding": {
+      "enrolled_elsewhere": true
+    }
+  }
+}

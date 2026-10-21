@@ -1,0 +1,48 @@
+{
+  "case_version": 1,
+  "id": "COMMON-09.authenticate-realm",
+  "title": "Two same-named identities of different issuers authenticate as themselves",
+  "draft": ["8.5", "17.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "identities": [
+      {
+        "ref": "alice",
+        "id": "https://idp.acme.example/alice",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "https://workloads.acme.example/invoice-assistant",
+        "secret": "tok-alice-7f3a9c1e5b2d"
+      },
+      {
+        "ref": "alice-globex",
+        "id": "https://idp.globex.example/alice",
+        "realm": {
+          "tenant_id": "globex",
+          "environment_id": "https://gateway.example/environments/finance"
+        },
+        "workload": "https://workloads.globex.example/invoice-assistant",
+        "secret": "tok-galice-90b2e6d4c1a7"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.example/invoices/INV-1042",
+    "native_state_ref": "alice-globex"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "authenticated",
+    "principal": {
+      "id": "https://idp.globex.example/alice",
+      "realm": {"tenant_id": "globex", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.globex.example/invoice-assistant"
+    }
+  }
+}

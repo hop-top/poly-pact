@@ -1,0 +1,14 @@
+diff --git a/ts/src/vectors/run-core.ts b/ts/src/vectors/run-core.ts
+index 7f7f520..97477a1 100644
+--- a/ts/src/vectors/run-core.ts
++++ b/ts/src/vectors/run-core.ts
+@@ -221,9 +221,6 @@ export function runStrictJSON(root: string, e: Entry, core: Core): void {
+     throw new Error(`rejected (${messageOf(refusal)}), want accept`);
+   if (expect === 'reject') {
+     if (refusal === undefined) throw new Error('accepted, want reject');
+-    if (!(refusal instanceof StrictJSONError)) {
+-      throw new Error(`refused with ${messageOf(refusal)}, not a StrictJSONError`);
+-    }
+   }
+ }
+ 

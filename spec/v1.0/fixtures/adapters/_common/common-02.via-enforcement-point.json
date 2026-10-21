@@ -1,0 +1,39 @@
+{
+  "case_version": 1,
+  "id": "COMMON-02.via-enforcement-point",
+  "title": "The same request through the enforcement point authenticates",
+  "draft": ["4.4", "17.1"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "identities": [
+      {
+        "ref": "alice",
+        "id": "https://idp.acme.example/alice",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "https://workloads.acme.example/invoice-assistant",
+        "secret": "tok-alice-7f3a9c1e5b2d"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.example/invoices/INV-1042",
+    "native_state_ref": "alice",
+    "arrival": "enforcement_point"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "authenticated",
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant"
+    }
+  }
+}

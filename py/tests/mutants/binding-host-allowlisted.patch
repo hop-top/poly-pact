@@ -1,0 +1,11 @@
+diff --git a/py/src/hop_top_pact/core/binding/_config.py b/py/src/hop_top_pact/core/binding/_config.py
+--- a/py/src/hop_top_pact/core/binding/_config.py
++++ b/py/src/hop_top_pact/core/binding/_config.py
+@@ -195,7 +195,6 @@
+         "upgrade",
+         "signature",
+         "signature-input",
+-        "host",
+     }
+ )
+ 

@@ -1,0 +1,71 @@
+name: ci-release
+
+# Every pushed branch and every pull request, whatever the base: the check
+# reads only files in the tree, so no branch needs to be named here.
+on:
+  push:
+    paths:
+      - ".github/**"
+      - "tools/release/**"
+      - "tools/mutants.py"
+  pull_request:
+    paths:
+      - ".github/**"
+      - "tools/release/**"
+      - "tools/mutants.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+# The job names are required-check names for branch protection: do not rename.
+jobs:
+  publish-map:
+    name: Release / Publish map
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Publish map agrees with the release-please config
+        # Stdlib only: the runner's python3, no mise.
+        run: make MISE= release-check
+
+      - name: Publish map check tests
+        run: python3 -I tools/release/test_check_publish_map.py
+
+      - name: Publish map check mutants
+        # Each patch in tools/release/mutants breaks one rule of the check;
+        # the tests must fail on every one (tools/mutants.py).
+        run: >-
+          python3 -I tools/mutants.py --package tools/release
+          --patches tools/release/mutants -q
+          -- python3 -I test_check_publish_map.py
+
+      - name: Check fails on a broken map
+        # Drop the spec entry's `ecosystem: none` line from a copy of
+        # publish.yml: the check must exit 1, or it has stopped reading the
+        # map.
+        run: |
+          set -uo pipefail
+          mutant="$RUNNER_TEMP/publish.yml"
+          grep -v '^ *ecosystem: none$' .github/workflows/publish.yml > "$mutant"
+          if cmp -s .github/workflows/publish.yml "$mutant"; then
+            echo "::error::mutation did not change publish.yml"
+            exit 1
+          fi
+          rc=0
+          python3 -I tools/release/check-publish-map.py --workflow "$mutant" || rc=$?
+          if [ "$rc" -ne 1 ]; then
+            echo "::error::check-publish-map exited $rc on the broken map, want 1"
+            exit 1
+          fi

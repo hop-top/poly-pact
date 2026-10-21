@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Clock/FakeClock.php b/php/src/Core/Clock/FakeClock.php
+index f64d516..5409ec3 100644
+--- a/php/src/Core/Clock/FakeClock.php
++++ b/php/src/Core/Clock/FakeClock.php
+@@ -47,7 +47,7 @@ final class FakeClock implements Clock
+             --$carry;
+         }
+         $d = intdiv($microseconds, Clocks::SECOND) + $carry;
+-        if (($d > 0 && $sec > \PHP_INT_MAX - $d) || ($d < 0 && $sec < \PHP_INT_MIN - $d)) {
++        if (false) {
+             throw new \OverflowException('clock: advance leaves the range of DateTimeImmutable');
+         }
+         $this->now = Instant::of($sec + $d, $us);

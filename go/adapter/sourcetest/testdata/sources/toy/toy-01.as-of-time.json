@@ -1,0 +1,16 @@
+{
+  "case_version": 1,
+  "id": "TOY-01.as-of-time",
+  "title": "A pushed fact is read as of the read time minus the declared lag",
+  "draft": ["8.3", "17.2"],
+  "now": 1792080000,
+  "source": {"model": "toy/1", "source_id": "toy-directory", "lag_seconds": 2400, "paths": ["/principal/groups"]},
+  "steps": [
+    {"at": 1792078000, "inbound": {"op": "put", "principal": "x-toy:acme:7a1f", "path": "/principal/groups", "value": ["finance"]}, "expect": {"status": "ok"}}
+  ],
+  "reads": [
+    {"at": 1792080000, "native_path": "/principal/groups", "principal": "x-toy:acme:7a1f",
+     "expect": {"outcome": "value", "value": ["finance"], "observed_at": 1792077600, "status_checked_at": 1792077600, "source_id": "toy-directory"}}
+  ],
+  "must_not_call": ["outbound"]
+}

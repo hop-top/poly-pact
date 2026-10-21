@@ -1,0 +1,9 @@
+{
+  "go": "1.0.0-alpha.0",
+  "cli": "1.0.0-alpha.0",
+  "ts": "1.0.0-alpha.0",
+  "py": "1.0.0-alpha.0",
+  "rs": "1.0.0-alpha.0",
+  "php": "1.0.0-alpha.0",
+  "spec/v1.0": "1.0.0-alpha.0"
+}

@@ -1,0 +1,209 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "http", "version": "1.1", "mapping_revision": "pact-files-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/files/{file_id}/content",
+      "action": "file.read",
+      "resource_mapping": "file:{file_id}, from the path parameter; file_id is an opaque identifier that the file registry maps to one configured local NTFS path, one volume serial number and one 128-bit file identifier; no path, drive letter, stream name or query parameter from the client selects a file; the access mode is read and is part of the bound operation"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "Broker HTTP authentication stage, before routing: SSPI Negotiate exchange ending in an impersonation-capable security context"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup in the broker, by workload and by the presented agent_id because a user account is shared by every agent acting for that user"},
+    {"function": "map_operation", "component": "Broker mapping stage, mapping revision pact-files-1"},
+    {"function": "read_native_claim", "component": "Broker read of the principal SID and the group SIDs from the access token of the completed exchange"},
+    {"function": "check_context", "component": "Installed broker checks native-principal-binding-v1, native-delegation-v1 and execution-identity-v1 (declared executor class impersonated-user); no others"},
+    {"function": "authorize_native", "component": "Native file open under the user's impersonation token, with the minimal read access mask; the Windows access check inside the open is the decision"},
+    {"function": "record_outcome", "component": "Broker outcome writer, after the open, the denial or the refusal; absence of a native executor-identity record is declared where it applies"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain inside the file broker on the Windows file server; to be supplied"},
+    {"component": "C02", "owner": "Windows IAM owner and adapter owner", "what_exists": "Windows authentication through the Negotiate security package, and the token read for the principal and group claims; authentication exists; the adapter is the reference implementation of the profile, not yet run on Windows"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry with administrator-run enrollment, looked up by the Windows SID workload and the presented agent_id; the registry contract and a memory backend exist, a durable backend is to be supplied"},
+    {"component": "C04", "owner": "Application and IAM owner", "what_exists": "Native delegation and task registry binding user, agent, purpose and task, read through authority_ref; to be supplied by the deployment, semantics pending the delegation and execution-identity deliverable"},
+    {"component": "C05", "owner": "Adapter owner", "what_exists": "Enrollment registry, delegation and task registry, hold store, and the Windows security context of the completed exchange; to be supplied"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: the read route needs no external approval workflow; a separately approved task is a task-authority fact (C04)"},
+    {"component": "C07", "owner": "Adapter owner", "what_exists": "Mapper at revision pact-files-1 and the file registry from opaque file id to local path, volume serial and file id; to be supplied"},
+    {"component": "C08", "owner": "Resource owner (file server administrator)", "what_exists": "Local NTFS file system and the Windows access check under the impersonated user; exists"},
+    {"component": "C09", "owner": "Gateway and platform owner", "what_exists": "Replay and receipt store; to be supplied"},
+    {"component": "C10", "owner": "Resource owner and evidence owner", "what_exists": "Broker outcome writer and an immutable record of the executor identity; the native source of that record is an open item"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Policy registry holding the base requirements; registry only, no adaptation lifecycle; to be supplied"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "Revocation and security hold store; to be supplied"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled evidence and audit store; to be supplied"},
+    {"component": "C15", "owner": "Application and resource owner", "what_exists": "Per-task handle table with handle lifetime, cancellation and task isolation in the broker; no transactions or budgets because the route is read-only; to be supplied"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no containment, egress or output control is claimed; execution-control-v1 is not installed and data-use restrictions are labeled attested-only"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Native access to the same files by any other means, such as the user's own SMB share access, a local or remote logon to the file server, or backup software",
+      "control": "out_of_claim",
+      "evidence": "Not a broker route; native ACLs apply to those paths unchanged; excluded in unsupported_forms"
+    },
+    {
+      "path": "File open under the broker's own service identity because impersonation is unavailable or fails (broader-account fallback)",
+      "control": "closed",
+      "evidence": "The broker opens files only inside an impersonation window and opens nothing when impersonation fails or the effective executor is not the principal (profile.md section 3.5); fixture FILES-01"
+    },
+    {
+      "path": "Object substitution behind the configured path: a replaced file, a junction or symbolic link at any path component, a hard link, or an alternate name",
+      "control": "closed",
+      "evidence": "Post-open check of the reparse attribute, the volume serial number and file id, and the final path against the registry before any read (profile.md section 3.3); fixtures FILES-02 and FILES-07"
+    },
+    {
+      "path": "Reuse of an open handle by another task, operation, agent or child process",
+      "control": "closed",
+      "evidence": "Handles are per task, non-inheritable and never shared (profile.md section 3.4); fixture FILES-05"
+    },
+    {
+      "path": "Write, delete, rename, directory listing or search through the broker",
+      "control": "closed",
+      "evidence": "Only route R1 exists and its mapping binds method, file id and read access mode (profile.md section 2); fixture FILES-06"
+    },
+    {
+      "path": "Remote access to the files over SMB from another host, with delegation and share-level permissions",
+      "control": "out_of_claim",
+      "evidence": "SMB stub profile smb.md: not claimed; excluded in unsupported_forms"
+    },
+    {
+      "path": "A Unix file broker or any other non-Windows file system adapter",
+      "control": "out_of_claim",
+      "evidence": "Unix stub profile unix.md: not claimed; excluded in unsupported_forms"
+    }
+  ],
+  "unsupported_forms": [
+    "Remote SMB delegation and share-level permission controls: the claim is a broker-local open of a local NTFS file under impersonation at the local impersonation level; the SMB stub profile (smb.md) is not claimed",
+    "Unix behavior: no Unix identity, permission, ACL or path semantics are claimed; the Unix stub profile (unix.md) is not claimed",
+    "Immediate revocation of an open handle: a handle keeps the access granted at open until the task ends, the deadline passes or the broker closes it; a revocation reaches only later opens",
+    "Broker-account fallback: the broker never opens a file under its own service identity, whether impersonation is unavailable, fails, or would produce a different executor",
+    "Any route other than GET /files/{file_id}/content, including every write, delete, rename, directory listing and search",
+    "Directories, reparse points of any kind (symbolic links, junctions, mount points, placeholders), and files whose data is not immediately available: they are rejected after open",
+    "Non-NTFS volumes, network paths and device namespaces: only fully qualified local NTFS paths registered by an administrator are served",
+    "Identity acquired by any means other than a completed Negotiate exchange: an OpenID Connect sign-in alone does not establish a Windows file-access token, and password-based, LsaLogonUser and service-for-user (S4U) acquisition are not implemented",
+    "Group requirements beyond comparing token group SIDs under a configured rule: no nested-group or SID-history semantics are claimed, and group lists are optional to this integration",
+    "Enforced purpose or data-use restrictions: execution-control-v1 is not claimed, so any such restriction is labeled attested-only and no egress or output control is claimed (draft section 17.4)"
+  ],
+  "freshness": [
+    {
+      "source": "Enrollment registry (agent and key binding status)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Windows security context of the completed Negotiate exchange (principal SID and token group SIDs)",
+      "observation": "snapshot",
+      "max_age_seconds": 300,
+      "status_max_age_seconds": 300,
+      "outage": "defer"
+    },
+    {
+      "source": "Native file open under impersonation (effective right to open the file)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Native delegation and task registry (authority_ref)",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Security hold store",
+      "observation": "authoritative",
+      "max_age_seconds": 30,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "Windows security context of the completed Negotiate exchange (principal SID and token group SIDs)",
+      "facts": ["identity", "groups"],
+      "live_check": {"available": false},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 300,
+      "value_semantics": "cached_snapshot"
+    }
+  ],
+  "attribute_sources": [],
+  "residual_limits": [
+    "Post-read: file contents already returned to the agent are not recalled by a later revocation; execution-control-v1 is not claimed, so any purpose or data-use restriction is attested-only and no egress or output control is claimed (draft sections 17.4 and 18); disclosed here with no bound",
+    "Revocation propagation: a change to the enrollment registry, the delegation and task registry or the hold store reaches the broker at the next evaluation within each source's own consistency (status bound 0); a change to group membership reaches the broker only through a new Negotiate exchange and is bounded by the context age of 300 seconds plus an upstream lag that is not established; an operation already executed is not undone by revoking its receipt",
+    "Open handle: a handle already open keeps the access granted at open until the task ends, the deadline passes or the broker closes it; whether a later ACL or group change affects an open handle is an open item, and the profile claims no revocation of an open handle",
+    "Token snapshot: the principal and group SIDs are a snapshot taken when the context was established and no later check of account state takes place inside the context; the age of the directory data inside a new token (for example from a cached Kerberos service ticket) is not established and needs a domain controller to probe",
+    "Impersonation level: the broker obtains the local impersonation level only, so no remote resource is reached under the user's rights",
+    "Executor evidence: the immutable native record that names the actual executor identity for execution and authorization reports has no established native source; until one is named, the broker's own audit record is the evidence reference and its qualification is an open item",
+    "Path and object binding: any event that gives a registered file a new file identifier, or changes its final path, makes the broker refuse the file until an administrator registers it again"
+  ],
+  "fixtures": [
+    {"id": "adapters/files/files-01.check-enter-fails", "path": "fixtures/adapters/files/files-01.check-enter-fails.json"},
+    {"id": "adapters/files/files-01.check-executor-is-service", "path": "fixtures/adapters/files/files-01.check-executor-is-service.json"},
+    {"id": "adapters/files/files-01.check-impersonated", "path": "fixtures/adapters/files/files-01.check-impersonated.json"},
+    {"id": "adapters/files/files-01.enter-fails", "path": "fixtures/adapters/files/files-01.enter-fails.json"},
+    {"id": "adapters/files/files-01.executor-is-service", "path": "fixtures/adapters/files/files-01.executor-is-service.json"},
+    {"id": "adapters/files/files-01.no-context", "path": "fixtures/adapters/files/files-01.no-context.json"},
+    {"id": "adapters/files/files-02.final-path-case", "path": "fixtures/adapters/files/files-02.final-path-case.json"},
+    {"id": "adapters/files/files-02.other-final-path", "path": "fixtures/adapters/files/files-02.other-final-path.json"},
+    {"id": "adapters/files/files-02.other-object-id", "path": "fixtures/adapters/files/files-02.other-object-id.json"},
+    {"id": "adapters/files/files-02.other-volume", "path": "fixtures/adapters/files/files-02.other-volume.json"},
+    {"id": "adapters/files/files-03.access-denied", "path": "fixtures/adapters/files/files-03.access-denied.json"},
+    {"id": "adapters/files/files-03.decision-provenance", "path": "fixtures/adapters/files/files-03.decision-provenance.json"},
+    {"id": "adapters/files/files-03.deny-entry", "path": "fixtures/adapters/files/files-03.deny-entry.json"},
+    {"id": "adapters/files/files-03.read-granted", "path": "fixtures/adapters/files/files-03.read-granted.json"},
+    {"id": "adapters/files/files-04.claim-times", "path": "fixtures/adapters/files/files-04.claim-times.json"},
+    {"id": "adapters/files/files-04.context-at-limit", "path": "fixtures/adapters/files/files-04.context-at-limit.json"},
+    {"id": "adapters/files/files-04.stale-context", "path": "fixtures/adapters/files/files-04.stale-context.json"},
+    {"id": "adapters/files/files-06.delete", "path": "fixtures/adapters/files/files-06.delete.json"},
+    {"id": "adapters/files/files-06.extra-segment", "path": "fixtures/adapters/files/files-06.extra-segment.json"},
+    {"id": "adapters/files/files-06.put", "path": "fixtures/adapters/files/files-06.put.json"},
+    {"id": "adapters/files/files-06.query", "path": "fixtures/adapters/files/files-06.query.json"},
+    {"id": "adapters/files/files-06.read-mapped", "path": "fixtures/adapters/files/files-06.read-mapped.json"},
+    {"id": "adapters/files/files-06.write-operation", "path": "fixtures/adapters/files/files-06.write-operation.json"},
+    {"id": "adapters/files/files-07.directory", "path": "fixtures/adapters/files/files-07.directory.json"},
+    {"id": "adapters/files/files-07.junction-leaf", "path": "fixtures/adapters/files/files-07.junction-leaf.json"},
+    {"id": "adapters/files/files-07.offline", "path": "fixtures/adapters/files/files-07.offline.json"},
+    {"id": "adapters/files/files-07.recall-on-data-access", "path": "fixtures/adapters/files/files-07.recall-on-data-access.json"},
+    {"id": "adapters/files/files-07.symbolic-link-leaf", "path": "fixtures/adapters/files/files-07.symbolic-link-leaf.json"},
+    {"id": "adapters/files/files-08.principal-id", "path": "fixtures/adapters/files/files-08.principal-id.json"},
+    {"id": "adapters/files/files-08.token-groups", "path": "fixtures/adapters/files/files-08.token-groups.json"},
+    {"id": "adapters/files/files-08.unapproved-path", "path": "fixtures/adapters/files/files-08.unapproved-path.json"},
+    {"id": "adapters/files/files-09.revert-fails", "path": "fixtures/adapters/files/files-09.revert-fails.json"},
+    {"id": "adapters/files/files-09.unhealthy", "path": "fixtures/adapters/files/files-09.unhealthy.json"},
+    {"id": "adapters/files/files-09.unhealthy-check", "path": "fixtures/adapters/files/files-09.unhealthy-check.json"},
+    {"id": "adapters/files/files-10.agent-a", "path": "fixtures/adapters/files/files-10.agent-a.json"},
+    {"id": "adapters/files/files-10.agent-a-other-order", "path": "fixtures/adapters/files/files-10.agent-a-other-order.json"},
+    {"id": "adapters/files/files-10.agent-b", "path": "fixtures/adapters/files/files-10.agent-b.json"},
+    {"id": "adapters/files/files-11.a-compromised", "path": "fixtures/adapters/files/files-11.a-compromised.json"},
+    {"id": "adapters/files/files-11.a-revoked", "path": "fixtures/adapters/files/files-11.a-revoked.json"},
+    {"id": "adapters/files/files-11.b-beside-compromised", "path": "fixtures/adapters/files/files-11.b-beside-compromised.json"},
+    {"id": "adapters/files/files-11.b-beside-revoked", "path": "fixtures/adapters/files/files-11.b-beside-revoked.json"},
+    {"id": "adapters/files/files-11.both-revoked", "path": "fixtures/adapters/files/files-11.both-revoked.json"},
+    {"id": "adapters/files/files-11.other-account-agent", "path": "fixtures/adapters/files/files-11.other-account-agent.json"},
+    {"id": "adapters/files/files-11.other-realm-agent", "path": "fixtures/adapters/files/files-11.other-realm-agent.json"},
+    {"id": "adapters/files/files-11.unenrolled-agent", "path": "fixtures/adapters/files/files-11.unenrolled-agent.json"},
+    {"id": "adapters/files/files-12.completed-exchange", "path": "fixtures/adapters/files/files-12.completed-exchange.json"},
+    {"id": "adapters/files/files-12.identity-headers-ignored", "path": "fixtures/adapters/files/files-12.identity-headers-ignored.json"},
+    {"id": "adapters/files/files-12.no-negotiate", "path": "fixtures/adapters/files/files-12.no-negotiate.json"},
+    {"id": "adapters/files/files-12.other-account", "path": "fixtures/adapters/files/files-12.other-account.json"},
+    {"id": "adapters/files/files-12.other-domain", "path": "fixtures/adapters/files/files-12.other-domain.json"},
+    {"id": "adapters/files/files-12.rejected-token", "path": "fixtures/adapters/files/files-12.rejected-token.json"},
+    {"id": "adapters/files/files-12.same-display-name", "path": "fixtures/adapters/files/files-12.same-display-name.json"}
+  ]
+}

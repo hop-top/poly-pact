@@ -1,0 +1,80 @@
+{
+  "case_version": 1,
+  "id": "GRAPH-09.unknown-token",
+  "title": "GD2 with a page_token that has no continuation record is CONTEXT_MISMATCH (GR-24, RB-58)",
+  "draft": [
+    "10.3",
+    "13.4",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "graph/1",
+    "gateway": {
+      "tenant_id": "northwind",
+      "environment_id": "https://mail.northwind.example/environments/production",
+      "origin": "https://mail.northwind.example",
+      "header_allowlist": [
+        "accept"
+      ]
+    },
+    "form": "delegated",
+    "entra": {
+      "tenant_id": "8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c",
+      "gateway_app_id": "3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7"
+    },
+    "registry": [
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://mail.northwind.example/environments/production"
+        },
+        "row": "GD1",
+        "class": "delegated-user",
+        "grant": "on_behalf_of",
+        "app_id": "3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7",
+        "service_principal_id": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+        "ref": "executor-registry:gd1:r7",
+        "changed_at": 1791993600
+      },
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://mail.northwind.example/environments/production"
+        },
+        "row": "GD2",
+        "class": "delegated-user",
+        "grant": "on_behalf_of",
+        "app_id": "3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7",
+        "service_principal_id": "4a5b6c7d-8e9f-4a0b-9c1d-2e3f4a5b6c7d",
+        "ref": "executor-registry:gd2:r7",
+        "changed_at": 1791993600
+      }
+    ],
+    "continuations": []
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://mail.northwind.example/mail/messages?page_token=Qm9vT2gzcVN6WGR2TjNfa0w4cFJ0WXc1bU5hQmNEZWY"
+  },
+  "call": {
+    "principal": {
+      "id": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c%2Fv2.0:8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c:2b3c4d5e-6f70-4182-93a4-b5c6d7e8f901",
+      "realm": {
+        "tenant_id": "northwind",
+        "environment_id": "https://mail.northwind.example/environments/production"
+      },
+      "workload": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c%2Fv2.0:8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c:d4e5f6a7-b8c9-4d0e-8f1a-2b3c4d5e6f70",
+      "mechanism": "oauth"
+    },
+    "mapping_version": "pact-graph-1"
+  },
+  "expect": {
+    "function": "map_operation",
+    "outcome": "error",
+    "reason_code": "CONTEXT_MISMATCH",
+    "must_not_call": [
+      "token",
+      "execute"
+    ]
+  }
+}

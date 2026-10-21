@@ -1,0 +1,94 @@
+{
+  "case_version": 1,
+  "id": "MTLS-11.issuer-expired",
+  "title": "A certificate whose pinned issuer is past its notAfter is refused",
+  "draft": [
+    "8.5",
+    "13.4",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "mtls/1",
+    "listener": {
+      "role": "direct",
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.acme.example/environments/reconciliation"
+    },
+    "status_bound_seconds": 360,
+    "authorities": [
+      {
+        "ref": "workload-ca",
+        "subject_cn": "Acme Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/workload-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "legacy-ca",
+        "subject_cn": "Acme Legacy CA 2024",
+        "key_seed": "pact-mtls-fixture/legacy-ca",
+        "not_before": 1704067200,
+        "not_after": 1767225600
+      }
+    ],
+    "pinned_cas": [
+      {
+        "ca_id": "workload-ca-2026",
+        "authority": "workload-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "legacy-ca-2024",
+        "authority": "legacy-ca",
+        "san_kind": "uri"
+      }
+    ],
+    "peers": [
+      {
+        "ref": "legacy-reconciler",
+        "issuer": "legacy-ca",
+        "serial": 8304,
+        "subject_cn": "reconciler",
+        "uris": [
+          "spiffe://acme.example/ns/finance/sa/reconciler"
+        ],
+        "dns_names": [],
+        "not_before": 1791993600,
+        "not_after": 1794672000,
+        "ext_key_usage": [
+          "client_auth"
+        ],
+        "key_usage": [
+          "digital_signature"
+        ],
+        "key_seed": "pact-mtls-fixture/legacy-reconciler"
+      }
+    ],
+    "snapshots": [
+      {
+        "ca_id": "workload-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "legacy-ca-2024",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.acme.example/api/v1/reconciliation/records/REC-2041",
+    "native_state_ref": "legacy-reconciler"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "CREDENTIAL_REJECTED"
+  }
+}

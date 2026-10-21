@@ -1,0 +1,1 @@
+{"transport_profile":"stdio-ipc","version":"0.1","channels":["stdio","uds","named-pipe"],"framing":"ndjson","max_frame_bytes":524288,"identity_assurance":["kernel-peer","launcher"]}

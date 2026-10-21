@@ -1,0 +1,4 @@
+{
+  "transport_code": "INVALID_PROOF",
+  "reason": "presentation signed with a holder key other than the enrolled one (holder_jkt); rejected before an authenticated evaluation, no receipt"
+}

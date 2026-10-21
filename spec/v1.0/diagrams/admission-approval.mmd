@@ -1,0 +1,59 @@
+%% PACT v1.0 — informative sequence for sections 11–12 and the approval example.
+%% The gateway includes its requirement-publishing adapter in this example.
+%% This illustrates a pending approval, not an absent or demonstrably invalid claim.
+%% Approval routing, human roles, notification, and exception grants are external.
+%% Fresh exchanges repeat all required checks; old terminal receipts stay immutable.
+sequenceDiagram
+    accTitle: PACT admission with external supervisor approval
+    accDescr: A pending native approval produces a terminal DEFERRED result. If a supervisor later approves through the external system, the agent obtains a fresh requirement contract and submits a fresh presentation. Execution still requires current native authorization and execution checks.
+
+    participant A as Agent
+    participant G as Gateway
+    participant V as PACT validator
+    participant N as Native identity and policy
+    participant H as External approval system
+
+    A->>G: ContractRequest with intent and proposed operation
+    G->>N: Authenticate and resolve native operation context
+    N-->>G: Valid identity, key binding, and native context
+    Note over G,N: Invalid authentication stops the exchange
+    G-->>A: Signed RequirementContract C1 with one-use nonce
+    A->>G: Signed Presentation P1 and actual request
+    G->>V: Presentation and mapped native context
+    V->>H: Resolve required approval reference
+    H-->>V: Approval pending
+    V-->>G: Signed DEFERRED receipt
+    G-->>A: DEFERRED with bounded retry guidance and no execution
+
+    Note over A,H: Exchange C1/P1 is terminal. The external workflow may continue after its expiry
+    Note over H: Supervisor reviews under native policy
+
+    opt External workflow later grants approval or a permitted exception
+        H-->>A: Approval reference or trusted attestation
+        Note over A,H: Notification and evidence retrieval are implementation-defined
+        A->>G: Fresh ContractRequest for the intended operation
+        G->>N: Refresh authentication and native operation context
+        N-->>G: Current valid identity and context
+        G-->>A: Fresh signed RequirementContract C2 with a new nonce
+        A->>G: Fresh signed Presentation P2, approval reference, and actual request
+        G->>V: Fresh presentation and mapped native context
+        V->>H: Resolve authority, scope, validity, and current approval status
+        H-->>V: Trusted approval evidence and status
+        V->>V: Repeat all PACT checks against C2 and the actual request
+        V-->>G: Signed admission receipt for P2
+
+        alt ADMISSIBLE
+            G->>N: Authorize exact operation with applicable approval or exception
+            N-->>G: Current native authorization decision
+            alt Native authorization allows and all execution conditions pass
+                G->>G: Enforce once-only handoff, execute, and record attributable outcome
+                G-->>A: Operation result
+            else Native authorization or execution checks do not allow
+                G-->>A: No execution with native reason
+            end
+        else INADMISSIBLE or DEFERRED
+            G-->>A: Admission result with no execution
+        end
+    end
+
+    Note over A,H: Pending, denied, expired, or revoked approval cannot authorize execution

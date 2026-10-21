@@ -1,0 +1,38 @@
+{
+  "manifest_version": 1,
+  "entries": [
+    {
+      "id": "admission/valid",
+      "kind": "evaluate",
+      "scope": "runner",
+      "path": "admission/valid",
+      "expected": "expected/admission/valid/decision.json",
+      "outcome": "ADMISSIBLE",
+      "spec_map_row": "CL-11.3",
+      "draft_section": "11.3",
+      "conformance_profile": ["full", "single-owner"]
+    },
+    {
+      "id": "learning/shadow-too-short",
+      "kind": "learning",
+      "scope": "runner",
+      "path": "learning/shadow-too-short",
+      "expected": "expected/learning/shadow-too-short/registry.json",
+      "outcome": "REJECTED",
+      "spec_map_row": "CL-16.4",
+      "draft_section": "16.4",
+      "conformance_profile": ["full"]
+    },
+    {
+      "id": "single-owner/positive-path",
+      "kind": "profile",
+      "scope": "runner",
+      "path": "single-owner/positive-path",
+      "expected": "expected/single-owner/positive-path/decision.json",
+      "outcome": "ADMISSIBLE",
+      "spec_map_row": "CL-22.1",
+      "draft_section": "22.1",
+      "conformance_profile": ["single-owner"]
+    }
+  ]
+}

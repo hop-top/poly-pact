@@ -1,0 +1,6 @@
+{
+  "id": "vectors/strictjson/invalid-utf8-encoded-surrogate",
+  "input_b64": "eyJvcGVyYXRpb25faWQiOiJpbnZvaWNlLXJlYWQtb3BlcmF0aW9uLTAwMDEiLCJlbnZpcm9ubWVudF9pZCI6Imh0dHBzOi8vZ2F0ZXdheS5leGFtcGxlL2Vudmlyb25tZW50cy9maW5hbmNlIiwicHJpbmNpcGFsX2lkIjoiaHR0cHM6Ly9pZGVudGl0eS5leGFtcGxlL3ByaW5jaXBhbHMvYWxpY2UiLCJhY3Rpb24iOiLtoIAiLCJyZXNvdXJjZXMiOlsiaHR0cHM6Ly9pbnZvaWNlcy5leGFtcGxlL2ludm9pY2VzL0lOVi0xMDQyIl0sIm1ldGhvZCI6IkdFVCIsInRhcmdldF91cmkiOiJodHRwczovL2dhdGV3YXkuZXhhbXBsZS9pbnZvaWNlcy9JTlYtMTA0MiIsImJvZHlfZGlnZXN0IjoiNDdERVFwajhIQlNhLV9USW1XLTVKQ2V1UWVSa201Tk1wSldaRzNoU3VGVSIsImhlYWRlcnMiOnt9fQ==",
+  "expect": "reject",
+  "reason": "UTF-8 encoding ED A0 80 of the surrogate U+D800 is not valid UTF-8. Decode target: OperationContext."
+}

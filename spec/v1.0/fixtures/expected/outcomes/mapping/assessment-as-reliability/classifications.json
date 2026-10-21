@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/assessment-as-reliability",
+  "adversarial_claim": "An evaluator's assessment earns reliability without an execution record: QUALITY SUCCESS on reliability, citing a completed assessment.",
+  "subject_event_id": "quality-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution completed with data returned': EXECUTION reported by the executor, SUCCESS, reliability; it cites the completed execution record of its task and operation, which names the declared executor class (14.2). One positive unit (15.3)."
+    },
+    {
+      "event_id": "quality-event-0002",
+      "report": "reports/quality-event-0002.json",
+      "signed": "signed/quality-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "invalid-report",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft A.2 and 14.5: QUALITY and FEEDBACK use task_quality or policy_adherence; reliability is observed only by an EXECUTION report, tied to the executor's record (14.2). The receiver refuses the report with INVALID_MESSAGE; it contributes nothing."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 1,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

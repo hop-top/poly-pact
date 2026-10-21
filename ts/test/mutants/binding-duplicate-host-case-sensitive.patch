@@ -1,0 +1,12 @@
+diff --git a/ts/src/core/binding/headers.ts b/ts/src/core/binding/headers.ts
+--- a/ts/src/core/binding/headers.ts
++++ b/ts/src/core/binding/headers.ts
+@@ -91,7 +91,7 @@
+  */
+ export function checkHost(lines: Lines, originForm: boolean): void {
+   const values: string[] = [];
+-  for (const [name, value] of lines) if (equalFoldASCII(name, 'host')) values.push(value);
++  for (const [name, value] of lines) if (name === 'Host') values.push(value);
+   if (values.length > 1) {
+     throw refuse(Rule.DUPLICATE_HOST, `the request has ${values.length} Host field lines`);
+   }

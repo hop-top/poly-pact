@@ -1,0 +1,79 @@
+# Weekly version updates for every package manager in the repository.
+# Commit messages read "build(deps): ...". A release younger than 14 days is
+# not proposed (cooldown) unless it fixes a security issue, which the cooldown
+# never delays; dependencies we own are proposed at once. @types/node follows
+# the Node floor of ts/package.json, so its major updates are ignored.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build(deps)
+    cooldown:
+      default-days: 14
+      exclude:
+        - "hop-top/*"
+
+  # go/ is the library module, cli/ the command module.
+  - package-ecosystem: gomod
+    directories:
+      - /go
+      - /cli
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build(deps)
+    cooldown:
+      default-days: 14
+      exclude:
+        - "hop.top/*"
+        - "github.com/hop-top/*"
+
+  - package-ecosystem: npm
+    directory: /ts
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build(deps)
+    cooldown:
+      default-days: 14
+      exclude:
+        - "@hop-top/*"
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: pip
+    directory: /py
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build(deps)
+    cooldown:
+      default-days: 14
+      exclude:
+        - "hop-top-*"
+
+  - package-ecosystem: cargo
+    directory: /rs
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build(deps)
+    cooldown:
+      default-days: 14
+      exclude:
+        - "hop-top-*"
+
+  - package-ecosystem: composer
+    directory: /php
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build(deps)
+    cooldown:
+      default-days: 14
+      exclude:
+        - "hop-top/*"

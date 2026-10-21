@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/conformance/case.py b/py/src/hop_top_pact/conformance/case.py
+--- a/py/src/hop_top_pact/conformance/case.py
++++ b/py/src/hop_top_pact/conformance/case.py
+@@ -325,7 +325,7 @@
+             Submission(
+                 signed=p.signed,
+                 jti=p.jti,
+-                replica="r1" if p.replica is None else p.replica,
++                replica="r2" if p.replica is None else p.replica,
+                 concurrent=bool(p.concurrent),
+                 evict_replay_records=bool(p.evict_replay_records),
+                 actual_operation=_DEFAULT_OPERATION

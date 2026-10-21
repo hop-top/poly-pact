@@ -1,0 +1,13 @@
+--- a/rs/src/core/jcs.rs
++++ b/rs/src/core/jcs.rs
+@@ -242,7 +242,9 @@
+             out.push_str(&d[1..]);
+         }
+         out.push('e');
+-        out.push(if n - 1 < 0 { '-' } else { '+' });
++        if n - 1 < 0 {
++            out.push('-');
++        }
+         out.push_str(&(n - 1).abs().to_string());
+     }
+     Ok(())

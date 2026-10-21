@@ -1,0 +1,11 @@
+--- a/rs/examples/vectors/harness.rs
++++ b/rs/examples/vectors/harness.rs
+@@ -45,7 +45,7 @@
+ /// Whether the harness runs the entry: kind vector, key or schema, scope core
+ /// or adapter.
+ pub fn in_scope(e: &Entry) -> bool {
+-    IN_SCOPE_KINDS.contains(&e.kind.as_str()) && e.scope != "runner"
++    IN_SCOPE_KINDS.contains(&e.kind.as_str())
+ }
+ 
+ fn runner_of(e: &Entry) -> Result<Runner, HarnessError> {

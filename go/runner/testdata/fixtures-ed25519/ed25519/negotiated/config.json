@@ -1,0 +1,1 @@
+{"gateway":{"jws_algorithms":["ES256","Ed25519"]},"validator":{"key":"keys/ed25519.jwk.json"}}

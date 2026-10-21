@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/admission-as-task-success",
+  "adversarial_claim": "A passed admission is reported as task performance: ADMISSION SUCCESS on reliability, so that every admission would add positive reliability weight.",
+  "subject_event_id": "admission-event-0002",
+  "events": [
+    {
+      "event_id": "admission-event-0001",
+      "report": "reports/admission-event-0001.json",
+      "signed": "signed/admission-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "none",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'PACT admission decision': ADMISSION, SUCCESS or FAILURE, none; zero weight."
+    },
+    {
+      "event_id": "admission-event-0002",
+      "report": "reports/admission-event-0002.json",
+      "signed": "signed/admission-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "invalid-report",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft A.2: ADMISSION and AUTHORIZATION events MUST use dimension none. Draft 14.3: admission passes MUST NOT generate positive task-performance reputation. The receiver refuses the report; it contributes nothing."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

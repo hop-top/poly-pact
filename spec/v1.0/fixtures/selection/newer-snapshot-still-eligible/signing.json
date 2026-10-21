@@ -1,0 +1,10 @@
+{
+  "artifacts": [
+    {"decoded":"contract.json","signed":"signed/contract.jws","typ":"pact-requirements+jwt","signer":"issuer","jti":"zWVS3ONKaygCWEzKzdthOA"},
+    {"decoded":"evidence/runtime.json","signed":"signed/evidence/runtime.jws","typ":"pact-evidence+jwt","signer":"issuer","jti":"7oJQ-3bglLNLRx8Tpz275Q"},
+    {"decoded":"reputation.json","signed":"signed/reputation.jws","typ":"pact-reputation+jwt","signer":"reputation-service","jti":"B4jqsRY111cD8G4fMEzpGQ","iat":1792080005,"exp":1792080305}
+  ],
+  "presentations": [
+    {"signed":"signed/presentation.jws","signer":"holder","jti":"jAPNcLo93LxW9UA_MrC_Sw","iat":1792080010}
+  ]
+}

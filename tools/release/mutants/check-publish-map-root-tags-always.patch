@@ -1,0 +1,11 @@
+--- a/tools/release/check-publish-map.py
++++ b/tools/release/check-publish-map.py
+@@ -258,7 +258,7 @@
+ 
+     if "*/v*" not in tags:
+         errors.append(f"tags: the tag filter does not include '*/v*' (got {tags})")
+-    if root and f"!{root}/v*" not in tags:
++    if f"!{root}/v*" not in tags:
+         errors.append(f"tags: the tag filter does not exclude the root component ('!{root}/v*')")
+     return errors
+ 

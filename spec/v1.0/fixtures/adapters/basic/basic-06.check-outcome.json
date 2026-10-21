@@ -1,0 +1,71 @@
+{
+  "case_version": 1,
+  "id": "BASIC-06.check-outcome",
+  "title": "A check outcome does not echo Basic credentials found in the evidence references",
+  "draft": [
+    "17.1",
+    "19"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "purposes": [
+      {
+        "purpose_id": "invoice-lookup",
+        "actions": [
+          "invoice.read"
+        ]
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "basic:legacy-accounts:20417",
+      "realm": {"tenant_id": "northstar", "environment_id": "https://gateway.northstar.example/environments/invoices"},
+      "workload": "basic:legacy-accounts:20417",
+      "mechanism": "basic"
+    },
+    "check_id": "purpose-operation-v1",
+    "intent": {
+      "intent_id": "intent-0001",
+      "purpose_id": "invoice-lookup",
+      "description": "Read one invoice",
+      "task_id": "native-task:invoice-review-0001"
+    },
+    "operation": {
+      "operation_id": "op-invoice-read-INV-1041",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "principal_id": "basic:legacy-accounts:20417",
+      "action": "invoice.read",
+      "resources": [
+        "invoice:INV-1041"
+      ],
+      "method": "GET",
+      "target_uri": "https://invoices.northstar.example/invoices/INV-1041",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    },
+    "evidence_refs": [
+      "native-record:request-0001",
+      "https://audit.northstar.example/r/1?auth=Basic%20aW52b2ljZS1hc3Npc3RhbnQtb3BzOlRxNyFoYXJib3ItbGFudGVybi00Mg==",
+      "Authorization: Basic aW52b2ljZS1hc3Npc3RhbnQtb3BzOlRxNyFoYXJib3ItbGFudGVybi00Mg=="
+    ]
+  },
+  "expect": {
+    "function": "check_context",
+    "outcome": "PASS",
+    "reason_code": "REQUIREMENT_SATISFIED",
+    "leak_scan": {
+      "secrets": [
+        "Tq7!harbor-lantern-42",
+        "aW52b2ljZS1hc3Npc3RhbnQtb3BzOlRxNyFoYXJib3ItbGFudGVybi00Mg=="
+      ]
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "case_version": 1,
+  "id": "MTLS-03.two-certificates",
+  "title": "A Cert value holding two PEM certificates is refused",
+  "draft": [
+    "13.4",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "mtls/1",
+    "listener": {
+      "role": "terminated",
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.acme.example/environments/reconciliation"
+    },
+    "status_bound_seconds": 360,
+    "authorities": [
+      {
+        "ref": "workload-ca",
+        "subject_cn": "Acme Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/workload-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "partner-ca",
+        "subject_cn": "Partner Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/partner-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "host-ca",
+        "subject_cn": "Acme Host CA 2026",
+        "key_seed": "pact-mtls-fixture/host-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      }
+    ],
+    "pinned_cas": [
+      {
+        "ca_id": "workload-ca-2026",
+        "authority": "workload-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "partner-ca-2026",
+        "authority": "partner-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "host-ca-2026",
+        "authority": "host-ca",
+        "san_kind": "dns"
+      }
+    ],
+    "peers": [
+      {
+        "ref": "terminator",
+        "issuer": "workload-ca",
+        "serial": 4100,
+        "subject_cn": "envoy-terminator",
+        "uris": [
+          "spiffe://acme.example/ns/edge/sa/envoy-terminator"
+        ],
+        "dns_names": [],
+        "not_before": 1791993600,
+        "not_after": 1794672000,
+        "ext_key_usage": [
+          "client_auth"
+        ],
+        "key_usage": [
+          "digital_signature"
+        ],
+        "key_seed": "pact-mtls-fixture/terminator"
+      },
+      {
+        "ref": "reconciler",
+        "issuer": "workload-ca",
+        "serial": 4097,
+        "subject_cn": "reconciler",
+        "uris": [
+          "spiffe://acme.example/ns/finance/sa/reconciler"
+        ],
+        "dns_names": [],
+        "not_before": 1791993600,
+        "not_after": 1794672000,
+        "ext_key_usage": [
+          "client_auth"
+        ],
+        "key_usage": [
+          "digital_signature"
+        ],
+        "key_seed": "pact-mtls-fixture/reconciler"
+      },
+      {
+        "ref": "ledger-writer",
+        "issuer": "workload-ca",
+        "serial": 4098,
+        "subject_cn": "ledger-writer",
+        "uris": [
+          "spiffe://acme.example/ns/finance/sa/ledger-writer"
+        ],
+        "dns_names": [],
+        "not_before": 1791993600,
+        "not_after": 1794672000,
+        "ext_key_usage": [
+          "client_auth"
+        ],
+        "key_usage": [
+          "digital_signature"
+        ],
+        "key_seed": "pact-mtls-fixture/ledger-writer"
+      }
+    ],
+    "snapshots": [
+      {
+        "ca_id": "workload-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "partner-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "host-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      }
+    ],
+    "terminators": [
+      "mtls:workload-ca-2026:uri:spiffe%3A%2F%2Facme.example%2Fns%2Fedge%2Fsa%2Fenvoy-terminator"
+    ],
+    "forwarded": [
+      [
+        [
+          "Cert",
+          "@certs:reconciler,ledger-writer"
+        ]
+      ]
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.acme.example/api/v1/reconciliation/records/REC-2041",
+    "native_state_ref": "terminator"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "CREDENTIAL_REJECTED"
+  }
+}

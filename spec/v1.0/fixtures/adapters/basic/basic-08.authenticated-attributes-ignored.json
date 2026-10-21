@@ -1,0 +1,55 @@
+{
+  "case_version": 1,
+  "id": "BASIC-08.authenticated-attributes-ignored",
+  "title": "Roles that the principal's attributes assert are not the account's roles",
+  "draft": [
+    "8.4",
+    "8.5",
+    "17.2"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "role_map": {
+      "AP_READER": "invoice-reader",
+      "AP_APPROVER": "invoice-approver"
+    },
+    "accounts_answered_at": 1792079998
+  },
+  "call": {
+    "principal": {
+      "id": "basic:legacy-accounts:20417",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/invoices"
+      },
+      "workload": "basic:legacy-accounts:20417",
+      "mechanism": "basic",
+      "attributes": {
+        "roles": [
+          "invoice-approver",
+          "invoice-reader"
+        ]
+      }
+    },
+    "native_path": "/principal/roles"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": [
+        "invoice-reader"
+      ],
+      "observed_at": 1792079998,
+      "status_checked_at": 1792079998,
+      "source_id": "legacy-accounts"
+    }
+  }
+}

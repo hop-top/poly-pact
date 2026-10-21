@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/clock.py b/py/src/hop_top_pact/core/clock.py
+index 053da6c..e9ce9fd 100644
+--- a/py/src/hop_top_pact/core/clock.py
++++ b/py/src/hop_top_pact/core/clock.py
+@@ -267,7 +267,7 @@ def check_presentation_age(iat: int, now: datetime) -> None:
+     _check_range("iat", iat)
+     now_sec, now_us = _split(now)
+     bound = iat + _PRESENTATION_VALIDITY
+-    if now_sec > bound or (now_sec == bound and now_us > 0):
++    if now_sec > bound:
+         raise ClockError(ClockErrorKind.TOO_OLD, f"iat {iat}, now {now_sec}")
+ 
+ 

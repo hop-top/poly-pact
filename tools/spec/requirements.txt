@@ -1,0 +1,46 @@
+# Pinned tooling for the spec checks: make spec-validate, make spec-examples and
+# make spec-manifest (its JSON Schema step).
+#
+# Those targets create the virtualenv tools/spec/.venv from this file on first
+# use, and again whenever this file changes. The packages below need Python
+# 3.11 or later (regress and rpds-py require it). The interpreter defaults to
+# `mise exec -- python3`; override it with the SPEC_PYTHON variable:
+#
+#   make MISE= SPEC_PYTHON=/path/to/python3.12 spec-validate
+#
+# To build the virtualenv by hand:
+#
+#   python3 -m venv tools/spec/.venv
+#   tools/spec/.venv/bin/python3 -m pip install -r tools/spec/requirements.txt
+#
+# Every package is pinned to an exact version, the dependency closure included.
+#
+# Probe of the schema meta-validator, 2026-10-16 (Python 3.11, Node 26.8.1),
+# on spec/v1.0/schemas/pact.schema.json and ten deliberately broken copies:
+# - check-jsonschema 0.38.2 --check-metaschema: passes the schema, offline.
+#   Rejects a wrong type name, a non-numeric minimum, a non-array required, a
+#   non-schema $defs entry and an invalid pattern. Does not reject a dangling
+#   $ref, and checks against whatever dialect $schema declares: a draft-07
+#   declaration passes. tools/spec/schema-dialect.json closes that gap.
+# - ajv 8.20.0 + ajv-cli 5.0.0 + ajv-formats 3.0.1, compile --spec=draft2020:
+#   passes the schema only with -c ajv-formats (strict mode rejects the "uri"
+#   format otherwise). Rejects the same copies, plus the dangling $ref, the
+#   draft-07 declaration and an unknown keyword. Needs a Node toolchain and 27
+#   npm packages, among them deprecated glob 7.2.3 and inflight 1.0.6.
+# Chosen: check-jsonschema. Both pass; the examples check needs the Python
+# jsonschema package anyway, and check-jsonschema brings it in.
+check-jsonschema==0.38.2
+attrs==26.1.0
+certifi==2026.7.22
+charset-normalizer==3.5.2
+click==8.5.0
+idna==3.20
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+referencing==0.37.0
+regress==2026.9.1
+requests==2.34.2
+rpds-py==2026.9.1
+ruamel.yaml==0.19.1
+typing_extensions==4.16.0
+urllib3==2.8.0

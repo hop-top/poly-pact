@@ -1,0 +1,11 @@
+--- a/tools/release/check-publish-map.py
++++ b/tools/release/check-publish-map.py
+@@ -228,7 +228,7 @@
+             mirrors.setdefault(entry["mirror"], []).append(key)
+     errors = []
+     for mirror, keys in sorted(mirrors.items()):
+-        if len(keys) > 1:
++        if False:
+             errors.append(f"mirror: {mirror} is the mirror of more than one entry: {', '.join(sorted(keys))}")
+     return errors
+ 

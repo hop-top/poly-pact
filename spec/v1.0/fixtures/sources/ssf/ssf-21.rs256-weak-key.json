@@ -1,0 +1,222 @@
+{
+  "case_version": 1,
+  "id": "SSF-21.rs256-weak-key",
+  "title": "An RS256 SET is refused when its key has fewer than 2048 bits (RFC 7518 section 3.3), though the signature verifies; a 2048-bit key is accepted",
+  "draft": ["7.2", "7.5", "17.2", "A.2"],
+  "now": 1792080000,
+  "source": {
+    "issuers": [
+      {
+        "algorithms": [
+          "ES256",
+          "RS256"
+        ],
+        "audience": "https://rx.example.com/ssf",
+        "issuer": "https://tx.example.com",
+        "jwks": {
+          "keys": [
+            {
+              "alg": "ES256",
+              "crv": "P-256",
+              "kid": "test-issuer-key-1",
+              "kty": "EC",
+              "use": "sig",
+              "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+              "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E"
+            },
+            {
+              "alg": "RS256",
+              "e": "AQAB",
+              "kid": "test-rsa-key-1",
+              "kty": "RSA",
+              "n": "nF04fXMsy39caLlLzaO0CYIDER4FneqOHsQlgRXXs9-bHXL7gjaDkFZ9k-jB1UAr5mATfgqfKLACR7L-wx2fjVsfKtpL4WoHSk1GkihMI2ArIRmsd4KzaaXEgouG1QwZmFiKpL856dlrB6bLn0XSszNcySb8dZCBu15FZ211OCvGOrd8wuIJuAKNjdDf7YRhBTzvpX-YOklEy87k9elWdtOGspjj2oL2LVY0ti5IjOKp4ukeXeBP45hwNwDHYvtsXYW0ZhB8rOnRVYcJY7fyGcN0T2AH4VjN1NBaO8y41WA3FxJLpDKqzVH902gAi6BAsE60k94ftLM-1yCqQA5l9Q",
+              "use": "sig"
+            },
+            {
+              "alg": "RS256",
+              "e": "AQAB",
+              "kid": "test-rsa-key-1024",
+              "kty": "RSA",
+              "n": "kuZ_QDxiqMEbJxAeEStECQmXQr8RK-QkEf1NBiGYio0EDTveI8cOwBKNC5FDbFg1CSMQk2NuNMRh5m2edvDqcMm6_I4pXxr8wC5lPKqVTOoWkdNzDufQHjex4tXpCV0mQjAmdaNdIP7RwVqDXWWpfVI0xPpC5NTcLy4uHrTIo0M",
+              "use": "sig"
+            },
+            {
+              "alg": "RS256",
+              "e": "AQAB",
+              "kid": "test-rsa-key-2047",
+              "kty": "RSA",
+              "n": "RYsTLkrkafdPfakFf7vIUqgXCaqlxGf4eW--nPwrLzFiiT2LvWuJpFFla9ZZcYinu2Z5L8vuPAbtCzbSFp1dMZMOWdIxupgQlzoDd77Bl32ldgWTWridl9uufhLW_QhTvvtwVLqRy8gsEQ6hTUo0D5S7tLE-aiKrG1wYVAXN_-yHaVT8XiMfWg1n_Gl3AdlXg1XjNgIqcWJC49nK7ylgkkLxXJR4i41bhpuz2L405-eLOlzbf5phWzmiCcuavGoKtnxVnxl6e2ZgyStCLOU9Zig_cCpeGHFA7-XhMVHpi7zzoyoGwmZaLgmcZjgD-uL1KHmfVMoyr5EMdlstNquFSQ",
+              "use": "sig"
+            }
+          ]
+        }
+      }
+    ],
+    "mappings": [
+      {
+        "format": "iss_sub",
+        "issuer": "https://tx.example.com",
+        "local": "7a1f",
+        "subject_iss": "https://tx.example.com",
+        "value": "u-1"
+      },
+      {
+        "format": "iss_sub",
+        "issuer": "https://tx.example.com",
+        "local": "9c2e",
+        "subject_iss": "https://tx.example.com",
+        "value": "u-2"
+      },
+      {
+        "format": "opaque",
+        "issuer": "https://tx.example.com",
+        "local": "5b3d",
+        "value": "o-1"
+      },
+      {
+        "format": "email",
+        "issuer": "https://tx.example.com",
+        "local": "4d4d",
+        "value": "ada@example.com"
+      }
+    ],
+    "model": "ssf/1",
+    "principal_prefix": "oauth:https%3A%2F%2Fidp.example.com:t1:",
+    "source_id": "ssf-northstar"
+  },
+  "steps": [
+    {
+      "at": 1792079100,
+      "inbound": {
+        "push": {
+          "decoded": {
+            "claims": {
+              "aud": "https://rx.example.com/ssf",
+              "events": {
+                "https://schemas.openid.net/secevent/risc/event-type/account-disabled": {}
+              },
+              "iat": 1792079100,
+              "iss": "https://tx.example.com",
+              "jti": "w-1",
+              "sub_id": {
+                "format": "iss_sub",
+                "iss": "https://tx.example.com",
+                "sub": "u-2"
+              }
+            },
+            "header": {
+              "alg": "RS256",
+              "kid": "test-rsa-key-1024",
+              "typ": "secevent+jwt"
+            },
+            "signed_by": "rsa:test-rsa-key-1024"
+          },
+          "set": "eyJhbGciOiJSUzI1NiIsImtpZCI6InRlc3QtcnNhLWtleS0xMDI0IiwidHlwIjoic2VjZXZlbnQrand0In0.eyJhdWQiOiJodHRwczovL3J4LmV4YW1wbGUuY29tL3NzZiIsImV2ZW50cyI6eyJodHRwczovL3NjaGVtYXMub3BlbmlkLm5ldC9zZWNldmVudC9yaXNjL2V2ZW50LXR5cGUvYWNjb3VudC1kaXNhYmxlZCI6e319LCJpYXQiOjE3OTIwNzkxMDAsImlzcyI6Imh0dHBzOi8vdHguZXhhbXBsZS5jb20iLCJqdGkiOiJ3LTEiLCJzdWJfaWQiOnsiZm9ybWF0IjoiaXNzX3N1YiIsImlzcyI6Imh0dHBzOi8vdHguZXhhbXBsZS5jb20iLCJzdWIiOiJ1LTIifX0.MJUC3XYNwryi1AmHSTz6-yQKS4zbKZunh3pnewzoSa3oMMhhMhRWMonFLknPBSr6za8kWDg2HuOhI0eWK-xtyKP59PX_1NHV9dUvjv_I2h3rvsY1ak5o6F52JXhc_72odPE6pCzgzv8CAMcY8vwKKqZxvtrC8tu6FlRxLaELS3k"
+        }
+      },
+      "expect": {
+        "err": "invalid_key",
+        "status": 400,
+        "telemetry": [
+          "rejected"
+        ]
+      }
+    },
+    {
+      "at": 1792079110,
+      "inbound": {
+        "push": {
+          "decoded": {
+            "claims": {
+              "aud": "https://rx.example.com/ssf",
+              "events": {
+                "https://schemas.openid.net/secevent/risc/event-type/account-disabled": {}
+              },
+              "iat": 1792079110,
+              "iss": "https://tx.example.com",
+              "jti": "w-2",
+              "sub_id": {
+                "format": "iss_sub",
+                "iss": "https://tx.example.com",
+                "sub": "u-2"
+              }
+            },
+            "header": {
+              "alg": "RS256",
+              "kid": "test-rsa-key-2047",
+              "typ": "secevent+jwt"
+            },
+            "signed_by": "rsa:test-rsa-key-2047"
+          },
+          "set": "eyJhbGciOiJSUzI1NiIsImtpZCI6InRlc3QtcnNhLWtleS0yMDQ3IiwidHlwIjoic2VjZXZlbnQrand0In0.eyJhdWQiOiJodHRwczovL3J4LmV4YW1wbGUuY29tL3NzZiIsImV2ZW50cyI6eyJodHRwczovL3NjaGVtYXMub3BlbmlkLm5ldC9zZWNldmVudC9yaXNjL2V2ZW50LXR5cGUvYWNjb3VudC1kaXNhYmxlZCI6e319LCJpYXQiOjE3OTIwNzkxMTAsImlzcyI6Imh0dHBzOi8vdHguZXhhbXBsZS5jb20iLCJqdGkiOiJ3LTIiLCJzdWJfaWQiOnsiZm9ybWF0IjoiaXNzX3N1YiIsImlzcyI6Imh0dHBzOi8vdHguZXhhbXBsZS5jb20iLCJzdWIiOiJ1LTIifX0.EiRDJiJRkF3mMdKmNqoeUB-i2LPRuRXw3kk-hP7xx8NizQPOD4zOGS3sMNe-Wn9Yetf6j2SG7gwpfRMSHCbdTccGQ_R2elhKnfctCk_cia6ciLIuxQL9Gc245HStsrBpfDyzRVnoM6RFBPlEM3pegTJ3yDVdCRrqHUFGBUxdaHqGPIqb7dXtWrGYsxI-wMBavP3yvsAz7_R7Lugw6C5R_AJWZXEaouZExFYwLiHhi5gCMXriXJGY5Gq8tEtODvrtR04SZWfBtiAHXedj704Wvz8Zjvr3C4NiM3cQOFHlKapYit9K2u2sPyuiPgci1oSo5WzfWOegjaHCdqAt4V4SRA"
+        }
+      },
+      "expect": {
+        "err": "invalid_key",
+        "status": 400,
+        "telemetry": [
+          "rejected"
+        ]
+      }
+    },
+    {
+      "at": 1792079120,
+      "inbound": {
+        "push": {
+          "decoded": {
+            "claims": {
+              "aud": "https://rx.example.com/ssf",
+              "events": {
+                "https://schemas.openid.net/secevent/risc/event-type/account-disabled": {}
+              },
+              "iat": 1792079120,
+              "iss": "https://tx.example.com",
+              "jti": "w-3",
+              "sub_id": {
+                "format": "iss_sub",
+                "iss": "https://tx.example.com",
+                "sub": "u-1"
+              }
+            },
+            "header": {
+              "alg": "RS256",
+              "kid": "test-rsa-key-1",
+              "typ": "secevent+jwt"
+            },
+            "signed_by": "rsa:test-rsa-key-1"
+          },
+          "set": "eyJhbGciOiJSUzI1NiIsImtpZCI6InRlc3QtcnNhLWtleS0xIiwidHlwIjoic2VjZXZlbnQrand0In0.eyJhdWQiOiJodHRwczovL3J4LmV4YW1wbGUuY29tL3NzZiIsImV2ZW50cyI6eyJodHRwczovL3NjaGVtYXMub3BlbmlkLm5ldC9zZWNldmVudC9yaXNjL2V2ZW50LXR5cGUvYWNjb3VudC1kaXNhYmxlZCI6e319LCJpYXQiOjE3OTIwNzkxMjAsImlzcyI6Imh0dHBzOi8vdHguZXhhbXBsZS5jb20iLCJqdGkiOiJ3LTMiLCJzdWJfaWQiOnsiZm9ybWF0IjoiaXNzX3N1YiIsImlzcyI6Imh0dHBzOi8vdHguZXhhbXBsZS5jb20iLCJzdWIiOiJ1LTEifX0.Dl6p2PSirpFbSxmro9X4Lk7RAGbS04Tsdr4F_iADvFifWSXsLyhZMa9RYR-5ACtM6F42oc5e6KkBkUHf0Y5o87pvwjly-JuC65OJe1tee30-5aQYH3tVQAFLoR-6Gu1Vt8vnm1HQruzxfRGQgHnLcl_fn8m2XzQll5L_8t6HYH2qdIOVSpMfpDtvsHTiZN1eNw4WTT6Bcdn_T3stWvgkY95aM7RMGU-LPhB7Yj0E52QRBJNrC0oBvRhPxNvvlA9RmOMQL8434zkDigw0RDTKqiDusbJALJVnuIXj6yt95_9v8FE0PCwMHTqBshX5FASkb2nFJ8f5-_GLMiFziUQ5sg"
+        }
+      },
+      "expect": {
+        "status": 202,
+        "telemetry": [
+          "applied"
+        ]
+      }
+    }
+  ],
+  "reads": [
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Fidp.example.com:t1:7a1f",
+      "expect": {
+        "observed_at": 1792079120,
+        "outcome": "value",
+        "source_id": "ssf-northstar",
+        "status_checked_at": 1792079120,
+        "value": "disabled"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Fidp.example.com:t1:9c2e",
+      "expect": {
+        "outcome": "error",
+        "reason_code": "MISSING_FIELD"
+      }
+    }
+  ]
+}

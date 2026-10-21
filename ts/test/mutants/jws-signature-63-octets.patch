@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/jws/index.ts b/ts/src/core/jws/index.ts
+index bf16b6c..9559511 100644
+--- a/ts/src/core/jws/index.ts
++++ b/ts/src/core/jws/index.ts
+@@ -252,7 +252,7 @@ export class Verifier {
+     }
+ 
+     const sig = segment(s64, 'signature');
+-    if (sig.length !== 64) throw fail(Reason.SIGNATURE_LENGTH, `${sig.length} octets, want 64`);
++    if (sig.length !== 64 && sig.length !== 63) throw fail(Reason.SIGNATURE_LENGTH, `${sig.length} octets, want 64`);
+ 
+     const key = this.#resolve({ typ, role, kid, header: rawHeader, payload }, embedded);
+     matchAlg(alg, key.jwk);

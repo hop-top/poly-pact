@@ -1,0 +1,47 @@
+# Toolchains for every PACT package and for the repo gates (Makefile, CI).
+# `make setup` runs `mise install`, then `mise run install`.
+#
+# Python and pnpm follow the poly-axon pins; lychee, actionlint, shellcheck,
+# shfmt, release-please and node were moved to their latest releases at least
+# 14 days old on 2026-10-20. The Go, Rust and yq pins are exact; Rust and yq
+# were probed with `mise ls-remote` on 2026-10-16.
+
+[tools]
+# Exact patch release. Built with go1.26.1 the commands reach 22 govulncheck
+# findings in the standard library; built with go1.26.10 none.
+go = "1.26.10"
+# Pinned to a Go 1.26 build; the kit default (1.62) is built with go1.23.
+golangci-lint = "2.13.2"
+python = "3.11"
+lychee = "0.24"
+actionlint = "1.7"
+shellcheck = "0.11"
+shfmt = "3.14"
+yq = "4.54.1"
+"npm:release-please" = "17"
+# TypeScript package toolchain.
+node = "26.10.0"
+pnpm = "11.24.0"
+# PHP and Composer are not pinned here: mise builds php from source, which
+# fails on CI runners. They come from PATH (php/README.md, Contributing);
+# CI installs them with setup-php. Rust is pinned in rs/mise.toml.
+
+[tasks.install]
+description = "Install each package's dependencies; a package whose manifest is absent is skipped with a NOTICE"
+# Runs from the repo root, where CI invokes `mise run install`.
+run = '''
+set -e
+skip() { echo "NOTICE: install skipped for $1: $2 absent" >&2; }
+if [ -f go/go.mod ]; then go -C go mod download; else skip go go/go.mod; fi
+if [ -f cli/go.mod ]; then go -C cli mod download; else skip cli cli/go.mod; fi
+if [ -f ts/package.json ]; then (cd ts && pnpm install --frozen-lockfile --ignore-scripts); else skip ts ts/package.json; fi
+if [ -f py/pyproject.toml ]; then
+  (cd py && python3 -m venv .venv && ./.venv/bin/python3 -m pip install --quiet --upgrade pip && ./.venv/bin/python3 -m pip install --quiet -c constraints.txt -e ".[dev]")
+else
+  skip py py/pyproject.toml
+fi
+if [ -f rs/Cargo.toml ]; then (cd rs && mise exec -- cargo fetch --locked); else skip rs rs/Cargo.toml; fi
+if [ ! -f php/composer.json ]; then skip php php/composer.json
+elif ! command -v php >/dev/null 2>&1 || ! command -v composer >/dev/null 2>&1; then echo "NOTICE: install skipped for php: php or composer not on PATH" >&2
+else (cd php && composer install --no-interaction --no-progress); fi
+'''

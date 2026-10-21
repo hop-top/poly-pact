@@ -1,0 +1,32 @@
+{
+  "tasks": [
+    {
+      "task_id": "native-task:invoice-review-0011",
+      "agent_id": "https://identity.example/agents/invoice-assistant",
+      "operator_id": "https://identity.example/operators/acme",
+      "principal_id": "https://identity.example/principals/alice",
+      "independence_group": "native-task-group:invoice-review-0011",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M"
+    }
+  ],
+  "records": {
+    "native-incident-record:finance-0011": {
+      "kind": "incident",
+      "state": "confirmed",
+      "returned": null,
+      "task_id": "native-task:invoice-review-0011",
+      "operation_id": "invoice-read-operation-0011",
+      "executor": null,
+      "observed_at": 1792079980
+    },
+    "native-remediation-record:finance-0011": {
+      "kind": "remediation",
+      "state": "completed",
+      "returned": null,
+      "task_id": "native-task:invoice-review-0011",
+      "operation_id": "invoice-read-operation-0011",
+      "executor": null,
+      "observed_at": 1792079990
+    }
+  }
+}

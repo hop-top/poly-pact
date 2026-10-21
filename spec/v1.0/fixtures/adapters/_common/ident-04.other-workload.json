@@ -1,0 +1,35 @@
+{
+  "case_version": 1,
+  "id": "IDENT-04.other-workload",
+  "title": "A certificate of the same authority for another workload has no binding to the agent enrolled for the first",
+  "draft": ["6.1", "8.5"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "enrollments": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "mtls:internal-ca-2026:uri:spiffe%3A%2F%2Fexample.org%2Fns%2Fprod%2Fsa%2Frunner",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "operator_id": "https://identity.example/operators/finance-ops",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079940,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-0001"
+      }
+    ]
+  },
+  "call": {
+    "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+    "workload": "mtls:internal-ca-2026:uri:spiffe%3A%2F%2Fexample.org%2Fns%2Fprod%2Fsa%2Fbilling",
+    "agent_id": "https://identity.example/agents/invoice-assistant"
+  },
+  "expect": {"function": "resolve_agent_binding", "outcome": "unknown"}
+}

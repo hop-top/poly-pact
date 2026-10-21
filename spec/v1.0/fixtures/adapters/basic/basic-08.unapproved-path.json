@@ -1,0 +1,41 @@
+{
+  "case_version": 1,
+  "id": "BASIC-08.unapproved-path",
+  "title": "A native path other than the two approved ones is unsupported",
+  "draft": [
+    "17.1",
+    "17.2"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "role_map": {
+      "AP_READER": "invoice-reader",
+      "AP_APPROVER": "invoice-approver"
+    },
+    "accounts_answered_at": 1792079998
+  },
+  "call": {
+    "principal": {
+      "id": "basic:legacy-accounts:20417",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/invoices"
+      },
+      "workload": "basic:legacy-accounts:20417",
+      "mechanism": "basic"
+    },
+    "native_path": "/principal/department"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "error",
+    "reason_code": "UNSUPPORTED_REQUIREMENT"
+  }
+}

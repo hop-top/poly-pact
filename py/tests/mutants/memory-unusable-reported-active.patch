@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/adapters/memory/identity.py b/py/src/hop_top_pact/adapters/memory/identity.py
+--- a/py/src/hop_top_pact/adapters/memory/identity.py
++++ b/py/src/hop_top_pact/adapters/memory/identity.py
+@@ -152,7 +152,7 @@
+             agent_id=cur.agent_id,
+             operator_id=cur.operator_id,
+             holder_jkt=cur.holder_jkt,
+-            status=BindingStatus(cur.status),
++            status=BindingStatus.ACTIVE,
+             observed_at=observed,
+             status_checked_at=checked,
+             source_id=cur.source_id,

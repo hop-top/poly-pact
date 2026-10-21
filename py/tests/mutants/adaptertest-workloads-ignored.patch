@@ -1,0 +1,14 @@
+diff --git a/py/src/hop_top_pact/adapter/adaptertest/casefile.py b/py/src/hop_top_pact/adapter/adaptertest/casefile.py
+--- a/py/src/hop_top_pact/adapter/adaptertest/casefile.py
++++ b/py/src/hop_top_pact/adapter/adaptertest/casefile.py
+@@ -411,10 +411,6 @@
+ def applies_to(c: Case, shared: bool) -> bool:
+     """Whether c runs against an adapter whose profile supports workloads shared by
+     several agents (shared True) or does not."""
+-    if c.workloads == WORKLOADS_SHARED:
+-        return shared
+-    if c.workloads == WORKLOADS_DEDICATED:
+-        return not shared
+     return True
+ 
+ 

@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/jws/jwk.py b/py/src/hop_top_pact/core/jws/jwk.py
+index 26716ba..de34b3f 100644
+--- a/py/src/hop_top_pact/core/jws/jwk.py
++++ b/py/src/hop_top_pact/core/jws/jwk.py
+@@ -196,7 +196,7 @@ def thumbprint(k: JWK) -> str:
+     """
+     if k.algorithm() == ALG_ES256:
+         public_key_of(k)
+-        text = f'{{"crv":"{k.crv}","kty":"{k.kty}","x":"{k.x}","y":"{k.y}"}}'
++        text = f'{{"kty":"{k.kty}","crv":"{k.crv}","x":"{k.x}","y":"{k.y}"}}'
+     else:
+         _okp_x(k)
+         text = f'{{"crv":"{k.crv}","kty":"{k.kty}","x":"{k.x}"}}'

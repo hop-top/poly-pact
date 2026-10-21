@@ -1,0 +1,46 @@
+{
+  "now": 1792080000,
+  "clock_skew_seconds": 5,
+  "learning_service": {
+    "service_id": "https://learning.example/finance",
+    "tenant_id": "acme",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "trust": [
+    {
+      "iss": "https://trust.example/issuers/finance",
+      "role": "policy-authority",
+      "keys": [
+        "keys/issuer.jwk.json"
+      ]
+    },
+    {
+      "iss": "https://learning.example/controllers/finance",
+      "role": "learning-controller",
+      "keys": [
+        "keys/learning-controller.jwk.json"
+      ]
+    }
+  ],
+  "evaluations": {
+    "configured-evaluation-store:independent-0001": {
+      "evaluator_id": "https://learning.example/evaluators/independent"
+    }
+  },
+  "source_data_manifests": {},
+  "gates": [
+    {
+      "artifact_id": "https://learning.example/artifacts/baseline-v1",
+      "version": "1",
+      "independent_tasks": 120,
+      "observation_seconds": 691200,
+      "test_suites_passed": [
+        "I7Z5M225iXt94t2aNsPS_YEN07CyAkcn_SuW7d057Sg"
+      ],
+      "metrics": {
+        "native-denial-override-count": 0,
+        "admission-regression-rate": 0.004
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "vectors/jws/header-jwk-off-curve",
+  "description": "The embedded jwk takes x from the holder key and y from the issuer key: the point is not on P-256. expected_holder_jkt is the RFC 7638 thumbprint of these member values, so only the point is wrong.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtcHJlc2VudGF0aW9uK2p3dCIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6ImF4ZlI4dUVzUWtmNHZPYmxZNlJBOG5jRGZZRXQ2ek9nOUtFNVJkaVl3cFkiLCJ5IjoiQjNkVkVOdU8wRUFwUFpyR24zUXcyN3A5cmVZODZZSXBuZ1MzblNKNGM5RSJ9fQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9oZWFkZXItandrLW9mZi1jdXJ2ZSJ9.jwcPMEFT8Eb9XNcuqYdYWy3xC1baeABs65J1dU_tSQME1-zqYNpXLIdwvx4RO17aYl7t0Zo_KPVTY-jGu_FLIA",
+  "expected_typ": null,
+  "trusted_keysets": {},
+  "expected_holder_jkt": "27gwNgCruSrsG-BjOJhOszfZSu_Xx33dTTsdg1KFkIU",
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "jwk-off-curve",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+    "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+    "kid": "test-holder-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

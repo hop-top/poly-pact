@@ -1,0 +1,112 @@
+{
+  "name": "@hop-top/pact",
+  "version": "0.0.0",
+  "description": "TypeScript SDK of the PACT protocol",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.18"
+  },
+  "packageManager": "pnpm@11.24.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hop-top/poly-pact.git",
+    "directory": "ts"
+  },
+  "homepage": "https://github.com/hop-top/poly-pact/tree/main/ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./core/strictjson": {
+      "types": "./dist/core/strictjson.d.ts",
+      "default": "./dist/core/strictjson.js"
+    },
+    "./core/jcs": {
+      "types": "./dist/core/jcs.d.ts",
+      "default": "./dist/core/jcs.js"
+    },
+    "./core/digest": {
+      "types": "./dist/core/digest.d.ts",
+      "default": "./dist/core/digest.js"
+    },
+    "./core/jws": {
+      "types": "./dist/core/jws/index.d.ts",
+      "default": "./dist/core/jws/index.js"
+    },
+    "./core/clock": {
+      "types": "./dist/core/clock.d.ts",
+      "default": "./dist/core/clock.js"
+    },
+    "./core/binding": {
+      "types": "./dist/core/binding/index.d.ts",
+      "default": "./dist/core/binding/index.js"
+    },
+    "./core/schema": {
+      "types": "./dist/core/schema.d.ts",
+      "default": "./dist/core/schema.js"
+    },
+    "./adapter": {
+      "types": "./dist/adapter/index.d.ts",
+      "default": "./dist/adapter/index.js"
+    },
+    "./adapter/enroll": {
+      "types": "./dist/adapter/enroll.d.ts",
+      "default": "./dist/adapter/enroll.js"
+    },
+    "./adapter/enroll/memory": {
+      "types": "./dist/adapter/enroll/memory.d.ts",
+      "default": "./dist/adapter/enroll/memory.js"
+    },
+    "./adapter/freshness": {
+      "types": "./dist/adapter/freshness.d.ts",
+      "default": "./dist/adapter/freshness.js"
+    },
+    "./adapter/adaptertest": {
+      "types": "./dist/adapter/adaptertest/index.d.ts",
+      "default": "./dist/adapter/adaptertest/index.js"
+    },
+    "./adapters/memory": {
+      "types": "./dist/adapters/memory/index.d.ts",
+      "default": "./dist/adapters/memory/index.js"
+    },
+    "./runner/manifest": {
+      "types": "./dist/runner/manifest/index.d.ts",
+      "default": "./dist/runner/manifest/index.js"
+    },
+    "./conformance": {
+      "types": "./dist/conformance/case.d.ts",
+      "default": "./dist/conformance/case.js"
+    }
+  },
+  "files": [
+    "dist",
+    "schema",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "node --test --test-reporter=spec 'test/**/*.test.ts'",
+    "lint": "biome check && tsc -p tsconfig.json && node scripts/gen-types.ts --check",
+    "vectors": "node src/vectors/main.ts --gates ../tools/parity/gates.json ../spec/v1.0/fixtures/manifest.json",
+    "gen": "node scripts/gen-types.ts",
+    "check-pack": "node scripts/check-pack.ts",
+    "sync-schema": "cp ../spec/v1.0/schemas/pact.schema.json schema/pact.schema.json",
+    "check-schema": "cmp ../spec/v1.0/schemas/pact.schema.json schema/pact.schema.json"
+  },
+  "dependencies": {
+    "ajv": "8.20.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@types/node": "22.20.5",
+    "ajv-formats": "3.0.1",
+    "typescript": "7.0.2"
+  }
+}

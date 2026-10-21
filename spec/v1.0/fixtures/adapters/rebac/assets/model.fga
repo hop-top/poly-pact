@@ -1,0 +1,14 @@
+model
+  schema 1.1
+
+type user
+
+type project
+  relations
+    define member: [user]
+
+type document
+  relations
+    define parent: [project]
+    define editor: [user]
+    define viewer: [user] or member from parent

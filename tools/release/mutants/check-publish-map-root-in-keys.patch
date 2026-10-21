@@ -1,0 +1,11 @@
+--- a/tools/release/check-publish-map.py
++++ b/tools/release/check-publish-map.py
+@@ -220,7 +220,7 @@
+ def check(tags, entries, components) -> list[str]:
+     errors = []
+     root = components.get(".")
+-    expected = set(components.values()) - {root}
++    expected = set(components.values())
+     roots = spec_roots(components)
+ 
+     missing = sorted(expected - entries.keys())

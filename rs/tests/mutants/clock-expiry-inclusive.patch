@@ -1,0 +1,11 @@
+--- a/rs/src/core/clock.rs
++++ b/rs/src/core/clock.rs
+@@ -241,7 +241,7 @@
+     if sec_nanos(iat) > latest {
+         return Err(fail(Kind::IssuedInFuture, format!("iat {iat}, now {}, skew {skew:?}", unix(now))));
+     }
+-    if now_ns >= sec_nanos(exp) {
++    if now_ns > sec_nanos(exp) {
+         return Err(fail(Kind::Expired, format!("exp {exp}, now {}", unix(now))));
+     }
+     Ok(())

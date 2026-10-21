@@ -1,0 +1,25 @@
+{
+  "tasks": [
+    {
+      "task_id": "native-task:september-summary-007",
+      "agent_id": "https://identity.example/agents/invoice-assistant",
+      "operator_id": "https://identity.example/operators/acme",
+      "principal_id": "https://identity.example/principals/alice",
+      "independence_group": "native-task-group:september-summary-007"
+    }
+  ],
+  "records": {
+    "native-job-log:summary-restart-0001/accepted": {
+      "kind": "execution",
+      "state": "accepted",
+      "returned": null,
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-summary-restart-0001",
+      "executor": {
+        "class": "delegated-user",
+        "principal_id": "https://identity.example/principals/alice"
+      },
+      "observed_at": 1792079940
+    }
+  }
+}

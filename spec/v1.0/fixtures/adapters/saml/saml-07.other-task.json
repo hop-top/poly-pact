@@ -1,0 +1,139 @@
+{
+  "case_version": 1,
+  "id": "SAML-07.other-task",
+  "title": "The operation is under one task's grant while the intent names another live task: native-delegation-v1 fails with TASK_MISMATCH",
+  "draft": [
+    "17.5",
+    "10.1"
+  ],
+  "native_state": {
+    "model": "saml/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://portal.northstar.example/environments/purchasing",
+      "origin": "https://portal.northstar.example",
+      "header_allowlist": []
+    },
+    "sp": {
+      "entity_id": "https://portal.northstar.example/saml/metadata",
+      "trusted_idps": [
+        "https://idp.northstar.example/saml"
+      ]
+    },
+    "agents": [
+      {
+        "ref": "assistant",
+        "token": "brk-assistant-7Qm2xV9pL4tR8sW1",
+        "workload": "x-broker:portal-broker:client-assistant"
+      },
+      {
+        "ref": "reviewer",
+        "token": "brk-reviewer-3Hk8nB5cZ2yD6fJ0",
+        "workload": "x-broker:portal-broker:client-reviewer"
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://portal.northstar.example/environments/purchasing"
+        },
+        "workload": "x-broker:portal-broker:client-assistant",
+        "agent_id": "https://agents.northstar.example/purchasing-assistant",
+        "operator_id": "https://operators.northstar.example/procurement",
+        "holder_jkt": "NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792080000,
+        "source_id": "northstar-enrollment"
+      },
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://portal.northstar.example/environments/purchasing"
+        },
+        "workload": "x-broker:portal-broker:client-reviewer",
+        "agent_id": "https://agents.northstar.example/contract-reviewer",
+        "operator_id": "https://operators.northstar.example/legal",
+        "holder_jkt": "0ZcOCORZNYy-DWpqq30jZyJGHTN0d2HglBV3uiguA4I",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792080000,
+        "source_id": "northstar-enrollment"
+      }
+    ],
+    "events": [
+      {
+        "kind": "sign_in",
+        "assertion_id": "_a1f0c2e49b7d4e3f8a61",
+        "issuer": "https://idp.northstar.example/saml",
+        "audience": "https://portal.northstar.example/saml/metadata",
+        "subject": "8f3e1c5a2b",
+        "authn_instant": 1792076400,
+        "session_id": "sps-maya-1",
+        "session_credential": "ps-maya-Xw4Lk9Tq2Rb7",
+        "expires_at": 1792083600
+      }
+    ],
+    "grants": [
+      {
+        "task_id": "task-5b21c0",
+        "session_id": "sps-maya-1",
+        "user": "saml:https%3A%2F%2Fportal.northstar.example%2Fsaml%2Fmetadata:https%3A%2F%2Fidp.northstar.example%2Fsaml:8f3e1c5a2b",
+        "agent_id": "https://agents.northstar.example/purchasing-assistant",
+        "expires_at": 1792081800,
+        "revoked": false
+      },
+      {
+        "task_id": "task-9d47e1",
+        "session_id": "sps-maya-1",
+        "user": "saml:https%3A%2F%2Fportal.northstar.example%2Fsaml%2Fmetadata:https%3A%2F%2Fidp.northstar.example%2Fsaml:8f3e1c5a2b",
+        "agent_id": "https://agents.northstar.example/purchasing-assistant",
+        "expires_at": 1792081800,
+        "revoked": false
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "saml:https%3A%2F%2Fportal.northstar.example%2Fsaml%2Fmetadata:https%3A%2F%2Fidp.northstar.example%2Fsaml:8f3e1c5a2b",
+      "realm": {"tenant_id": "northstar", "environment_id": "https://portal.northstar.example/environments/purchasing"},
+      "workload": "x-broker:portal-broker:client-assistant",
+      "mechanism": "broker-token"
+    },
+    "binding": {
+      "agent_id": "https://agents.northstar.example/purchasing-assistant",
+      "operator_id": "https://operators.northstar.example/procurement",
+      "holder_jkt": "NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs",
+      "status": "ACTIVE"
+    },
+    "check_id": "native-delegation-v1",
+    "intent": {
+      "intent_id": "int-supplier-comparison",
+      "purpose_id": "purchasing.supplier-comparison",
+      "description": "Compare suppliers for the Q4 tender",
+      "task_id": "task-9d47e1"
+    },
+    "operation": {
+      "operation_id": "op-saml-r1",
+      "environment_id": "https://portal.northstar.example/environments/purchasing",
+      "principal_id": "saml:https%3A%2F%2Fportal.northstar.example%2Fsaml%2Fmetadata:https%3A%2F%2Fidp.northstar.example%2Fsaml:8f3e1c5a2b",
+      "action": "record.read",
+      "resources": [
+        "record:SUP-1042"
+      ],
+      "method": "GET",
+      "target_uri": "https://portal.northstar.example/broker/v1/tasks/task-5b21c0/records/SUP-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {
+    "function": "check_context",
+    "outcome": "FAIL",
+    "reason_code": "TASK_MISMATCH",
+    "must_not_call": [
+      "execute"
+    ]
+  }
+}

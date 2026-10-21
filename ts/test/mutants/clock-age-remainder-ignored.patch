@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/clock.ts b/ts/src/core/clock.ts
+index 77913db..e55dace 100644
+--- a/ts/src/core/clock.ts
++++ b/ts/src/core/clock.ts
+@@ -269,7 +269,7 @@ export function checkPresentationAge(iat: number, now: number): void {
+   const [sec, ms] = split(now);
+   // Both are integers below 2^53 in magnitude, so the difference is exact.
+   const age = sec - iat;
+-  if (!(age < PRESENTATION_VALIDITY || (age === PRESENTATION_VALIDITY && ms === 0))) {
++  if (!(age < PRESENTATION_VALIDITY || age === PRESENTATION_VALIDITY)) {
+     throw new ClockError(
+       'TOO_OLD',
+       `presentation issued more than 60s ago: iat ${iat}, now ${sec}`,

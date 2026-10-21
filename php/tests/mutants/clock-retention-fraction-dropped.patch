@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Clock/Clocks.php b/php/src/Core/Clock/Clocks.php
+index ab9df89..b22cab5 100644
+--- a/php/src/Core/Clock/Clocks.php
++++ b/php/src/Core/Clock/Clocks.php
+@@ -173,7 +173,7 @@ final class Clocks
+             return Instant::of($expiry, 0);
+         }
+ 
+-        return Instant::of($horizon, $us);
++        return Instant::of($horizon, 0);
+     }
+ 
+     private static function lifetimeSeconds(Artifact $a): int

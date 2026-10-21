@@ -1,0 +1,26 @@
+diff --git a/ts/src/adapters/memory/freshness.ts b/ts/src/adapters/memory/freshness.ts
+index f014ec3..7f78542 100644
+--- a/ts/src/adapters/memory/freshness.ts
++++ b/ts/src/adapters/memory/freshness.ts
+@@ -75,7 +75,7 @@ export function runCheck(core: Core, c: CheckRecord): CheckOutcome {
+       reasonCode: Code.DEPENDENCY_UNAVAILABLE,
+     };
+   }
+-  const observed = sourceTime(c.observed_at);
++  const observed = c.observed_at === null ? null : core.clock.now();
+   const checked = sourceTime(c.status_checked_at);
+   const f = c.freshness;
+   if (f !== null) {
+diff --git a/ts/src/adapters/memory/native.ts b/ts/src/adapters/memory/native.ts
+index ed0f380..6e0dc0c 100644
+--- a/ts/src/adapters/memory/native.ts
++++ b/ts/src/adapters/memory/native.ts
+@@ -95,7 +95,7 @@ export function readClaim(
+   for (const c of core.st.claims) {
+     if (!ClaimRecord.applies(c, nativePath, cc)) continue;
+     if (unavailable(core, c.source_id)) throw outage('read claim', c.source_id);
+-    const observed = sourceTime(c.observed_at);
++    const observed = c.observed_at === null ? null : core.clock.now();
+     const checked = sourceTime(c.status_checked_at);
+     checkSourceTimes(core, observed, checked);
+     let value: unknown;

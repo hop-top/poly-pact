@@ -1,0 +1,12 @@
+diff --git a/php/tests/Deps/Depcheck.php b/php/tests/Deps/Depcheck.php
+--- a/php/tests/Deps/Depcheck.php
++++ b/php/tests/Deps/Depcheck.php
+@@ -140,7 +140,7 @@
+                     continue;
+                 }
+                 $name = $p['name'];
+-                $got[$name] = $p['version'];
++                $got[$name] = $want[$name] ?? $p['version'];
+                 $dist = \is_array($p['dist'] ?? null) ? $p['dist'] : [];
+                 $url = \is_string($dist['url'] ?? null) ? $dist['url'] : '';
+                 if (($dist['type'] ?? null) !== 'zip' || !str_starts_with($url, self::DIST_URL)) {

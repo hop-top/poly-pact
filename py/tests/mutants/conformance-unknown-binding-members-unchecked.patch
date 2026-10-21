@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/conformance/_decode.py b/py/src/hop_top_pact/conformance/_decode.py
+--- a/py/src/hop_top_pact/conformance/_decode.py
++++ b/py/src/hop_top_pact/conformance/_decode.py
+@@ -230,7 +230,7 @@
+         ("operator_id", a.operator_id),
+         ("holder_jkt", a.holder_jkt),
+     ):
+-        if unknown and value is not None:
++        if False:
+             raise CaseError(
+                 f"authenticated.{name} is set, but binding_status unknown has no agent,"
+                 " operator or key (null)"

@@ -1,0 +1,82 @@
+{
+  "description": "HTTPS gateway metadata of a single-owner deployment: the Appendix B.13 metadata with all seven endpoints, pact-conformance-profile-v1 in extensions_supported and its ConformanceDeclaration in extensions (draft 13.1, 21, 22.1).",
+  "objects": [
+    {
+      "section": "22.1",
+      "def": "GatewayMetadata",
+      "object": {
+        "gateway_id": "https://gateway.example/finance",
+        "environment_id": "https://gateway.example/environments/finance",
+        "wire_versions": [
+          "0.1"
+        ],
+        "jws_algorithms": [
+          "ES256"
+        ],
+        "endpoints": {
+          "requirements": "https://gateway.example/pact/v0.1/requirements",
+          "evaluate": "https://gateway.example/pact/v0.1/evaluate",
+          "outcomes": "https://gateway.example/pact/v0.1/outcomes",
+          "reputation_query": "https://gateway.example/pact/v0.1/reputation/query",
+          "learning_artifacts": "https://gateway.example/pact/v0.1/learning/artifacts",
+          "learning_events": "https://gateway.example/pact/v0.1/learning/events",
+          "receipts_query": "https://gateway.example/pact/v0.1/receipts/query"
+        },
+        "jwks_uri": "https://gateway.example/.well-known/jwks.json",
+        "operation_mapping_version": "finance-http-1",
+        "extensions_supported": [
+          "pact-conformance-profile-v1"
+        ],
+        "modes": [
+          "enforced"
+        ],
+        "presentation_transports": [
+          "header",
+          "adapter-envelope",
+          "gateway-evaluate"
+        ],
+        "limits": {
+          "max_presentation_bytes": 262144,
+          "max_artifact_payload_bytes": 32768,
+          "max_profile_bytes": 32768,
+          "max_evidence_artifacts": 32,
+          "max_field_rules": 128,
+          "max_json_depth": 16,
+          "max_resources": 256,
+          "max_description_bytes": 4096,
+          "contract_validity_seconds": 60,
+          "presentation_validity_seconds": 60,
+          "evaluation_seconds": 30,
+          "clock_skew_seconds": 5,
+          "replay_retention_seconds": 65,
+          "max_header_presentation_bytes": 8192,
+          "max_envelope_presentation_bytes": 262144,
+          "max_evaluate_presentation_bytes": 262144
+        },
+        "protected_header_names": [
+          "if-match",
+          "x-dry-run"
+        ],
+        "header_normalization_id": "finance-header-normalization-1",
+        "adapters": [
+          {
+            "protocol": "mcp",
+            "version": "2025-11-25",
+            "mapping_revision": "finance-mcp-1"
+          }
+        ],
+        "extensions": {
+          "pact-conformance-profile-v1": {
+            "conformance_profile": "single-owner",
+            "version": "0.1",
+            "omitted_roles": [
+              "reputation",
+              "learning"
+            ],
+            "owner": "https://owner.example/issuer"
+          }
+        }
+      }
+    }
+  ]
+}

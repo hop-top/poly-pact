@@ -1,0 +1,13 @@
+diff --git a/ts/src/vectors/run-keys.ts b/ts/src/vectors/run-keys.ts
+index 9ce931d..f0e0c8e 100644
+--- a/ts/src/vectors/run-keys.ts
++++ b/ts/src/vectors/run-keys.ts
+@@ -101,7 +101,7 @@ function checkKeyRecord(root: string, k: KeyRecord, core: Core): void {
+       `${path}: public point x=${got.x} y=${got.y}, but scalar ${scalar} times G is x=${want.x} y=${want.y}`,
+     );
+   }
+-  if (k.role === 'holder') {
++  if (k.role === 'nobody') {
+     const tp = core.thumbprint(got);
+     if (tp !== APPENDIX_C_HOLDER_JKT) {
+       throw new Error(

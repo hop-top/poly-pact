@@ -1,0 +1,158 @@
+{
+  "case_version": 1,
+  "id": "OAUTH-06.scope-leading-space",
+  "title": "A scope value outside the RFC 6749 3.3 syntax, or with a repeated token, is refused, never repaired",
+  "draft": [
+    "13.4",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "oauth/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.acme.example/environments/crm",
+      "origin": "https://gateway.acme.example",
+      "header_allowlist": [
+        "accept",
+        "prefer"
+      ]
+    },
+    "entries": [
+      {
+        "id": "E1",
+        "form": "introspection",
+        "issuer": "https://as.acme.example",
+        "tenant": "none",
+        "audiences": [
+          "https://gateway.acme.example"
+        ],
+        "clients": [
+          "crm-assistant",
+          "report-runner"
+        ],
+        "sender_constraint": "none",
+        "lifetime_seconds": 3600,
+        "introspection_endpoint": "https://as.acme.example/oauth2/introspect",
+        "gateway_client_id": "pact-gateway",
+        "gateway_client_secret": "gw-secret-5b8e2d1f9a4c",
+        "resource_binding": "aud",
+        "cache_seconds": 0
+      },
+      {
+        "id": "E2",
+        "form": "entra-v2",
+        "issuer": "https://login.microsoftonline.com/7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11/v2.0",
+        "tenant": "7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11",
+        "audiences": [
+          "6e2b8c4d-1a3f-4e5b-9c7d-8f0a1b2c3d4e"
+        ],
+        "clients": [
+          "5d7e9f1a-2b3c-4d5e-8f60-718293a4b5c6",
+          "9e8d7c6b-5a49-4382-9716-05f4e3d2c1b0"
+        ],
+        "sender_constraint": "none",
+        "lifetime_seconds": 5400,
+        "algorithms": [
+          "RS256"
+        ],
+        "key_refresh_seconds": 3600,
+        "key_max_age_seconds": 86400,
+        "trusted_origins": [
+          "https://login.microsoftonline.com"
+        ]
+      }
+    ],
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/customers/{customer_id}",
+        "entry": "E1",
+        "scope": "crm.customers.read"
+      },
+      {
+        "method": "GET",
+        "path": "/mail/messages",
+        "entry": "E2",
+        "scope": "Mail.Read"
+      },
+      {
+        "method": "POST",
+        "path": "/pact/v0.1/requirements",
+        "entry": "E1",
+        "scope": ""
+      }
+    ],
+    "keys": [
+      {
+        "ref": "entra-2026a",
+        "bits": 2048
+      }
+    ],
+    "tokens": [
+      {
+        "ref": "alice",
+        "opaque": "tok-crm-alice-6d2f9b1e8a40"
+      }
+    ],
+    "introspection": [
+      {
+        "endpoint": "https://as.acme.example/oauth2/introspect",
+        "token": "tok-crm-alice-6d2f9b1e8a40",
+        "status": 200,
+        "response": {
+          "active": true,
+          "sub": "248289761001",
+          "client_id": "crm-assistant",
+          "scope": " crm.customers.read openid",
+          "aud": "https://gateway.acme.example",
+          "iss": "https://as.acme.example",
+          "exp": 1792083000,
+          "iat": 1792079400,
+          "jti": "jti-crm-0001",
+          "token_type": "Bearer",
+          "username": "alice@acme.example"
+        }
+      }
+    ],
+    "discovery": [
+      {
+        "entry": "E2",
+        "url": "https://login.microsoftonline.com/7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11/v2.0/.well-known/openid-configuration",
+        "status": 200,
+        "document": {
+          "issuer": "https://login.microsoftonline.com/7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11/v2.0",
+          "jwks_uri": "https://login.microsoftonline.com/7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11/discovery/v2.0/keys",
+          "id_token_signing_alg_values_supported": [
+            "RS256"
+          ]
+        }
+      }
+    ],
+    "key_sets": [
+      {
+        "entry": "E2",
+        "url": "https://login.microsoftonline.com/7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11/discovery/v2.0/keys",
+        "status": 200,
+        "keys": [
+          {
+            "key": "entra-2026a",
+            "kid": "kid-2026a",
+            "kty": "RSA",
+            "use": "sig",
+            "issuer": "https://login.microsoftonline.com/7c1d0b3a-5e7f-4a53-9a43-2f7d1f0e9b11/v2.0"
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.acme.example/customers/C-1042",
+    "native_state_ref": "alice"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "CREDENTIAL_REJECTED"
+  }
+}

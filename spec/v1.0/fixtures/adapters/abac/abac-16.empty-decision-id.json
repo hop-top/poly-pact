@@ -1,0 +1,112 @@
+{
+  "case_version": 1,
+  "id": "ABAC-16.empty-decision-id",
+  "title": "A 200 answer with a valid allow that has an empty decision_id: the decision cannot be attributed, DEPENDENCY_UNAVAILABLE",
+  "draft": ["17.1", "12.2", "A.2"],
+  "native_state": {
+    "model": "abac/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/documents",
+      "origin": "https://gateway.northstar.example",
+      "header_allowlist": ["accept"]
+    },
+    "pdp": {
+      "source_id": "pdp-northstar",
+      "decision_path": "pact/abac/decision",
+      "answer": {
+        "status": 200,
+        "body": "{\"decision_id\":\"\",\"result\":{\"allow\":true,\"obligations\":[],\"policy_version\":\"abac-2026-10-01\"}}"
+      }
+    },
+    "zones": [
+      {"prefix": "10.20.0.0/16", "zone": "corporate"},
+      {"prefix": "203.0.113.0/24", "zone": "external"}
+    ],
+    "facts": [
+      {
+        "path": "/subject/principal_id",
+        "principal": "ldap:corp-directory:4f6c2a1e-9b3d-4c85-a2f0-1d7e6b5a4c39",
+        "value": "ldap:corp-directory:4f6c2a1e-9b3d-4c85-a2f0-1d7e6b5a4c39",
+        "observed_at": 1792079998,
+        "status_checked_at": 1792080000,
+        "source_id": "hr-northstar",
+        "source_ref": "hr:person:00412"
+      },
+      {
+        "path": "/subject/department",
+        "principal": "ldap:corp-directory:4f6c2a1e-9b3d-4c85-a2f0-1d7e6b5a4c39",
+        "value": "x-dept:northstar-hr:procurement",
+        "observed_at": 1792079960,
+        "status_checked_at": 1792079980,
+        "source_id": "hr-northstar",
+        "source_ref": "hr:assignment:00412"
+      },
+      {
+        "path": "/subject/clearance",
+        "principal": "ldap:corp-directory:4f6c2a1e-9b3d-4c85-a2f0-1d7e6b5a4c39",
+        "value": "confidential",
+        "observed_at": 1792079997,
+        "status_checked_at": 1792080000,
+        "source_id": "security-attributes",
+        "source_ref": "sec:clearance:00412"
+      },
+      {
+        "path": "/environment/device/compliant",
+        "device_id": "northstar-mdm:device-3a9c51e0",
+        "value": true,
+        "observed_at": 1792079880,
+        "status_checked_at": 1792079990,
+        "source_id": "mdm-northstar",
+        "source_ref": "mdm:device:3a9c51e0"
+      },
+      {
+        "path": "/resource/classification",
+        "resource": "document:c-2041",
+        "value": "confidential",
+        "observed_at": 1792079999,
+        "status_checked_at": 1792080000,
+        "source_id": "catalog-northstar",
+        "source_ref": "catalog:c-2041:classification"
+      },
+      {
+        "path": "/resource/owning_department",
+        "resource": "document:c-2041",
+        "value": "x-dept:northstar-hr:procurement",
+        "observed_at": 1792079999,
+        "status_checked_at": 1792080000,
+        "source_id": "catalog-northstar",
+        "source_ref": "catalog:c-2041:owner"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "ldap:corp-directory:4f6c2a1e-9b3d-4c85-a2f0-1d7e6b5a4c39",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/documents"
+      },
+      "workload": "ldap:corp-directory:4f6c2a1e-9b3d-4c85-a2f0-1d7e6b5a4c39",
+      "mechanism": "ldap",
+      "attributes": {"device_id": "northstar-mdm:device-3a9c51e0", "peer_address": "10.20.30.40"}
+    },
+    "operation": {
+      "operation_id": "op-document-read-0001",
+      "environment_id": "https://gateway.northstar.example/environments/documents",
+      "principal_id": "ldap:corp-directory:4f6c2a1e-9b3d-4c85-a2f0-1d7e6b5a4c39",
+      "action": "document.read",
+      "resources": ["document:c-2041"],
+      "method": "GET",
+      "target_uri": "https://gateway.northstar.example/api/documents/c-2041",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {
+    "function": "authorize_native",
+    "outcome": "error",
+    "reason_code": "DEPENDENCY_UNAVAILABLE",
+    "must_not_call": ["execute"]
+  }
+}

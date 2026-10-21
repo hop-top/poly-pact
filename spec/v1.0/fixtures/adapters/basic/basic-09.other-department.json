@@ -1,0 +1,64 @@
+{
+  "case_version": 1,
+  "id": "BASIC-09.other-department",
+  "title": "An invoice of another department is denied by the native permission lookup and nothing runs",
+  "draft": [
+    "4.3",
+    "17.1",
+    "2.3"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "invoices": [
+      {
+        "id": "INV-1041",
+        "department": "accounts-payable"
+      },
+      {
+        "id": "INV-2090",
+        "department": "treasury"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "basic:legacy-accounts:20417",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/invoices"
+      },
+      "workload": "basic:legacy-accounts:20417",
+      "mechanism": "basic"
+    },
+    "operation": {
+      "operation_id": "op-invoice-read-INV-2090",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "principal_id": "basic:legacy-accounts:20417",
+      "action": "invoice.read",
+      "resources": [
+        "invoice:INV-2090"
+      ],
+      "method": "GET",
+      "target_uri": "https://invoices.northstar.example/invoices/INV-2090",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {
+    "function": "authorize_native",
+    "outcome": "DENY",
+    "must_not_call": [
+      "execute"
+    ],
+    "decision": {
+      "source_id": "legacy-permissions"
+    }
+  }
+}

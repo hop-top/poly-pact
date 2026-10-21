@@ -1,0 +1,6 @@
+version: 1
+# Change applied after seed.ldif for LDAP-03.deleted-entry: the account
+# inventory-assistant-retail is deleted after it authenticated.
+
+dn: uid=inventory-assistant-retail,ou=retail,ou=people,ou=hq,dc=northstar,dc=example
+changetype: delete

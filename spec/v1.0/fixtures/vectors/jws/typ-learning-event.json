@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/typ-learning-event",
+  "description": "typ pact-learning-event+jwt requires signer role learning-controller (draft 7.3); kid is resolved in the key set trusted for that role.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtbGVhcm5pbmctZXZlbnQrand0Iiwia2lkIjoidGVzdC1sZWFybmluZy1jb250cm9sbGVyLWtleS0xIn0.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy90eXAtbGVhcm5pbmctZXZlbnQifQ.cle3oBaYatP-_thWnVemu0ip-7s75c17z58to-oweHY_Dy6M_qjJUbSOpQQltbl0acoM5WMMSusKkkeNnpoPyA",
+  "expected_typ": "pact-learning-event+jwt",
+  "trusted_keysets": {
+    "learning-controller": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "UVkLelFRQNLXhMhWCGaP3--Mgv0fW-UkIVVKDcPQM-0",
+        "y": "4MF9qJBKcn2K4b82v4p5Jg0BLwDU2AiI0dC7RP2hbaQ",
+        "kid": "test-learning-controller-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "UVkLelFRQNLXhMhWCGaP3--Mgv0fW-UkIVVKDcPQM-0",
+    "y": "4MF9qJBKcn2K4b82v4p5Jg0BLwDU2AiI0dC7RP2hbaQ",
+    "kid": "test-learning-controller-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": "{\"pact_version\":\"0.1\",\"jti\":\"vectors/jws/typ-learning-event\"}"
+}

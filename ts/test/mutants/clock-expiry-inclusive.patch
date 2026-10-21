@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/clock.ts b/ts/src/core/clock.ts
+index 77913db..645248c 100644
+--- a/ts/src/core/clock.ts
++++ b/ts/src/core/clock.ts
+@@ -227,7 +227,7 @@ export function checkWindow(
+     );
+   }
+   // now = sec + a fraction below 1, so now < exp exactly when sec < exp.
+-  if (!(sec < exp)) {
++  if (!(sec <= exp)) {
+     throw new ClockError('EXPIRED', `expired: exp ${exp}, now ${sec}`);
+   }
+ }

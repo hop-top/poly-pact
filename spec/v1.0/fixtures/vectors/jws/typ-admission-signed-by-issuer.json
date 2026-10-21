@@ -1,0 +1,45 @@
+{
+  "id": "vectors/jws/typ-admission-signed-by-issuer",
+  "description": "An admission attestation signed by the issuer key. Its typ requires role validator, and the issuer key is trusted only as issuer, so kid is not found where it is looked up.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtYWRtaXNzaW9uK2p3dCIsImtpZCI6InRlc3QtaXNzdWVyLWtleS0xIn0.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy90eXAtYWRtaXNzaW9uLXNpZ25lZC1ieS1pc3N1ZXIifQ.AF-u97euQtTWi9i83hKE5z9uIR2UlKzJ65LP_PcyJU5kMjJ4V3rIuhgFI_3biPdtTdPQ4ER7pf4p80BCJLJ1Ug",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ],
+    "validator": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "sBoXKnakYCyS0yQsuJfd4wJMdA3rshW0xrCq6Twikak",
+        "y": "6FwQdDI32tVv7A4t-6cDeRwA93Acfha9_XxIU4_Hf-I",
+        "kid": "test-validator-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "kid-unknown",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

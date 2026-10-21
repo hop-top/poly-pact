@@ -1,0 +1,6 @@
+{
+  "id": "vectors/strictjson/unknown-core-field",
+  "input_text": "{\"operation_id\":\"invoice-read-operation-0001\",\"environment_id\":\"https://gateway.example/environments/finance\",\"principal_id\":\"https://identity.example/principals/alice\",\"action\":\"invoice.read\",\"resources\":[\"https://invoices.example/invoices/INV-1042\"],\"method\":\"GET\",\"target_uri\":\"https://gateway.example/invoices/INV-1042\",\"body_digest\":\"47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU\",\"headers\":{},\"bogus_field\":true}",
+  "expect": "reject",
+  "reason": "bogus_field is not a core field of OperationContext; additional fields belong in extensions. Decode target: OperationContext."
+}

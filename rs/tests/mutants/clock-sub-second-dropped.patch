@@ -1,0 +1,11 @@
+--- a/rs/src/core/clock.rs
++++ b/rs/src/core/clock.rs
+@@ -175,7 +175,7 @@
+ /// instant exactly.
+ fn nanos(t: SystemTime) -> i128 {
+     match t.duration_since(UNIX_EPOCH) {
+-        Ok(d) => d.as_nanos() as i128,
++        Ok(d) => i128::from(d.as_secs()) * NANOS_PER_SEC,
+         Err(e) => -(e.duration().as_nanos() as i128),
+     }
+ }

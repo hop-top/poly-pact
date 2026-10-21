@@ -1,0 +1,11 @@
+--- a/rs/examples/vectors/jws_groups.rs
++++ b/rs/examples/vectors/jws_groups.rs
+@@ -99,7 +99,7 @@
+         }
+         return Ok(());
+     }
+-    if Some(reason.as_str()) != reject_reason {
++    if reason.is_empty() {
+         return fail(format!("reason {reason:?}, want {reject_reason:?}"));
+     }
+     Ok(())

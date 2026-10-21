@@ -1,0 +1,22 @@
+{
+  "id": "vectors/jws/header-jwk-private",
+  "description": "The embedded holder jwk carries the private member d (the published test scalar 1). Private JWK parameters are rejected (draft 7.2) even though the thumbprint matches and the signature is valid.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtcHJlc2VudGF0aW9uK2p3dCIsImp3ayI6eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6ImF4ZlI4dUVzUWtmNHZPYmxZNlJBOG5jRGZZRXQ2ek9nOUtFNVJkaVl3cFkiLCJ5IjoiVC1OQzR2NGFmNXVPNS10S2ZBLWVGaXZPTTFkck1WN095N1pBYURlX1VmVSIsImQiOiJBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFFIn19.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9oZWFkZXItandrLXByaXZhdGUifQ.7LNatRomuzl0Hl9V5xCwWub5wtA3A4k_r7wCRWgdApQIcAomXMmxzA-oYoOV4VfAR4SY_9PiJB7uuuXR8MevuQ",
+  "expected_typ": null,
+  "trusted_keysets": {},
+  "expected_holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "jwk-private",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "axfR8uEsQkf4vOblY6RA8ncDfYEt6zOg9KE5RdiYwpY",
+    "y": "T-NC4v4af5uO5-tKfA-eFivOM1drMV7Oy7ZAaDe_UfU",
+    "kid": "test-holder-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

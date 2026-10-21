@@ -1,0 +1,1 @@
+{"presentations":[{"signed":"signed/presentation.jws","jti":"jti-a","replica":"r1","concurrent":true},{"signed":"signed/presentation.jws","jti":"jti-a","replica":"r2","concurrent":true}]}

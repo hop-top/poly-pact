@@ -1,0 +1,34 @@
+{
+  "id": "vectors/jws/es256-high-s",
+  "description": "S is replaced by n - S (n the P-256 group order), the high-S twin of a valid signature. The ECDSA verification equation holds for S and for n - S alike, so both verify unless a verifier adds a low-S rule, and neither RFC 7518 section 3.4 nor the draft states one. This vector records that current behaviour: accept. Whether a PACT verifier must reject high-S signatures is an open question for the draft; if the draft decides to reject them, this vector changes to reject.",
+  "compact": "eyJhbGciOiJFUzI1NiIsInR5cCI6InBhY3QtZXZpZGVuY2Urand0Iiwia2lkIjoidGVzdC1pc3N1ZXIta2V5LTEifQ.eyJwYWN0X3ZlcnNpb24iOiIwLjEiLCJqdGkiOiJ2ZWN0b3JzL2p3cy9lczI1Ni1oaWdoLXMifQ.9GSdsqzS9qaZf3pNgqgH8FlI9JgTUN5U9QboF787Q12KQi-d7vA8VQl0oxXXEIdUvERSdphzBgHGvJqbP71e-w",
+  "expected_typ": null,
+  "trusted_keysets": {
+    "issuer": [
+      {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+        "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+        "kid": "test-issuer-key-1",
+        "alg": "ES256",
+        "use": "sig"
+      }
+    ]
+  },
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "accept",
+  "reject_reason": null,
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "fPJ7GI0DT36KUjgDBLUaw8CJaeJ38hs1pgtI_EdmmXg",
+    "y": "B3dVENuO0EApPZrGn3Qw27p9reY86YIpngS3nSJ4c9E",
+    "kid": "test-issuer-key-1",
+    "alg": "ES256",
+    "use": "sig"
+  },
+  "signature_valid": true,
+  "expected_payload": "{\"pact_version\":\"0.1\",\"jti\":\"vectors/jws/es256-high-s\"}"
+}

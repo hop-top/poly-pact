@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Schema/UriFormat.php b/php/src/Core/Schema/UriFormat.php
+index f2517f7..d268ee8 100644
+--- a/php/src/Core/Schema/UriFormat.php
++++ b/php/src/Core/Schema/UriFormat.php
+@@ -72,7 +72,7 @@ final class UriFormat implements Format
+      */
+     public static function matches(string $s): bool
+     {
+-        return preg_match("\x07" . self::URI_EXPRESSION . "\x07D", $s) === 1;
++        return preg_match("\x07" . self::URI_EXPRESSION . "\x07", $s) === 1;
+     }
+ 
+     /** The opis Format: a value that is not a string is not checked. */

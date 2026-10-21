@@ -1,0 +1,113 @@
+{
+  "description": "Test manifests for the entry fields conformance_profile, transport and layer (README.md, Manifest entry fields) and for the source-case layout (README.md, Manifest): four valid and nine invalid. Each file is a whole manifest. Validate it against the schema, then apply the field rules of section Checks; paths are not resolved. A valid case passes both. An invalid case fails the schema with exactly the errors in schema_errors (instance_pointer is the RFC 6901 location in the file, keyword the failing JSON Schema keyword; empty when the schema cannot express the rule) and the field rules with exactly the rule ids in rules.",
+  "schema": "../../manifest.schema.json",
+  "cases": [
+    {
+      "file": "valid-defaults.json",
+      "valid": true,
+      "reason": "no entry names a conformance profile, a transport or a layer: each runs under full, over https, for every layer",
+      "schema_errors": [],
+      "rules": []
+    },
+    {
+      "file": "valid-profiles.json",
+      "valid": true,
+      "reason": "conformance_profile lists full, single-owner or both; a profile entry has scope runner",
+      "schema_errors": [],
+      "rules": []
+    },
+    {
+      "file": "valid-transports.json",
+      "valid": true,
+      "reason": "transport lists https and stdio-ipc; layer only where transport has stdio-ipc; transport entries have scope runner, the mcp entry scope adapter",
+      "schema_errors": [],
+      "rules": []
+    },
+    {
+      "file": "valid-source-case.json",
+      "valid": true,
+      "reason": "a source case is the file sources/<source>/<case>.json with the id sources/<source>/<case>, whose case segment may contain a dot; its scope is adapter and it has no expected file and no outcome",
+      "schema_errors": [],
+      "rules": []
+    },
+    {
+      "file": "invalid-conformance-profile-lite.json",
+      "valid": false,
+      "reason": "conformance_profile names lite, which is not a conformance profile id of spec/v1.0/profiles/registry.json",
+      "schema_errors": [
+        {"instance_pointer": "/entries/0/conformance_profile/0", "keyword": "enum"}
+      ],
+      "rules": ["entry-conformance-profile"]
+    },
+    {
+      "file": "invalid-transport-tcp.json",
+      "valid": false,
+      "reason": "transport names tcp, which is neither https nor stdio-ipc",
+      "schema_errors": [
+        {"instance_pointer": "/entries/0/transport/0", "keyword": "enum"}
+      ],
+      "rules": ["entry-transport"]
+    },
+    {
+      "file": "invalid-layer-network.json",
+      "valid": false,
+      "reason": "layer is network, which is neither transcript nor os",
+      "schema_errors": [
+        {"instance_pointer": "/entries/0/layer", "keyword": "enum"}
+      ],
+      "rules": ["entry-layer"]
+    },
+    {
+      "file": "invalid-layer-on-https.json",
+      "valid": false,
+      "reason": "layer is set on an entry whose transport is https only",
+      "schema_errors": [
+        {"instance_pointer": "/entries/0/transport", "keyword": "not"}
+      ],
+      "rules": ["entry-layer"]
+    },
+    {
+      "file": "invalid-transport-no-layer.json",
+      "valid": false,
+      "reason": "an entry of kind transport names no layer, so it does not say who executes it",
+      "schema_errors": [
+        {"instance_pointer": "/entries/0", "keyword": "required"}
+      ],
+      "rules": ["entry-layer"]
+    },
+    {
+      "file": "invalid-duplicate-id.json",
+      "valid": false,
+      "reason": "two entries share the id admission/valid; JSON Schema cannot state unique ids",
+      "schema_errors": [],
+      "rules": ["entry-id-duplicate"]
+    },
+    {
+      "file": "invalid-missing-path.json",
+      "valid": false,
+      "reason": "the entry has no path",
+      "schema_errors": [
+        {"instance_pointer": "/entries/0", "keyword": "required"}
+      ],
+      "rules": ["manifest-shape"]
+    },
+    {
+      "file": "invalid-conformance-profile-not-array.json",
+      "valid": false,
+      "reason": "conformance_profile is the string full, not an array",
+      "schema_errors": [
+        {"instance_pointer": "/entries/0/conformance_profile", "keyword": "type"}
+      ],
+      "rules": ["manifest-shape"]
+    },
+    {
+      "file": "invalid-source-case-scope.json",
+      "valid": false,
+      "reason": "a source case has scope core; every source-case entry has scope adapter",
+      "schema_errors": [
+        {"instance_pointer": "/entries/0/scope", "keyword": "const"}
+      ],
+      "rules": ["entry-scope"]
+    }
+  ]
+}

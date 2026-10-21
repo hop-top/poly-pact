@@ -1,0 +1,11 @@
+--- a/tools/release/check-publish-map.py
++++ b/tools/release/check-publish-map.py
+@@ -236,7 +236,7 @@
+         eco = entry.get("ecosystem", "")
+         if not d:
+             errors.append(f"dir: {key}: no dir")
+-        elif d in roots and d not in components:
++        elif False:
+             if key not in roots[d]:
+                 errors.append(f"dir: {key}: {d!r} is the spec root of {', '.join(sorted(roots[d]))}, not of {key!r}")
+             elif eco != "none":

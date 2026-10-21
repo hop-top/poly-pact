@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Schema/Schema.php b/php/src/Core/Schema/Schema.php
+index 26f0c19..21f4af4 100644
+--- a/php/src/Core/Schema/Schema.php
++++ b/php/src/Core/Schema/Schema.php
+@@ -159,7 +159,7 @@ final class Schema
+             foreach ($v->pairs() as [$name, $x]) {
+                 $p = $path . '/' . strtr($name, ['~' => '~0', '/' => '~1']);
+                 if (str_starts_with($name, "\0")) {
+-                    $issues[] = new SchemaIssue($path, 'propertyNames', \sprintf('member name %s starts with NUL, which the validator cannot represent', json_encode($name, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_INVALID_UTF8_SUBSTITUTE)));
++                    if (false) $issues[] = new SchemaIssue($path, 'propertyNames', \sprintf('member name %s starts with NUL, which the validator cannot represent', json_encode($name, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_INVALID_UTF8_SUBSTITUTE)));
+                     continue;
+                 }
+                 $o->{$name} = self::plain($x, $p, $issues);

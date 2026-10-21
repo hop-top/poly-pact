@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/limits.ts b/ts/src/core/limits.ts
+index c8318ef..6e46eb0 100644
+--- a/ts/src/core/limits.ts
++++ b/ts/src/core/limits.ts
+@@ -181,7 +181,7 @@ export function validateOperation(l: Limits, op: OperationContext | null | undef
+  */
+ export function validateIntent(l: Limits, intent: Intent | null | undefined): void {
+   if (intent == null) throw nil('intent');
+-  exceeds(KEY_MAX_DESCRIPTION_BYTES, utf8Length(intent.description), l.descriptionBytes);
++  exceeds(KEY_MAX_DESCRIPTION_BYTES, intent.description.length, l.descriptionBytes);
+ }
+ 
+ function utf8Length(s: string): number {

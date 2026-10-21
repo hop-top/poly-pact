@@ -1,0 +1,6 @@
+{
+  "artifacts": [
+    {"decoded":"reports/feedback-event-0001.json","signed":"signed/feedback-event-0001.jws","typ":"pact-outcome+jwt","signer":"evaluator","jti":"PadvH-YXlScULO8P99LxTQ"},
+    {"decoded":"reports/feedback-event-0002.json","signed":"signed/feedback-event-0002.jws","typ":"pact-outcome+jwt","signer":"evaluator","jti":"bI9S5FyYEMvLvIFOYsjpkg"}
+  ]
+}

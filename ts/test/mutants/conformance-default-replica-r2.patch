@@ -1,0 +1,13 @@
+diff --git a/ts/src/conformance/case.ts b/ts/src/conformance/case.ts
+index 249082a..30dcb87 100644
+--- a/ts/src/conformance/case.ts
++++ b/ts/src/conformance/case.ts
+@@ -367,7 +367,7 @@ function readExchange(
+     submissions.push({
+       signed: p.signed,
+       jti: p.jti,
+-      replica: p.replica ?? 'r1',
++      replica: p.replica ?? 'r2',
+       concurrent: p.concurrent === true,
+       evictReplayRecords: p.evict_replay_records === true,
+       actualOperation: p.actual_operation ?? DEFAULT_OPERATION,

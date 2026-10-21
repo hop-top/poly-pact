@@ -1,0 +1,13 @@
+diff --git a/ts/src/core/strictjson.ts b/ts/src/core/strictjson.ts
+index 1964a88..796c8bc 100644
+--- a/ts/src/core/strictjson.ts
++++ b/ts/src/core/strictjson.ts
+@@ -70,7 +70,7 @@ export class StrictJSONError extends Error {
+ 
+   constructor(kind: StrictJSONErrorKind, path: string, offset: number, detail: string) {
+     // The root's pointer is "" (RFC 6901); "/" is the member named "".
+-    super(`strictjson: ${kind}${path === '' ? '' : ` at ${path}`} (offset ${offset}): ${detail}`);
++    super(`strictjson: ${kind} at ${path === '' ? '/' : path} (offset ${offset}): ${detail}`);
+     this.name = 'StrictJSONError';
+     this.kind = kind;
+     this.path = path;

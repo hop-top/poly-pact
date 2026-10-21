@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/strictjson/_walk.py b/py/src/hop_top_pact/core/strictjson/_walk.py
+index 26ad5c4..54f38e5 100644
+--- a/py/src/hop_top_pact/core/strictjson/_walk.py
++++ b/py/src/hop_top_pact/core/strictjson/_walk.py
+@@ -411,8 +411,6 @@ class _Walker:
+         if kind != _KEY:
+             raise self.fail(StrictJSONErrorKind.SYNTAX, "object member name is not a string")
+         self.path.append(key)
+-        if key in f.out:
+-            raise self.fail(StrictJSONErrorKind.DUPLICATE_KEY, json.dumps(key))
+         if f.fields is not None:
+             t = f.fields.get(key)
+             if t is None:

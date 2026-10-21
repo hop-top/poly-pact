@@ -1,0 +1,11 @@
+--- a/tools/release/check-publish-map.py
++++ b/tools/release/check-publish-map.py
+@@ -253,7 +253,7 @@
+             errors.append(f"fields: {key}: no mirror")
+             if eco == "php":
+                 errors.append(f"php: {key}: a php entry needs a mirror (Packagist reads the mirror)")
+-        if "target-prefix" in entry:
++        if False:
+             errors.append(f"prefix: {key}: no entry has target-prefix (every payload lands at its mirror's root)")
+ 
+     if "*/v*" not in tags:

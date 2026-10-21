@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/adapter/enroll_memory.py b/py/src/hop_top_pact/adapter/enroll_memory.py
+index 0afd911..02f7d0c 100644
+--- a/py/src/hop_top_pact/adapter/enroll_memory.py
++++ b/py/src/hop_top_pact/adapter/enroll_memory.py
+@@ -310,7 +310,7 @@ class MemoryRegistry:
+         """The rows of workload in realm that are in force: every row that is not
+         REVOKED, a COMPROMISED one included (identity mapping IM-18)."""
+         rows = self._by_work.get((realm, workload), [])
+-        return sum(1 for r in rows if r.binding.status != BindingStatus.REVOKED)
++        return len(rows)
+ 
+     def _read(self, row: _Row | None) -> AgentBinding:
+         """The binding of row confirmed as of now, or the UNKNOWN binding for None."""

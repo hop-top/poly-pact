@@ -1,0 +1,91 @@
+name: ci-php
+
+on:
+  push:
+    branches: [main, next, 'release/*']
+    paths:
+      - "php/**"
+      - "spec/v1.0/fixtures/**"
+      - "spec/v1.0/schemas/**"
+      - "spec/v1.0/draft.md"
+      - "spec/v1.0/spec-map.md"
+      - "tools/parity/gates.json"
+      - "go/core/enums.go"
+      - "go/core/jws/errors.go"
+      - "go/runner/manifest/**"
+      - "mise.toml"
+      - "Makefile"
+      - ".github/workflows/ci-php.yml"
+  pull_request:
+    paths:
+      - "php/**"
+      - "spec/v1.0/fixtures/**"
+      - "spec/v1.0/schemas/**"
+      - "spec/v1.0/draft.md"
+      - "spec/v1.0/spec-map.md"
+      - "tools/parity/gates.json"
+      - "go/core/enums.go"
+      - "go/core/jws/errors.go"
+      - "go/runner/manifest/**"
+      - "mise.toml"
+      - "Makefile"
+      - ".github/workflows/ci-php.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: PHP / Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # The composer.json floor and the newest release. PHP is not in
+        # mise.toml (mise builds it from source): setup-php installs it, and
+        # the php-* targets run php and composer from PATH.
+        php: ["8.4", "8.5"]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: shivammathur/setup-php@2.37.2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: hash, iconv, json, mbstring, openssl, pcre
+          ini-values: zend.assertions=1, error_reporting=-1
+          coverage: none
+          # Composer 2.10.3, the version the lock was written with.
+          tools: composer:2.10.3
+
+      - name: Interpreter
+        run: php -v && composer --version
+
+      - name: Install dependencies
+        working-directory: php
+        run: composer install --no-interaction --no-progress
+
+      - name: Platform requirements
+        working-directory: php
+        run: composer check-platform-reqs --no-dev
+
+      - name: Lint
+        run: make php-lint
+
+      - name: Test
+        run: make php-test
+
+      - name: Vectors
+        run: make php-vectors > /dev/null
+
+      - name: Schema copy
+        run: make php-check-schema
+
+      - name: Build
+        run: make php-build

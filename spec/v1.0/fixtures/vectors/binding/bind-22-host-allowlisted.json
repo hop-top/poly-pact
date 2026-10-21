@@ -1,0 +1,36 @@
+{
+  "id": "vectors/binding/bind-22-host-allowlisted",
+  "description": "The Appendix B allowlist with host added: host is never covered, so the configuration is refused (request-binding.md RB-20). It is a gateway fault, not INVALID_MESSAGE.",
+  "config": {
+    "origin": "https://gateway.example",
+    "header_allowlist": [
+      "if-match",
+      "x-dry-run",
+      "host"
+    ],
+    "normalization_id": "finance-header-normalization-1",
+    "mapping_version": "finance-http-1",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "request": {
+    "method": "GET",
+    "raw_request_uri": "/invoices/INV-1042",
+    "headers": [
+      {
+        "name": "Host",
+        "value": "gateway.example"
+      }
+    ],
+    "body_b64": ""
+  },
+  "operation_id": "invoice-read-operation-0001",
+  "principal_id": "https://identity.example/principals/alice",
+  "action": "invoice.read",
+  "resources": [
+    "https://invoices.example/invoices/INV-1042"
+  ],
+  "expect": {
+    "config_error": true
+  },
+  "expect_operation_digest": null
+}

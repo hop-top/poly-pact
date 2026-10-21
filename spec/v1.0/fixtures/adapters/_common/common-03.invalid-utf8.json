@@ -1,0 +1,54 @@
+{
+  "case_version": 1,
+  "id": "COMMON-03.invalid-utf8",
+  "title": "Percent-encoded octets that are not well-formed UTF-8 are rejected as INVALID_MESSAGE",
+  "draft": ["10.2", "13.4"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "mappings": [
+      {
+        "version": "map-1",
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/invoices/{id}",
+            "action": "invoice.read",
+            "resource": "https://invoices.example/invoices/{id}"
+          },
+          {
+            "method": "POST",
+            "path": "/invoices/{id}/approve",
+            "action": "invoice.approve",
+            "resource": "https://invoices.example/invoices/{id}"
+          }
+        ]
+      }
+    ],
+    "identities": [
+      {
+        "ref": "alice",
+        "id": "https://idp.acme.example/alice",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "https://workloads.acme.example/invoice-assistant",
+        "secret": "tok-alice-7f3a9c1e5b2d"
+      }
+    ]
+  },
+  "request": {"method": "POST", "url": "https://gateway.example/invoices/INV-1042%C0%AFapprove"},
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "mapping_version": "map-1"
+  },
+  "expect": {"function": "map_operation", "outcome": "error", "reason_code": "INVALID_MESSAGE"}
+}

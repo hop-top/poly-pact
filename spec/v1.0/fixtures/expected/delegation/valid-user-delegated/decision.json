@@ -1,0 +1,139 @@
+{
+  "decision": "ADMISSIBLE",
+  "transport_code": null,
+  "checks": [
+    {
+      "check_id": "native-authentication",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "agent-holder-binding",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "contract-validity",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "nonce",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "operation-binding",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "intent-binding",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "profile-validity",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "evidence-validity",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "reputation-context",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "security-hold",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "active-policy",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "principal",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "roles",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "supervisor-approval",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "isolation",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "reputation-status",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "native-principal-binding-v1",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "purpose-operation-v1",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "native-delegation-v1",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "security-hold-v1",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    },
+    {
+      "check_id": "execution-identity-v1",
+      "result": "PASS",
+      "reason_code": "REQUIREMENT_SATISFIED"
+    }
+  ],
+  "receipt": {
+    "typ": "pact-admission+jwt",
+    "signer": "keys/validator.jwk.json",
+    "claims": {
+      "pact_version": "0.1",
+      "iss": "https://trust.example/issuers/finance",
+      "sub": "https://identity.example/agents/invoice-assistant",
+      "aud": "https://gateway.example/finance",
+      "iat": 1792080000,
+      "tenant_id": "acme",
+      "presentation_id": "U6pX2a0NHv4B-gyKJem7rA",
+      "operation_id": "invoice-read-operation-0001",
+      "principal_id": "https://identity.example/principals/alice",
+      "environment_id": "https://gateway.example/environments/finance",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "profile_digest": "b6pNI8i5pX5MtuxkaBw0M-4tmzdkGsHVS_Kyji7_uOU",
+      "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+      "operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+      "requirements_digest": "8y7oUaT77S0kQcAEeZk14rdGEbJdsZdMfnSAzB3VifA",
+      "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+      "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+      "decision": "ADMISSIBLE",
+      "terminal_reason": "COMPLETED",
+      "mode": "enforced"
+    },
+    "exp_max": 1792080060
+  },
+  "executed": true
+}

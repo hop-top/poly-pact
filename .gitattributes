@@ -1,0 +1,50 @@
+# >>> kit-managed: gitattributes >>>
+# Default: text files normalize to LF, binary detection is automatic.
+* text=auto eol=lf
+
+# Explicit text formats — collapse cross-platform CRLF noise.
+*.md          text eol=lf
+*.mdx         text eol=lf
+*.yaml        text eol=lf
+*.yml         text eol=lf
+*.json        text eol=lf
+*.toml        text eol=lf
+*.sh          text eol=lf
+*.bash        text eol=lf
+*.bats        text eol=lf
+Dockerfile    text eol=lf
+*.Dockerfile  text eol=lf
+Makefile      text eol=lf
+*.proto       text eol=lf
+
+# Explicit binary — never line-end-translate or diff.
+*.png         binary
+*.jpg         binary
+*.jpeg        binary
+*.gif         binary
+*.ico         binary
+*.pdf         binary
+*.zip         binary
+*.tar.gz      binary
+*.tgz         binary
+*.woff        binary
+*.woff2       binary
+
+# Vendored docs — exclude from language stats.
+docs/**       linguist-documentation=true
+# Go
+*.go              text eol=lf
+**/*.pb.go        linguist-generated=true
+**/*.gen.go       linguist-generated=true
+go.sum            linguist-generated=true
+# <<< kit-managed: gitattributes <<<
+
+# Byte-exact conformance inputs. Fixture files, signed objects and the draft
+# feed digest vectors, signature checks and the draft SHA-256 pin, which must
+# match on every OS. CI on Windows fails when checkout changes a byte under
+# spec/ (.github/workflows/ci-go.yml, "Verify spec bytes").
+# Fixtures are never line-end converted on add or checkout.
+spec/v1.0/fixtures/**  -text
+*.jws             -text
+# The draft is text, always checked out with LF.
+spec/v1.0/draft.md     text eol=lf

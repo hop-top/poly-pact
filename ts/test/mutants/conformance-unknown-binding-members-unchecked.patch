@@ -1,0 +1,13 @@
+diff --git a/ts/src/conformance/decode.ts b/ts/src/conformance/decode.ts
+index 649c112..c017767 100644
+--- a/ts/src/conformance/decode.ts
++++ b/ts/src/conformance/decode.ts
+@@ -481,7 +481,7 @@ export function checkAuthenticated(a: Authenticated | null): void {
+     ['operator_id', a.operator_id],
+     ['holder_jkt', a.holder_jkt],
+   ] as const) {
+-    if (unknown && v !== null) {
++    if (false && unknown && v !== null) {
+       throw new CaseError(
+         `authenticated.${name} is set, but binding_status unknown has no agent, operator or key (null)`,
+       );

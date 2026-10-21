@@ -1,0 +1,82 @@
+{
+  "store_id": "legacy-accounts",
+  "accounts": [
+    {
+      "account_id": "20417",
+      "user_id": "invoice-assistant-ops",
+      "password": {
+        "scheme": "pbkdf2-sha256",
+        "iterations": 4096,
+        "salt": "RnVJatXT01tnEUSjOkfAeg",
+        "key": "3yuXPi7OJmYJkUK_O7UYgaiuOgqKIX3npH6k3jmkxMM"
+      },
+      "roles": [
+        "AP_READER"
+      ],
+      "department": "accounts-payable",
+      "status": "active"
+    },
+    {
+      "account_id": "20511",
+      "user_id": "report-runner",
+      "password": {
+        "scheme": "pbkdf2-sha256",
+        "iterations": 4096,
+        "salt": "3gSpyuekkkK3LDBXdwp93A",
+        "key": "_PIyp7LVLAVPZ7kr2xVIwxCzbhPHn6JtoxNu7wzXU8M"
+      },
+      "roles": [
+        "AP_READER",
+        "AP_EXPORT"
+      ],
+      "department": "treasury",
+      "status": "active"
+    },
+    {
+      "account_id": "20612",
+      "user_id": "legacy-approver",
+      "password": {
+        "scheme": "pbkdf2-sha256",
+        "iterations": 4096,
+        "salt": "g2gXobAmrLsSvGCncrjOPQ",
+        "key": "MSoKynmZIem2P_rmcJpTaBVTd0CQTgVEJqWl9_h5kAg"
+      },
+      "roles": [
+        "invoice-approver",
+        "AP_READER"
+      ],
+      "department": "accounts-payable",
+      "status": "active"
+    },
+    {
+      "account_id": "20788",
+      "user_id": "legacy-batch",
+      "password": {
+        "scheme": "pbkdf2-sha256",
+        "iterations": 4096,
+        "salt": "QljGvMfmpNN_komUJBtnUQ",
+        "key": "wUeDPSSlBQHUIorKYCfR0ad8ZIbUnVNzkyxaE3jvt7Q"
+      },
+      "roles": [
+        "AP_READER"
+      ],
+      "department": "accounts-payable",
+      "status": "active"
+    },
+    {
+      "account_id": "20999",
+      "user_id": "former-assistant",
+      "password": {
+        "scheme": "pbkdf2-sha256",
+        "iterations": 4096,
+        "salt": "Dft6Fs_EkWUKaeDV39XcqQ",
+        "key": "m3OeY5-3qEkkzg5pl4NtfiujHqO4Hu6da6TBYMZx5lg"
+      },
+      "roles": [
+        "AP_READER"
+      ],
+      "department": "accounts-payable",
+      "status": "disabled"
+    }
+  ]
+}

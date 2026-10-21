@@ -1,0 +1,4 @@
+{
+  "transport_code": "CONTEXT_MISMATCH",
+  "reason": "The contract's extensions carry no pact-transport-profile-v1 declaration, so the contract names the HTTPS baseline (draft 13.3.1). The gateway established from the channel that the presentation arrived over stdio-ipc, as part of authenticate_native (13.3.1, 17.1). An enforced-mode gateway rejects a presentation received over a transport other than the one its contract names before an authenticated evaluation (12.2), with CONTEXT_MISMATCH (13.3.1; 13.4: transport differs); no receipt (the downgrade rule)"
+}

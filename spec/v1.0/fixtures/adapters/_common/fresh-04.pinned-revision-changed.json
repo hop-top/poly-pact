@@ -1,0 +1,55 @@
+{
+  "case_version": 1,
+  "id": "FRESH-04.pinned-revision-changed",
+  "title": "A policy revision that changed after the contract was issued fails the version-pinned check with REQUIREMENTS_CHANGED",
+  "draft": ["11.3", "9.3", "13.4"],
+  "now": 1792080000,
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "checks": [
+      {
+        "id": "native-policy-v1",
+        "result": "PASS",
+        "reason_code": "REQUIREMENT_SATISFIED",
+        "source_id": "policy-decision-point",
+        "source_ref": "decision-7f3a",
+        "observed_at": 1792079998,
+        "pinned_revision": "finance-policy-7",
+        "revision": "finance-policy-8"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "check_id": "native-policy-v1",
+    "intent": {
+      "intent_id": "intent-01",
+      "purpose_id": "invoice-approval",
+      "description": "Approve the September invoice.",
+      "task_id": "native-task:september-summary-007"
+    },
+    "operation": {
+      "operation_id": "op-invoice-approve-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://idp.acme.example/alice",
+      "action": "invoice.read",
+      "resources": ["https://invoices.example/invoices/INV-1042"],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect": {"function": "check_context", "outcome": "FAIL", "reason_code": "REQUIREMENTS_CHANGED"}
+}

@@ -1,0 +1,14 @@
+diff --git a/py/src/hop_top_pact/adapter/adaptertest/compare.py b/py/src/hop_top_pact/adapter/adaptertest/compare.py
+--- a/py/src/hop_top_pact/adapter/adaptertest/compare.py
++++ b/py/src/hop_top_pact/adapter/adaptertest/compare.py
+@@ -183,8 +183,8 @@
+         nothing an adapter returns on trust."""
+         try:
+             return f(), None, True
+-        except PactError as e:
+-            return None, e, True
++        except Exception as e:
++            return None, e, True  # type: ignore[return-value]
+         except Exception as e:
+             self.fail(
+                 f"{step} raised {type(e).__name__}: {error_text(e)}; an adapter reports an"

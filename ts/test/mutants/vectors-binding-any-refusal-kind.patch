@@ -1,0 +1,13 @@
+diff --git a/ts/src/vectors/run-binding.ts b/ts/src/vectors/run-binding.ts
+index 162eccb..4efd3ef 100644
+--- a/ts/src/vectors/run-binding.ts
++++ b/ts/src/vectors/run-binding.ts
+@@ -107,7 +107,7 @@ export function runBinding(root: string, e: Entry, core: Core): void {
+   } catch (err) {
+     rethrowStub(err);
+     if (accept) throw new Error(`refused (${messageOf(err)}), want an operation context`);
+-    if (err instanceof RequestError && err.kind === 'INVALID_REQUEST') return;
++    if (err instanceof RequestError) return;
+     throw new Error(`got ${messageOf(err)}, want a RequestError INVALID_REQUEST (INVALID_MESSAGE)`);
+   }
+   if (!accept) throw new Error('got an operation context, want a refusal (INVALID_MESSAGE)');

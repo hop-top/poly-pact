@@ -1,0 +1,115 @@
+name: ci-parity
+
+on:
+  push:
+    branches: [main, next, 'release/*']
+    # The only job that compares the languages, so the filter stays generous:
+    # any change that can shift what a harness prints, or how the comparison
+    # judges it, runs it. tools/parity holds the comparator and the gates file.
+    paths:
+      - "spec/**"
+      - "go/**"
+      - "cli/**"
+      - "go.work"
+      - "ts/**"
+      - "py/**"
+      - "rs/**"
+      - "php/**"
+      - "scripts/specjson.py"
+      - "tools/parity/**"
+      - "Makefile"
+      - "mise.toml"
+      - ".github/workflows/ci-parity.yml"
+  pull_request:
+    paths:
+      - "spec/**"
+      - "go/**"
+      - "cli/**"
+      - "go.work"
+      - "ts/**"
+      - "py/**"
+      - "rs/**"
+      - "php/**"
+      - "scripts/specjson.py"
+      - "tools/parity/**"
+      - "Makefile"
+      - "mise.toml"
+      - ".github/workflows/ci-parity.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+# The job names are required-check names for branch protection: do not rename.
+jobs:
+  parity:
+    name: Parity / Compare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # Every toolchain of mise.toml in one runner: make parity runs the
+      # harness of each language whose package exists.
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          cache: true
+      # The rs harness: Rust from the package-local rs/mise.toml.
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          working_directory: rs
+          install: true
+          install_args: rust
+          cache: true
+      # PHP is not in mise.toml (mise builds it from source); php-vectors
+      # runs php and composer from PATH.
+      - uses: shivammathur/setup-php@2.37.2
+        with:
+          php-version: "8.5"
+          extensions: hash, iconv, json, mbstring, openssl, pcre
+          coverage: none
+          tools: composer:2.10.3
+      - run: mise run install
+
+      - name: Comparator self-test
+        # Synthetic NDJSON, one mutation per rule: the comparator must fail
+        # each one for the rule it names, and pass the controls.
+        run: make parity-selftest
+
+      - name: Conformance
+        # pactc over every manifest entry against the fake implementation of
+        # the runner tests (go/runner/testdata/fakeimpl, good mode); fails on
+        # any FAIL. Its pactc/v1 report is the runner leg of Parity.
+        run: make conformance CONFORMANCE_REPORT=bin/conformance/pactc.json
+
+      - name: Upload conformance report
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: conformance-report
+          path: bin/conformance/pactc.json
+          if-no-files-found: ignore
+
+      - name: Parity
+        # Runs every present harness, then compares each against the
+        # manifest and tools/parity/gates.json, with the conformance report
+        # as the runner leg of go.
+        run: make parity PARITY_ARGS="--runner-report go=bin/conformance/pactc.json"
+
+      - name: Upload harness output
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: parity-ndjson
+          path: bin/parity/
+          if-no-files-found: ignore

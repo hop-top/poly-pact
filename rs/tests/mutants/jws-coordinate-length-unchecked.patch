@@ -1,0 +1,11 @@
+--- a/rs/src/core/jws/jwk.rs
++++ b/rs/src/core/jws/jwk.rs
+@@ -182,7 +182,7 @@
+ fn coordinate(name: &str, s: &str) -> Result<Vec<u8>, Error> {
+     let b =
+         decode_segment(s).map_err(|e| fail(Reason::JWKInvalid, format!("{name} is not canonical base64url: {e}")))?;
+-    if b.len() != 32 {
++    if b.is_empty() {
+         return Err(fail(Reason::JWKInvalid, format!("{name} has {} octets, want 32", b.len())));
+     }
+     Ok(b)

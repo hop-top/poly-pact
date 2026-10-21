@@ -1,0 +1,31 @@
+[package]
+name = "hop-top-pact"
+version = "1.0.0-alpha.0"
+edition = "2024"
+rust-version = "1.88"
+description = "Rust SDK of the PACT protocol: wire types, strict JSON, JCS, digests and ES256 JWS"
+license = "MIT"
+repository = "https://github.com/hop-top/poly-pact"
+homepage = "https://github.com/hop-top/poly-pact/tree/main/rs"
+documentation = "https://docs.rs/hop-top-pact"
+readme = "README.md"
+keywords = ["pact", "jws", "jcs", "agents", "admission"]
+categories = ["cryptography", "encoding"]
+include = ["Cargo.toml", "README.md", "LICENSE", "src/**", "schema/**", "examples/**", "tests/*.rs", "tests/support/**"]
+
+[dependencies]
+base64 = { version = "=0.23.1", default-features = false, features = ["std"] }
+getrandom = { version = "=0.4.3", default-features = false, features = ["sys_rng"] }
+jsonschema = { version = "=0.59.0", default-features = false }
+p256 = { version = "=0.14.0", default-features = false, features = ["ecdsa"] }
+regex = { version = "=1.13.1", default-features = false, features = ["std"] }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
+
+[[example]]
+name = "vectors"
+test = true
+
+[dev-dependencies]
+serde_json_canonicalizer = "=0.4.1"

@@ -1,0 +1,20 @@
+diff --git a/php/src/Core/RequirementContract.php b/php/src/Core/RequirementContract.php
+index 265ff61..1db7b56 100644
+--- a/php/src/Core/RequirementContract.php
++++ b/php/src/Core/RequirementContract.php
+@@ -38,7 +38,6 @@ final readonly class RequirementContract
+         'context_checks' => ['kind' => 'array', 'items' => 'string', 'required' => true, 'nullable' => false, 'ref' => null, 'enum' => null],
+         'learning_policy_digest' => ['kind' => 'string', 'items' => null, 'required' => true, 'nullable' => false, 'ref' => null, 'enum' => null],
+         'learning_artifact_digest' => ['kind' => 'string', 'items' => null, 'required' => true, 'nullable' => false, 'ref' => null, 'enum' => null],
+-        'nonce' => ['kind' => 'string', 'items' => null, 'required' => true, 'nullable' => false, 'ref' => null, 'enum' => null],
+         'mode' => ['kind' => 'string', 'items' => null, 'required' => true, 'nullable' => false, 'ref' => null, 'enum' => Mode::class],
+         'extensions' => ['kind' => 'object', 'items' => null, 'required' => false, 'nullable' => false, 'ref' => null, 'enum' => null],
+     ];
+@@ -68,7 +67,6 @@ final readonly class RequirementContract
+         public array $context_checks,
+         public string $learning_policy_digest,
+         public string $learning_artifact_digest,
+-        public string $nonce,
+         public string $mode,
+         public ?JsonObject $extensions = null,
+     ) {}

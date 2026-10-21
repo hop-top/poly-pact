@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/runner/manifest/files.py b/py/src/hop_top_pact/runner/manifest/files.py
+index a1c6819..93ab667 100644
+--- a/py/src/hop_top_pact/runner/manifest/files.py
++++ b/py/src/hop_top_pact/runner/manifest/files.py
+@@ -72,7 +72,7 @@ def _walk(top: str, rel: str = "") -> Iterator[str]:
+         names = sorted(it, key=lambda d: d.name)
+     for d in names:
+         r = rel + "/" + d.name if rel else d.name
+-        if d.is_dir(follow_symlinks=False):
++        if d.is_dir():
+             yield from _walk(d.path, r)
+         else:
+             yield r

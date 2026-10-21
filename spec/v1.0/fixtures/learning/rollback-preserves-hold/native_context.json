@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "task_id": "native-task:september-summary-007",
+      "agent_id": "https://identity.example/agents/invoice-assistant",
+      "operator_id": "https://identity.example/operators/acme",
+      "principal_id": "https://identity.example/principals/alice",
+      "independence_group": "native-task-group:september-summary-007"
+    }
+  ],
+  "records": {
+    "native-incident:finance-0001": {
+      "kind": "incident",
+      "state": "confirmed",
+      "returned": null,
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0002",
+      "executor": null,
+      "observed_at": 1792166630
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "claim": {
+    "roles": ["PACT Gateway 0.1", "PACT Validator 0.1"],
+    "modes": ["enforced"],
+    "presentation_transports": ["header"],
+    "adapters": [
+      {"protocol": "saml", "version": "2.0", "mapping_revision": "pact-saml-1"}
+    ],
+    "conformance_profile": ["full"],
+    "transport": [
+      {"transport_profile": "https", "version": "0.1"}
+    ]
+  },
+  "protected_routes": [
+    {
+      "method": "GET",
+      "path_pattern": "/broker/v1/tasks/{task_id}/records/{record_id}",
+      "action": "record.read",
+      "resource_mapping": "record:{record_id}, from the path parameter; task_id from the path is the Intent task_id checked against the grant; the principal is the session principal, never a request parameter"
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/broker/v1/tasks/{task_id}/records",
+      "action": "record.list",
+      "resource_mapping": "record-collection, the collection the session principal's native authority covers; query parameters such as a filter and a page token are part of the bound operation"
+    }
+  ],
+  "enforcement_points": [
+    {"function": "authenticate_native", "component": "Broker request stage, before routing to the resource layer: verifies the agent's own broker credential, resolves the grant named by the request's task reference, reads the grant's session live, returns the session principal with the agent's workload; no live session is a native denial; a grant for another agent is denied"},
+    {"function": "resolve_agent_binding", "component": "Enrollment registry lookup by the realm, the agent's broker workload, and the agent ID that the presentation names, independent of the SAML sign-in; a workload with more than one enrollment in force is a configuration error"},
+    {"function": "map_operation", "component": "Broker mapping stage, mapping revision pact-saml-1, baseline HTTP mapping"},
+    {"function": "read_native_claim", "component": "Live read of the SP session record for the approved paths /attributes/environment/principal_id and /attributes/environment/idp_realm; a directory adapter for membership facts when a contract requires them"},
+    {"function": "check_context", "component": "Installed checks native-delegation-v1 and execution-identity-v1, with the mandatory protocol checks"},
+    {"function": "authorize_native", "component": "The SP's existing access policy for the requested records, invoked with the session principal and never the broker's identity"},
+    {"function": "record_outcome", "component": "Broker outcome writer, after execution; each authorization and execution report references an immutable native record of the actual executor identity"}
+  ],
+  "native_dependencies": [
+    {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator in the SP's request path; to be supplied"},
+    {"component": "C02", "owner": "SP and IAM owners, adapter owner", "what_exists": "The SP's SAML implementation and session store, assumed to exist; the broker's agent authentication and the adapter's claim and check functions, to be supplied"},
+    {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry with administrator-run enrollment; a reference registry exists, a production store is to be supplied"},
+    {"component": "C04", "owner": "Application and IAM owner", "what_exists": "The task broker and its TaskGrant store, assumed by the example and to be supplied by the SP; final authority_ref semantics wait for the delegation binding model"},
+    {"component": "C05", "owner": "SP, IAM and adapter owners", "what_exists": "SPSession store, TaskGrant store, enrollment registry and hold store, to be supplied; membership from a directory adapter under its own profile, which has not landed"},
+    {"component": "C06", "owner": "none", "what_exists": "Not used: no approval workflow is part of this profile; reauthentication or approval the environment requires is handled by its own workflow"},
+    {"component": "C07", "owner": "Adapter owner", "what_exists": "Broker mapper at revision pact-saml-1; to be supplied"},
+    {"component": "C08", "owner": "Resource owner", "what_exists": "The SP's resource layer and access policy; exists"},
+    {"component": "C09", "owner": "Gateway and platform owner", "what_exists": "Replay and receipt store; to be supplied"},
+    {"component": "C10", "owner": "Resource and evidence owner", "what_exists": "Broker task record and the SP audit log of executor identity; to be supplied"},
+    {"component": "C11", "owner": "none", "what_exists": "Not used: PACT Reputation 0.1 is not claimed here"},
+    {"component": "C12", "owner": "Platform owner", "what_exists": "Policy registry holding the base requirements; to be supplied as a registry only, no adaptation lifecycle"},
+    {"component": "C13", "owner": "Security and IAM owner", "what_exists": "Hold store and enrollment status; to be supplied"},
+    {"component": "C14", "owner": "Security and data owner", "what_exists": "Access-controlled evidence and audit store; to be supplied; records that hold a principal identifier carry the controls of SAML Core section 8.3.7"},
+    {"component": "C15", "owner": "none", "what_exists": "Not used: only reads are claimed, so there are no transactions, budgets or side effects to control"},
+    {"component": "C16", "owner": "none", "what_exists": "Not used: no runtime attestation or data-use guarantee is claimed; a required runtime fact is attested-only"}
+  ],
+  "bypass_paths": [
+    {
+      "path": "Grant creation and management routes of the portal, reached with an agent credential and no user session",
+      "control": "closed",
+      "evidence": "These routes accept only a live SPSession as authentication and reject an agent credential (SB-8); planned case SAML-10, no fixture file yet"
+    },
+    {
+      "path": "Broker routes and methods outside the two protected routes, including every operation with side effects, reached with a valid agent credential, an enrolled agent and a live grant",
+      "control": "closed",
+      "evidence": "The broker's agent-facing route table serves only the two protected routes (SB-20); planned case SAML-11, no fixture file yet"
+    },
+    {
+      "path": "The same portal resources reached directly by the user's own browser session, with no agent involved",
+      "control": "out_of_claim",
+      "evidence": "Native user access under native authorization, not an agent request path; excluded in unsupported_forms (the user's own access)"
+    },
+    {
+      "path": "An agent using a copy of the user's session credential or of a SAML assertion against portal routes",
+      "control": "out_of_claim",
+      "evidence": "SB-3 forbids the SP to hand either to the agent but a user-side copy cannot be controlled; excluded in unsupported_forms (assertion and session credential export)"
+    },
+    {
+      "path": "SAML sign-in (assertion consumer) and single logout endpoints of the SP",
+      "control": "out_of_claim",
+      "evidence": "Assertion validation stays in the SP's SAML implementation (SB-1); what the adapter does with the resulting sessions is covered by the cases SAML-01, SAML-02, SAML-04 and SAML-05"
+    },
+    {
+      "path": "Native administrative paths that create, change or revoke enrollments, grants or sessions",
+      "control": "out_of_claim",
+      "evidence": "Governed by the environment's own administrative controls, not an agent request path"
+    }
+  ],
+  "unsupported_forms": [
+    "Universal unattended SAML agent login: a request with no live SPSession has no principal (case SAML-09); the Enhanced Client or Proxy profile and any other SAML profile or binding used by an agent as a SAML party are not claimed",
+    "Delegation supplied by SAML itself: the only delegation read is the TaskGrant created by an authenticated portal action; no delegation, proxying or act-as meaning is read from any SAML message or extension",
+    "Assertion export to the agent, export of the SP session credential to the agent, and the user's own direct access: the SP hands the agent neither, and a copy a user makes or the user's own access is outside the claim",
+    "IdP-initiated agent sessions: an unsolicited Response can at most establish the user's SP session, never a grant or an agent task, because a grant exists only through a portal action in a live session",
+    "Agents that share one broker credential: each agent has its own broker credential, the default of identity-mapping section 5, and a workload with more than one enrollment in force is a configuration error",
+    "Operations with side effects, and every route other than the two in protected_routes: transactions, budgets and idempotency need C15, which is not used, and a route not listed is not claimed",
+    "Membership, role and account-state facts taken from the assertion, the SPSession or authn_instant: such facts come only from a directory adapter with its own observation time, and no directory adapter profile has landed",
+    "A requirement on how recently the user authenticated: authn_instant is not a freshness time and no baseline check consumes it",
+    "An SP that has no task broker: there is no TaskGrant and no authenticated portal action to create one",
+    "The final semantics of authority_ref: they wait for the delegation binding model"
+  ],
+  "freshness": [
+    {
+      "source": "SP session store (SPSession lookup)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Task grant store (TaskGrant lookup)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Enrollment registry (agent and key binding status)",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    },
+    {
+      "source": "Security hold store",
+      "observation": "authoritative",
+      "max_age_seconds": 0,
+      "status_max_age_seconds": 0,
+      "outage": "defer"
+    }
+  ],
+  "membership_sources": [
+    {
+      "source": "SP session store (SPSession lookup)",
+      "facts": ["identity"],
+      "live_check": {"available": true, "endpoint_class": "local lookup of the SP's session record, on the authoritative copy"},
+      "change_feed": {"mode": "none"},
+      "best_status_max_age_seconds": 0,
+      "value_semantics": "authoritative_current"
+    }
+  ],
+  "attribute_sources": [],
+  "residual_limits": [
+    "Post-read: data already returned to the agent is not recalled by a later logout, expiry or grant revocation, and an executed operation is not undone by revoking its receipt; no egress, output or data-use control is claimed and a required runtime fact is attested-only; disclosed here with no bound",
+    "Revocation propagation, SP session: a logout, a termination by the SP and expiry are seen at the next read of the session record and every grant of that session is then unusable; zero within the SP's consistency domain",
+    "Revocation propagation, identity provider: a session that ends at the identity provider reaches this profile only as a logout request at the SP or as a new authentication by the user, otherwise the SP session continues until its own end, and the logout protocol is a SHOULD for the session authority with a PartialLogout status for unreachable participants (SAML Core section 3.7.3.2); bounded by the session expires_at and the grant expires_at, and not otherwise",
+    "Revocation propagation, grants and enrollment: a revoked grant, or a binding revoked or marked compromised, prevents later admissions in the gateway's consistency domain; the binding is read for each evaluation; zero within each store's own consistency",
+    "In-flight operations: a read that has begun when the session ends is not cancelled by this profile; session and grant are read immediately before execution starts and after that the broker's native cancellation semantics apply, which the broker documents",
+    "Name reuse: the SAML texts read do not say whether an identity provider may issue a persistent NameID value again to another subject after deleting one, so a reused value could map to an existing principal; disclosed here and open",
+    "Forged portal action: a browser can be induced to make the portal action that creates a grant without the user's intent; the SP applies its own request-forgery defences, which this profile does not specify; disclosed here with no bound",
+    "Re-stamp detection on session claims: the two session claims carry no SourceRef, so the monotonic guard does not compare them and the integration rests on the gateway's own clock; disclosed here"
+  ],
+  "fixtures": [
+    {"id": "adapters/saml/saml-01.wrong-audience", "path": "fixtures/adapters/saml/saml-01.wrong-audience.json"},
+    {"id": "adapters/saml/saml-02.after-logout", "path": "fixtures/adapters/saml/saml-02.after-logout.json"},
+    {"id": "adapters/saml/saml-02.replay-session", "path": "fixtures/adapters/saml/saml-02.replay-session.json"},
+    {"id": "adapters/saml/saml-02.session-unchanged", "path": "fixtures/adapters/saml/saml-02.session-unchanged.json"},
+    {"id": "adapters/saml/saml-03.grant-user-mismatch", "path": "fixtures/adapters/saml/saml-03.grant-user-mismatch.json"},
+    {"id": "adapters/saml/saml-03.identity-headers", "path": "fixtures/adapters/saml/saml-03.identity-headers.json"},
+    {"id": "adapters/saml/saml-03.session-cookie", "path": "fixtures/adapters/saml/saml-03.session-cookie.json"},
+    {"id": "adapters/saml/saml-04.at-expiry", "path": "fixtures/adapters/saml/saml-04.at-expiry.json"},
+    {"id": "adapters/saml/saml-04.before-expiry", "path": "fixtures/adapters/saml/saml-04.before-expiry.json"},
+    {"id": "adapters/saml/saml-04.delegation", "path": "fixtures/adapters/saml/saml-04.delegation.json"},
+    {"id": "adapters/saml/saml-04.expired", "path": "fixtures/adapters/saml/saml-04.expired.json"},
+    {"id": "adapters/saml/saml-05.delegation", "path": "fixtures/adapters/saml/saml-05.delegation.json"},
+    {"id": "adapters/saml/saml-05.logged-out", "path": "fixtures/adapters/saml/saml-05.logged-out.json"},
+    {"id": "adapters/saml/saml-06.at-expiry", "path": "fixtures/adapters/saml/saml-06.at-expiry.json"},
+    {"id": "adapters/saml/saml-06.expired-grant", "path": "fixtures/adapters/saml/saml-06.expired-grant.json"},
+    {"id": "adapters/saml/saml-07.grantee-compromised", "path": "fixtures/adapters/saml/saml-07.grantee-compromised.json"},
+    {"id": "adapters/saml/saml-07.grantee-revoked", "path": "fixtures/adapters/saml/saml-07.grantee-revoked.json"},
+    {"id": "adapters/saml/saml-07.no-grant", "path": "fixtures/adapters/saml/saml-07.no-grant.json"},
+    {"id": "adapters/saml/saml-07.other-agent", "path": "fixtures/adapters/saml/saml-07.other-agent.json"},
+    {"id": "adapters/saml/saml-07.other-agent-check", "path": "fixtures/adapters/saml/saml-07.other-agent-check.json"},
+    {"id": "adapters/saml/saml-07.other-principal", "path": "fixtures/adapters/saml/saml-07.other-principal.json"},
+    {"id": "adapters/saml/saml-07.other-task", "path": "fixtures/adapters/saml/saml-07.other-task.json"},
+    {"id": "adapters/saml/saml-07.outside-scope", "path": "fixtures/adapters/saml/saml-07.outside-scope.json"},
+    {"id": "adapters/saml/saml-07.usable", "path": "fixtures/adapters/saml/saml-07.usable.json"},
+    {"id": "adapters/saml/saml-08.directory-times", "path": "fixtures/adapters/saml/saml-08.directory-times.json"},
+    {"id": "adapters/saml/saml-08.login-time", "path": "fixtures/adapters/saml/saml-08.login-time.json"},
+    {"id": "adapters/saml/saml-08.read-time", "path": "fixtures/adapters/saml/saml-08.read-time.json"},
+    {"id": "adapters/saml/saml-09.no-session", "path": "fixtures/adapters/saml/saml-09.no-session.json"},
+    {"id": "adapters/saml/saml-09.no-task-route", "path": "fixtures/adapters/saml/saml-09.no-task-route.json"},
+    {"id": "adapters/saml/saml-17.direct", "path": "fixtures/adapters/saml/saml-17.direct.json"},
+    {"id": "adapters/saml/saml-17.forged-token", "path": "fixtures/adapters/saml/saml-17.forged-token.json"},
+    {"id": "adapters/saml/saml-17.idp-realm", "path": "fixtures/adapters/saml/saml-17.idp-realm.json"},
+    {"id": "adapters/saml/saml-17.no-credential", "path": "fixtures/adapters/saml/saml-17.no-credential.json"},
+    {"id": "adapters/saml/saml-17.other-user", "path": "fixtures/adapters/saml/saml-17.other-user.json"},
+    {"id": "adapters/saml/saml-17.via-enforcement-point", "path": "fixtures/adapters/saml/saml-17.via-enforcement-point.json"}
+  ]
+}

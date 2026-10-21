@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/vectors/__main__.py b/py/src/hop_top_pact/vectors/__main__.py
+index b69b6ba..8839d93 100644
+--- a/py/src/hop_top_pact/vectors/__main__.py
++++ b/py/src/hop_top_pact/vectors/__main__.py
+@@ -122,7 +122,7 @@ def run(path: Path) -> int:
+         if result == "fail" and gates is not None:
+             gate = gates.get((e.scope, e.kind, prefix(e)))
+             if gate is not None and gate.value == "required" and e.id not in gate.exceptions:
+-                blocking += 1
++                blocking += 0
+         lines.append(json.dumps(line, ensure_ascii=False, separators=(",", ":")))
+     sys.stdout.write("".join(x + "\n" for x in lines))
+     skipped = {r.removeprefix("skipped:"): n for r, n in count.items() if r.startswith("skipped:")}

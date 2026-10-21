@@ -1,0 +1,24 @@
+{
+  "description": "The TransportDeclaration payload of the stdio-ipc transport profile: channels stdio, uds and named-pipe, framing ndjson, a frame limit of 524288 bytes, identity assurance kernel-peer and launcher (draft 13.3.1, 20.1, A.2).",
+  "objects": [
+    {
+      "section": "13.3.1",
+      "def": "TransportDeclaration",
+      "object": {
+        "transport_profile": "stdio-ipc",
+        "version": "0.1",
+        "channels": [
+          "stdio",
+          "uds",
+          "named-pipe"
+        ],
+        "framing": "ndjson",
+        "max_frame_bytes": 524288,
+        "identity_assurance": [
+          "kernel-peer",
+          "launcher"
+        ]
+      }
+    }
+  ]
+}

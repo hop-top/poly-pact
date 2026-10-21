@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/correction-recompute",
+  "adversarial_claim": "A correction adds a second vote beside the success it supersedes, or the snapshot keeps the superseded success.",
+  "subject_event_id": "correction-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution completed with data returned': EXECUTION, SUCCESS, reliability. It contributes one positive unit until correction-event-0002 supersedes it (14.6 rule 10); at the end of the case it contributes nothing and is listed in superseded_event_ids, not qualified_event_ids (15.2)."
+    },
+    {
+      "event_id": "correction-event-0002",
+      "report": "reports/correction-event-0002.json",
+      "signed": "signed/correction-event-0002.jws",
+      "qualification": "QUALIFIED",
+      "reason": "correction",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 1
+      },
+      "rationale": "Draft 14.6 rule 10: same task_id, operation_id, dimension and reporter as the event it supersedes; scored as one event with its own result FAILURE and observed_at in place of execution-event-0001; 14.3: corrections do not add a second vote."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 1
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

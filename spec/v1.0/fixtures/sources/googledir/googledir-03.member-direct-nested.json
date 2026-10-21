@@ -1,0 +1,168 @@
+{
+  "case_version": 1,
+  "id": "GOOGLE-03.member-direct-nested",
+  "title": "members.hasMember: a direct member and a member of a nested group are members, a suspended member is still a member, a non-member is not.",
+  "draft": [
+    "8.3",
+    "9.2",
+    "17.2",
+    "18"
+  ],
+  "now": 1792080000,
+  "source": {
+    "model": "googledir/1",
+    "source_id": "googledir-northstar",
+    "principal_prefix": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:",
+    "groups": [
+      "grp-eng",
+      "grp-ops"
+    ],
+    "transitive_groups": [],
+    "directory": {
+      "customer": "my_customer",
+      "users": [
+        {
+          "id": "118233047251904436211",
+          "primary_email": "avery@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436212",
+          "primary_email": "blake@northstar.example",
+          "aliases": [],
+          "suspended": true,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436213",
+          "primary_email": "casey@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": true
+        },
+        {
+          "id": "118233047251904436214",
+          "primary_email": "devon@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        },
+        {
+          "id": "118233047251904436215",
+          "primary_email": "emery@northstar.example",
+          "aliases": [],
+          "suspended": false,
+          "archived": false
+        }
+      ],
+      "groups": [
+        {
+          "id": "grp-platform",
+          "members": [
+            "118233047251904436214"
+          ],
+          "groups": []
+        },
+        {
+          "id": "grp-eng",
+          "members": [
+            "118233047251904436211"
+          ],
+          "groups": [
+            "grp-platform"
+          ]
+        },
+        {
+          "id": "grp-all",
+          "members": [],
+          "groups": [
+            "grp-eng"
+          ]
+        },
+        {
+          "id": "grp-ops",
+          "members": [
+            "118233047251904436212"
+          ],
+          "groups": []
+        }
+      ]
+    }
+  },
+  "reads": [
+    {
+      "at": 1792080000,
+      "native_path": "/principal/groups/grp-eng/member",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "value",
+        "value": true,
+        "observed_at": 1792080000,
+        "status_checked_at": 1792080000,
+        "source_id": "googledir-northstar"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/groups/grp-eng/member",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436214",
+      "expect": {
+        "outcome": "value",
+        "value": true,
+        "observed_at": 1792080000,
+        "status_checked_at": 1792080000,
+        "source_id": "googledir-northstar"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/groups/grp-eng/member",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436215",
+      "expect": {
+        "outcome": "value",
+        "value": false,
+        "observed_at": 1792080000,
+        "status_checked_at": 1792080000,
+        "source_id": "googledir-northstar"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/groups/grp-ops/member",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436212",
+      "expect": {
+        "outcome": "value",
+        "value": true,
+        "observed_at": 1792080000,
+        "status_checked_at": 1792080000,
+        "source_id": "googledir-northstar"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/groups/grp-ops/member",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:118233047251904436211",
+      "expect": {
+        "outcome": "value",
+        "value": false,
+        "observed_at": 1792080000,
+        "status_checked_at": 1792080000,
+        "source_id": "googledir-northstar"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/groups/grp-eng/member",
+      "principal": "oauth:https%3A%2F%2Faccounts.google.com:northstar.example:avery%40northstar.example",
+      "expect": {
+        "outcome": "error",
+        "reason_code": "MISSING_FIELD"
+      }
+    }
+  ],
+  "must_not_call": [
+    "email-key"
+  ]
+}

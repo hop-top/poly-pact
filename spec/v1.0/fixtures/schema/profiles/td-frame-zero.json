@@ -1,0 +1,24 @@
+{
+  "description": "TransportDeclaration payload with max_frame_bytes 0 (draft 20.1: at least 360448).",
+  "objects": [
+    {
+      "section": "20.1",
+      "def": "TransportDeclaration",
+      "object": {
+        "transport_profile": "stdio-ipc",
+        "version": "0.1",
+        "channels": [
+          "stdio",
+          "uds",
+          "named-pipe"
+        ],
+        "framing": "ndjson",
+        "max_frame_bytes": 0,
+        "identity_assurance": [
+          "kernel-peer",
+          "launcher"
+        ]
+      }
+    }
+  ]
+}

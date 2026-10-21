@@ -1,0 +1,34 @@
+{
+  "case": "outcomes/qualification/environmental-failure-misattributed",
+  "adversarial_claim": "A read that failed because of a storage outage is counted as an attributable failure of the agent.",
+  "subject_event_id": "execution-event-0001",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "causal-zero-weight",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.6 rule 8: causal_assessment ENVIRONMENT carries zero negative weight; 14.3: outages MUST NOT count as agent misconduct. Zero weight, so not listed in qualified_event_ids (15.2)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

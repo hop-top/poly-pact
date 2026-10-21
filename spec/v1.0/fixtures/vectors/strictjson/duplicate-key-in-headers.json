@@ -1,0 +1,6 @@
+{
+  "id": "vectors/strictjson/duplicate-key-in-headers",
+  "input_text": "{\"operation_id\":\"invoice-read-operation-0001\",\"environment_id\":\"https://gateway.example/environments/finance\",\"principal_id\":\"https://identity.example/principals/alice\",\"action\":\"invoice.read\",\"resources\":[\"https://invoices.example/invoices/INV-1042\"],\"method\":\"GET\",\"target_uri\":\"https://gateway.example/invoices/INV-1042\",\"body_digest\":\"47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU\",\"headers\":{\"x-a\":\"1\",\"x-a\":\"2\"}}",
+  "expect": "reject",
+  "reason": "Duplicate member name x-a inside the headers map. Decode target: OperationContext."
+}

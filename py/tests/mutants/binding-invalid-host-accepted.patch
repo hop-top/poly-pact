@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/core/binding/_headers.py b/py/src/hop_top_pact/core/binding/_headers.py
+--- a/py/src/hop_top_pact/core/binding/_headers.py
++++ b/py/src/hop_top_pact/core/binding/_headers.py
+@@ -98,7 +98,7 @@
+     if origin_form and not values:
+         raise refuse(Rule.MISSING_HOST, "an origin-form request without Host")
+     for v in values:
+-        if not _valid_host(v.strip(" \t")):
++        if not _valid_host(v.strip(" \t")) and not v:
+             raise refuse(Rule.INVALID_HOST, 'the Host value is not uri-host [ ":" port ]')
+ 
+ 

@@ -1,0 +1,6 @@
+{
+  "artifacts": [
+    {"decoded":"reports/execution-event-0001.json","signed":"signed/execution-event-0001.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"Q_FKEtFnNjI--8BZ2xHQLg"},
+    {"decoded":"reports/quality-event-0002.json","signed":"signed/quality-event-0002.jws","typ":"pact-outcome+jwt","signer":"executor","jti":"DwouZSh3TLgjF79-QBufHA"}
+  ]
+}

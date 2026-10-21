@@ -1,0 +1,22 @@
+diff --git a/ts/src/adapter/freshness.ts b/ts/src/adapter/freshness.ts
+index 5a90c49..8bbfe5a 100644
+--- a/ts/src/adapter/freshness.ts
++++ b/ts/src/adapter/freshness.ts
+@@ -181,6 +181,8 @@ export class Evaluator {
+     const observed = usable(claim.observedAt) ? claim.observedAt : null;
+     const checked = usable(claim.statusCheckedAt) ? claim.statusCheckedAt : null;
+ 
++    const guard = this.guard === null ? CheckStatus.NOT_APPLICABLE : this.guard.check(claim)[0];
++    if (guard === CheckStatus.FAIL) return [CheckStatus.FAIL, REASON_CODE.RESTAMPED];
+     // A source clock ahead outranks everything, and an implausible time is
+     // never recorded as the baseline of a source record.
+     const latest = now + skew;
+@@ -188,8 +190,6 @@ export class Evaluator {
+       return [CheckStatus.FAIL, REASON_CODE.CLOCK_AHEAD];
+     }
+ 
+-    const guard = this.guard === null ? CheckStatus.NOT_APPLICABLE : this.guard.check(claim)[0];
+-    if (guard === CheckStatus.FAIL) return [CheckStatus.FAIL, REASON_CODE.RESTAMPED];
+ 
+     if (
+       (observed !== null && tooOld(observed, now, start, rule.max_age_seconds)) ||

@@ -1,0 +1,81 @@
+{
+  "case_version": 1,
+  "id": "LDAP-02.ad-disabled",
+  "title": "Active Directory: userAccountControl with ADS_UF_ACCOUNTDISABLE is disabled",
+  "draft": [
+    "17.1",
+    "17.2",
+    "8.3",
+    "11.4"
+  ],
+  "native_state": {
+    "model": "ldap/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/inventory",
+      "origin": "https://inventory.northstar.example",
+      "header_allowlist": []
+    },
+    "login_realm": "corp",
+    "directories": [
+      {
+        "name": "corp-ad",
+        "seed": "assets/ad-seed.ldif"
+      }
+    ],
+    "realms": [
+      {
+        "realm_id": "corp",
+        "kind": "activedirectory",
+        "directory": "corp-ad",
+        "unique_id_text": "rfc4122-octet-order",
+        "user_bases": [
+          "CN=Users,DC=corp,DC=northstar,DC=example"
+        ],
+        "group_bases": [
+          "OU=Groups,DC=corp,DC=northstar,DC=example"
+        ],
+        "account_class": "user",
+        "group_class": "group",
+        "login_attribute": "sAMAccountName",
+        "lookup": {
+          "dn": "CN=PACT Lookup,CN=Users,DC=corp,DC=northstar,DC=example",
+          "password": "Ad5!willow-crest-41"
+        },
+        "denied_principals": [
+          "ldap:corp:7a3f0c52-9d41-4e8b-a6f2-000000003109"
+        ],
+        "sentinel": {
+          "account": "7a3f0c52-9d41-4e8b-a6f2-000000003108",
+          "group": "7a3f0c52-9d41-4e8b-a6f2-000000003204",
+          "parent_group": "7a3f0c52-9d41-4e8b-a6f2-000000003205"
+        },
+        "direct_groups": true,
+        "nested": "ad-chain"
+      }
+    ]
+  },
+  "call": {
+    "principal": {
+      "id": "ldap:corp:7a3f0c52-9d41-4e8b-a6f2-000000003102",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/inventory"
+      },
+      "workload": "ldap:corp:7a3f0c52-9d41-4e8b-a6f2-000000003102",
+      "mechanism": "ldap-simple-bind"
+    },
+    "native_path": "/principal/account_state"
+  },
+  "expect": {
+    "function": "read_native_claim",
+    "outcome": "claim",
+    "claim": {
+      "value": "disabled",
+      "observed_at": 1792080000,
+      "status_checked_at": 1792080000,
+      "source_id": "ldap:corp:state:pact-ldap-state-ad-1",
+      "source_ref": "7a3f0c52-9d41-4e8b-a6f2-000000003102@1792080000"
+    }
+  }
+}

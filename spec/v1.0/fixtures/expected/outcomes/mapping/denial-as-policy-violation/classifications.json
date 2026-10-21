@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/denial-as-policy-violation",
+  "adversarial_claim": "A native denial is laundered into a detected policy violation: SECURITY FAILURE on policy_adherence citing the denial record, so that the denial adds negative policy_adherence weight.",
+  "subject_event_id": "security-event-0002",
+  "events": [
+    {
+      "event_id": "authorization-event-0001",
+      "report": "reports/authorization-event-0001.json",
+      "signed": "signed/authorization-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "none",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Native denial': AUTHORIZATION, FAILURE, none; zero weight; not misconduct (14.3). The authorization record names the declared delegated-user executor (14.2)."
+    },
+    {
+      "event_id": "security-event-0002",
+      "report": "reports/security-event-0002.json",
+      "signed": "signed/security-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "record-mismatch",
+      "contribution": {
+        "dimension": "policy_adherence",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.2: a native denial is not a detected policy violation, and the gateway reports a violation citing its record of the violating request. The report cites the denial record and no violation record of its task and operation, so it is UNQUALIFIED; no negative weight."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 0,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

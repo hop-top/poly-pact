@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/duplicate-reports-same-tuple",
+  "adversarial_claim": "The resource service reports the same completed read twice under two event_id and jti values, and the second report counts as a second success.",
+  "subject_event_id": "execution-event-0001",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution completed with data returned': EXECUTION, SUCCESS, reliability; counts toward reliability. The cited record names the declared executor (14.2)."
+    },
+    {
+      "event_id": "execution-event-0002",
+      "report": "reports/execution-event-0002.json",
+      "signed": "signed/execution-event-0002.jws",
+      "qualification": null,
+      "reason": "duplicate",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.6 rule 4 and 14.3: same (task_id, operation_id, event_kind, dimension, reporter) tuple as execution-event-0001, so it gets a DUPLICATE acknowledgment and casts no second vote. Its (iss, jti) is new, so it is not an identical retry (7.5). Not listed in qualified_event_ids (15.2)."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 1,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

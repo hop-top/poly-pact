@@ -1,0 +1,59 @@
+{
+  "case_version": 1,
+  "id": "IDENT-01.authenticate",
+  "title": "Another user of the same tenant authenticates as itself, not as the account the agent is enrolled for",
+  "draft": ["8.5", "17.1"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "identities": [
+      {
+        "ref": "enrolled-account",
+        "id": "basic:acme-accounts:20417",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "basic:acme-accounts:20417",
+        "secret": "tok-20417-4c8e1a7b9d2f"
+      },
+      {
+        "ref": "other-user",
+        "id": "basic:acme-accounts:20511",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "basic:acme-accounts:20511",
+        "secret": "tok-20511-e5a3c9b17d40"
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "basic:acme-accounts:20417",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "operator_id": "https://identity.example/operators/finance-ops",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079940,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-0001"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.example/invoices/INV-1042",
+    "native_state_ref": "other-user"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "authenticated",
+    "principal": {
+      "id": "basic:acme-accounts:20511",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "basic:acme-accounts:20511"
+    }
+  }
+}

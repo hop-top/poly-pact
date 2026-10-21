@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/qualification/client-task-id-unreconciled",
+  "adversarial_claim": "The agent supplies a fresh task_id for a second read of the same native task, so that its success counts as a second independent task.",
+  "subject_event_id": "execution-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution completed with data returned': EXECUTION, SUCCESS, reliability; counts toward reliability."
+    },
+    {
+      "event_id": "execution-event-0002",
+      "report": "reports/execution-event-0002.json",
+      "signed": "signed/execution-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "task-unreconciled",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft 14.6 rule 2 and 10.1: its client-supplied task_id is in no authoritative task record, and the native record it cites belongs to native-task:september-summary-007. Rule 1: its independence_group comes from task_attribution_source, not from the report. 14.3: an agent-controlled change of task ID cannot create an independent task."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 1,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

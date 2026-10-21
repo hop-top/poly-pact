@@ -1,0 +1,5 @@
+# Release-please-managed paths only, owned by the release team. No catch-all
+# rule: a "*" entry would put every pull request into code-owner review.
+/.github/release-please-config.json @hop-top/release
+/.github/.release-please-manifest.json @hop-top/release
+CHANGELOG.md @hop-top/release

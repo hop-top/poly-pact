@@ -1,0 +1,56 @@
+{
+  "case_version": 1,
+  "id": "BASIC-07.dedicated",
+  "title": "The one enrollment of the account binds its agent with the enrolled holder key",
+  "draft": [
+    "6.1",
+    "6.2",
+    "17.1"
+  ],
+  "workloads": "dedicated",
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "northstar",
+          "environment_id": "https://gateway.northstar.example/environments/invoices"
+        },
+        "workload": "basic:legacy-accounts:20417",
+        "agent_id": "https://agents.northstar.example/invoice-assistant",
+        "operator_id": "https://operators.northstar.example/finance-ops",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079970,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-20417-a"
+      }
+    ]
+  },
+  "call": {
+    "realm": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices"
+    },
+    "workload": "basic:legacy-accounts:20417",
+    "agent_id": "https://agents.northstar.example/invoice-assistant"
+  },
+  "expect": {
+    "function": "resolve_agent_binding",
+    "outcome": "bound",
+    "binding": {
+      "agent_id": "https://agents.northstar.example/invoice-assistant",
+      "operator_id": "https://operators.northstar.example/finance-ops",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "status": "ACTIVE"
+    }
+  }
+}

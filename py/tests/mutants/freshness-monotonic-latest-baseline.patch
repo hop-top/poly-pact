@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/adapter/freshness.py b/py/src/hop_top_pact/adapter/freshness.py
+index b2c1c40..568c089 100644
+--- a/py/src/hop_top_pact/adapter/freshness.py
++++ b/py/src/hop_top_pact/adapter/freshness.py
+@@ -282,6 +282,7 @@ class Monotonic:
+             if first is None and len(self._seen) >= self._limit:
+                 return CheckStatus.UNKNOWN, ReasonCode.DEPENDENCY_UNAVAILABLE
+             if first is not None and at > first:
++                self._seen[key] = at
+                 return CheckStatus.FAIL, ReasonCode.RESTAMPED
+             self._seen[key] = at
+             return CheckStatus.PASS, ReasonCode.SATISFIED

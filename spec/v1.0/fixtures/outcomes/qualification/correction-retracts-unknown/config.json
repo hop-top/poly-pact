@@ -1,0 +1,36 @@
+{
+  "now": 1792080000,
+  "clock_skew_seconds": 5,
+  "data_policy": {
+    "qualification_policy_id": "pact-qualification-v1",
+    "ingestion_window_seconds": 604800,
+    "positive_weight_cap_per_task": 1,
+    "maximum_failure_weight": 5,
+    "task_attribution_source": "native-task-registry",
+    "reporter_independence_policy_id": "pact-reporter-independence-v1"
+  },
+  "reputation_service": {
+    "service_id": "https://reputation.example/finance",
+    "tenant_id": "acme",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "visibility": "execution",
+  "trust": [
+    {
+      "iss": "https://executor.example/finance",
+      "role": "reporter",
+      "reporter_role": "executor",
+      "keys": [
+        "keys/executor.jwk.json"
+      ]
+    }
+  ],
+  "executor_classes": [
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0001",
+      "class": "delegated-user"
+    }
+  ]
+}

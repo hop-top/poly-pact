@@ -1,0 +1,59 @@
+{
+  "id": "vectors/binding/bind-01-appendix-b3",
+  "description": "The request of the Appendix B finance gateway binds to the Appendix B.3 operation context, whose object_digest is the operation_digest of Appendix B.4 and B.7. Authorization and PACT-Presentation are never covered; Accept is not allowlisted.",
+  "config": {
+    "origin": "https://gateway.example",
+    "header_allowlist": [
+      "if-match",
+      "x-dry-run"
+    ],
+    "normalization_id": "finance-header-normalization-1",
+    "mapping_version": "finance-http-1",
+    "environment_id": "https://gateway.example/environments/finance"
+  },
+  "request": {
+    "method": "GET",
+    "raw_request_uri": "/invoices/INV-1042",
+    "headers": [
+      {
+        "name": "Host",
+        "value": "gateway.example"
+      },
+      {
+        "name": "Authorization",
+        "value": "Bearer native-token"
+      },
+      {
+        "name": "PACT-Presentation",
+        "value": "eyJhbGciOiJFUzI1NiJ9.e30.c2ln"
+      },
+      {
+        "name": "Accept",
+        "value": "application/json"
+      }
+    ],
+    "body_b64": ""
+  },
+  "operation_id": "invoice-read-operation-0001",
+  "principal_id": "https://identity.example/principals/alice",
+  "action": "invoice.read",
+  "resources": [
+    "https://invoices.example/invoices/INV-1042"
+  ],
+  "expect": {
+    "operation_context": {
+      "operation_id": "invoice-read-operation-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://identity.example/principals/alice",
+      "action": "invoice.read",
+      "resources": [
+        "https://invoices.example/invoices/INV-1042"
+      ],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    }
+  },
+  "expect_operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0"
+}

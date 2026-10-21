@@ -1,0 +1,116 @@
+{
+  "case_version": 1,
+  "id": "AWS-09.jwt-member",
+  "title": "An authorizer with a jwt member besides iam is refused, CREDENTIAL_REJECTED",
+  "draft": [
+    "17.1",
+    "8.5"
+  ],
+  "native_state": {
+    "model": "aws/1",
+    "gateway": {
+      "tenant_id": "northwind",
+      "environment_id": "https://api.metrics.example/environments/operations",
+      "origin": "https://api.metrics.example",
+      "header_allowlist": []
+    },
+    "api": {
+      "partition": "aws",
+      "account_id": "111122223333",
+      "api_id": "a1b2c3d4e5"
+    },
+    "configuration_check": {
+      "completed_at": 1792079970,
+      "passed": true,
+      "findings": []
+    },
+    "roles": [
+      {
+        "account_id": "111122223333",
+        "role_arn": "arn:aws:iam::111122223333:role/agents/metrics-reader",
+        "role_id": "AROAEXAMPLEREADER0001",
+        "session_name": {
+          "rule": "any"
+        }
+      },
+      {
+        "account_id": "111122223333",
+        "role_arn": "arn:aws:iam::111122223333:role/agents/report-builder",
+        "role_id": "AROAEXAMPLEBUILDER001",
+        "session_name": {
+          "rule": "any"
+        }
+      }
+    ],
+    "sessions": [
+      {
+        "ref": "reader",
+        "iam": {
+          "accessKey": "ASIAEXAMPLEREADER001",
+          "accountId": "111122223333",
+          "callerId": "AROAEXAMPLEREADER0001:metrics-assistant",
+          "cognitoIdentity": null,
+          "principalOrgId": "o-exampleorg1",
+          "userArn": "arn:aws:sts::111122223333:assumed-role/metrics-reader/metrics-assistant",
+          "userId": "AROAEXAMPLEREADER0001:metrics-assistant"
+        }
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://api.metrics.example/environments/operations"
+        },
+        "workload": "aws:111122223333:arn%3Aaws%3Aiam%3A%3A111122223333%3Arole%2Fagents%2Fmetrics-reader:unreported",
+        "agent_id": "https://agents.northwind.example/metrics-assistant",
+        "operator_id": "https://operators.northwind.example/sre",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1792076400,
+        "status_checked_at": 1792079995,
+        "source_id": "enrollment-registry",
+        "source_ref": "enrollment-0001"
+      },
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://api.metrics.example/environments/operations"
+        },
+        "workload": "aws:111122223333:arn%3Aaws%3Aiam%3A%3A111122223333%3Arole%2Fagents%2Freport-builder:unreported",
+        "agent_id": "https://agents.northwind.example/report-builder",
+        "operator_id": "https://operators.northwind.example/sre",
+        "holder_jkt": "ahxE1XEYqxvLIZy3r4nx9RE4E0683KndykyuZTK9xQg",
+        "status": "ACTIVE",
+        "observed_at": 1792076400,
+        "status_checked_at": 1792079995,
+        "source_id": "enrollment-registry",
+        "source_ref": "enrollment-0003"
+      }
+    ],
+    "event": {
+      "requestContext": {
+        "authorizer": {
+          "jwt": {
+            "claims": {
+              "sub": "metrics-assistant"
+            },
+            "scopes": [
+              "metrics/read"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://api.metrics.example/metrics/operations",
+    "native_state_ref": "reader"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "denied",
+    "reason_code": "CREDENTIAL_REJECTED"
+  }
+}

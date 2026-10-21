@@ -1,0 +1,4 @@
+{
+  "transport_code": "INVALID_PROOF",
+  "reason": "the presented agent has no record in the authenticated realm: resolve_agent_binding returns UNKNOWN with no agent, operator or key and without the report of an enrollment for another workload (draft 17.1; identity mapping IM-11, section 8 row 2). No binding in force with the presentation key exists, so holder binding fails at 11.3 step 2, before an authenticated evaluation (12.2), INVALID_PROOF (6.1, 13.4), no receipt"
+}

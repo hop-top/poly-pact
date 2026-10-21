@@ -1,0 +1,79 @@
+{
+  "case_version": 1,
+  "id": "BASIC-06.map-error",
+  "title": "The mapping error of a request with a fragment carries neither the password nor its Base64 form",
+  "draft": [
+    "10.2",
+    "19"
+  ],
+  "native_state": {
+    "model": "basic/1",
+    "gateway": {
+      "tenant_id": "northstar",
+      "environment_id": "https://gateway.northstar.example/environments/invoices",
+      "origin": "https://invoices.northstar.example",
+      "header_allowlist": []
+    },
+    "accounts": "assets/accounts.json",
+    "credentials": [
+      {
+        "ref": "ops",
+        "user_id": "invoice-assistant-ops",
+        "password": "Tq7!harbor-lantern-42"
+      },
+      {
+        "ref": "ops-wrong-password",
+        "user_id": "invoice-assistant-ops",
+        "password": "Tq7!harbor-lantern-43"
+      },
+      {
+        "ref": "unknown-user",
+        "user_id": "invoice-assistant-0ps",
+        "password": "Tq7!harbor-lantern-42"
+      },
+      {
+        "ref": "approver",
+        "user_id": "legacy-approver",
+        "password": "Lm4:quarry:otter"
+      },
+      {
+        "ref": "batch",
+        "user_id": "legacy-batch",
+        "password": "batch\u0007bell-31"
+      },
+      {
+        "ref": "former",
+        "user_id": "former-assistant",
+        "password": "Zx9$willow-ember-07"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://invoices.northstar.example/invoices/INV-1041#lines",
+    "native_state_ref": "ops"
+  },
+  "call": {
+    "principal": {
+      "id": "basic:legacy-accounts:20417",
+      "realm": {
+        "tenant_id": "northstar",
+        "environment_id": "https://gateway.northstar.example/environments/invoices"
+      },
+      "workload": "basic:legacy-accounts:20417",
+      "mechanism": "basic"
+    },
+    "mapping_version": "pact-basic-1"
+  },
+  "expect": {
+    "function": "map_operation",
+    "outcome": "error",
+    "reason_code": "INVALID_MESSAGE",
+    "leak_scan": {
+      "secrets": [
+        "Tq7!harbor-lantern-42",
+        "aW52b2ljZS1hc3Npc3RhbnQtb3BzOlRxNyFoYXJib3ItbGFudGVybi00Mg=="
+      ]
+    }
+  }
+}

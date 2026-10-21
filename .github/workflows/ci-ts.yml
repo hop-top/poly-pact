@@ -1,0 +1,177 @@
+name: ci-ts
+
+on:
+  push:
+    branches: [main, next, 'release/*']
+    paths:
+      - "ts/**"
+      - "spec/v1.0/fixtures/**"
+      - "spec/v1.0/schemas/**"
+      - "spec/v1.0/draft.md"
+      - "spec/v1.0/profiles/freshness.md"
+      - "spec/v1.0/profiles/registry.json"
+      - "spec/v1.0/profiles/integration-profile.schema.json"
+      - "spec/v1.0/spec-map.md"
+      - "tools/spec/manifest-parity-cases.json"
+      - "go/runner/manifest/**"
+      - "tools/mutants.py"
+      - "mise.toml"
+      - "Makefile"
+      - ".github/workflows/ci-ts.yml"
+  pull_request:
+    paths:
+      - "ts/**"
+      - "spec/v1.0/fixtures/**"
+      - "spec/v1.0/schemas/**"
+      - "spec/v1.0/draft.md"
+      - "spec/v1.0/profiles/freshness.md"
+      - "spec/v1.0/profiles/registry.json"
+      - "spec/v1.0/profiles/integration-profile.schema.json"
+      - "spec/v1.0/spec-map.md"
+      - "tools/spec/manifest-parity-cases.json"
+      - "go/runner/manifest/**"
+      - "tools/mutants.py"
+      - "mise.toml"
+      - "Makefile"
+      - ".github/workflows/ci-ts.yml"
+  schedule:
+    # Nightly: the full test job on every Node version, and the mutation
+    # patches of ts/test/mutants.
+    - cron: "23 4 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: TypeScript / Test (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # 22.18.0 is the engines.node floor of ts/package.json; 26.10.0 is the
+        # mise.toml pin.
+        node: ["22.18.0", "24.21.0", "26.10.0"]
+    env:
+      # Overrides the node pin of mise.toml for this leg.
+      MISE_NODE_VERSION: ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up toolchains
+        uses: jdx/mise-action@v5.1.1
+
+      - name: Install dependencies
+        run: mise run install
+
+      - name: Lint
+        # Biome, tsc --noEmit (node --test does not type-check), and the
+        # generated-file check.
+        run: make ts-lint
+
+      - name: Test
+        run: make ts-test
+
+      - name: Vectors
+        # One NDJSON line per manifest entry; the step fails on a harness
+        # error. The lines themselves are compared by ci-parity.
+        run: |
+          make ts-vectors > "$RUNNER_TEMP/ts.ndjson"
+          wc -l < "$RUNNER_TEMP/ts.ndjson"
+
+      - name: Vendored schema
+        run: make ts-check-schema
+
+      - name: Build
+        # tsc, then the npm pack file-list check.
+        run: make ts-build
+
+  test-windows:
+    # make ts-test on Windows: the path, symbolic-link and containment
+    # handling of the manifest module and the fixture readers. One Node
+    # version, the mise.toml pin.
+    name: TypeScript / Test (windows)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Verify spec bytes
+        # Fixture and draft bytes are byte-exact inputs to the digest and
+        # signature tests; a line-ending conversion at checkout rewrites
+        # them (.github/workflows/ci-go.yml, "Verify spec bytes").
+        run: |
+          converted=$(git ls-files --eol -- spec | awk '{ if (substr($1, 3) != substr($2, 3)) print }')
+          if [ -n "$converted" ]; then
+            echo "::error::checkout converted line endings under spec/"
+            printf '%s\n' "$converted"
+            exit 1
+          fi
+
+      - name: Set up toolchains
+        # node and pnpm only: the other pins of mise.toml are not needed here.
+        uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: node pnpm
+
+      - name: Script shell
+        # pnpm runs package scripts through cmd on Windows, which passes the
+        # single quotes of the test glob to node; bash strips them.
+        run: echo "pnpm_config_script_shell=$(cygpath -w "$(command -v bash)")" >> "$GITHUB_ENV"
+
+      - name: Install dependencies
+        # The install task of mise.toml is a POSIX script, and mise runs
+        # inline task scripts through cmd on Windows.
+        run: cd ts && mise exec -- pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Test
+        run: make ts-test
+
+  mutants:
+    name: TypeScript / Mutants
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # Nightly, and on a pull request that adds a mutation patch.
+    if: github.event_name == 'schedule' || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Patches added
+        id: patches
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if git diff --name-only --diff-filter=A "$BASE" HEAD -- 'ts/test/mutants/*.patch' | grep -q .; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up toolchains
+        if: github.event_name == 'schedule' || steps.patches.outputs.run == 'true'
+        uses: jdx/mise-action@v5.1.1
+
+      - name: Install dependencies
+        if: github.event_name == 'schedule' || steps.patches.outputs.run == 'true'
+        run: mise run install
+
+      - name: Mutants
+        if: github.event_name == 'schedule' || steps.patches.outputs.run == 'true'
+        run: make ts-mutants

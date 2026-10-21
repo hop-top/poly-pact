@@ -1,0 +1,254 @@
+{
+  "case_version": 1,
+  "id": "SCIM-08.bad-token",
+  "title": "A request with no token, a wrong token or another scheme is 401 with a Bearer challenge; a token without the provisioning right is 403; none of them changes state.",
+  "draft": [
+    "17.2",
+    "18"
+  ],
+  "now": 1792080000,
+  "source": {
+    "model": "scim/1",
+    "source_id": "scim-northstar",
+    "lag_seconds": 2400,
+    "base_path": "/scim/v2",
+    "join": {
+      "attribute": "externalId",
+      "prefix": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:"
+    },
+    "credentials": [
+      {
+        "token": "provisioning-token-0001",
+        "provisioning": true
+      },
+      {
+        "token": "readonly-token-0002",
+        "provisioning": false
+      }
+    ]
+  },
+  "steps": [
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "avery@northstar.example",
+          "externalId": "3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 401,
+        "challenge": {
+          "scheme": "Bearer",
+          "error": null
+        }
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer wrong-token",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "avery@northstar.example",
+          "externalId": "3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 401,
+        "challenge": {
+          "scheme": "Bearer",
+          "error": "invalid_token"
+        }
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Basic YXZlcnk6cHc=",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "avery@northstar.example",
+          "externalId": "3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 401,
+        "challenge": {
+          "scheme": "Bearer",
+          "error": null
+        }
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer readonly-token-0002",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "avery@northstar.example",
+          "externalId": "3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 403,
+        "challenge": {
+          "scheme": "Bearer",
+          "error": "insufficient_scope"
+        }
+      }
+    },
+    {
+      "at": 1792070000,
+      "inbound": {
+        "method": "GET",
+        "path": "/scim/v2/Users"
+      },
+      "expect": {
+        "status": 401,
+        "challenge": {
+          "scheme": "Bearer",
+          "error": null
+        }
+      }
+    },
+    {
+      "at": 1792070001,
+      "inbound": {
+        "method": "POST",
+        "path": "/scim/v2/Users",
+        "authorization": "Bearer provisioning-token-0001",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:schemas:core:2.0:User"
+          ],
+          "userName": "blake@northstar.example",
+          "externalId": "5a9d2f4c-1b73-4e08-8c6d-0f3a7b1e2d22",
+          "active": true
+        }
+      },
+      "expect": {
+        "status": 201,
+        "save_id_as": "blake"
+      }
+    },
+    {
+      "at": 1792070002,
+      "inbound": {
+        "method": "PATCH",
+        "path": "/scim/v2/Users/${blake}",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "Replace",
+              "path": "active",
+              "value": false
+            }
+          ]
+        }
+      },
+      "expect": {
+        "status": 401
+      }
+    },
+    {
+      "at": 1792070003,
+      "inbound": {
+        "method": "PATCH",
+        "path": "/scim/v2/Users/${blake}",
+        "authorization": "Bearer readonly-token-0002",
+        "body": {
+          "schemas": [
+            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+          ],
+          "Operations": [
+            {
+              "op": "Replace",
+              "path": "active",
+              "value": false
+            }
+          ]
+        }
+      },
+      "expect": {
+        "status": 403
+      }
+    },
+    {
+      "at": 1792070004,
+      "inbound": {
+        "method": "DELETE",
+        "path": "/scim/v2/Users/${blake}",
+        "authorization": "Bearer wrong-token"
+      },
+      "expect": {
+        "status": 401
+      }
+    },
+    {
+      "at": 1792070005,
+      "inbound": {
+        "method": "GET",
+        "path": "/scim/v2/Users/${blake}",
+        "authorization": "Bearer provisioning-token-0001"
+      },
+      "expect": {
+        "status": 200,
+        "body": {
+          "active": true
+        }
+      }
+    }
+  ],
+  "reads": [
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:3c5e1a7b-8d24-4f60-b1a9-6e2f0c7d9a11",
+      "expect": {
+        "source_id": "scim-northstar",
+        "outcome": "error",
+        "reason_code": "MISSING_FIELD"
+      }
+    },
+    {
+      "at": 1792080000,
+      "native_path": "/principal/account_state",
+      "principal": "oauth:https%3A%2F%2Flogin.microsoftonline.com%2F9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02%2Fv2.0:9f0b6c1e-2d4a-4c8e-9a51-3b7d5e8f1a02:5a9d2f4c-1b73-4e08-8c6d-0f3a7b1e2d22",
+      "expect": {
+        "source_id": "scim-northstar",
+        "outcome": "value",
+        "value": "active",
+        "observed_at": 1792077600,
+        "status_checked_at": 1792077600
+      }
+    }
+  ],
+  "must_not_call": [
+    "outbound"
+  ]
+}

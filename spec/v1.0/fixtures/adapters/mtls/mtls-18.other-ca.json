@@ -1,0 +1,142 @@
+{
+  "case_version": 1,
+  "id": "MTLS-18.other-ca",
+  "title": "The same URI name issued by another pinned CA is another identifier, with that CA's ca-id",
+  "draft": [
+    "8.5",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "mtls/1",
+    "listener": {
+      "role": "direct",
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.acme.example/environments/reconciliation"
+    },
+    "status_bound_seconds": 360,
+    "authorities": [
+      {
+        "ref": "workload-ca",
+        "subject_cn": "Acme Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/workload-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "partner-ca",
+        "subject_cn": "Partner Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/partner-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "host-ca",
+        "subject_cn": "Acme Host CA 2026",
+        "key_seed": "pact-mtls-fixture/host-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      }
+    ],
+    "pinned_cas": [
+      {
+        "ca_id": "workload-ca-2026",
+        "authority": "workload-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "partner-ca-2026",
+        "authority": "partner-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "host-ca-2026",
+        "authority": "host-ca",
+        "san_kind": "dns"
+      }
+    ],
+    "peers": [
+      {
+        "ref": "partner-same-name",
+        "issuer": "partner-ca",
+        "serial": 9002,
+        "subject_cn": "reconciler",
+        "uris": [
+          "spiffe://acme.example/ns/finance/sa/reconciler"
+        ],
+        "dns_names": [],
+        "not_before": 1791993600,
+        "not_after": 1794672000,
+        "ext_key_usage": [
+          "client_auth"
+        ],
+        "key_usage": [
+          "digital_signature"
+        ],
+        "key_seed": "pact-mtls-fixture/partner-same-name"
+      }
+    ],
+    "snapshots": [
+      {
+        "ca_id": "workload-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "partner-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "host-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      }
+    ],
+    "enrollments": [
+      {
+        "realm": {
+          "tenant_id": "acme",
+          "environment_id": "https://gateway.acme.example/environments/reconciliation"
+        },
+        "workload": "mtls:workload-ca-2026:uri:spiffe%3A%2F%2Facme.example%2Fns%2Ffinance%2Fsa%2Freconciler",
+        "agent_id": "https://agents.acme.example/reconciliation-assistant",
+        "operator_id": "https://operators.acme.example/finance-ops",
+        "holder_jkt": "yr9n3SqX73aD4pOt1-jNNEO_3EjGD1F6TMseINltJTc",
+        "status": "ACTIVE",
+        "observed_at": 1791475200,
+        "status_checked_at": 1792079970,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-0001"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.acme.example/api/v1/reconciliation/records/REC-2041",
+    "native_state_ref": "partner-same-name"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "authenticated",
+    "principal": {
+      "id": "mtls:partner-ca-2026:uri:spiffe%3A%2F%2Facme.example%2Fns%2Ffinance%2Fsa%2Freconciler",
+      "realm": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.acme.example/environments/reconciliation"
+      },
+      "workload": "mtls:partner-ca-2026:uri:spiffe%3A%2F%2Facme.example%2Fns%2Ffinance%2Fsa%2Freconciler",
+      "mechanism": "mtls",
+      "attributes": {
+        "cnf": {
+          "jkt": "sWpWLhk1TcdCadHC6AcpOC7qkSqrYhWJM58gRv5GDpM"
+        }
+      }
+    }
+  }
+}

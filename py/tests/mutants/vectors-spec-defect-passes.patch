@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/vectors/_groups.py b/py/src/hop_top_pact/vectors/_groups.py
+index a290619..31c53d0 100644
+--- a/py/src/hop_top_pact/vectors/_groups.py
++++ b/py/src/hop_top_pact/vectors/_groups.py
+@@ -212,7 +212,7 @@ def run_digest(root: Path, e: Entry) -> None:
+             )
+         notes.append(f"{vid}: the draft states {appendix}, computed {got}")
+         defects.append({"vector": vid, "appendix_value": appendix, "expected_digest": got})
+-    if defects:
++    if len(defects) > 1:
+         raise Skipped(SPEC_DEFECT, "spec defect: " + "; ".join(notes), defects=defects)
+ 
+ 

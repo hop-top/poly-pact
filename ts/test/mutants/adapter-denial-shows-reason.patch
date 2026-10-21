@@ -1,0 +1,13 @@
+diff --git a/ts/src/adapter/errors.ts b/ts/src/adapter/errors.ts
+index c157b79..ad2ad31 100644
+--- a/ts/src/adapter/errors.ts
++++ b/ts/src/adapter/errors.ts
+@@ -175,7 +175,7 @@ export class NativeDenial extends AdapterError {
+     super(Code.INVALID_PROOF);
+     this.name = 'NativeDenial';
+     this.reason = reason;
+-    this.message = `adapter: native authentication denied: ${this.publicReason()}`;
++    this.message = `adapter: native authentication denied: ${this.reason || this.publicReason()}`;
+   }
+ 
+   /**

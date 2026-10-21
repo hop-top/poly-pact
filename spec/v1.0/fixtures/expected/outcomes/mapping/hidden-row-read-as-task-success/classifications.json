@@ -1,0 +1,47 @@
+{
+  "case": "outcomes/mapping/hidden-row-read-as-task-success",
+  "adversarial_claim": "A read whose rows were all filtered out, so that the agent saw none of them, is reported as an EXECUTION SUCCESS on task_quality, as if a hidden row had been read and the task done well.",
+  "subject_event_id": "execution-event-0002",
+  "events": [
+    {
+      "event_id": "execution-event-0001",
+      "report": "reports/execution-event-0001.json",
+      "signed": "signed/execution-event-0001.jws",
+      "qualification": "QUALIFIED",
+      "reason": "mapped",
+      "contribution": {
+        "dimension": "reliability",
+        "positive": 1,
+        "negative": 0
+      },
+      "rationale": "Draft 14.5, row 'Execution completed, zero rows or filtered result': EXECUTION, SUCCESS, reliability, details \"empty\"; counts toward reliability. The executor record names the declared delegated-user executor (14.2)."
+    },
+    {
+      "event_id": "execution-event-0002",
+      "report": "reports/execution-event-0002.json",
+      "signed": "signed/execution-event-0002.jws",
+      "qualification": "UNQUALIFIED",
+      "reason": "invalid-report",
+      "contribution": {
+        "dimension": "task_quality",
+        "positive": 0,
+        "negative": 0
+      },
+      "rationale": "Draft A.2: an EXECUTION event with result SUCCESS and dimension task_quality is invalid. Draft 14.5: task_quality requires an evaluator and the report never implies that a hidden row was read. The receiver refuses the report; it contributes nothing."
+    }
+  ],
+  "dimension_deltas": {
+    "reliability": {
+      "positive": 1,
+      "negative": 0
+    },
+    "task_quality": {
+      "positive": 0,
+      "negative": 0
+    },
+    "policy_adherence": {
+      "positive": 0,
+      "negative": 0
+    }
+  }
+}

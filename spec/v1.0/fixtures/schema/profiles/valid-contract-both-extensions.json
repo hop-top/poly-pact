@@ -1,0 +1,142 @@
+{
+  "description": "Requirement contract whose extensions carry both profile declarations, pact-conformance-profile-v1 and pact-transport-profile-v1, on the Appendix B.4 object (draft 13.3.1, 21).",
+  "objects": [
+    {
+      "section": "21",
+      "typ": "pact-requirements+jwt",
+      "object": {
+        "pact_version": "0.1",
+        "iss": "https://trust.example/issuers/finance",
+        "sub": "https://identity.example/agents/invoice-assistant",
+        "aud": "https://gateway.example/finance",
+        "jti": "zIMh1jdcSU0EP90CYPIbwA",
+        "iat": 1792080000,
+        "nbf": 1792080000,
+        "exp": 1792080060,
+        "tenant_id": "acme",
+        "contract_id": "contract-finance-0001",
+        "environment_id": "https://gateway.example/environments/finance",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "operation_digest": "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0",
+        "intent_digest": "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M",
+        "base_revision": "finance-base-3",
+        "selected_set": "supervised",
+        "field_rules": [
+          {
+            "rule_id": "principal",
+            "path": "/attributes/environment/principal_id",
+            "schema": {
+              "type": "string"
+            },
+            "source": "native",
+            "comparison": "equal",
+            "allowed_issuers": [],
+            "native_path": "/principal/id",
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          },
+          {
+            "rule_id": "roles",
+            "path": "/attributes/environment/roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "contains": {
+                "const": "finance-reader"
+              }
+            },
+            "source": "native",
+            "comparison": "equal",
+            "allowed_issuers": [],
+            "native_path": "/principal/roles",
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          },
+          {
+            "rule_id": "supervisor-approval",
+            "path": "/attributes/delegation/authority_ref",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source": "native",
+            "comparison": "equal",
+            "allowed_issuers": [],
+            "native_path": "/task/approval_ref",
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          },
+          {
+            "rule_id": "isolation",
+            "path": "/attributes/runtime/isolation",
+            "schema": {
+              "const": "managed"
+            },
+            "source": "evidence",
+            "comparison": "equal",
+            "allowed_issuers": [
+              "https://trust.example/issuers/finance"
+            ],
+            "native_path": null,
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          },
+          {
+            "rule_id": "reputation-status",
+            "path": "/attributes/reputation/security_status",
+            "schema": {
+              "const": "CLEAR"
+            },
+            "source": "evidence",
+            "comparison": "equal",
+            "allowed_issuers": [
+              "https://reputation.example/finance"
+            ],
+            "native_path": null,
+            "max_age_seconds": 30,
+            "status_max_age_seconds": 0
+          }
+        ],
+        "context_checks": [
+          "native-principal-binding-v1",
+          "purpose-operation-v1",
+          "native-delegation-v1",
+          "security-hold-v1"
+        ],
+        "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+        "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0",
+        "nonce": "N8WrKpg8XNb9Wh_QuWlHbw",
+        "mode": "enforced",
+        "extensions": {
+          "pact-conformance-profile-v1": {
+            "conformance_profile": "single-owner",
+            "version": "0.1",
+            "omitted_roles": [
+              "reputation",
+              "learning"
+            ],
+            "owner": "https://owner.example/issuer"
+          },
+          "pact-transport-profile-v1": {
+            "transport_profile": "stdio-ipc",
+            "version": "0.1",
+            "channels": [
+              "stdio",
+              "uds",
+              "named-pipe"
+            ],
+            "framing": "ndjson",
+            "max_frame_bytes": 524288,
+            "identity_assurance": [
+              "kernel-peer",
+              "launcher"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

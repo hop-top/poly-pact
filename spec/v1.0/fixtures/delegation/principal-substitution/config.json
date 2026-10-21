@@ -1,0 +1,99 @@
+{
+  "mode": "enforced",
+  "now": 1792080000,
+  "clock_skew_seconds": 5,
+  "gateway": {
+    "gateway_id": "https://gateway.example/finance",
+    "environment_id": "https://gateway.example/environments/finance",
+    "tenant_id": "acme",
+    "operation_mapping_version": "finance-http-1"
+  },
+  "trust": [
+    {
+      "iss": "https://trust.example/issuers/finance",
+      "role": "requirement-publisher",
+      "keys": [
+        "keys/issuer.jwk.json"
+      ]
+    },
+    {
+      "iss": "https://trust.example/issuers/finance",
+      "role": "issuer",
+      "keys": [
+        "keys/issuer.jwk.json"
+      ],
+      "claim_paths": [
+        "/attributes/runtime/isolation"
+      ]
+    },
+    {
+      "iss": "https://reputation.example/finance",
+      "role": "reputation-service",
+      "keys": [
+        "keys/reputation-service.jwk.json"
+      ],
+      "claim_paths": [
+        "/attributes/reputation/security_status"
+      ]
+    }
+  ],
+  "validator": {
+    "iss": "https://trust.example/issuers/finance",
+    "source_id": "configured-finance-validator-v1",
+    "key": "keys/validator.jwk.json"
+  },
+  "native_mappings": [
+    {
+      "path": "/attributes/environment/principal_id",
+      "native_path": "/principal/id"
+    },
+    {
+      "path": "/attributes/environment/roles",
+      "native_path": "/principal/roles"
+    },
+    {
+      "path": "/attributes/delegation/authority_ref",
+      "native_path": "/task/approval_ref"
+    }
+  ],
+  "installed_checks": [
+    "native-principal-binding-v1",
+    "purpose-operation-v1",
+    "native-delegation-v1",
+    "security-hold-v1",
+    "execution-identity-v1"
+  ],
+  "executor_classes": [
+    {
+      "principal_id": "https://identity.example/principals/alice",
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "invoice-read-operation-0001",
+      "class": "delegated-user",
+      "executor_id": "https://identity.example/principals/alice"
+    }
+  ],
+  "active_policy": {
+    "base_revision": "finance-base-3",
+    "selected_set": "supervised",
+    "learning_policy_digest": "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ",
+    "learning_artifact_digest": "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0"
+  },
+  "limits": {
+    "max_presentation_bytes": 262144,
+    "max_artifact_payload_bytes": 32768,
+    "max_profile_bytes": 32768,
+    "max_evidence_artifacts": 32,
+    "max_field_rules": 128,
+    "max_json_depth": 16,
+    "max_resources": 256,
+    "max_description_bytes": 4096,
+    "contract_validity_seconds": 60,
+    "presentation_validity_seconds": 60,
+    "evaluation_seconds": 30,
+    "clock_skew_seconds": 5,
+    "replay_retention_seconds": 65,
+    "max_header_presentation_bytes": 8192,
+    "max_envelope_presentation_bytes": 262144,
+    "max_evaluate_presentation_bytes": 262144
+  }
+}

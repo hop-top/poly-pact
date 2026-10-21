@@ -1,0 +1,19 @@
+{
+  "id": "vectors/jws/rfc7515-a3",
+  "description": "RFC 7515 Appendix A.3 (ES256 over P-256). The signature is valid under the RFC's public key (signer_jwk), which checks the 64-octet R || S encoding. The protected header {\"alg\":\"ES256\"} has no typ, so a PACT verifier rejects it.",
+  "compact": "eyJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.DtEhU3ljbEg8L38VWAfUAqOyKAM6-Xx-F4GawxaepmXFCgfTjDxw5djxLa8ISlSApmWQxfKTUJqPP3-Kg6NU1Q",
+  "expected_typ": null,
+  "trusted_keysets": {},
+  "expected_holder_jkt": null,
+  "decode_as": null,
+  "expect": "reject",
+  "reject_reason": "typ-unsupported",
+  "signer_jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
+    "y": "x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0"
+  },
+  "signature_valid": true,
+  "expected_payload": null
+}

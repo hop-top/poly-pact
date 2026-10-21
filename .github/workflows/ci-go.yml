@@ -1,0 +1,419 @@
+name: CI (Go)
+
+on:
+  push:
+    branches: [main, next, 'release/*']
+    # The Go tests read spec/v1.0/fixtures and spec/v1.0/schemas, so a change
+    # there can break them with no go/ or cli/ diff. mise.toml, the Makefile and this file are in
+    # the filter so toolchain and workflow repairs verify themselves.
+    paths:
+      - "go/**"
+      - "cli/**"
+      - "go.work"
+      - "spec/v1.0/fixtures/**"
+      - "spec/v1.0/schemas/**"
+      - "mise.toml"
+      - "Makefile"
+      - ".github/workflows/ci-go.yml"
+      - "docs/sdk/parity-ledger.md"
+      - "tools/parity/api_ledger.py"
+  pull_request:
+    paths:
+      - "go/**"
+      - "cli/**"
+      - "go.work"
+      - "spec/v1.0/fixtures/**"
+      - "spec/v1.0/schemas/**"
+      - "mise.toml"
+      - "Makefile"
+      - ".github/workflows/ci-go.yml"
+      - "docs/sdk/parity-ledger.md"
+      - "tools/parity/api_ledger.py"
+  # Nightly fuzz run (the fuzz job below). The other jobs skip on this trigger.
+  schedule:
+    - cron: "23 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One shell on every runner, so the Windows leg runs the same syntax as the
+# Linux legs.
+defaults:
+  run:
+    shell: bash
+
+# The job names are required-check names for branch protection: do not rename.
+jobs:
+  lint:
+    name: Go / Lint
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          cache: true
+      - run: mise run install
+
+      - name: Require golangci-lint
+        # make go-lint skips with a NOTICE and exits 0 when the binary is
+        # missing. A skipped lint must fail CI, not pass it.
+        run: mise exec -- golangci-lint --version
+
+      - name: golangci-lint
+        # Runs via the Makefile so the working directory and config location
+        # stay defined in exactly one place.
+        run: make go-lint
+
+      - name: API parity ledger
+        # docs/sdk/parity-ledger.md has one row per exported symbol of the Go
+        # library packages in scope (docs/sdk/ports-plan.md, section 5.5); the
+        # script reads them with go doc -all. The self-test runs first so a
+        # parser defect cannot pass as a clean ledger.
+        run: |
+          mise exec -- python3 -I tools/parity/api_ledger.py --selftest
+          mise exec -- python3 -I tools/parity/api_ledger.py
+
+  test:
+    name: Go / Test (${{ matrix.os }})
+    if: github.event_name != 'schedule'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Report both legs even when one fails.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Verify spec bytes
+        # The Windows leg exists for the Windows files adapter, and fixture
+        # and draft bytes are byte-exact inputs to the digest and signature
+        # tests. A line-ending conversion at checkout rewrites them, so check
+        # before anything else runs. git ls-files --eol shows the line ending
+        # of the index (i/) and of the working tree (w/); they differ exactly
+        # when checkout converted the file. The digest of spec/v1.0/draft.md in the
+        # working tree must equal the digest of the committed blob.
+        if: runner.os == 'Windows'
+        run: |
+          converted=$(git ls-files --eol -- spec | awk '{ if (substr($1, 3) != substr($2, 3)) print }')
+          if [ -n "$converted" ]; then
+            echo "::error::checkout converted line endings under spec/"
+            printf '%s\n' "$converted"
+            exit 1
+          fi
+          want=$(git cat-file blob HEAD:spec/v1.0/draft.md | sha256sum | cut -d ' ' -f 1)
+          got=$(sha256sum spec/v1.0/draft.md | cut -d ' ' -f 1)
+          echo "spec/v1.0/draft.md sha256 $got (committed blob $want)"
+          if [ "$got" != "$want" ]; then
+            echo "::error::spec/v1.0/draft.md in the working tree differs from the committed blob"
+            exit 1
+          fi
+
+      - name: Toolchain
+        if: runner.os != 'Windows'
+        uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          cache: true
+      - name: Dependencies
+        if: runner.os != 'Windows'
+        run: mise run install
+
+      # Go only on Windows. The install task is a POSIX script and mise runs
+      # inline task scripts through cmd on Windows, and the other pins in
+      # mise.toml (php, node, rust) are not needed to test Go.
+      - name: Toolchain (Windows)
+        if: runner.os == 'Windows'
+        uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: go
+          cache: true
+
+      - name: Test (race, coverage)
+        if: runner.os == 'Linux'
+        # -race requires cgo. `mise exec` re-applies its own [env] over the
+        # job and step env, so a step-level CGO_ENABLED would be silently
+        # clobbered: env(1) after mise exec is the layer that wins.
+        # `go -C <dir>` puts the module root in scope; -coverprofile is
+        # resolved relative to that directory, so the profiles land at
+        # go/coverage.out and cli/coverage.out and the upload paths match.
+        # The library (go/) and the commands (cli/) are two modules, so each
+        # runs on its own.
+        run: |
+          mise exec -- env CGO_ENABLED=1 go -C go test -race -coverprofile=coverage.out ./...
+          mise exec -- env CGO_ENABLED=1 go -C cli test -race -coverprofile=coverage.out ./...
+
+      - name: Upload coverage
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: coverage-go
+          path: |
+            go/coverage.out
+            cli/coverage.out
+          if-no-files-found: error
+
+      - name: Test
+        if: runner.os == 'Windows'
+        # No -race: it needs cgo and a C toolchain.
+        run: |
+          mise exec -- go -C go test ./...
+          mise exec -- go -C cli test ./...
+
+      - name: Files adapter Windows tier (test user and files)
+        # A local test user and two files for FILES-W01 and FILES-W02 of the
+        # files profile: one that only the job's account can read, and one
+        # that grants the test user directly. icacls replaces the inherited
+        # entries of each file with the explicit grants. PowerShell, because
+        # the bash of the runner rewrites arguments that start with a slash.
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $user = "pactfiles"
+          $pass = "Pf1!" + [guid]::NewGuid().ToString("N")
+          Write-Output "::add-mask::$pass"
+          # /y answers the prompt for a password over 14 characters.
+          net user $user $pass /add /y
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          $dir = Join-Path $env:RUNNER_TEMP "pact-files"
+          New-Item -ItemType Directory -Force -Path $dir | Out-Null
+          $restricted = Join-Path $dir "restricted.txt"
+          $granted = Join-Path $dir "granted.txt"
+          Set-Content -NoNewline -Path $restricted -Value "restricted contents"
+          Set-Content -NoNewline -Path $granted -Value "granted contents"
+          icacls $restricted /inheritancelevel:r /grant:r "${env:USERNAME}:(R)"
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          icacls $granted /inheritancelevel:r /grant:r "${env:USERNAME}:(R)" "${user}:(R)"
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          "PACT_TEST_FILES_USER=$user" >> $env:GITHUB_ENV
+          "PACT_TEST_FILES_PASSWORD=$pass" >> $env:GITHUB_ENV
+          "PACT_TEST_FILES_RESTRICTED=$restricted" >> $env:GITHUB_ENV
+          "PACT_TEST_FILES_GRANTED=$granted" >> $env:GITHUB_ENV
+
+      - name: Files adapter Windows tier
+        # FILES-W01, FILES-W02, the impersonation seam and a loopback
+        # Negotiate exchange of the job's own account.
+        if: runner.os == 'Windows'
+        env:
+          PACT_TEST_FILES_SSPI: "1"
+        run: make go-test-windows
+
+  ldap-integration:
+    name: Go / LDAP integration
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: go
+          cache: true
+
+      - name: OpenLDAP 2.6 server
+        # A service container needs a published image; this server needs the
+        # memberof and ppolicy overlays, the access control of the seed and a
+        # certificate, so the step builds the image of the test data and
+        # starts it. start.sh makes the certificate; it is copied out once
+        # slapd answers.
+        run: |
+          docker build -t pact-openldap go/adapters/ldap/testdata/openldap
+          docker run -d --name pact-openldap -p 127.0.0.1:1636:636 pact-openldap
+          tries=0
+          until docker exec pact-openldap ldapsearch -x -H ldap://localhost -b "" -s base >/dev/null 2>&1; do
+            tries=$((tries + 1))
+            if [ "$tries" -ge 30 ]; then
+              echo "::error::slapd did not answer within 30 s"
+              exit 1
+            fi
+            sleep 1
+          done
+          docker cp pact-openldap:/etc/openldap/tls/server.crt "$RUNNER_TEMP/ldap-ca.pem"
+
+      - name: Test (LDAP integration tier)
+        env:
+          PACT_TEST_LDAP_URL: ldaps://localhost:1636
+          PACT_TEST_LDAP_ADMIN_DN: cn=admin,dc=northstar,dc=example
+          PACT_TEST_LDAP_ADMIN_PASSWORD: integration-admin-secret
+        run: |
+          PACT_TEST_LDAP_CA="$RUNNER_TEMP/ldap-ca.pem" mise exec -- go -C go test -count=1 -run '^TestIntegration$' -v ./adapters/ldap
+
+      - name: Server log
+        if: failure()
+        run: docker logs pact-openldap
+
+  abac-integration:
+    name: Go / ABAC integration
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: go
+          cache: true
+
+      - name: OPA 1.21.2 server
+        # The adapter reaches the PDP over TLS only, so the step makes a
+        # certificate for localhost and starts the published image with the
+        # policy of the fixtures and decision logging, which gives every
+        # decision a decision_id.
+        run: |
+          mkdir -p "$RUNNER_TEMP/opa"
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=localhost" \
+            -addext "subjectAltName=DNS:localhost" \
+            -keyout "$RUNNER_TEMP/opa/key.pem" -out "$RUNNER_TEMP/opa/cert.pem"
+          chmod 644 "$RUNNER_TEMP/opa/key.pem"
+          docker run -d --name pact-opa -p 127.0.0.1:18443:8181 \
+            -v "$PWD/spec/v1.0/fixtures/adapters/abac/assets:/policy:ro" -v "$RUNNER_TEMP/opa:/tls:ro" \
+            openpolicyagent/opa:1.21.2 run --server --addr :8181 \
+            --tls-cert-file /tls/cert.pem --tls-private-key-file /tls/key.pem \
+            --set decision_logs.console=true /policy/policy.rego
+          tries=0
+          until curl -sf --cacert "$RUNNER_TEMP/opa/cert.pem" https://localhost:18443/health >/dev/null; do
+            tries=$((tries + 1))
+            if [ "$tries" -ge 30 ]; then
+              echo "::error::OPA did not answer within 30 s"
+              exit 1
+            fi
+            sleep 1
+          done
+
+      - name: Test (ABAC integration tier)
+        env:
+          PACT_TEST_OPA_URL: https://localhost:18443
+        run: |
+          PACT_TEST_OPA_CA="$RUNNER_TEMP/opa/cert.pem" mise exec -- go -C go test -count=1 -run '^TestIntegration$' -v ./adapters/abac
+
+      - name: Server log
+        if: failure()
+        run: docker logs pact-opa
+
+  rebac-integration:
+    name: Go / ReBAC integration
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: go
+          cache: true
+
+      - name: OpenFGA server
+        # The image needs the run command, which a service container cannot
+        # pass, so the step starts it. The Check caches are enabled, so a
+        # Check that does not ask HIGHER_CONSISTENCY can be answered stale.
+        run: |
+          docker run -d --name pact-openfga -p 127.0.0.1:8080:8080 \
+            -e OPENFGA_AUTHN_METHOD=preshared \
+            -e OPENFGA_AUTHN_PRESHARED_KEYS=fga-preshared-7c1e9a3b5d2f \
+            -e OPENFGA_CHECK_QUERY_CACHE_ENABLED=true \
+            -e OPENFGA_CHECK_QUERY_CACHE_TTL=60s \
+            -e OPENFGA_CHECK_ITERATOR_CACHE_ENABLED=true \
+            -e OPENFGA_CHECK_ITERATOR_CACHE_TTL=60s \
+            openfga/openfga:v1.10.0 run
+          tries=0
+          until curl -fsS http://127.0.0.1:8080/healthz >/dev/null 2>&1; do
+            tries=$((tries + 1))
+            if [ "$tries" -ge 30 ]; then
+              echo "::error::openfga did not answer within 30 s"
+              exit 1
+            fi
+            sleep 1
+          done
+
+      - name: Test (ReBAC integration tier)
+        env:
+          PACT_TEST_OPENFGA_URL: http://127.0.0.1:8080
+          PACT_TEST_OPENFGA_KEY: fga-preshared-7c1e9a3b5d2f
+        run: mise exec -- go -C go test -count=1 -run '^TestIntegration$' -v ./adapters/rebac
+
+      - name: Server log
+        if: failure()
+        run: docker logs pact-openfga
+
+  db-integration:
+    name: Go / Database integration
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    # The published image needs no build or start command, so the server is
+    # a service container; the test loads spec/v1.0/fixtures/adapters/db/schema.sql
+    # into a database of its own as the administrator.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: integration-admin-secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: go
+          cache: true
+
+      - name: Test (database integration tier)
+        env:
+          PACT_TEST_PG_DSN: postgres://postgres:integration-admin-secret@127.0.0.1:5432/postgres?sslmode=disable
+        run: mise exec -- go -C go test -count=1 -run '^TestIntegration$' -v ./adapters/db
+
+  build:
+    name: Go / Build
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          cache: true
+      - run: mise run install
+
+      - name: Build
+        run: make go-build
+
+  fuzz:
+    name: Go / Fuzz (nightly)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v5.1.1
+        with:
+          install: true
+          install_args: go
+          cache: true
+
+      - name: Fuzz core/jcs (30 s)
+        # go test accepts -fuzz for one package at a time.
+        run: mise exec -- go -C go test -run '^$' -fuzz '^FuzzCanonicalize$' -fuzztime 30s ./core/jcs
+
+      - name: Upload failing inputs
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: fuzz-core-jcs
+          path: go/core/jcs/testdata/fuzz
+          if-no-files-found: ignore

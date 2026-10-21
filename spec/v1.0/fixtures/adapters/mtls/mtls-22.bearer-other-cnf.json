@@ -1,0 +1,147 @@
+{
+  "case_version": 1,
+  "id": "MTLS-22.bearer-other-cnf",
+  "title": "A bearer token whose confirmation names another key has no effect on the identity or on cnf",
+  "draft": [
+    "8.5",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "mtls/1",
+    "listener": {
+      "role": "direct",
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.acme.example/environments/reconciliation"
+    },
+    "status_bound_seconds": 360,
+    "authorities": [
+      {
+        "ref": "workload-ca",
+        "subject_cn": "Acme Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/workload-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "partner-ca",
+        "subject_cn": "Partner Workload CA 2026",
+        "key_seed": "pact-mtls-fixture/partner-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      },
+      {
+        "ref": "host-ca",
+        "subject_cn": "Acme Host CA 2026",
+        "key_seed": "pact-mtls-fixture/host-ca",
+        "not_before": 1767225600,
+        "not_after": 1861920000
+      }
+    ],
+    "pinned_cas": [
+      {
+        "ca_id": "workload-ca-2026",
+        "authority": "workload-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "partner-ca-2026",
+        "authority": "partner-ca",
+        "san_kind": "uri"
+      },
+      {
+        "ca_id": "host-ca-2026",
+        "authority": "host-ca",
+        "san_kind": "dns"
+      }
+    ],
+    "peers": [
+      {
+        "ref": "reconciler",
+        "issuer": "workload-ca",
+        "serial": 4097,
+        "subject_cn": "reconciler",
+        "uris": [
+          "spiffe://acme.example/ns/finance/sa/reconciler"
+        ],
+        "dns_names": [],
+        "not_before": 1791993600,
+        "not_after": 1794672000,
+        "ext_key_usage": [
+          "client_auth"
+        ],
+        "key_usage": [
+          "digital_signature"
+        ],
+        "key_seed": "pact-mtls-fixture/reconciler"
+      },
+      {
+        "ref": "ledger-writer",
+        "issuer": "workload-ca",
+        "serial": 4098,
+        "subject_cn": "ledger-writer",
+        "uris": [
+          "spiffe://acme.example/ns/finance/sa/ledger-writer"
+        ],
+        "dns_names": [],
+        "not_before": 1791993600,
+        "not_after": 1794672000,
+        "ext_key_usage": [
+          "client_auth"
+        ],
+        "key_usage": [
+          "digital_signature"
+        ],
+        "key_seed": "pact-mtls-fixture/ledger-writer"
+      }
+    ],
+    "snapshots": [
+      {
+        "ca_id": "workload-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "partner-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      },
+      {
+        "ca_id": "host-ca-2026",
+        "number": 7,
+        "this_update": 1792079940,
+        "next_update": 1792080540,
+        "revoked": []
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gateway.acme.example/api/v1/reconciliation/records/REC-2041",
+    "headers": {
+      "Authorization": "Bearer eyJhbGciOiJFUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUiLCJzdWIiOiJsZWRnZXItd3JpdGVyIiwiY25mIjp7Ing1dCNTMjU2IjoiYndjSzBlc2MzQUNDM0RCMlk1X2xFU3NYRThvOWx0YzA1Tzg5amROLWRnMiIsImprdCI6IkFiVURSb3c3X2thdTBNVDVUY3RXOHcyR1pSbE1sTFpSZWVkXzRUM1hhTjAifX0.c2lnbmF0dXJl"
+    },
+    "native_state_ref": "reconciler"
+  },
+  "expect": {
+    "function": "authenticate_native",
+    "outcome": "authenticated",
+    "principal": {
+      "id": "mtls:workload-ca-2026:uri:spiffe%3A%2F%2Facme.example%2Fns%2Ffinance%2Fsa%2Freconciler",
+      "realm": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.acme.example/environments/reconciliation"
+      },
+      "workload": "mtls:workload-ca-2026:uri:spiffe%3A%2F%2Facme.example%2Fns%2Ffinance%2Fsa%2Freconciler",
+      "mechanism": "mtls",
+      "attributes": {
+        "cnf": {
+          "jkt": "kLaRI8HDJRlWHXY9RBhdAocxS1ihcuBKOvXo7YShoA8"
+        }
+      }
+    }
+  }
+}

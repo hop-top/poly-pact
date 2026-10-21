@@ -1,0 +1,74 @@
+{
+  "case_version": 1,
+  "id": "COMMON-12.other-principal",
+  "title": "A check scoped to one principal is FAIL for another principal",
+  "draft": ["17.1", "17.3.1", "17.5"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "enrollments": [
+      {
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "https://workloads.acme.example/invoice-assistant",
+        "agent_id": "https://agents.acme.example/invoice-assistant",
+        "operator_id": "https://identity.example/operators/finance-ops",
+        "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+        "status": "ACTIVE",
+        "observed_at": 1791993600,
+        "status_checked_at": 1792079940,
+        "source_id": "enrollment-registry",
+        "source_ref": "enr-0001"
+      }
+    ],
+    "checks": [
+      {
+        "id": "approval-v1",
+        "principal": "https://idp.acme.example/alice",
+        "agent_id": "https://agents.acme.example/invoice-assistant",
+        "result": "PASS",
+        "reason_code": "REQUIREMENT_SATISFIED",
+        "source_id": "approvals",
+        "source_ref": "appr-0042"
+      }
+    ]
+  },
+  "call": {
+    "check_id": "approval-v1",
+    "principal": {
+      "id": "https://idp.acme.example/bob",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "binding": {
+      "agent_id": "https://agents.acme.example/invoice-assistant",
+      "operator_id": "https://identity.example/operators/finance-ops",
+      "holder_jkt": "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M",
+      "status": "ACTIVE"
+    },
+    "intent": {
+      "intent_id": "intent-01",
+      "purpose_id": "invoice-approval",
+      "description": "Approve the September invoice.",
+      "task_id": "native-task:september-summary-007"
+    },
+    "operation": {
+      "operation_id": "op-invoice-approve-0001",
+      "environment_id": "https://gateway.example/environments/finance",
+      "principal_id": "https://idp.acme.example/bob",
+      "action": "invoice.read",
+      "resources": ["https://invoices.example/invoices/INV-1042"],
+      "method": "GET",
+      "target_uri": "https://gateway.example/invoices/INV-1042",
+      "body_digest": "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+      "headers": {}
+    },
+    "evidence_refs": ["native-record:approval-0042"]
+  },
+  "expect": {"function": "check_context", "outcome": "FAIL", "reason_code": "APPROVAL_SCOPE_MISMATCH", "must_not_call": ["execute"]}
+}

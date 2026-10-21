@@ -1,0 +1,6 @@
+{
+  "id": "vectors/strictjson/accept-valid-object",
+  "input_text": "{\n  \"operation_id\": \"invoice-read-operation-0001\",\n  \"environment_id\": \"https://gateway.example/environments/finance\",\n  \"principal_id\": \"https://identity.example/principals/alice\",\n  \"action\": \"invoice.read\",\n  \"resources\": [\n    \"https://invoices.example/invoices/INV-1042\"\n  ],\n  \"method\": \"GET\",\n  \"target_uri\": \"https://gateway.example/invoices/INV-1042\",\n  \"body_digest\": \"47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU\",\n  \"headers\": {}\n}",
+  "expect": "accept",
+  "reason": "Appendix B.3 operation context verbatim. Decode target: OperationContext."
+}

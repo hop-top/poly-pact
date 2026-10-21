@@ -1,0 +1,4 @@
+{
+  "transport_code": "INVALID_PROOF",
+  "reason": "the contract's selected_set and field rules were edited after signing, so the requirement publisher's signature does not verify; rejected before an authenticated evaluation, no receipt"
+}

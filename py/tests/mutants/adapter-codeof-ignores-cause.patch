@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/adapter/_errors.py b/py/src/hop_top_pact/adapter/_errors.py
+index 65d84c1..ab64d21 100644
+--- a/py/src/hop_top_pact/adapter/_errors.py
++++ b/py/src/hop_top_pact/adapter/_errors.py
+@@ -123,7 +123,7 @@ def code_of(err: BaseException | None) -> Code | None:
+         if isinstance(err, AdapterError):
+             return err.code
+         seen.add(id(err))
+-        err = err.__cause__ if err.__cause__ is not None else err.__context__
++        err = None
+     return None
+ 
+ 

@@ -1,0 +1,66 @@
+{
+  "case_version": 1,
+  "id": "COMMON-03.body-digest",
+  "title": "The body digest covers the exact request-body bytes and the body is restored",
+  "draft": ["7.4", "10.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "mappings": [
+      {
+        "version": "map-1",
+        "routes": [
+          {
+            "method": "GET",
+            "path": "/invoices/{id}",
+            "action": "invoice.read",
+            "resource": "https://invoices.example/invoices/{id}"
+          },
+          {
+            "method": "POST",
+            "path": "/invoices/{id}/approve",
+            "action": "invoice.approve",
+            "resource": "https://invoices.example/invoices/{id}"
+          }
+        ]
+      }
+    ],
+    "identities": [
+      {
+        "ref": "alice",
+        "id": "https://idp.acme.example/alice",
+        "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+        "workload": "https://workloads.acme.example/invoice-assistant",
+        "secret": "tok-alice-7f3a9c1e5b2d"
+      }
+    ]
+  },
+  "request": {
+    "method": "POST",
+    "url": "https://gateway.example/invoices/INV-1042/approve",
+    "headers": {"Content-Type": "application/json"},
+    "body_b64": "eyJhbW91bnQiOiAiMTIwLjAwIiwKICJjdXJyZW5jeSI6ICJFVVIifQ0KAP8gdHJhaWxpbmc="
+  },
+  "call": {
+    "principal": {
+      "id": "https://idp.acme.example/alice",
+      "realm": {"tenant_id": "acme", "environment_id": "https://gateway.example/environments/finance"},
+      "workload": "https://workloads.acme.example/invoice-assistant",
+      "mechanism": "bearer"
+    },
+    "mapping_version": "map-1"
+  },
+  "expect": {
+    "function": "map_operation",
+    "outcome": "mapped",
+    "operation": {
+      "body_digest": "3Dp_DAmWtMCSpUNthmGjzsg5zuR-QRQta3Sdl3AiwBI",
+      "headers": {"content-type": "application/json"}
+    }
+  }
+}

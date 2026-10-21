@@ -1,0 +1,12 @@
+diff --git a/py/src/hop_top_pact/adapters/memory/native.py b/py/src/hop_top_pact/adapters/memory/native.py
+--- a/py/src/hop_top_pact/adapters/memory/native.py
++++ b/py/src/hop_top_pact/adapters/memory/native.py
+@@ -130,7 +130,7 @@
+     for r in a.st.policy:
+         if _applies(r, p, op):
+             first.setdefault(r.effect, r)
+-    decided = first.get(Effect.DENY) or first.get(Effect.UNKNOWN) or first.get(Effect.ALLOW)
++    decided = first.get(Effect.ALLOW) or first.get(Effect.UNKNOWN) or first.get(Effect.DENY)
+     if decided is None:
+         return Decision(
+             effect=Effect.DENY,

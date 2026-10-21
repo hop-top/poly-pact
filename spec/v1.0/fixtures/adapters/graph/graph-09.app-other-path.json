@@ -1,0 +1,95 @@
+{
+  "case_version": 1,
+  "id": "GRAPH-09.app-other-path",
+  "title": "GA2 whose recorded link names a mailbox other than the registered one is CONTEXT_MISMATCH (GR-24)",
+  "draft": [
+    "10.3",
+    "13.4",
+    "17.1"
+  ],
+  "native_state": {
+    "model": "graph/1",
+    "gateway": {
+      "tenant_id": "northwind",
+      "environment_id": "https://mail.northwind.example/environments/production",
+      "origin": "https://mail.northwind.example",
+      "header_allowlist": [
+        "accept"
+      ]
+    },
+    "form": "application",
+    "entra": {
+      "tenant_id": "8f3d2c1b-5a4e-4f6d-9b7a-1c2e3f4a5b6c",
+      "gateway_app_id": "3f1c9a2e-6b7d-4e8f-a0b1-c2d3e4f5a6b7"
+    },
+    "executor_app_id": "9e8d7c6b-5a49-4382-a1b0-c9d8e7f6a5b4",
+    "registry": [
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://mail.northwind.example/environments/production"
+        },
+        "row": "GA1",
+        "workload": "https://workloads.northwind.example/mail-digest",
+        "class": "registered-app-executor",
+        "grant": "client_credentials",
+        "app_id": "9e8d7c6b-5a49-4382-a1b0-c9d8e7f6a5b4",
+        "service_principal_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+        "mailbox_id": "0f9e8d7c-6b5a-4493-8271-605f4e3d2c1b",
+        "ref": "executor-registry:ga1:mail-digest:r7",
+        "changed_at": 1791993600
+      },
+      {
+        "realm": {
+          "tenant_id": "northwind",
+          "environment_id": "https://mail.northwind.example/environments/production"
+        },
+        "row": "GA2",
+        "workload": "https://workloads.northwind.example/mail-digest",
+        "class": "registered-app-executor",
+        "grant": "client_credentials",
+        "app_id": "9e8d7c6b-5a49-4382-a1b0-c9d8e7f6a5b4",
+        "service_principal_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+        "mailbox_id": "0f9e8d7c-6b5a-4493-8271-605f4e3d2c1b",
+        "ref": "executor-registry:ga2:mail-digest:r7",
+        "changed_at": 1791993600
+      }
+    ],
+    "continuations": [
+      {
+        "page_token": "Qm9vT2gzcVN6WGR2TjNfa0w4cFJ0WXc1bU5hQmNEZWY",
+        "row": "GA1",
+        "principal": "https://workloads.northwind.example/mail-digest",
+        "task_id": "native-task:mail-digest-0042",
+        "agent_id": "https://agents.northwind.example/mail-assistant",
+        "mapping_version": "pact-graph-1",
+        "link": "https://graph.microsoft.com/v1.0/users/6d5c4b3a-2918-4706-b5f4-e3d2c1b0a998/messages?$select=id,subject,body&$top=10&$skip=10"
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://mail.northwind.example/mailbox/messages?page_token=Qm9vT2gzcVN6WGR2TjNfa0w4cFJ0WXc1bU5hQmNEZWY"
+  },
+  "call": {
+    "principal": {
+      "id": "https://workloads.northwind.example/mail-digest",
+      "realm": {
+        "tenant_id": "northwind",
+        "environment_id": "https://mail.northwind.example/environments/production"
+      },
+      "workload": "https://workloads.northwind.example/mail-digest",
+      "mechanism": "mtls"
+    },
+    "mapping_version": "pact-graph-1"
+  },
+  "expect": {
+    "function": "map_operation",
+    "outcome": "error",
+    "reason_code": "CONTEXT_MISMATCH",
+    "must_not_call": [
+      "token",
+      "execute"
+    ]
+  }
+}

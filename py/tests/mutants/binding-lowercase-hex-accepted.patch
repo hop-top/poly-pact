@@ -1,0 +1,13 @@
+diff --git a/py/src/hop_top_pact/core/binding/_target.py b/py/src/hop_top_pact/core/binding/_target.py
+index 213f01b..a453649 100644
+--- a/py/src/hop_top_pact/core/binding/_target.py
++++ b/py/src/hop_top_pact/core/binding/_target.py
+@@ -110,7 +110,7 @@ def _check_component(s: str, *, is_path: bool) -> None:
+                 Rule.MALFORMED_ESCAPE,
+                 f"the {name} has a % at offset {i} not followed by two hex digits",
+             )
+-        if s[i + 1] in _LOWER_HEX or s[i + 2] in _LOWER_HEX:
++        if False:
+             raise refuse(
+                 Rule.LOWERCASE_HEX, f"the {name} has a lowercase hex digit in the escape at {i}"
+             )

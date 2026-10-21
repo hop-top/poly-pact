@@ -1,0 +1,13 @@
+# Relative links that leave spec/ on purpose. The mirror carries only spec/, so
+# every entry is a link that is dead there; scripts/check-spec-selfcontained.py
+# fails on any other link that leaves spec/, and on an entry that matches no link.
+#
+# One entry per line: <source> -> <target>
+#   source  Markdown file under spec/, path from the repository root
+#   target  where the link resolves, path from the repository root (not the text
+#           as written: ../../../docs/handoff.md in spec/v1.0/examples/README.md
+#           is docs/handoff.md)
+# Blank lines and lines starting with # are ignored.
+#
+# No entry: a document of the source repository is linked by its absolute
+# https://github.com/hop-top/poly-pact URL, which resolves on the mirror too.

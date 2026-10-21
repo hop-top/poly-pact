@@ -1,0 +1,398 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PACT integration profile",
+  "description": "Machine-readable form of an integration profile (spec/v1.0/profiles/TEMPLATE.md): the exact conformance claim for one gateway or product and the evidence behind it. Informative; where this schema and spec/v1.0/draft.md differ, the draft governs. Every object is closed (additionalProperties false) and every top-level key is required.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim",
+    "protected_routes",
+    "enforcement_points",
+    "native_dependencies",
+    "bypass_paths",
+    "unsupported_forms",
+    "freshness",
+    "membership_sources",
+    "attribute_sources",
+    "residual_limits",
+    "fixtures"
+  ],
+  "properties": {
+    "claim": {
+      "description": "Template section 1: roles, modes, presentation transports, the exact native-protocol adapters claimed, and the conformance and transport profiles the claim holds under.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roles", "modes", "presentation_transports", "adapters", "conformance_profile", "transport"],
+      "properties": {
+        "roles": {
+          "description": "Conformance roles claimed, spelled as in draft section 22.1. An admission-only claim is a partial role implementation.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "PACT Holder 0.1",
+              "PACT Gateway 0.1",
+              "PACT Validator 0.1",
+              "PACT Reputation 0.1",
+              "PACT Learning 0.1"
+            ]
+          }
+        },
+        "modes": {
+          "description": "Deployment modes claimed (draft sections 2.3 and 22.1). An observe deployment discloses that native access is not conditioned on PACT admission.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["enforced", "observe"]}
+        },
+        "presentation_transports": {
+          "description": "Presentation transports actually usable (draft section 13.2).",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["header", "gateway-evaluate", "adapter-envelope"]}
+        },
+        "adapters": {
+          "description": "Exact native-protocol versions and mapping revisions, as in GatewayMetadata.adapters (draft Appendix A).",
+          "type": "array",
+          "items": {"$ref": "#/$defs/adapter"}
+        },
+        "conformance_profile": {
+          "description": "Conformance profiles the claim holds under (draft sections 21 and 22.1), by id. Always an array, even for one profile. The ids are the entries of kind conformance in spec/v1.0/profiles/registry.json; a new conformance profile adds its id here in the same change that adds its registry entry. The id names version 0.1, the only version in the registry.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["full", "single-owner"]}
+        },
+        "transport": {
+          "description": "Transport profiles the claim uses (draft sections 13 and 13.3). Always an array, even for one transport. Not the same as presentation_transports, which names the presentation transports in use (header, gateway-evaluate, adapter-envelope; draft section 13.2).",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/transportClaim"}
+        }
+      }
+    },
+    "protected_routes": {
+      "description": "Template section 2: every route the claim covers. A route not listed is not claimed.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/protectedRoute"}
+    },
+    "enforcement_points": {
+      "description": "Template section 3: where each draft section 17.1 adapter function runs.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/enforcementPoint"}
+    },
+    "native_dependencies": {
+      "description": "Template section 4: native systems the integration relies on, keyed by component C01 to C16.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/nativeDependency"}
+    },
+    "bypass_paths": {
+      "description": "Template section 5: every other way to reach a protected resource and how the claim treats it.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/bypassPath"}
+    },
+    "unsupported_forms": {
+      "description": "Template section 6: wider claims this integration does not establish, one statement each.",
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "freshness": {
+      "description": "Template section 8: per-source observation semantics, achievable bounds in seconds, and outage behavior.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/freshnessSource"}
+    },
+    "membership_sources": {
+      "description": "Template section 8, membership and status sources subsection: every native source that supplies membership, role, or account-status facts, with the facts it offers and the best status freshness it can achieve (draft sections 9.2, 17.2, and 18). An empty array is valid for an integration that reads no such fact.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/membershipSource"}
+    },
+    "attribute_sources": {
+      "description": "Template section 8, attribute sources subsection: every native source of a subject, resource, or environment attribute that the integration reads over an approved native path and that is not a membership or account-status fact, with the category, the paths, and the freshness entry that bounds the source (draft sections 9.2, 17.1, and 17.2). An empty array is valid for an integration that reads no such attribute.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/attributeSource"}
+    },
+    "residual_limits": {
+      "description": "Template section 9: what remains true after a successful admission (post-read data, revocation propagation), one statement each.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "fixtures": {
+      "description": "Template section 10: negative fixtures that demonstrate the claim. Lists only fixtures that exist and are registered in spec/v1.0/fixtures/manifest.json; a planned case is listed in section 10 of the Markdown profile only, under a Planned heading, and joins this array in the change that adds its file.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/fixtureRef"}
+    }
+  },
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "seconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol", "version", "mapping_revision"],
+      "properties": {
+        "protocol": {"$ref": "#/$defs/text"},
+        "version": {"$ref": "#/$defs/text"},
+        "mapping_revision": {"$ref": "#/$defs/text"}
+      }
+    },
+    "transportClaim": {
+      "description": "One transport profile the claim uses, identified by transport_profile and version (a profile has no URI, draft section 21). https is the baseline HTTPS binding (draft section 13) and has no registry entry; stdio-ipc is the local IPC and stdio profile (draft section 13.3) listed in spec/v1.0/profiles/registry.json.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transport_profile", "version"],
+      "properties": {
+        "transport_profile": {"enum": ["https", "stdio-ipc"]},
+        "version": {"enum": ["0.1"]}
+      }
+    },
+    "protectedRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "path_pattern", "action", "resource_mapping"],
+      "properties": {
+        "method": {"$ref": "#/$defs/text"},
+        "path_pattern": {"$ref": "#/$defs/text"},
+        "action": {
+          "description": "Native action the route performs.",
+          "$ref": "#/$defs/text"
+        },
+        "resource_mapping": {
+          "description": "How the actual request maps to the native resource.",
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "enforcementPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["function", "component"],
+      "properties": {
+        "function": {
+          "description": "Required adapter capability, spelled as in draft section 17.1.",
+          "enum": [
+            "authenticate_native",
+            "resolve_agent_binding",
+            "map_operation",
+            "read_native_claim",
+            "check_context",
+            "authorize_native",
+            "record_outcome"
+          ]
+        },
+        "component": {
+          "description": "Component and stage where the function runs.",
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "nativeDependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component", "owner", "what_exists"],
+      "properties": {
+        "component": {
+          "description": "Handoff component ID, C01 to C16.",
+          "enum": [
+            "C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08",
+            "C09", "C10", "C11", "C12", "C13", "C14", "C15", "C16"
+          ]
+        },
+        "owner": {"$ref": "#/$defs/text"},
+        "what_exists": {
+          "description": "The system that supplies the component, or the reason it is not used. Listing a component does not assert that it has been built.",
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "bypassPath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "control", "evidence"],
+      "properties": {
+        "path": {"$ref": "#/$defs/text"},
+        "control": {
+          "description": "closed: the path is shut; equivalent: the same enforcement points apply; out_of_claim: the claim excludes the path.",
+          "enum": ["closed", "equivalent", "out_of_claim"]
+        },
+        "evidence": {"$ref": "#/$defs/text"}
+      }
+    },
+    "freshnessSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "observation", "max_age_seconds", "status_max_age_seconds", "outage"],
+      "properties": {
+        "source": {"$ref": "#/$defs/text"},
+        "observation": {
+          "description": "authoritative: current authoritative state; snapshot: cached credential snapshot (draft section 17.2).",
+          "enum": ["authoritative", "snapshot"]
+        },
+        "max_age_seconds": {
+          "description": "Achievable bound on the age of the original source observation (draft section 9.2).",
+          "$ref": "#/$defs/seconds"
+        },
+        "status_max_age_seconds": {
+          "description": "Achievable bound on cached revocation or membership-status checks; 0 means a fresh authoritative check.",
+          "$ref": "#/$defs/seconds"
+        },
+        "outage": {
+          "description": "Behavior when the source is unavailable; defer means the evaluation result is DEFERRED and fails closed (draft section 18).",
+          "enum": ["defer"]
+        }
+      }
+    },
+    "membershipSource": {
+      "description": "One native source of membership, role, or account-status facts. When live_check.available is false, value_semantics is cached_snapshot and best_status_max_age_seconds is at least 1: the adapter cannot claim a check it did not perform (draft sections 9.2 and 17.2).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "facts",
+        "live_check",
+        "change_feed",
+        "best_status_max_age_seconds",
+        "value_semantics"
+      ],
+      "properties": {
+        "source": {
+          "description": "Native source of the facts, named as in the matching freshness entry when the source appears there.",
+          "$ref": "#/$defs/text"
+        },
+        "facts": {
+          "description": "Facts the source offers: identity (the authenticated principal), groups (group memberships), roles (role assignments), account_state (whether the account is usable, such as enabled or disabled).",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["identity", "groups", "roles", "account_state"]}
+        },
+        "live_check": {"$ref": "#/$defs/liveCheck"},
+        "change_feed": {"$ref": "#/$defs/changeFeed"},
+        "best_status_max_age_seconds": {
+          "description": "Best achievable bound on the age of a membership or status fact this integration can honor (draft sections 9.2 and 18); 0 means a fresh authoritative check for each evaluation. A requirement with a smaller status_max_age_seconds cannot be met: the result is DEFERRED, or an authorized policy publisher changes the requirement (draft section 17.2).",
+          "$ref": "#/$defs/seconds"
+        },
+        "value_semantics": {
+          "description": "authoritative_current: values are current authoritative state; cached_snapshot: values are cached credential snapshots (draft section 17.2).",
+          "enum": ["authoritative_current", "cached_snapshot"]
+        },
+        "source_document": {
+          "description": "Optional. The id of the entry of kind source in spec/v1.0/profiles/registry.json whose document describes this source, such as a SCIM service provider the integration operates; the row takes the values of that document's membership and status source row.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        }
+      },
+      "if": {
+        "properties": {
+          "live_check": {
+            "properties": {"available": {"const": false}},
+            "required": ["available"]
+          }
+        },
+        "required": ["live_check"]
+      },
+      "then": {
+        "properties": {
+          "best_status_max_age_seconds": {"minimum": 1},
+          "value_semantics": {"const": "cached_snapshot"}
+        }
+      }
+    },
+    "liveCheck": {
+      "description": "Whether the adapter can ask the source for the current state at evaluation time.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available"],
+      "properties": {
+        "available": {
+          "description": "true: a live check exists; false: the adapter reads only cached or pushed values.",
+          "type": "boolean"
+        },
+        "endpoint_class": {
+          "description": "Class of endpoint the live check calls, such as a directory query, a management API, a token introspection endpoint, or a local credential store. Present when available is true and absent when it is false.",
+          "$ref": "#/$defs/text"
+        }
+      },
+      "if": {
+        "properties": {"available": {"const": true}},
+        "required": ["available"]
+      },
+      "then": {"required": ["endpoint_class"]},
+      "else": {"not": {"required": ["endpoint_class"]}}
+    },
+    "changeFeed": {
+      "description": "How the source announces membership or status changes to the adapter.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "description": "none: no change feed; poll_delta: the adapter polls for changes since a token or time; push: the source notifies the adapter, which includes an integration that operates the receiving end of a provisioning or signal protocol, such as a SCIM 2.0 service provider, a push notification channel or a Shared Signals receiver: the inbound messages are the feed, and mechanism names the protocol and the sender's cadence.",
+          "enum": ["none", "poll_delta", "push"]
+        },
+        "mechanism": {
+          "description": "The feed mechanism and its cadence or delivery path. Present when mode is poll_delta or push and absent when it is none.",
+          "$ref": "#/$defs/text"
+        }
+      },
+      "if": {
+        "properties": {"mode": {"const": "none"}},
+        "required": ["mode"]
+      },
+      "then": {"not": {"required": ["mechanism"]}},
+      "else": {"required": ["mechanism"]}
+    },
+    "attributeSource": {
+      "description": "One native source of attributes other than membership and account status. The categories follow the input shape of an attribute-based policy decision; action is not a category, because OperationContext.action carries it. JSON Schema cannot check that freshness names an existing freshness entry; the profile-validate lint checks it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "category", "attributes", "freshness"],
+      "properties": {
+        "source": {"$ref": "#/$defs/text"},
+        "category": {
+          "description": "subject: an attribute of the authenticated principal; resource: an attribute of a resource of the operation; environment: an attribute of the circumstances of the request, such as the device, the network, or the time.",
+          "enum": ["subject", "resource", "environment"]
+        },
+        "attributes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "description": "approved native path",
+            "type": "string",
+            "pattern": "^/[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)*$"
+          }
+        },
+        "freshness": {
+          "description": "the `source` of the matching freshness entry",
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "fixtureRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path"],
+      "properties": {
+        "id": {
+          "description": "Entry id in spec/v1.0/fixtures/manifest.json.",
+          "$ref": "#/$defs/text"
+        },
+        "path": {
+          "description": "Fixture location relative to spec/, so it resolves identically in every tree that carries the spec directory. Slash-separated segments, none empty, none starting with a dot.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(/[A-Za-z0-9_][A-Za-z0-9_.-]*)*$"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+diff --git a/php/src/Core/Jcs/Jcs.php b/php/src/Core/Jcs/Jcs.php
+index 70298be..68e61fc 100644
+--- a/php/src/Core/Jcs/Jcs.php
++++ b/php/src/Core/Jcs/Jcs.php
+@@ -118,7 +118,7 @@ final class Jcs
+         // refused before it is converted.
+         $units = [];
+         foreach ($o->names() as $name) {
+-            $units[$name] = self::utf16($name, $path);
++            $units[$name] = $name;
+         }
+         uasort($units, strcmp(...));
+         $out = [];

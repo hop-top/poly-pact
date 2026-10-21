@@ -1,0 +1,53 @@
+{
+  "case_version": 1,
+  "id": "COMMON-07.admission-without-execution-visibility",
+  "title": "Missing execution visibility does not stop an adapter signing its own admission decision",
+  "draft": ["14.1", "14.2"],
+  "native_state": {
+    "model": "common/1",
+    "gateway": {
+      "tenant_id": "acme",
+      "environment_id": "https://gateway.example/environments/finance",
+      "origin": "https://gateway.example",
+      "header_allowlist": ["x-request-kind"]
+    },
+    "visibility": "none",
+    "reporting": {
+      "issuer": "https://gateway.example/reporters/finance",
+      "audience": "https://reputation.example/service",
+      "kid": "reporter-key-1"
+    }
+  },
+  "call": {
+    "observation": {
+      "event_id": "event-01-admission",
+      "event_kind": "ADMISSION",
+      "context": {
+        "tenant_id": "acme",
+        "environment_id": "https://gateway.example/environments/finance",
+        "agent_id": "https://identity.example/agents/invoice-assistant",
+        "purpose_id": "invoice-approval",
+        "action_class": "invoice.approve",
+        "resource_class": "invoice",
+        "runtime_class": "managed"
+      },
+      "task_id": "native-task:september-summary-007",
+      "operation_id": "op-invoice-approve-0001",
+      "admission_receipt_id": null,
+      "observed_at": 1792079995,
+      "result": "SUCCESS",
+      "dimension": "none",
+      "severity": "info",
+      "evidence_refs": [],
+      "attribution": {
+        "native_task_ref": "native-task:september-summary-007",
+        "independence_group": "group-1",
+        "causal_assessment": "UNKNOWN",
+        "assessment_ref": null
+      },
+      "supersedes": [],
+      "details": ""
+    }
+  },
+  "expect": {"function": "record_outcome", "outcome": "signed"}
+}
