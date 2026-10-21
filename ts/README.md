@@ -1,6 +1,8 @@
-# @hop-top/pact
+# PACT (TypeScript SDK)
 
-TypeScript SDK of the PACT protocol
+Purpose-bound Access Control & Trust: AI agents prove who they act for and why, on every request — on top of the auth you already run, from HTTP Basic and files to OAuth, LDAP, Entra, Kubernetes and AWS.
+
+TypeScript SDK.
 
 Read-only mirror of [hop-top/poly-pact](https://github.com/hop-top/poly-pact) (component `pact-ts`, directory `ts/`); open issues and pull requests there.
 
@@ -8,7 +10,7 @@ Status: pre-1.0; any minor release can change the API.
 
 [![npm](https://img.shields.io/npm/v/@hop-top/pact)](https://www.npmjs.com/package/@hop-top/pact)
 
-[PACT](https://github.com/hop-top/spec-pact) (Purpose-bound Access Control & Trust) is a draft protocol in which a gateway admits an agent's signed, purpose-bound request while native authorization stays final; its [draft](https://github.com/hop-top/spec-pact/blob/main/v1.0/draft.md) is the authority on behavior. This package implements its wire types, the JSON, digest, JWS, clock and HTTP binding rules, the native adapter contract with its conformance suite, and an in-memory reference adapter.
+[PACT](https://github.com/hop-top/spec-pact) is a draft protocol in which a gateway admits an agent's signed, purpose-bound request while native authorization stays final; its [draft](https://github.com/hop-top/spec-pact/blob/main/v1.0/draft.md) is the authority on behavior. This package implements its wire types, the JSON, digest, JWS, clock and HTTP binding rules, the native adapter contract with its conformance suite, and an in-memory reference adapter.
 
 ## Install
 

@@ -1,6 +1,8 @@
-# hop-top-pact
+# PACT (Rust SDK)
 
-Rust SDK of the PACT protocol: wire types, strict JSON, JCS, digests, ES256 JWS and schema validation
+Purpose-bound Access Control & Trust: AI agents prove who they act for and why, on every request — on top of the auth you already run, from HTTP Basic and files to OAuth, LDAP, Entra, Kubernetes and AWS.
+
+Rust SDK: wire types, strict JSON, JCS, digests, ES256 JWS and schema validation.
 
 Read-only mirror of `rs/` in [hop-top/poly-pact](https://github.com/hop-top/poly-pact) (component
 `pact-rs`); open issues and pull requests there.
@@ -22,7 +24,7 @@ may change between prerelease versions.
 - [Security](https://github.com/hop-top/pact-rs#security)
 - [License](https://github.com/hop-top/pact-rs#license)
 
-[PACT](https://github.com/hop-top/spec-pact) (Purpose-bound Access Control & Trust) is a protocol
+[PACT](https://github.com/hop-top/spec-pact) is a protocol
 for agent profiles, intent, reputation and adaptive admission: a gateway admits an agent's
 signed, purpose-bound request, and native authorization stays final. This crate is its Rust
 SDK for the core of the protocol: the wire objects and the primitives every implementation
