@@ -4,7 +4,7 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
 ## Purpose and status
 
-This is an integration profile, filled on the structure of [`TEMPLATE.md`](../TEMPLATE.md), for relationship-based access control (ReBAC) where the native decision is a Check against an OpenFGA relationship store. It is the profile deliverable for finding G23 of `docs/handoff.md` (source repository only, not part of the mirror) and fills the claim for the sample [I12](../../examples/example_I12.md). G23 asks to pin the tenant, store, model, relation, and object mappings, to say which contextual facts are trusted, to state the query and cache consistency, to state what a Check means when more than one sharing path exists, and to say who may write relationships. This profile answers each item (section 12) and states what stays unestablished (sections 6, 9, and 14).
+This is an integration profile, filled on the structure of [`TEMPLATE.md`](../TEMPLATE.md), for relationship-based access control (ReBAC) where the native decision is a Check against an OpenFGA relationship store. It is the profile deliverable for finding G23 of the specification review and fills the claim for the sample [I12](../../examples/example_I12.md). G23 asks to pin the tenant, store, model, relation, and object mappings, to say which contextual facts are trusted, to state the query and cache consistency, to state what a Check means when more than one sharing path exists, and to say who may write relationships. This profile answers each item (section 12) and states what stays unestablished (sections 6, 9, and 14).
 
 The profile adds no wire field and no protocol requirement. Where it and [`draft.md`](../../draft.md) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. The rules RB-1 to RB-19 (section 11) are normative for an adapter that claims this profile; the other sections state the claim, the evidence, and the limits.
 
@@ -31,7 +31,7 @@ The sample's names (Maya, Orion, Northstar) are fictional. This profile uses the
 | Spec version, wire version | `1.0`, `0.1` |
 | Profile revision, date | `2`, `2026-10-18` |
 | Maintainer | PACT specification maintainers |
-| Reference documents | draft = `spec/v1.0/draft.md`; handoff = `docs/handoff.md` (source repository only; sections 6 and 12 draw on it); identity rules = `spec/v1.0/profiles/identity-mapping.md`; freshness rules = `spec/v1.0/profiles/freshness.md` |
+| Reference documents | draft = `spec/v1.0/draft.md`; identity rules = `spec/v1.0/profiles/identity-mapping.md`; freshness rules = `spec/v1.0/profiles/freshness.md` |
 
 ## 1. Claim scope
 
@@ -179,7 +179,7 @@ The alternative-path semantics of B1 are stated in RB-14: after a membership rem
 
 ### 7.1 Dependency on the delegation work (finding G03)
 
-The relationship `user` of a Check is bound to the delegating principal: the principal of the operation context, for whom the task was authorized, and never the agent and never a service or administrator identity (RB-19). Finding G03 of `docs/handoff.md` covers how the agent, the principal, the authorized task, the native delegation, the broker, and the downstream executor are bound and checked (draft §17.5). This profile depends on that work textually only. It names the values the checks bind (`principal_id`, `Intent.task_id`, `/attributes/delegation/authority_ref`, the executor class `delegated-user`) and the results the sample expects, and it defines no algorithm for `native-principal-binding-v1`, `native-delegation-v1`, or `execution-identity-v1`. Until that work lands, a claim under this profile cannot cite more than the draft's own §17.5 text for those checks.
+The relationship `user` of a Check is bound to the delegating principal: the principal of the operation context, for whom the task was authorized, and never the agent and never a service or administrator identity (RB-19). Finding G03 of the specification review covers how the agent, the principal, the authorized task, the native delegation, the broker, and the downstream executor are bound and checked (draft §17.5). This profile depends on that work textually only. It names the values the checks bind (`principal_id`, `Intent.task_id`, `/attributes/delegation/authority_ref`, the executor class `delegated-user`) and the results the sample expects, and it defines no algorithm for `native-principal-binding-v1`, `native-delegation-v1`, or `execution-identity-v1`. Until that work lands, a claim under this profile cannot cite more than the draft's own §17.5 text for those checks.
 
 ## 8. Freshness
 
@@ -366,7 +366,7 @@ The subject id `u-0042` and the object id `northstar.orion-brief` are registry o
 
 ## 12. G23 closure map
 
-Each item G23 requests, and each piece of evidence it needs to close, maps to rules and to cases. The first table maps the work G23 requests, the second the evidence it needs, both as worded in `docs/handoff.md`.
+Each item G23 requests, and each piece of evidence it needs to close, maps to rules and to cases. The first table maps the work G23 requests, the second the evidence it needs, both as worded in the specification review.
 
 | G23 requested work | Rules | Cases |
 |---|---|---|

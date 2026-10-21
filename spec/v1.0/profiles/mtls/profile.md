@@ -4,7 +4,7 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
 ## Purpose and status
 
-This is the integration profile ([`TEMPLATE.md`](../TEMPLATE.md)) for a gateway that authenticates machine clients with X.509 client certificates over mutual TLS and then requires a signed PACT presentation, the scenario of [`example_I07.md`](../../examples/example_I07.md). It states which certificates the gateway accepts and how a certificate names a workload; how certificate status, renewal, connection reuse, and session resumption behave; and the one way a TLS terminator in front of the gateway may pass a peer identity on. It answers the open finding G16 of `docs/handoff.md` (source repository only, not part of the mirror); the section "G16 closure map" shows which rule answers which closure item.
+This is the integration profile ([`TEMPLATE.md`](../TEMPLATE.md)) for a gateway that authenticates machine clients with X.509 client certificates over mutual TLS and then requires a signed PACT presentation, the scenario of [`example_I07.md`](../../examples/example_I07.md). It states which certificates the gateway accepts and how a certificate names a workload; how certificate status, renewal, connection reuse, and session resumption behave; and the one way a TLS terminator in front of the gateway may pass a peer identity on. It answers the open finding G16 of the specification review; the section "G16 closure map" shows which rule answers which closure item.
 
 The profile adds no wire field and no protocol requirement. Where it and [`draft.md`](../../draft.md) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. The rules MTLS-1 to MTLS-31 are normative for a claim made under this profile and carry ids so that fixtures and reviews can cite them. They are language-neutral. The section "Evidence" is informative: it records what the Go standard library does, as probed for this profile, and names the Go packages of this repository that an adapter builds on. The Go standard library is the reference TLS and X.509 stack of this repository and is called "the reference stack" in the rules. Section 10 indexes the conformance cases of this profile, the behaviour tested outside them, and the common cases the adapter replaces.
 
@@ -19,7 +19,7 @@ Shared rules are not repeated here. Identifiers, enrollment, and lifecycle are i
 | Spec version, wire version | `1.0`, `0.1` |
 | Profile revision, date | `r2`, 2026-10-17 |
 | Maintainer | PACT adapter maintainers |
-| Reference documents | draft = `spec/v1.0/draft.md`; handoff = `docs/handoff.md` (source repository only); identity rules = [`identity-mapping.md`](../identity-mapping.md); freshness rules = [`freshness.md`](../freshness.md); scenario = [`example_I07.md`](../../examples/example_I07.md) |
+| Reference documents | draft = `spec/v1.0/draft.md`; identity rules = [`identity-mapping.md`](../identity-mapping.md); freshness rules = [`freshness.md`](../freshness.md); scenario = [`example_I07.md`](../../examples/example_I07.md) |
 | Mapping revision | `pact-mtls-1`: the revision of the identity-input mapping defined by the rules below |
 
 ## Terms

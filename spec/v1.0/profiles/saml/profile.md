@@ -11,13 +11,13 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft. It is
 | Spec version, wire version | `1.0`, `0.1` |
 | Profile revision, date | `2`, 2026-10-18: SB-11 renumbered, SB-16 refuses a grant for another agent, OI-2 codes fixed, `native-principal-binding-v1` removed from the adapter's checks; condition 5 of SB-11 compares the grantee with the binding `check_context` receives |
 | Maintainer | PACT adapter profile maintainers |
-| Reference documents | draft = [`draft.md`](../../draft.md); handoff = `docs/handoff.md` (source repository only); identity mapping = [`identity-mapping.md`](../identity-mapping.md); freshness = [`freshness.md`](../freshness.md); informative example = [`example_I05.md`](../../examples/example_I05.md); SAML Core and SAML Profiles (Annex D) |
+| Reference documents | draft = [`draft.md`](../../draft.md); identity mapping = [`identity-mapping.md`](../identity-mapping.md); freshness = [`freshness.md`](../freshness.md); informative example = [`example_I05.md`](../../examples/example_I05.md); SAML Core and SAML Profiles (Annex D) |
 
 ## Scope and boundary
 
 The profile covers one arrangement, the one of [`example_I05.md`](../../examples/example_I05.md). A SAML 2.0 service provider (SP) signs its users in through its own SAML implementation and keeps its own session for each user. An application task broker in the SP performs delegated tasks for an enrolled agent inside that user's session, on the SP's own resources. The adapter consumes two native records, an `SPSession` and a `TaskGrant` (Annex A). It consumes no SAML message.
 
-The profile specifies the work items that finding G14 of `docs/handoff.md` asks for: SP-session task authorization, agent enrollment, broker authority, expiry and logout, and the supported workflows, while the actual SAML validation is retained by the SP. It does not close G14. Closure needs executed negative cases (Annex C), which are separate work.
+The profile specifies the work items that finding G14 of the specification review asks for: SP-session task authorization, agent enrollment, broker authority, expiry and logout, and the supported workflows, while the actual SAML validation is retained by the SP. It does not close G14. Closure needs executed negative cases (Annex C), which are separate work.
 
 **Boundary.** SAML assertion processing stays in the SP's SAML implementation. The table lists the checks that implementation makes, with the source text of each, to say what the adapter does not do. This profile adds no requirement to these checks and restates none of them; it assumes them. A deployment whose SAML implementation does not make them cannot claim this profile.
 
@@ -377,7 +377,7 @@ Nothing else creates a grant: not an agent credential, not an assertion or any S
 
 ## Annex C. Map of the G14 closure items
 
-Finding G14 of `docs/handoff.md` asks for a specification of SP-session task authorization, agent enrollment, broker authority, expiry and logout, and supported workflows, while retaining the actual SAML validation. Its closure evidence is the rejection of wrong-SP and replayed assertions, of another session principal, of expired user or broker authority, and of unauthorized agent tasks. The tables map each item to the rules of Annex B and to the cases of section 10: `SAML-01` to `SAML-09` have landed, and `SAML-12` and `SAML-13` are planned. This profile specifies; it closes none of the evidence items until the cases exist and pass.
+Finding G14 of the specification review asks for a specification of SP-session task authorization, agent enrollment, broker authority, expiry and logout, and supported workflows, while retaining the actual SAML validation. Its closure evidence is the rejection of wrong-SP and replayed assertions, of another session principal, of expired user or broker authority, and of unauthorized agent tasks. The tables map each item to the rules of Annex B and to the cases of section 10: `SAML-01` to `SAML-09` have landed, and `SAML-12` and `SAML-13` are planned. This profile specifies; it closes none of the evidence items until the cases exist and pass.
 
 | G14 work item | Rules and sections |
 |---|---|

@@ -38,7 +38,7 @@ Profiles and adapter fixtures must stay language-neutral so that adapter SDKs in
 | Spec version, wire version | `1.0`, `0.1` |
 | Profile revision, date | `<revision, YYYY-MM-DD>` |
 | Maintainer | `<name or handle>` |
-| Reference documents | draft = `spec/v1.0/draft.md`; handoff = `docs/handoff.md` (source repository only; sections 4 and 6 draw on it) |
+| Reference documents | draft = `spec/v1.0/draft.md` |
 
 ## 1. Claim scope
 

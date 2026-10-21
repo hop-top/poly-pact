@@ -18,7 +18,7 @@ This profile fixes that memory once for every integration profile and adapter th
 - paging bound to a task (section 10);
 - the outcome reports that follow (section 11).
 
-It answers the open finding G26 of the review (`docs/handoff.md`, source repository only, not part of the mirror). Section 12 maps each closure item of that finding to the rules and to the cases `TASK-01` to `TASK-09` of section 15. Section 13 works through samples I02, I03, I08, and I14 and points to U01, U06, and U07.
+It answers the open finding G26 of the review. Section 12 maps each closure item of that finding to the rules and to the cases `TASK-01` to `TASK-09` of section 15. Section 13 works through samples I02, I03, I08, and I14 and points to U01, U06, and U07.
 
 The document adds no wire field, no message type, and no check identifier to the draft. The ledger is a native-side control of the gateway, in the same position as the transaction and budget controls the draft leaves with the native system (§10.3, §17.3). It enforces after admission and before the downstream request. Where this document and the draft differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. Sections 3 to 11 are normative for a profile that claims enforced support for a route that can cause more than one downstream request for a task, or a downstream side effect that an agent can ask for again; sections 12 to 19 are informative. A profile can make a rule stricter. It MUST NOT weaken one.
 

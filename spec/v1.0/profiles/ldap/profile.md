@@ -2,7 +2,7 @@
 
 This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
-This is the integration profile (template: [`TEMPLATE.md`](../TEMPLATE.md)) for LDAP-backed authentication, group membership, and account state, in the form example [I06](../../examples/example_I06.md) describes. An application authenticates a dedicated directory account with the directory's own mechanism, and PACT consumes the directory's identity, group, and account-state facts while the application keeps its own resource-permission model. The profile answers the open finding G15 of `docs/handoff.md` (source repository only, not part of the mirror): directory realms, supported authentication, stable identifiers, group and nested-group resolution, disabled-account semantics, lookup authority, and replication bounds. Its machine-readable form is [`profile.json`](profile.json), which follows [`../integration-profile.schema.json`](../integration-profile.schema.json).
+This is the integration profile (template: [`TEMPLATE.md`](../TEMPLATE.md)) for LDAP-backed authentication, group membership, and account state, in the form example [I06](../../examples/example_I06.md) describes. An application authenticates a dedicated directory account with the directory's own mechanism, and PACT consumes the directory's identity, group, and account-state facts while the application keeps its own resource-permission model. The profile answers the open finding G15 of the specification review: directory realms, supported authentication, stable identifiers, group and nested-group resolution, disabled-account semantics, lookup authority, and replication bounds. Its machine-readable form is [`profile.json`](profile.json), which follows [`../integration-profile.schema.json`](../integration-profile.schema.json).
 
 It adds no wire field and no protocol requirement. Where it and the [draft](../../draft.md) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. The rules of the appendices carry the identifiers LR-1 to LR-30, and the G15 closure items carry LDAP-01 to LDAP-10, so that fixtures and reviews can cite them. Identity rules are cited as IM-n from [`identity-mapping.md`](../identity-mapping.md) and freshness rules by section from [`freshness.md`](../freshness.md).
 
@@ -17,7 +17,7 @@ Every statement has one of four bases. *Draft* cites a draft section. *Source* c
 | Spec version, wire version | `1.0`, `0.1` |
 | Profile revision, date | `0.1-draft.1`, 2026-10-16 |
 | Maintainer | `jadb` |
-| Reference documents | draft = [`draft.md`](../../draft.md); handoff = `docs/handoff.md` (source repository only; sections 4 and 6 draw on it); example = [`example_I06.md`](../../examples/example_I06.md); [`identity-mapping.md`](../identity-mapping.md); [`freshness.md`](../freshness.md) |
+| Reference documents | draft = [`draft.md`](../../draft.md); example = [`example_I06.md`](../../examples/example_I06.md); [`identity-mapping.md`](../identity-mapping.md); [`freshness.md`](../freshness.md) |
 
 ## 1. Claim scope
 

@@ -2,8 +2,6 @@
 
 Informative examples for PACT Protocol v1.0. Names, identifiers, routes, policies, and thresholds are fictional. Excerpts are partial illustrations, not signed wire fixtures or tested implementations.
 
-Start with [handoff.md](https://github.com/hop-top/poly-pact/blob/HEAD/docs/handoff.md) in the source repository for the review findings, open issues, and validation status across all examples.
-
 ## Use cases
 
 Worked behavioral examples. `U` numbers are preserved from the original series.
