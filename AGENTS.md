@@ -29,6 +29,16 @@ docs/            repository documents, never mirrored
 scripts/ tools/  spec and manifest checks, spec tooling, vector generators
 ```
 
+## Reference
+
+- `tools/parity/README.md`: how the SDKs are held to parity with Go (result
+  grammar, gates file, API ledger rules, mutation checks).
+- `docs/sdk/parity-ledger.md`: the API parity ledger, one row per exported Go
+  symbol.
+- `docs/sdk/deps-{ts,py,rs,php}.md`: dependency vetting records; the guard
+  tests of each SDK read them, so a dependency change updates its record.
+- `go/docs/deps.md`: the same for the Go modules.
+
 ## Build and test
 
 `make help` lists every target. Run `make setup` once, then `make check`
