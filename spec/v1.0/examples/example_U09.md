@@ -2,12 +2,12 @@
 
 **Status:** Informative worked example for PACT Protocol v1.0. Names, amounts, policies, and thresholds are fictional deployment choices, not protocol defaults. Profile paths below are gateway-defined attributes. This is a behavioral example, not a complete signed wire fixture.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** U09. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,17 +27,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G08 | Establish genuine independent performance history. | Deployment / validation |
-| G09 | Empirically justify thresholds and ten/forty-five-minute assessment ages. | Validation |
-| G10 | Selection inputs, `selection-consistency-v1`, and the changed-input outcomes are defined in Sections 9.4 and 11.3 (step 9). Remaining: validate each outcome in the table under "Variations to verify"; state which outcome fixes the terminal decision when several apply to one changed input (degraded snapshot, new hold). | Clarification / validation |
-| G25 | Distinguish attested from enforced data-use controls per §17.4. | Deployment / coverage |
-
 ### Deliberate simplifications and limitations
 
 - This is selection under an already active artifact, not a model release.
@@ -45,12 +34,21 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 - The numeric choices in this example, such as the task count and the ten and forty-five minute assessment ages, are illustrative and are evaluated per Appendix E.
 - `execution-control-v1` is not required, so the runtime guarantee is labeled "attested-only": both sets require managed-runtime evidence and reduced scrutiny changes neither the label nor post-read residual limits.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Establish genuine independent performance history.
+- Empirically justify thresholds and ten/forty-five-minute assessment ages.
+- Selection inputs, `selection-consistency-v1`, and the changed-input outcomes are defined in Sections 9.4 and 11.3 (step 9). Remaining: validate each outcome in the table under "Variations to verify"; state which outcome fixes the terminal decision when several apply to one changed input (degraded snapshot, new hold).
+- Distinguish attested from enforced data-use controls per §17.4.
+
+Still to validate:
 
 - Test sparse/wrong-context/duplicated history, decay, new holds, and changed eligibility before handoff.
 - Evaluate reduced scrutiny independently while preserving immutable checks and mandatory native approvals.
 
-No finding is closed by this narrative. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 
@@ -109,7 +107,7 @@ For a contract that selected the established set, each row changes one input bet
 |---|---|
 | Same snapshot, no other input changed | The re-derivation yields the established set: `selection-consistency-v1` is `PASS` and the contract's set stands. |
 | A newer snapshot is presented and still meets every established-set condition and field rule | `PASS`; the exchange continues under the contract's set, never a weaker one. |
-| The presented snapshot has degraded below a threshold field rule under `/attributes/reputation` | That rule fails: `INADMISSIBLE`, `INVALID_CLAIM` on the rule. The same snapshot also gives the re-derivation a stricter set; see the G10 item above. |
+| The presented snapshot has degraded below a threshold field rule under `/attributes/reputation` | That rule fails: `INADMISSIBLE`, `INVALID_CLAIM` on the rule. The same snapshot also gives the re-derivation a stricter set; see the open point on changed selection inputs under "Limitations and open points" above. |
 | The gateway's own trusted input now selects a stricter set | `selection-consistency-v1` is `FAIL` with `SELECTION_INPUT_CHANGED`; decision `DEFERRED`; retry guidance "obtain a new contract", selected from the current inputs. Reusing the old contract gives the transport error `REQUIREMENTS_CHANGED`. |
 | A security hold becomes applicable | The mandatory security-hold check blocks admission with `SECURITY_HOLD`. A fresh favorable snapshot cannot waive it, and statistical decay cannot clear it (Sections 15.2 and 15.4). |
 | The active policy or the pinned selector artifact is replaced: changed policy digest or base revision, or selector artifact rolled back or frozen | The contract is no longer active: `REQUIREMENTS_CHANGED`; obtain a new contract. |

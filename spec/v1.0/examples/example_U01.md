@@ -2,12 +2,12 @@
 
 **Status:** Informative worked example for PACT Protocol v1.0. Names, amounts, policies, and thresholds are fictional deployment choices, not protocol defaults. Profile paths below are gateway-defined attributes. This is a behavioral example, not a complete signed wire fixture.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** U01. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,29 +27,27 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G08 | Establish independent task attribution without rewarding every invoice read as a separate task. | Deployment / validation |
-| G25 | Distinguish attested from enforced data-use controls per §17.4. | Deployment / coverage |
-| G26 | Define multi-invoice/page scope, limits, and fresh bindings. Specified by the [multi-operation profile](../profiles/multi-operation.md) (section 13.5): each invoice is its own bound operation of the registered task, counted against the task's budget, and a task label grants no session permission (rules MO-1 to MO-7, MO-15 to MO-20; `TASK-01`, `TASK-07`). | Profile / deployment |
-
 ### Deliberate simplifications and limitations
 
 - Only one invoice read is traced; the complete summary workflow is not implemented.
 - Runtime containment and summary-quality assessment have not been demonstrated.
 - `execution-control-v1` is not required, so the runtime guarantee is labeled "attested-only": trusted `managed` isolation evidence establishes a verified fact only, and invoice data use or export is a post-read residual limit.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Establish independent task attribution without rewarding every invoice read as a separate task.
+- Distinguish attested from enforced data-use controls per §17.4.
+- Define multi-invoice/page scope, limits, and fresh bindings. Specified by the [multi-operation profile](../profiles/multi-operation.md) (section 13.5): each invoice is its own bound operation of the registered task, counted against the task's budget, and a task label grants no session permission (rules MO-1 to MO-7, MO-15 to MO-20; `TASK-01`, `TASK-07`).
+
+Still to validate:
 
 - Mutate invoice, principal, task, or delegation before use; verify rejection/native denial.
 - Test multi-read attribution and qualify execution and summary quality independently.
 
-No finding is closed by this narrative. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

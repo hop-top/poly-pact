@@ -2,12 +2,12 @@
 
 **Status:** Informative integration sample for PACT Protocol v1.0. All organizations, identifiers, routes, and policies are illustrative. HTTP examples contain placeholders and are not executable fixtures. Profile excerpts omit required core fields and signatures; they are not complete wire objects. The adapter configuration below is a deployment design, not a new PACT wire schema.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I03. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,16 +27,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G17 | Specify token types, required introspection fields, audiences, refresh, and sender constraints. Specified for this sample's opaque token (form I) by the integration profile [`oauth`](../profiles/oauth/profile.md); its G17 closure map ties each item to rules and case groups. | Profile |
-| G26 | Preserve native task limits and side-effect handling across fresh exchanges. Specified across operations by the [multi-operation profile](../profiles/multi-operation.md), whose G26 closure map (section 12) ties each item to rules and to the cases `TASK-01` to `TASK-09`, and whose section 13.2 works this sample: every read of the renewal task, a retried one included, is reserved against the task's `max_operations`, and a fresh contract resets no counter (rules MO-19, MO-20, MO-28; `TASK-01`); a refreshed token that yields the same principal and client keeps the task's ledger entry, and a token of another user is refused with `task-mismatch` (rule MO-7; `TASK-07`). The customer read is of the class Read (section 6.1) and needs no duplicate suppression. | Profile / deployment |
-
 ### Deliberate simplifications and limitations
 
 - The concrete sample uses opaque bearer tokens with introspection; other profiles are not implemented.
@@ -46,7 +36,13 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 The integration profile [`oauth`](../profiles/oauth/profile.md) states the conformance claim behind this sample as its form I, an opaque token validated by introspection: route R1 (`GET /customers/{customer_id}`, action `crm.customer.read`) under issuer entry E1, the principal `oauth:{issuer-id}:{tenant}:{subject}` with `sub` as the subject (rule OAUTH-37), the OAuth client as the enrolled workload (rule OAUTH-38), the deployment requirements of its section 4, and the fixture index of its section 10. The adapter cases are in [`fixtures/adapters/oauth/`](../fixtures/adapters/oauth/README.md), registered in the fixture manifest; the decision examples below name the case group or case for each row. They test the adapter against an authorization server, introspection endpoint, and enrollment registry that the harness serves itself; they are not a live integration.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Specify token types, required introspection fields, audiences, refresh, and sender constraints. Specified for this sample's opaque token (form I) by the integration profile [`oauth`](../profiles/oauth/profile.md); its requirement coverage table ties each item to rules and case groups.
+- Preserve native task limits and side-effect handling across fresh exchanges. Specified across operations by the [multi-operation profile](../profiles/multi-operation.md), whose requirement coverage table (section 12) ties each item to rules and to the cases `TASK-01` to `TASK-09`, and whose section 13.2 works this sample: every read of the renewal task, a retried one included, is reserved against the task's `max_operations`, and a fresh contract resets no counter (rules MO-19, MO-20, MO-28; `TASK-01`); a refreshed token that yields the same principal and client keeps the task's ledger entry, and a token of another user is refused with `task-mismatch` (rule MO-7; `TASK-07`). The customer read is of the class Read (section 6.1) and needs no duplicate suppression.
 
 The cases cover the adapter's handling of inactive, wrong-resource, and insufficient-scope tokens, absent introspection facts, unavailable introspection, changed token subjects and clients, and the bypass paths B1 to B5 of the profile. These remain unvalidated:
 
@@ -59,7 +55,7 @@ The cases cover the adapter's handling of inactive, wrong-resource, and insuffic
 - Token and client-credential exclusion from the deployment's own logs and telemetry; `OAUTH-22` covers the adapter's results only.
 - The refusal to issue a contract on a requirements request with an inactive token or an unenrolled client (`OAUTH-25`), a gateway property with no landed case.
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Scenario and placement
 

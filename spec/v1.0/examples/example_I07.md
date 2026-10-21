@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I07. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,30 +27,26 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G02 | Define native certificate-to-workload and distinct holder-key binding. | Profile |
-| G16 | Specify terminator handoff, certificate status, renewal, and resumed/long-lived connections. | Profile |
-
 ### Deliberate simplifications and limitations
 
 - The sample uses plain mTLS and a separate PACT key; OAuth certificate binding and SPIFFE are not implemented.
 - Peer identity forwarding is an assumed deployment-specific trusted mechanism.
 
-### Validation still required
+### Limitations and open points
 
-The integration profile [`mtls`](../profiles/mtls/profile.md) indexes, in its section 10, the cases and Go tests that cover forged peer headers, terminator bypass, wrong certificate, workload, and key combinations, revoked and stale certificate status, renewal, connection reuse, and resumption at the adapter; its G16 closure map ties each G16 item to rules and cases. The decisions table below names the cases. These PKI and deployment items remain unvalidated:
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Define native certificate-to-workload and distinct holder-key binding.
+- Specify terminator handoff, certificate status, renewal, and resumed/long-lived connections.
+
+The integration profile [`mtls`](../profiles/mtls/profile.md) indexes, in its section 10, the cases and Go tests that cover forged peer headers, terminator bypass, wrong certificate, workload, and key combinations, revoked and stale certificate status, renewal, connection reuse, and resumption at the adapter; its requirement coverage table ties each requirement to rules and cases. The decisions table below names the cases. These PKI and deployment items remain unvalidated:
 
 - The deployment's private PKI: whether its CA publishes complete revocation lists that the profile's list acceptance rule (rule MTLS-12) admits (open item O5), and the publication interval `P` and propagation time `R` that set the status bound `S` (rule MTLS-14).
 - The terminator at a pinned release: replacement of a header the client supplied and the exact `Cert` serialization (open items O1 and O2), and its obligations under rule MTLS-27.
 - Direct access to the reconciliation API from hosts other than the gateway (case `MTLS-21`), a deployment control with no fixture.
 - The refusal to issue a contract for a revoked or unenrolled workload (case `MTLS-23`), a gateway property with no landed case.
 
-No finding is closed by this narrative. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

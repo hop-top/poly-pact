@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I11. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,16 +27,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G22 | Specify input provenance, policy/obligations, and execution-time condition checks. Specified for an Open Policy Agent decision point by the integration profile [`abac`](../profiles/abac/profile.md), whose section 16 maps each G22 item to rules and cases. | Profile |
-| G25 | Distinguish attested from enforced data-use controls per §17.4. | Deployment / coverage |
-
 ### Deliberate simplifications and limitations
 
 - The rules are a fictional native policy, not a universal taxonomy or PACT policy language.
@@ -47,7 +37,13 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 The integration profile [`abac`](../profiles/abac/profile.md) states the conformance claim behind this sample with Open Policy Agent (OPA) as the native policy decision point, queried through its REST Data API: route R1 (`GET /api/documents/{document_id}`, action `document.read`); a policy input of exactly four members whose every fact comes from one native authority and never from the agent (rules ABAC-1 to ABAC-10); clearance as a configured chain of levels (rule ABAC-11); a decision document with `allow`, `obligations`, and a pinned `policy_version` (rules ABAC-13 to ABAC-20); a recheck of device, zone, and time before release (rules ABAC-21 to ABAC-24); and three obligation types that the document service enforces before any byte is disclosed (rules ABAC-25 to ABAC-30). The principal is the identifier of the mechanism that authenticated Maya; the policy engine authenticates nobody (profile section 7). The adapter cases are in [`fixtures/adapters/abac/`](../fixtures/adapters/abac/README.md), registered in the fixture manifest, with this sample's rule written in Rego as the asset `adapters/abac/policy`; the decision variations below name the case group or case for each row. The cases state the decision point's answer or its policy, the zone map, and the fact sources. The recheck, the gateway's use of a decision, and the executor's enforcement of obligations are Go tests of the adapter package; an integration tier that loads the policy into OPA runs only when an OPA server is configured.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Specify input provenance, policy/obligations, and execution-time condition checks. Specified for an Open Policy Agent decision point by the integration profile [`abac`](../profiles/abac/profile.md), whose section 16 maps each requirement to rules and cases.
+- Distinguish attested from enforced data-use controls per §17.4.
 
 The cases and Go tests cover tampered clearance, classification, device, and network facts, stale and unavailable sources, changed conditions before release, and obligations that cannot be met, at the adapter. These remain unvalidated:
 
@@ -57,7 +53,7 @@ The cases and Go tests cover tampered clearance, classification, device, and net
 - The decision-to-release window for the facts that are not reread at execution (open item O8), and policy changes that keep the same `policy_version` label (profile section 9).
 - Clearance with compartments or any order that is not one chain (O6), and obligation types other than the three of rule ABAC-25.
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

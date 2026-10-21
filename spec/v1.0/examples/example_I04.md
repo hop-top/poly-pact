@@ -2,12 +2,12 @@
 
 **Status:** Informative integration sample for PACT Protocol v1.0. Names, paths, groups, and policies are fictional. HTTP and profile excerpts are partial illustrations, not runnable or complete signed wire fixtures. The adapter design is deployment-specific.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I04. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,16 +27,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G19 | Complete path/object/handle controls and separate SMB/Unix profiles. Specified for the local NTFS open by the integration profile [`files`](../profiles/files/profile.md), whose section 10.1 maps each G19 item to rules and cases; the SMB and Unix documents [`smb.md`](../profiles/files/smb.md) and [`unix.md`](../profiles/files/unix.md) are stubs that make no claim. | Profile / coverage |
-| G25 | Distinguish attested from enforced data-use controls per §17.4. | Deployment / coverage |
-
 ### Deliberate simplifications and limitations
 
 - The design uses local NTFS; remote SMB delegation/share controls and Unix semantics are uncovered.
@@ -47,7 +37,13 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 The integration profile [`files`](../profiles/files/profile.md) states the conformance claim behind this sample: a broker on a Windows file server that authenticates the user through a completed Negotiate exchange (section 3.1), serves one read route R1 (`GET /files/{file_id}/content`, action `file.read`) whose opaque `file_id` the trusted file registry maps to one local NTFS path, volume serial number, and file identifier, opens the file under the user's impersonation token (section 3.2), checks the opened object before any read (section 3.3), and keeps each handle to one task (section 3.4). The principal is `files:{domain-sid}:{user-sid}`, and the user's account is a workload shared by every agent that acts for the user, each with its own enrollment record (profile section 7). Remote SMB access and Unix behaviour are not claimed: [`smb.md`](../profiles/files/smb.md) and [`unix.md`](../profiles/files/unix.md) are stubs with no fixtures. The adapter cases are in [`fixtures/adapters/files/`](../fixtures/adapters/files/README.md), registered in the fixture manifest; the decisions table below names the case group or case for each row. They describe the accounts, the Negotiate tokens, the impersonation of the broker thread, and the file system with its ACLs, which the harness realizes with fakes on every platform; they do not exercise Windows.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Complete path/object/handle controls and separate SMB/Unix profiles. Specified for the local NTFS open by the integration profile [`files`](../profiles/files/profile.md), whose section 10.1 maps each requirement to rules and cases; the SMB and Unix documents [`smb.md`](../profiles/files/smb.md) and [`unix.md`](../profiles/files/unix.md) are stubs that make no claim.
+- Distinguish attested from enforced data-use controls per §17.4.
 
 The cases cover restricted ACLs, stale contexts, broader-account fallback, path, reparse, and object substitution, and cross-task handles, at the adapter, against fakes. These remain unvalidated:
 
@@ -57,7 +53,7 @@ The cases cover restricted ACLs, stale contexts, broader-account fallback, path,
 - The native record of the executor identity that Section 14.2 asks reports to reference (open item OI-12).
 - Remote claims: delegation and share-denial tests belong to an SMB profile, which [`smb.md`](../profiles/files/smb.md) leaves unclaimed; a Unix adapter is likewise unclaimed ([`unix.md`](../profiles/files/unix.md)).
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Scenario and placement
 

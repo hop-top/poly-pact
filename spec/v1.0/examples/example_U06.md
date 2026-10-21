@@ -2,12 +2,12 @@
 
 **Status:** Informative worked example for PACT Protocol v1.0. Names, amounts, policies, and thresholds are fictional deployment choices, not protocol defaults. Profile paths below are gateway-defined attributes. This is a behavioral example, not a complete signed wire fixture.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** U06. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,27 +27,25 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G06 | Normalize missing/pending/rejected approval and fresh evaluation after approval. | Clarification / profile |
-| G26 | Preserve order scope and idempotency across new contracts/retries. Specified by the [multi-operation profile](../profiles/multi-operation.md) (section 13.5): the order is a keyed write, the deferred exchange reserves nothing, the fresh exchange after approval reserves once with the ledger's key, and a retry after a timeout reconciles first (rules MO-9 to MO-13, MO-25 to MO-31, MO-35 to MO-38; `TASK-02`, `TASK-05`, `TASK-09`). | Profile / deployment |
-
 ### Deliberate simplifications and limitations
 
 - Notifications, approver authentication, and approval routing are assumed external infrastructure.
 - Mandatory native approval is not an adaptive reputation waiver.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Normalize missing/pending/rejected approval and fresh evaluation after approval.
+- Preserve order scope and idempotency across new contracts/retries. Specified by the [multi-operation profile](../profiles/multi-operation.md) (section 13.5): the order is a keyed write, the deferred exchange reserves nothing, the fresh exchange after approval reserves once with the ledger's key, and a retry after a timeout reconciles first (rules MO-9 to MO-13, MO-25 to MO-31, MO-35 to MO-38; `TASK-02`, `TASK-05`, `TASK-09`).
+
+Still to validate:
 
 - Test wrong approver/order/amount and pending, rejected, expired, revoked, and unavailable approvals.
 - Approve after contract expiry; require a fresh exchange and native duplicate-order protection.
 
-No finding is closed by this narrative. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

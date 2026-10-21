@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I09. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,15 +27,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G04 | Prove request binding survives the selected gateway transformations. | Profile |
-| G21 | Define IAM caller/session mapping, executor identity, and supported AWS scope. Specified for this sample by the integration profile [`aws`](../profiles/aws/profile.md); its G21 closure map ties each AWS item to rules and cases. | Profile / coverage |
-
 ### Deliberate simplifications and limitations
 
 - Only a custom IAM-authorized API is covered, not arbitrary direct AWS services.
@@ -45,7 +36,12 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 The integration profile [`aws`](../profiles/aws/profile.md) states the conformance claim behind this sample: an HTTP API whose route uses `AWS_IAM` authorization and a Lambda proxy integration at payload format `2.0`, served on the `$default` stage through one custom domain (rule AR-1); route R1 (`GET /metrics/operations`, action `metrics.operations.read`); the workload `aws:{account-id}:{role-arn}:unreported` of a dedicated role (rules AR-8, AR-9, AR-12); the execution role as a distinct executor (rule AR-22); and the fixture index of its section 10. The adapter cases are in [`fixtures/adapters/aws/`](../fixtures/adapters/aws/README.md), registered in the fixture manifest; the decisions table below names the case group or case for each row. Each case's input is a payload `2.0` event that the harness builds from a sample event, a role table, and a configuration-check result; the cases are not a deployed API.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Prove request binding survives the selected gateway transformations.
+- Define IAM caller/session mapping, executor identity, and supported AWS scope. Specified for this sample by the integration profile [`aws`](../profiles/aws/profile.md); its requirement coverage table ties each AWS item to rules and cases.
 
 The cases cover forged identity inputs, wrong role, account, and session, request mutation in the event, the executor fallback, and a refusal by the handler after admission, at the adapter. These remain unvalidated:
 
@@ -55,7 +51,7 @@ The cases cover forged identity inputs, wrong role, account, and session, reques
 - The permissions of the execution role and of the handler's translation row, which the profile does not verify (open item O4), and the handler's permission check itself (C08).
 - The refusal to issue a contract on a requirements request without IAM context (`AWS-09`), and the two validator rules of `AWS-13`, which are reserved and not landed.
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 
