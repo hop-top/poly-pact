@@ -13,7 +13,7 @@ use HopTop\Pact\Vectors\Fixtures;
 use HopTop\Pact\Vectors\Skipped;
 
 /**
- * The key rule of docs/sdk/ports-plan.md section 5.2 of the source
+ * The key rule of tools/parity/README.md (Key rule) of the source
  * repository, over spec/v1.0/fixtures/keys (keys/README.md).
  *
  * A P-256 JWK passes when it parses as a public key and its point is its

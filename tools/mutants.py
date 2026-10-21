@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Run committed mutation patches against a package's tests.
 
-Mutation checks of the SDK packages (docs/sdk/ports-plan.md section 5.6) are
-committed patches, for example ts/test/mutants/<module>-<name>.patch and
+Mutation checks of the SDK packages (tools/parity/README.md, Mutation checks)
+are committed patches, for example ts/test/mutants/<module>-<name>.patch and
 py/tests/mutants/<module>-<name>.patch. Each patch must make the package's
 test command fail.
 

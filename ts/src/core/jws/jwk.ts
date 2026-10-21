@@ -3,7 +3,7 @@
  * 7518 section 6.2.1) and their RFC 7638 thumbprint.
  *
  * Node's JWK import accepts padded, non-canonical, 31- and 33-octet
- * coordinates (docs/sdk/probes/ts.md, P6 fact 2), so `x` and `y` go
+ * coordinates, so `x` and `y` go
  * through the canonical base64url decoder and must be 32 octets each before
  * `createPublicKey`; an import failure is `jwk-off-curve`.
  *

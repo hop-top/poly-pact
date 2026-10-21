@@ -1,9 +1,9 @@
 // Port of go/core/jws/jwk_test.go. Expected thumbprints are the Appendix C
-// holder_jkt and the RFC 7638 values the probe records report for the P-256
+// holder_jkt and the RFC 7638 values computed independently for the P-256
 // test keys; expected reasons follow RFC 7517, RFC 7518 section 6.2.1 and
 // draft 7.2. The coordinate cases beyond Go's (31 and 33 octets, padding,
 // spare bits, the standard alphabet) are the inputs Node's JWK import
-// accepts (docs/sdk/probes/ts.md, P6 fact 2): the profile refuses each one
+// accepts: the profile refuses each one
 // before the import.
 
 import assert from 'node:assert/strict';
@@ -307,8 +307,8 @@ test('TestKeySet', (t) => {
   wantReason(() => new KeySet({ ...iss, use: 'enc' }), Reason.JWK_USAGE);
 });
 
-// The thumbprints of the P-256 test keys, as the TypeScript, Python, Rust
-// and PHP probe records report them.
+// The thumbprints of the P-256 test keys, as computed independently in
+// TypeScript, Python, Rust and PHP.
 test('TestFixtureThumbprints', (t) => {
   if (!fixturesPresent(t)) return;
   const want: Record<string, string> = {

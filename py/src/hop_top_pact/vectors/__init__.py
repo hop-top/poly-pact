@@ -2,8 +2,8 @@
 
 Prints one NDJSON line per manifest entry, ``{"id","kind","result"}``, and
 nothing else on standard output. The counterpart of ``pactconf vectors
-verify --ndjson``; the result grammar is in docs/sdk/ports-plan.md of the
-source repository, section 5.1.
+verify --ndjson``; the result grammar is in tools/parity/README.md of the
+source repository (Result grammar).
 """
 
 from __future__ import annotations

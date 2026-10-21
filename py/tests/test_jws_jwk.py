@@ -218,7 +218,7 @@ def test_key_set() -> None:
 
 
 def test_fixture_thumbprints() -> None:
-    """The thumbprints of the P-256 test keys, as the probe records report them."""
+    """The thumbprints of the P-256 test keys, as four independent computations agree on them."""
     want = {
         "holder": HOLDER_JKT,
         "issuer": "AhqHzaYXA5MzmDCrsseUsVBGKyfhDhvekx0THjH_xIE",

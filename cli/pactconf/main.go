@@ -18,7 +18,7 @@
 // with --capability, which is not run, or a vector entry of scope runner in
 // a group without a runner here, which the Go conformance runner runs. With
 // --ndjson, stdout carries only one {"id","kind","result"} line per vector,
-// key and schema entry, the result grammar of docs/sdk/ports-plan.md section 5.1,
+// key and schema entry, the result grammar of tools/parity/README.md,
 // and the other rows go to stderr. It also fails when an id repeats, when a
 // path or expected file of any entry is missing, when a .json file under
 // vectors/ is not registered, when a vector entry of scope core or adapter

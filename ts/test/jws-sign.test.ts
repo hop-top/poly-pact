@@ -1,8 +1,8 @@
 // Port of go/core/jws/sign_test.go. Signing is randomized, so the tests check
 // properties of signatures and the exact header and payload segments, never
 // signature bytes. The low-S rule is the one Go applies (S is the low value
-// of the pair S, n-S); Node's signer writes a high S about half the time
-// (docs/sdk/probes/ts.md), so 64 signatures without normalization have a
+// of the pair S, n-S); Node's signer writes a high S about half the time,
+// so 64 signatures without normalization have a
 // high S with probability 1 - 2^-64.
 
 import assert from 'node:assert/strict';

@@ -196,7 +196,7 @@ describe('TestRejectTarget', () => {
 
 // The target rules that matter most, through a real node:http server, so the
 // inputs are what a gateway receives. The parser answers 400 itself to a raw
-// non-ASCII octet in the target (docs/sdk/probes/ts.md, P1), so that row
+// non-ASCII octet in the target, so that row
 // never reaches the binding over node:http.
 describe('TestRejectTargetOverWire', () => {
   const tests: [rule: Rule, target: string, parser400?: boolean][] = [

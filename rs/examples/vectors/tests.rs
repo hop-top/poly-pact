@@ -1,5 +1,5 @@
 //! Tests of the harness itself: entry handling, the result grammar and the
-//! exit status (docs/sdk/ports-plan.md sections 5.1 to 5.3).
+//! exit status (tools/parity/README.md, Result grammar to Gates file).
 
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};

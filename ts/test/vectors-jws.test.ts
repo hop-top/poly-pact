@@ -1,7 +1,7 @@
 // The JWS and key groups of the harness (src/vectors/run-jws.ts,
 // run-keys.ts) against fake cores. Expectations follow
 // spec/v1.0/fixtures/vectors/jws/README.md, spec/v1.0/fixtures/keys/README.md and the
-// key rule of docs/sdk/ports-plan.md section 5.2; the Appendix C holder_jkt
+// key rule of tools/parity/README.md (Key rule); the Appendix C holder_jkt
 // is the thumbprint of the P-256 key of scalar 1.
 
 import assert from 'node:assert/strict';

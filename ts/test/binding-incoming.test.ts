@@ -1,5 +1,5 @@
 // fromIncomingMessage and readIncomingMessage over a node:http server: what
-// the request looks like once read (docs/sdk/probes/ts.md, P1), and what
+// the request looks like once read, and what
 // node:http accepts that the binding then decides.
 
 import assert from 'node:assert/strict';

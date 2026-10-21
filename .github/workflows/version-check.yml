@@ -17,8 +17,6 @@ name: version-check
 #   RELEASING.md            documents the version scheme with examples
 #   .github/tests/*         promotion-gate test fixtures (example manifests)
 #   docs/sdk/deps-rs.md     a third-party crate's rc in a dependency review
-#   docs/sdk/probes/*       recorded probe output (build artifact names)
-#   docs/sdk/ports-plan-py.md  the Python port plan as approved
 
 on:
   push:
@@ -37,5 +35,3 @@ jobs:
         RELEASING.md
         .github/tests/*
         docs/sdk/deps-rs.md
-        docs/sdk/probes/*
-        docs/sdk/ports-plan-py.md

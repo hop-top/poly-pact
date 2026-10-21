@@ -98,7 +98,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -109,7 +109,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -120,7 +120,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -131,7 +131,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -142,7 +142,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -153,7 +153,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -164,7 +164,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -175,7 +175,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -186,7 +186,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -197,7 +197,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -208,7 +208,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -219,7 +219,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this adapter's cases; ports: a per-adapter decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -230,7 +230,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this source's cases; ports: a per-source decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this source's cases; ports: a per-source decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -241,7 +241,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this source's cases (they run as go test in adapter/source/scim today); ports: a per-source decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this source's cases (they run as go test in adapter/source/scim today); ports: a per-source decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",
@@ -252,7 +252,7 @@
       "py": "n/a",
       "rs": "n/a",
       "php": "n/a",
-      "flipped_by": "Go: an NDJSON printer for this source's cases; ports: a per-source decision (docs/sdk/ports-plan.md section 3)"
+      "flipped_by": "Go: an NDJSON printer for this source's cases; ports: a per-source decision (tools/parity/README.md, Native adapters and sources)"
     },
     {
       "scope": "adapter",

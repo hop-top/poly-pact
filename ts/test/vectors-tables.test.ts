@@ -63,8 +63,7 @@ interface ManifestDoc {
 
 test('the kind table is the closed set of the manifest format, in Go order', () => {
   const KINDS = kinds();
-  // 13 kinds: the plan's count of 9 predates transport, mcp, profile and
-  // source-case.
+  // 13 kinds, transport, mcp, profile and source-case among them.
   assert.deepEqual(KINDS, [
     'key',
     'vector',

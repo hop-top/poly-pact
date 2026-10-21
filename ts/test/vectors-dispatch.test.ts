@@ -1,5 +1,5 @@
-// Entry handling of the vectors harness (docs/sdk/ports-plan.md sections 5.1
-// and 5.2): which entries run, the skipped reasons, the closed sets, the
+// Entry handling of the vectors harness (tools/parity/README.md, Result
+// grammar and Entry handling): which entries run, the skipped reasons, the closed sets, the
 // line shape and the exit status under the gates file. Run in process with
 // runManifest; vectors-main.test.ts covers the command line.
 
@@ -263,7 +263,7 @@ test('every row that is not a pass goes to the detail list, then a summary', () 
 
 // The RED evidence: on the repository manifest, every in-scope entry of a
 // group whose module is still a stub fails with a not-implemented detail,
-// and every other entry is classified as the plan says.
+// and every other entry is classified as tools/parity/README.md says.
 test('repository manifest: classification, and every entry of a stubbed group fails', async (t) => {
   if (!existsSync(REPO_MANIFEST)) {
     if (process.env.PACT_REQUIRE_VECTORS === '1')

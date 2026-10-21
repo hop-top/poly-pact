@@ -2,7 +2,7 @@
 // "built" from the vector's request object by the shared request decoder,
 // and "parsed": sent as HTTP/1.1 text to a node:http server whose handler
 // runs fromIncomingMessage. The parser answers 400 itself to a raw non-ASCII
-// octet in the target (docs/sdk/probes/ts.md, P1); that is allowed only for
+// octet in the target; that is allowed only for
 // a vector that expects a refusal.
 
 import assert from 'node:assert/strict';

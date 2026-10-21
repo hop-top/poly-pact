@@ -1,5 +1,6 @@
 /**
- * The vectors harness (docs/sdk/ports-plan.md sections 5.1 and 5.2): every
+ * The vectors harness (tools/parity/README.md, Result grammar and Entry
+ * handling): every
  * entry of the fixture manifest gets one result line. Entries of kind vector
  * and key of scope core and adapter run through the package's modules and
  * are compared with their outcome and expected file. Entries of kind

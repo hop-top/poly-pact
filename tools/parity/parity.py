@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Cross-language parity check of the PACT harnesses against the fixture manifest.
 
-Implements the gates and orchestrator rules of docs/sdk/ports-plan.md
-section 5. Each language harness (make go-vectors, make ts-vectors, ...)
+Implements the gates and orchestrator rules of tools/parity/README.md
+(Gates file, Orchestrator rules). Each language harness (make go-vectors, make ts-vectors, ...)
 prints one NDJSON line per manifest entry, {"id","kind","result"}, with
 
     result ::= "pass" | "fail" | "skipped:" reason
@@ -57,7 +57,7 @@ Under a planned gate every valid result is accepted and counted. The
 spec-defect and capability rules check the result grammar and apply under
 every gate.
 
-The Go results come from several legs (docs/sdk/ports-plan.md section 5.1).
+The Go results come from several legs (tools/parity/README.md, Go legs).
 --runner-report go=FILE maps the scope-runner results of a pactc run --json
 report into the go stream: PASS is pass, FAIL is fail, SKIP is
 skipped:capability when the entry lists a capability the report does not

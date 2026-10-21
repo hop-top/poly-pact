@@ -1,8 +1,8 @@
 """RawRequest from an ASGI scope or a WSGI environ. Standard library only.
 
 Neither helper is on the conformance path, which builds a RawRequest with
-decode_request. docs/sdk/probes/py.md lists what is still to probe against
-real servers.
+decode_request. Each helper states the known limits of the server interface
+it reads.
 """
 
 from __future__ import annotations

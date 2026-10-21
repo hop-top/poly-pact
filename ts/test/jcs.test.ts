@@ -1,5 +1,5 @@
 // Port of go/core/jcs/jcs_test.go and number_test.go, plus the JCS property
-// test of the plan (section 6, item 5). Expected texts are those of the Go
+// test over random trees (idempotence, round trip through strict parse). Expected texts are those of the Go
 // tests, produced there by the RFC 8785 Appendix A reference canonicalizer
 // on V8, and the RFC 8785 Appendix B table.
 

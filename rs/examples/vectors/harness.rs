@@ -1,4 +1,4 @@
-//! The vectors harness (docs/sdk/ports-plan.md sections 5.1 and 5.2): every
+//! The vectors harness (tools/parity/README.md, Entry handling): every
 //! entry of the fixture manifest gets one result line. Entries of kind
 //! vector, key and schema of scope core and adapter run through the crate's
 //! modules and are compared with their outcome and expected file. Scope
@@ -121,7 +121,7 @@ pub struct Run {
 }
 
 /// An entry that ran although its rs gate is n/a claims coverage the gates
-/// file does not declare (ports-plan.md section 5.3, rule 3): the run fails.
+/// file does not declare (tools/parity/README.md, orchestrator rule 3): the run fails.
 fn not_applicable(run: &mut Run, gates: Option<&Gates>, e: &Entry) {
     if gates.and_then(|g| g.of(e)) == Some(Gate::NotApplicable) {
         run.details.push(format!("FAIL {}: ran under an rs gate that is n/a", e.id));

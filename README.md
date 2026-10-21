@@ -79,7 +79,7 @@ compares the languages on the shared vectors.
 | [`pact-rs`](rs/README.md) | `rs` | Rust SDK | crates.io `hop-top-pact` | `hop-top/pact-rs` |
 | [`pact-php`](php/README.md) | `php` | PHP SDK | Packagist `hop-top/pact` | `hop-top/pact-php` |
 
-Port plans, dependency vetting and the parity ledger: [docs/sdk/](docs/sdk/ports-plan.md).
+Cross-language parity: [tools/parity/README.md](tools/parity/README.md), the API ledger [docs/sdk/parity-ledger.md](docs/sdk/parity-ledger.md) and the dependency vetting records `docs/sdk/deps-*.md` ([TypeScript](docs/sdk/deps-ts.md), [Python](docs/sdk/deps-py.md), [Rust](docs/sdk/deps-rs.md), [PHP](docs/sdk/deps-php.md)).
 
 Each component has its own version and tags, such as `pact-go/v1.0.0-alpha.1`; `pact-go`,
 `pact-ts`, `pact-py`, `pact-rs` and `pact-php` start each new major version together. Each component is published to
@@ -123,7 +123,10 @@ All in one pull request into `next`.
   [spec/v1.0/draft.md](spec/v1.0/draft.md) is the authority
 - [spec/v1.0/fixtures/README.md](spec/v1.0/fixtures/README.md): conformance fixtures and the
   runner contract
-- [docs/sdk/](docs/sdk/ports-plan.md): SDK port plans, dependency vetting and the parity ledger
+- [tools/parity/README.md](tools/parity/README.md): how the SDKs are held to parity with Go
+- [docs/sdk/parity-ledger.md](docs/sdk/parity-ledger.md): the API parity ledger
+- dependency vetting: [TypeScript](docs/sdk/deps-ts.md), [Python](docs/sdk/deps-py.md),
+  [Rust](docs/sdk/deps-rs.md), [PHP](docs/sdk/deps-php.md)
 - [CHANGELOG.md](CHANGELOG.md): where each component's changelog lives
 
 ## Security

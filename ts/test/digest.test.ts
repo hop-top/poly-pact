@@ -2,7 +2,7 @@
 // digests are the draft's Appendix B values, the FIPS 180-4 "abc" example
 // and digests of hand-written RFC 8785 texts, as in the Go tests.
 //
-// Deviation of the port (docs/sdk/ports-plan-ts.md section 3): a Uint8Array
+// Deviation of the port: a Uint8Array
 // passed to objectDigest is received JSON text, hashed in its canonical
 // form, where Go's ObjectDigest encodes a []byte as a base64 string. Go's
 // json.RawMessage maps to Uint8Array or RawJSON.

@@ -10,8 +10,8 @@ namespace HopTop\Pact\Vectors;
  *
  * Prints one NDJSON line per manifest entry, {"id","kind","result"}, and
  * nothing else on standard output: the counterpart of `pactconf vectors
- * verify --ndjson`, with the result grammar of docs/sdk/ports-plan.md
- * section 5.1 of the source repository. Plain argv, no command-line
+ * verify --ndjson`, with the result grammar of tools/parity/README.md
+ * of the source repository. Plain argv, no command-line
  * framework: make php-vectors and make parity drive it.
  *
  * MANIFEST defaults to ../spec/v1.0/fixtures/manifest.json beside the

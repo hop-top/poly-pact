@@ -1,5 +1,5 @@
 /**
- * The key rule of the harness (docs/sdk/ports-plan.md section 5.2), after
+ * The key rule of the harness (tools/parity/README.md, Key rule), after
  * cli/pactconf vectors_keys.go and spec/v1.0/fixtures/keys/README.md: every
  * P-256 JWK under keys/ parses, and its point is the scalar of its record in
  * keys/test-private-scalars.json times the base point; the holder key's

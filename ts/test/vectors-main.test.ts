@@ -1,6 +1,6 @@
 // Tests of the vectors harness entry, src/vectors/main.ts, run as a child
 // process the way make ts-vectors runs it. Expected lines follow the result
-// grammar of docs/sdk/ports-plan.md section 5.1 in the source repository: one
+// grammar of tools/parity/README.md in the source repository: one
 // {"id","kind","result"} object per manifest entry on standard output and
 // nothing else; the rows that are not a pass and a summary go to standard
 // error. Exit status 0, 1 on a fail under a gate other than planned for ts,

@@ -92,15 +92,16 @@ before a pull request. Useful subsets:
   reputation, runner, and the commands in `cli`.
 - SDKs in `ts`, `py`, `rs` and `php`: strict JSON, JCS, digests, ES256 JWS,
   RFC 7638 thumbprints, schema validation and the shared vectors. The
-  TypeScript and Python ports follow the Go library to parity in the phases
-  of `docs/sdk/ports-plan.md`; Rust and PHP stay core-only.
+  TypeScript and Python ports follow the Go library to parity
+  (`tools/parity/README.md`); Rust and PHP stay core-only.
 
 ## What does not belong
 
 - A conformance runner or fixture tool outside Go: `pactc` is the single
   cross-language runner; `pactconf` and `pactfix` stay Go-only. *Convention.*
-- Native adapters in an SDK before `docs/sdk/ports-plan.md` schedules them.
-  *Convention.*
+- Native adapters in an SDK before the Go adapter prints NDJSON results and
+  its gate row is set for that language (`tools/parity/README.md`, Native
+  adapters and sources). *Convention.*
 - Task, track or ticket identifiers of any tracking system, in commits, code,
   comments, docs, ADRs or branch names. *Convention.*
 - Any change made in a mirror.

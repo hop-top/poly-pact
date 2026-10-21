@@ -21,7 +21,7 @@ func specTree(t testing.TB, files map[string]string) (root, spec string) {
 		"spec/fixtures/README.md":      "# Fixtures\n\n[Keys](keys/README.md), [map](../spec-map.md#fixture-groups).\n",
 		"spec/fixtures/keys/README.md": "# Keys\n",
 		"spec/spec-map.md":             "# Map\n\n[draft](draft.md)\n",
-		"docs/handoff.md":              "# Handoff\n",
+		"docs/notes.md":                "# Notes\n",
 	}
 	for k, v := range files {
 		base[k] = v
@@ -67,11 +67,11 @@ func TestCheckLinksAcceptsBase(t *testing.T) {
 	}
 }
 
-// TestCheckLinksHandoff: the link the spec map forbids, to docs/handoff.md
-// outside spec/, fails although the file exists in the source repository.
-func TestCheckLinksHandoff(t *testing.T) {
+// TestCheckLinksOutside: a link from the spec map to docs/notes.md outside
+// spec/ fails although the file exists in the source repository.
+func TestCheckLinksOutside(t *testing.T) {
 	_, spec := specTree(t, map[string]string{
-		"spec/spec-map.md": "# Map\n\nSee [handoff](../docs/handoff.md).\n",
+		"spec/spec-map.md": "# Map\n\nSee [notes](../docs/notes.md).\n",
 	})
 	wantLinkProblem(t, linkRules(t, spec), ruleLinkOutside, "spec/spec-map.md:3")
 }
@@ -83,11 +83,11 @@ func TestCheckLinksRules(t *testing.T) {
 		"leaves and re-enters spec": {"spec/README.md", "[d](../spec/draft.md)\n", ruleLinkOutside, "spec/README.md:1"},
 		"root-absolute":             {"spec/README.md", "[d](/spec/draft.md)\n", ruleLinkOutside, "spec/README.md:1"},
 		"nested escape":             {"spec/fixtures/README.md", "x\n\n[g](../../go/README.md)\n", ruleLinkOutside, "spec/fixtures/README.md:3"},
-		"reference definition":      {"spec/README.md", "[x][h]\n\n[h]: ../docs/handoff.md\n", ruleLinkOutside, "spec/README.md:3"},
-		"angle destination":         {"spec/README.md", "[h](<../docs/handoff.md>)\n", ruleLinkOutside, "spec/README.md:1"},
-		"html href":                 {"spec/README.md", "<a href=\"../docs/handoff.md\">h</a>\n", ruleLinkOutside, "spec/README.md:1"},
+		"reference definition":      {"spec/README.md", "[x][h]\n\n[h]: ../docs/notes.md\n", ruleLinkOutside, "spec/README.md:3"},
+		"angle destination":         {"spec/README.md", "[h](<../docs/notes.md>)\n", ruleLinkOutside, "spec/README.md:1"},
+		"html href":                 {"spec/README.md", "<a href=\"../docs/notes.md\">h</a>\n", ruleLinkOutside, "spec/README.md:1"},
 		"image":                     {"spec/README.md", "![i](../docs/x.png)\n", ruleLinkOutside, "spec/README.md:1"},
-		"percent-encoded escape":    {"spec/README.md", "[h](%2E%2E/docs/handoff.md)\n", ruleLinkOutside, "spec/README.md:1"},
+		"percent-encoded escape":    {"spec/README.md", "[h](%2E%2E/docs/notes.md)\n", ruleLinkOutside, "spec/README.md:1"},
 		"missing target":            {"spec/README.md", "[x](nope.md)\n", ruleLinkMissing, "spec/README.md:1"},
 		"missing with fragment":     {"spec/README.md", "[x](nope.md#a)\n", ruleLinkMissing, "spec/README.md:1"},
 		"missing nested":            {"spec/fixtures/README.md", "[x](keys/holder.jwk.json)\n", ruleLinkMissing, "spec/fixtures/README.md:1"},
@@ -104,12 +104,12 @@ func TestCheckLinksRules(t *testing.T) {
 // links.
 func TestCheckLinksIgnores(t *testing.T) {
 	text := "# x\n\n" +
-		"```\n[h](../docs/handoff.md)\n```\n\n" +
-		"~~~md\n[h](../docs/handoff.md)\n~~~\n\n" +
-		"Code `[h](../docs/handoff.md)` span.\n\n" +
-		"<!-- [h](../docs/handoff.md) -->\n\n" +
+		"```\n[h](../docs/notes.md)\n```\n\n" +
+		"~~~md\n[h](../docs/notes.md)\n~~~\n\n" +
+		"Code `[h](../docs/notes.md)` span.\n\n" +
+		"<!-- [h](../docs/notes.md) -->\n\n" +
 		"[web](https://example.com/x) [mail](mailto:a@example.com) [top](#x) [q](?a=b) [proto](//host/x)\n\n" +
-		"\\[not](../docs/handoff.md)\n"
+		"\\[not](../docs/notes.md)\n"
 	_, spec := specTree(t, map[string]string{"spec/README.md": text})
 	if ps := linkRules(t, spec); len(ps) > 0 {
 		t.Errorf("problems:\n%s", ps)
@@ -117,10 +117,10 @@ func TestCheckLinksIgnores(t *testing.T) {
 }
 
 func TestCheckLinksAllowList(t *testing.T) {
-	allow := "# comment\n\nspec/README.md -> docs/handoff.md\n"
+	allow := "# comment\n\nspec/README.md -> docs/notes.md\n"
 	t.Run("allowed", func(t *testing.T) {
 		_, spec := specTree(t, map[string]string{
-			"spec/README.md":    "[h](../docs/handoff.md)\n",
+			"spec/README.md":    "[h](../docs/notes.md)\n",
 			"spec/.links-allow": allow,
 		})
 		ps, st, err := checkLinks(spec)
@@ -130,8 +130,8 @@ func TestCheckLinksAllowList(t *testing.T) {
 	})
 	t.Run("allowed only for its source", func(t *testing.T) {
 		_, spec := specTree(t, map[string]string{
-			"spec/README.md":    "[h](../docs/handoff.md)\n",
-			"spec/draft.md":     "[h](../docs/handoff.md)\n",
+			"spec/README.md":    "[h](../docs/notes.md)\n",
+			"spec/draft.md":     "[h](../docs/notes.md)\n",
 			"spec/.links-allow": allow,
 		})
 		wantLinkProblem(t, linkRules(t, spec), ruleLinkOutside, "spec/draft.md:1")
@@ -141,7 +141,7 @@ func TestCheckLinksAllowList(t *testing.T) {
 		wantLinkProblem(t, linkRules(t, spec), ruleAllowList, "spec/.links-allow:3")
 	})
 	t.Run("malformed entry", func(t *testing.T) {
-		_, spec := specTree(t, map[string]string{"spec/.links-allow": "docs/handoff.md\n"})
+		_, spec := specTree(t, map[string]string{"spec/.links-allow": "docs/notes.md\n"})
 		if _, _, err := checkLinks(spec); err == nil {
 			t.Error("a malformed allow-list was accepted")
 		}
@@ -154,7 +154,7 @@ func TestCheckLinksMirror(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("symbolic links need privileges on windows")
 	}
-	_, spec := specTree(t, map[string]string{"spec/README.md": "[h](notes/handoff.md)\n"})
+	_, spec := specTree(t, map[string]string{"spec/README.md": "[h](notes/notes.md)\n"})
 	if err := os.Symlink(filepath.Join("..", "docs"), filepath.Join(spec, "notes")); err != nil {
 		t.Fatal(err)
 	}

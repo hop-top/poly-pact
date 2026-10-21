@@ -187,7 +187,7 @@ final class JwkTest extends TestCase
         Keys::wantReason(static fn() => new KeySet(new Jwk('OKP', 'Ed25519', self::RFC8037_X, '', 'ed')), R::JWK_CURVE);
     }
 
-    /** The thumbprints of the P-256 test keys, as the probe records report them. */
+    /** The thumbprints of the P-256 test keys, as four independent computations agree on them. */
     public function testFixtureThumbprints(): void
     {
         $want = [

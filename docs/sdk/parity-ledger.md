@@ -1,6 +1,6 @@
 # API parity ledger
 
-This ledger maps every exported symbol of the Go library packages in scope to its name in the TypeScript and Python ports, with a status, and records the names of the core-only Rust port (section [Rust](#rust)) ([ports-plan.md](ports-plan.md), sections 2 and 5.5). The ports follow it; a port that names a symbol differently changes its row in the same change.
+This ledger maps every exported symbol of the Go library packages in scope to its name in the TypeScript and Python ports, with a status, and records the names of the core-only Rust port (section [Rust](#rust)). The parity mechanism it belongs to is described in [tools/parity/README.md](../../tools/parity/README.md#api-ledger). The ports follow it; a port that names a symbol differently changes its row in the same change.
 
 `tools/parity/api_ledger.py` checks it. The script lists the packages with `go list`, reads each one with `go doc -all`, and fails on an exported symbol without a row, on a row whose symbol the package no longer exports, on a duplicate row, and on a malformed row. It runs in `ci-go`:
 
@@ -12,11 +12,11 @@ python3 -I tools/parity/api_ledger.py --selftest  # check the parser and the rul
 
 A change that adds, removes or renames an exported symbol of a package in scope updates this file in the same change.
 
-The rows of `adapter`, `adapter/enroll`, `adapter/enroll/memory`, `adapter/freshness` and the `adapter/adaptertest` case model are frozen for the ports ([adapter-contract-freeze.md](adapter-contract-freeze.md)): a change to one of those symbols also updates that note and opens a port task per language.
+The rows of `adapter`, `adapter/enroll`, `adapter/enroll/memory`, `adapter/freshness` and the `adapter/adaptertest` case model are frozen for the ports ([tools/parity/README.md](../../tools/parity/README.md#adapter-contract), Adapter contract): a change to one of those symbols follows the change rule there.
 
 ## Scope
 
-The packages that `go list ./core/... ./adapter/... ./adapters/memory ./contract ./gateway ./holder ./runner/manifest ./validator` names in the library module `go/`. A new package under `core/` or `adapter/` enters the scope, and the check, as soon as it exists. The native adapters (`adapters/basic`, `adapters/mtls`, `adapters/aws` and later ones) and `adapters/internal/broken` are outside it: the ports reach them through the phase-6 template, one task per adapter ([ports-plan.md](ports-plan.md), section 6).
+The packages that `go list ./core/... ./adapter/... ./adapters/memory ./contract ./gateway ./holder ./runner/manifest ./validator` names in the library module `go/`. A new package under `core/` or `adapter/` enters the scope, and the check, as soon as it exists. The native adapters (`adapters/basic`, `adapters/mtls`, `adapters/aws` and later ones) and `adapters/internal/broken` are outside it: whether a port implements one is decided per adapter ([tools/parity/README.md](../../tools/parity/README.md#native-adapters-and-sources), Native adapters and sources).
 
 A symbol is what `go doc -all` prints:
 
@@ -58,15 +58,7 @@ Each package section gives names relative to the port module of the same path.
 
 The PHP namespaces are in section [PHP](#php).
 
-The language plans ([ports-plan-ts.md](ports-plan-ts.md), [ports-plan-py.md](ports-plan-py.md), sections 1 to 3) do not list `adapter/installed`, `adapter/source`, `adapter/source/scim`, `adapter/sourcetest` and `adapter/task` yet; their rows above follow the same path rule.
-
-The language plans do not list `contract` (requirement contract issuance and verification, draft Sections 9.1 to 9.4) yet either; its rows follow the same rules.
-
-Nor do they list `holder` (the agent side: profile disclosure, contract verification and signed presentations, draft Sections 8, 10, 11.2 and 22.1); its rows follow the same rules.
-
-Nor do they list `validator` (the admission validator, draft Sections 11.3 to 12.2); its rows follow the same rules.
-
-Nor do they list `gateway` (the in-gateway admission middleware, draft Sections 4.4, 9.1, 10.2, 13.2 and 13.4); its rows follow the same rules.
+Every package follows the same path rule: the TypeScript export and the Python module mirror the Go import path. `contract` is requirement contract issuance and verification (draft Sections 9.1 to 9.4); `holder` is the agent side: profile disclosure, contract verification and signed presentations (draft Sections 8, 10, 11.2 and 22.1); `validator` is the admission validator (draft Sections 11.3 to 12.2); `gateway` is the in-gateway admission middleware (draft Sections 4.4, 9.1, 10.2, 13.2 and 13.4).
 
 ## Columns and statuses
 
@@ -82,13 +74,13 @@ A row moves from `planned` to `done` when both ports land it. A `deviation` row 
 
 ## Naming rules
 
-The names below are those of the language plans where they name a symbol, and otherwise follow these rules. Go initialisms stay one word: upper case inside a TypeScript name (`parseJWK`, `fromJSON`), lower case in a Python name (`parse_jwk`, `from_json`). One exception in TypeScript: `ID` inside a lowerCamel name (function, method, field, option) is written `Id` (`sourceId`, `withSourceId`, `newId`). Type names keep the Go spelling (`AgentID`, `TLSPeer`) and `UPPER_SNAKE` names are unchanged (`DEFAULT_SOURCE_ID`).
+The names below follow these rules, except where a row's note says otherwise. Go initialisms stay one word: upper case inside a TypeScript name (`parseJWK`, `fromJSON`), lower case in a Python name (`parse_jwk`, `from_json`). One exception in TypeScript: `ID` inside a lowerCamel name (function, method, field, option) is written `Id` (`sourceId`, `withSourceId`, `newId`). Type names keep the Go spelling (`AgentID`, `TLSPeer`) and `UPPER_SNAKE` names are unchanged (`DEFAULT_SOURCE_ID`).
 
 TypeScript casing follows what the existing TypeScript code already does:
 
-- [ports-plan-ts.md](ports-plan-ts.md), section 3, writes every `ID` of a lowerCamel name as `Id` (`sourceId`, `principalId`, `checkId`, the `sourceId` option of `MemoryRegistry`) and every other initialism in upper case (`parseJWK`, `publicJWK`, `presentationJSON`, `fromJSON`, `JWSError`, `StrictJSONError`, `TLSPeer`, `subjectCN`). `rawRequestURI` of `RawRequest`, which names no Go symbol, follows the same rule.
-- The TypeScript code of the hop-top kit (hop-top/poly-kit: `sdk/ts`, published as `@hop-top/kit`, `engine/sdk/ts-kit-engine` and `examples/spaced/ts`; non-test sources) agrees on `ID` by majority: 10 lowerCamel names use `Id` (`getInstallId` in `sdk/ts/src/telemetry/installId.ts`, `newId`, `nextId`, `installationId`, `validModernRequestId`) against 4 with `ID` (`handlerID` in `sdk/ts/src/uri.ts`, which wraps a dependency's function of that name, and three private constants of `installId.ts`, `installIDSize` among them). Its other initialisms are split: 27 names keep them upper case (`baseURL`, `parseURI`, `isValidJSON`, `APIClient`, `createCLI`, `LLMError`) and 35 capitalize them (`baseUrl`, `JsonRpcRequest`), 23 of those the `Mcp*` names of its `mcp/` module (`McpBridge`); `URL` alone is 4 to 4. The kit does not decide them, so the plan's upper case stands.
-- No lint configuration sets a naming rule: the kit lints with `typescript-eslint` `recommended` (`sdk/ts/eslint.config.mjs`), which has no `naming-convention` rule, and the plan's Biome rules (section 2) name none.
+- The TypeScript port writes every `ID` of a lowerCamel name as `Id` (`sourceId`, `principalId`, `checkId`, the `sourceId` option of `MemoryRegistry`) and every other initialism in upper case (`parseJWK`, `publicJWK`, `presentationJSON`, `fromJSON`, `JWSError`, `StrictJSONError`, `TLSPeer`, `subjectCN`). `rawRequestURI` of `RawRequest`, which names no Go symbol, follows the same rule.
+- The TypeScript code of the hop-top kit (hop-top/poly-kit: `sdk/ts`, published as `@hop-top/kit`, `engine/sdk/ts-kit-engine` and `examples/spaced/ts`; non-test sources) agrees on `ID` by majority: 10 lowerCamel names use `Id` (`getInstallId` in `sdk/ts/src/telemetry/installId.ts`, `newId`, `nextId`, `installationId`, `validModernRequestId`) against 4 with `ID` (`handlerID` in `sdk/ts/src/uri.ts`, which wraps a dependency's function of that name, and three private constants of `installId.ts`, `installIDSize` among them). Its other initialisms are split: 27 names keep them upper case (`baseURL`, `parseURI`, `isValidJSON`, `APIClient`, `createCLI`, `LLMError`) and 35 capitalize them (`baseUrl`, `JsonRpcRequest`), 23 of those the `Mcp*` names of its `mcp/` module (`McpBridge`); `URL` alone is 4 to 4. The kit does not decide them, so upper case stands.
+- No lint configuration sets a naming rule: the kit lints with `typescript-eslint` `recommended` (`sdk/ts/eslint.config.mjs`), which has no `naming-convention` rule, and the Biome rules of `ts/biome.json` name none.
 
 | Go | TypeScript | Python |
 |---|---|---|
@@ -99,14 +91,14 @@ TypeScript casing follows what the existing TypeScript code already does:
 | other field | `Type.lowerCamel` | `Type.snake_case` |
 | constant of an exported type of the package (`go doc` lists it under the type) | `Type.MEMBER`: the name without the words its group shares, in `UPPER_SNAKE` | `Type.MEMBER`, a member of the `StrEnum` or `IntEnum` |
 | other constant | `UPPER_SNAKE` | `UPPER_SNAKE` |
-| sentinel error `ErrX` | a kind or code of the package's error class | a kind or code of the package's error class, or a subclass where the plan names one |
+| sentinel error `ErrX` | a kind or code of the package's error class | a kind or code of the package's error class, or a subclass where its row names one |
 | `Valid()` | guard `isType(x)` | `Type.is_valid(s)` |
 | `Error()`, `Unwrap()`, `String()`, `Is()` | `message`, `cause`, `toString`, `instanceof` | `__str__`, `__cause__`, `__str__`, `isinstance` |
-| `New*` constructor | `new Type(...)`, or the factory the plan names | `Type(...)`, or the factory the plan names |
+| `New*` constructor | `new Type(...)`, or the factory its row names | `Type(...)`, or the factory its row names |
 
 ## Deviations
 
-The documented deviations of [ports-plan.md](ports-plan.md), section 2. Every row they touch has status `deviation` and names the deviation in its note.
+The documented deviations ([tools/parity/README.md](../../tools/parity/README.md#deviations)). Every row they touch has status `deviation` and names the deviation in its note.
 
 | Deviation | Go | TypeScript | Python | Rows |
 |---|---|---|---|---|
@@ -126,7 +118,7 @@ Port modules and names with no Go symbol.
 
 ## Rust
 
-The Rust SDK (`rs/`, crate `hop-top-pact`, library `hop_top_pact`) is core-only ([ports-plan.md](ports-plan.md), section 1.3): it ports the `core` packages below and no other package in scope. Its names are recorded here, per package, instead of in a column of the package sections; `tools/parity/api_ledger.py` does not read this section. A Go symbol of a ported package that is not listed below has the Rust name the rules give.
+The Rust SDK (`rs/`, crate `hop-top-pact`, library `hop_top_pact`) is core-only ([tools/parity/README.md](../../tools/parity/README.md#what-parity-means)): it ports the `core` packages below and no other package in scope. Its names are recorded here, per package, instead of in a column of the package sections; `tools/parity/api_ledger.py` does not read this section. A Go symbol of a ported package that is not listed below has the Rust name the rules give.
 
 ### Modules
 
@@ -193,7 +185,7 @@ The Rust SDK (`rs/`, crate `hop-top-pact`, library `hop_top_pact`) is core-only 
 
 ## PHP
 
-The PHP SDK (`php/`, Packagist `hop-top/pact`, namespace `HopTop\Pact`) is core-only ([ports-plan.md](ports-plan.md), section 1.3). This section maps the Go packages in scope to its namespaces; the symbol rows below carry the TypeScript and Python names only. A Go symbol of a core package has a PHP name under the rules here; a package marked `n/a` has none, by scope.
+The PHP SDK (`php/`, Packagist `hop-top/pact`, namespace `HopTop\Pact`) is core-only ([tools/parity/README.md](../../tools/parity/README.md#what-parity-means)). This section maps the Go packages in scope to its namespaces; the symbol rows below carry the TypeScript and Python names only. A Go symbol of a core package has a PHP name under the rules here; a package marked `n/a` has none, by scope.
 
 | Go package | PHP namespace | Status | Note |
 |---|---|---|---|
@@ -518,10 +510,10 @@ SDK extra of the PHP SDK: `Core\Schema` (validation with `opis/json-schema` and 
 | `Subject.Credential` | `Subject.credential` | `Subject.credential` | done |  |
 | `Subject.VerifyOutcome` | `Subject.verifyOutcome` | `Subject.verify_outcome` | done |  |
 | `TLSPeer` | `TLSPeer` | `TLSPeer` | done |  |
-| `TLSPeer.SubjectCN` | `TLSPeer.subjectCN` | `TLSPeer.subject_cn` | done | name of the language plans; case-file member `subject_cn` |
-| `TLSPeer.IssuerCN` | `TLSPeer.issuerCN` | `TLSPeer.issuer_cn` | done | name of the language plans; case-file member `issuer_cn` |
-| `TLSPeer.DNSNames` | `TLSPeer.dnsNames` | `TLSPeer.dns_names` | done | name of the language plans; case-file member `dns_names` |
-| `TLSPeer.URIs` | `TLSPeer.uris` | `TLSPeer.uris` | done | name of the language plans; case-file member `uris` |
+| `TLSPeer.SubjectCN` | `TLSPeer.subjectCN` | `TLSPeer.subject_cn` | done | TLS peer name of `RawRequest`; case-file member `subject_cn` |
+| `TLSPeer.IssuerCN` | `TLSPeer.issuerCN` | `TLSPeer.issuer_cn` | done | TLS peer name of `RawRequest`; case-file member `issuer_cn` |
+| `TLSPeer.DNSNames` | `TLSPeer.dnsNames` | `TLSPeer.dns_names` | done | TLS peer name of `RawRequest`; case-file member `dns_names` |
+| `TLSPeer.URIs` | `TLSPeer.uris` | `TLSPeer.uris` | done | TLS peer name of `RawRequest`; case-file member `uris` |
 
 ## `adapter/enroll`
 
@@ -2118,7 +2110,7 @@ SDK extra of the PHP SDK: `Core\Schema` (validation with `opis/json-schema` and 
 | `Error` | `JWSError` | `JWSError` | done |  |
 | `Error.Reason` | `JWSError.reason` | `JWSError.reason` | done |  |
 | `Error.Detail` | `JWSError.detail` | `JWSError.detail` | done |  |
-| `Error.Err` | `JWSError.cause` | `JWSError.err` | done | TypeScript: the `cause` of `Error` ([ports-plan-ts.md](ports-plan-ts.md), section 3) |
+| `Error.Err` | `JWSError.cause` | `JWSError.err` | done | TypeScript: the `cause` of `Error` |
 | `Error.Error` | `JWSError.message` | `JWSError.__str__` | done | Go `error` interface |
 | `Error.Unwrap` | `JWSError.cause` | `JWSError.__cause__` | done | Go error chain |
 | `Header` | `Header` | `Header` | done |  |

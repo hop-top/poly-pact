@@ -1,7 +1,7 @@
 """The value types of the adapter contract.
 
 Port of go/adapter/types_test.go. The field lists are written from the
-contract of the section 17.1 functions and the adapter-contract freeze note;
+contract of the section 17.1 functions and the frozen adapter contract;
 adding, dropping or retyping a field is a contract change and must change
 this table. Go's zero values are Python defaults: an absent time is None.
 """

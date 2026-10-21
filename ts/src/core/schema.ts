@@ -17,7 +17,7 @@ import { uriFormat } from './uri.ts';
 export { uriFormat };
 
 // ajv is CommonJS; under NodeNext its constructor is the default export's
-// `default` (docs/sdk/ports-plan-ts.md, section 4).
+// `default` (a plain default import fails tsc with TS2351).
 const Ajv2020 = Ajv2020Mod.default;
 
 /** One schema failure of a document. */
