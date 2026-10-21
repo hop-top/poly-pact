@@ -99,8 +99,8 @@
     }
   ],
   "unsupported_forms": [
-    "Direct PACT enforcement across arbitrary AWS services (handoff row I09): only the routes of one custom API are claimed",
-    "Inherited caller authority for the execution role (handoff row I09): the execution role is a distinct actor with its own declared permissions",
+    "Direct PACT enforcement across arbitrary AWS services (sample I09): only the routes of one custom API are claimed",
+    "Inherited caller authority for the execution role (sample I09): the execution role is a distinct actor with its own declared permissions",
     "REST APIs, WebSocket APIs, payload format 1.0, non-proxy and HTTP integrations: payload 1.0 has no rawQueryString and the REST proxy event does not preserve the order of request parameters",
     "JWT and Lambda authorizers, IAM users, the root user, federated users, and Amazon Cognito credentials: only assumed-role sessions map to a workload",
     "Callers from another account than the API owner's",

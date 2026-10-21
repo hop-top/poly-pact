@@ -38,7 +38,7 @@
     {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain; to be supplied by the deployment"},
     {"component": "C02", "owner": "IAM owner and adapter owner", "what_exists": "The deployment's identity mechanism and the adapter implementing authorize_native for this profile; the identity mechanism is to be supplied, the adapter is go/adapters/rebac in the reference implementation"},
     {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry; to be supplied, a reference registry exists in the Go package go/adapter/enroll"},
-    {"component": "C04", "owner": "Collaboration platform owner", "what_exists": "The collaboration system's record of the principal-to-agent task authorization; required, assumed by the sample, binding rules belong to the delegation work of finding G03"},
+    {"component": "C04", "owner": "Collaboration platform owner", "what_exists": "The collaboration system's record of the principal-to-agent task authorization; required, assumed by the sample, binding rules belong to the delegation work, not yet specified"},
     {"component": "C05", "owner": "Resource owner and adapter owner", "what_exists": "OpenFGA store (the Check) and the enrollment registry; to be supplied"},
     {"component": "C06", "owner": "none", "what_exists": "Not used: read and edit of a document need no external approval in this claim"},
     {"component": "C07", "owner": "Adapter owner", "what_exists": "Mapping registry holding the pin record, relation table, and subject and object mappings; to be supplied, specified by this profile"},

@@ -85,7 +85,7 @@ Claim mapping. The profile paths `/attributes/environment/principal_id` and `/at
 
 ## 4. Native dependencies
 
-Eleven of the sixteen handoff components are used, and each of the other five carries the reason it does not apply. Of the systems the rows name, only the account database, the invoice backend, the account permission lookup and the enrollment registry contract exist today; a row marked "to be supplied" is work that the deployment or the adapter still owes.
+Eleven of the sixteen components are used, and each of the other five carries the reason it does not apply. Of the systems the rows name, only the account database, the invoice backend, the account permission lookup and the enrollment registry contract exist today; a row marked "to be supplied" is work that the deployment or the adapter still owes.
 
 | ID | Responsibility | Needed when | Provided by | Owner | Status or reason not used |
 |---|---|---|---|---|---|
@@ -130,9 +130,9 @@ Deployment requirements. These are conditions on the deployment that the claim d
 
 ## 6. Unsupported forms
 
-The first row is seeded from the I01 row of the handoff "Deliberate design choices" table, and the other rows come from the dispositions and routes found while filling sections 2 to 5.
+The first row is the wider claim that sample I01 does not establish, and the other rows come from the dispositions and routes found while filling sections 2 to 5.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
 | Telling agents apart by a shared Basic password, and PACT enforcement on an unchanged Basic server | I01 Basic: "Shared-password agent distinction or enforcement on an unchanged server" | Only a dedicated account behind the controlled gateway is the established design. A shared password distinguishes no agent, and an unchanged Basic-only server cannot evaluate PACT because a client adds a profile header (example I01) |
 | Shared accounts | Section 7; identity-mapping §5 | One dedicated account per agent, the default of identity-mapping §5 (IM-19); an account with more than one enrollment in force is a configuration error (section 7) |

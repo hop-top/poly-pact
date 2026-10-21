@@ -4,11 +4,11 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
 ## Purpose and status
 
-This is the integration profile (the structure of [`TEMPLATE.md`](../TEMPLATE.md)) for attribute-based access control through an installed policy decision point, Open Policy Agent (OPA), reached through its REST Data API. It answers the open finding G22 of the specification review: where each policy input fact comes from and how fresh it must be, how clearance is compared, what a policy decision document contains and how it is pinned to a policy version, which conditions are read again before execution, and how the obligations of a decision are enforced before any data is disclosed. [Example I11](../../examples/example_I11.md) is the informative narrative; its organizations, routes, and thresholds are fictional and this profile does not make them real.
+This is the integration profile (the structure of [`TEMPLATE.md`](../TEMPLATE.md)) for attribute-based access control through an installed policy decision point, Open Policy Agent (OPA), reached through its REST Data API. It specifies where each policy input fact comes from and how fresh it must be, how clearance is compared, what a policy decision document contains and how it is pinned to a policy version, which conditions are read again before execution, and how the obligations of a decision are enforced before any data is disclosed. [Example I11](../../examples/example_I11.md) is the informative narrative; its organizations, routes, and thresholds are fictional and this profile does not make them real.
 
 The native policy engine stays authoritative. A PACT rejection can make access more restrictive; a PACT pass never makes a native permission more permissive, and a native denial always wins (draft §2.3, §4.3). This profile defines no PACT policy language. It fixes the fact inputs, the comparison of clearance levels, the decision document, the execution-time rechecks, and the obligation handling, and nothing about what a policy decides.
 
-Sections 1 to 10 fill the ten sections of the template. Sections 11 to 15 hold the rules that sections 1 to 10 cite, each with an id from ABAC-1 to ABAC-30 so that fixtures and reviews can cite it; they are normative for a claim under this profile. Sections 16 to 18 are informative: the closure map for G22, the reference implementation, and the sources and open items. The uppercase requirement words have the meanings of draft §3, and where this document and [`draft.md`](../../draft.md) differ, the draft governs. Each rule ends with its basis: a draft section, an OPA source tag from section 18, or `profile` for a convention this document adds. A convention applies to every claim under this profile.
+Sections 1 to 10 fill the ten sections of the template. Sections 11 to 15 hold the rules that sections 1 to 10 cite, each with an id from ABAC-1 to ABAC-30 so that fixtures and reviews can cite it; they are normative for a claim under this profile. Sections 16 to 18 are informative: the requirement coverage, the reference implementation, and the sources and open items. The uppercase requirement words have the meanings of draft §3, and where this document and [`draft.md`](../../draft.md) differ, the draft governs. Each rule ends with its basis: a draft section, an OPA source tag from section 18, or `profile` for a convention this document adds. A convention applies to every claim under this profile.
 
 The machine-readable form is [`profile.json`](profile.json), which validates against [`integration-profile.schema.json`](../integration-profile.schema.json). It holds sections 1 to 6 and 8 to 10 only; the profile header, the identity-mapping section, and the rules stay here.
 
@@ -116,9 +116,9 @@ The negative cases are named in section 10, with the fixtures and Go tests that 
 
 ## 6. Unsupported forms
 
-The first two rows are seeded from the I11/I12 row of the "Deliberate design choices" table of the handoff; the others come from the rules below and from sections 2 and 5.
+The first two rows are the wider claims that samples I11 and I12 do not establish; the others come from the rules below and from sections 2 and 5.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
 | Universal policies, or a PACT policy language | I11/I12 ABAC/ReBAC: "Universal policies/relationships or instantaneous propagation" | Only the native OPA policy and its decision document (ABAC-15) are claimed. PACT defines no policy language, no other engine, and no policy; the clearance chain and the sample rule are illustrative |
 | Instantaneous propagation of a fact change | I11/I12 ABAC/ReBAC: same row | A change reaches a decision within the status bound of its source (section 8) and, for device, zone, and time, again at execution within 30 seconds; nothing faster is promised (draft §18) |
@@ -132,7 +132,7 @@ The first two rows are seeded from the I11/I12 row of the "Deliberate design cho
 | Reuse of a decision across requests; an embedded or non-REST OPA interface | Section 13, ABAC-17 | Every decision is a new query through the REST Data API |
 | Verification of policy content from `policy_version` or from a bundle revision | Section 13, ABAC-16 | Both are labels the policy publisher sets; the profile pins and compares them |
 | Observation mode | Section 1 | Obligations are not enforced there |
-| Enforcement of data use after disclosure | Handoff G25, draft §17.4 | `execution-control-v1` is not in the contract; use after disclosure is attested-only |
+| Enforcement of data use after disclosure | Draft §17.4 | `execution-control-v1` is not in the contract; use after disclosure is attested-only |
 
 ## 7. Identity mapping
 
@@ -401,7 +401,7 @@ An admission and an execution are different instants. Between them a device can 
 
 ## 15. Obligations
 
-The draft does not define an obligation: the word appears in the handoff and in I11, and draft §17.3 only states that the gateway remains responsible for resource enforcement and field permissions. This profile defines the term for itself. An obligation is a typed condition in a policy decision that the executor must carry out before it discloses data. PACT carries it to the executor and does not interpret it: the obligation of the reference adapter contract holds the obligation type and its parameters, and PACT defines no obligation type (section 17). The executor interprets it, as follows.
+The draft does not define an obligation: the word appears in sample I11, and draft §17.3 only states that the gateway remains responsible for resource enforcement and field permissions. This profile defines the term for itself. An obligation is a typed condition in a policy decision that the executor must carry out before it discloses data. PACT carries it to the executor and does not interpret it: the obligation of the reference adapter contract holds the obligation type and its parameters, and PACT defines no obligation type (section 17). The executor interprets it, as follows.
 
 **ABAC-25. The three obligation types.** The installed obligation set of an entry (ABAC-16) is `filter_fields`, `redact`, and `watermark`. Their `params` are closed objects: a missing member, an unknown member, or a wrong type makes the obligation unmet (ABAC-28).
 
@@ -423,11 +423,11 @@ A pointer follows the syntax of RFC 6901 section 3, which makes a non-conforming
 
 **ABAC-30. The native record and the outcomes.** For each release and each refusal the executor writes one immutable native record with the `operation_id`, the `decision_id`, the `policy_version`, the obligation types applied, the executor identity (draft §17.5), and the result. The `AUTHORIZATION` and `EXECUTION` outcome reports reference that record in `evidence_refs` (draft §14.2, Appendix A.2), and a report whose executor class differs from the declared `delegated-user` class is `UNQUALIFIED`. A release is reported as in draft §14.5: a filtered or complete read is `EXECUTION`, `SUCCESS`, `reliability`. Draft §14.5 has no row for a read that the native policy allowed and the executor refused for an obligation, so this profile reports it as `EXECUTION`, `FAILURE`, dimension `none`, which carries no reputation weight and is not agent misconduct (draft §14.3, §14.5). *Basis: draft §14.2, §14.3, §14.5, §17.5; profile.*
 
-## 16. Closure map for G22 (informative)
+## 16. Requirement coverage (informative)
 
-The handoff states the requested work and the evidence needed to close G22. This table maps each item to the rules that answer it and to the negative cases of section 10. Closure rests on those cases passing; this document maps items to rules and closes nothing by itself.
+This table maps each requirement, the requested work and the evidence it needs, to the rules that answer it and to the negative cases of section 10. A requirement is met only when those cases pass; this document maps items to rules and establishes nothing by itself.
 
-| G22 item | Where it is answered | Rules | Cases |
+| Requirement | Where it is answered | Rules | Cases |
 |---|---|---|---|
 | Work: source authority | Section 8 table; section 11 | ABAC-1 to ABAC-7 | ABAC-01 to ABAC-04 |
 | Work: comparisons | Section 12 | ABAC-11, ABAC-12 | ABAC-01, ABAC-09, ABAC-10 |

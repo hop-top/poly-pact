@@ -60,14 +60,14 @@
     {"path": "Key material or endpoints chosen by the token or the request: jku, x5u, jwk, x5c headers, an introspection URL, a tenant-independent discovery document", "control": "closed", "evidence": "OAUTH-7, OAUTH-22, OAUTH-23: configuration only; cases adapters/oauth/oauth-12.jku, adapters/oauth/oauth-12.x5u, adapters/oauth/oauth-12.jwk-header and case group OAUTH-23, such as adapters/oauth/oauth-23.jwks-untrusted-origin; for form G OAUTH-42 and OAUTH-43, cases adapters/oauth/oauth-35.jku, adapters/oauth/oauth-35.jwk-header and adapters/oauth/oauth-37.jwks-untrusted-origin"},
     {"path": "A token tried under another issuer entry, tenant, key set, or form after it failed", "control": "closed", "evidence": "OAUTH-6: one entry per route and no fallback; case group OAUTH-24, such as adapters/oauth/oauth-24.other-entry-would-accept; for form G case group OAUTH-38, such as adapters/oauth/oauth-38.other-entry-would-accept"},
     {"path": "The PACT endpoints of draft section 13.2 that require native authentication, such as POST /pact/v0.1/requirements", "control": "equivalent", "evidence": "Served through the same authenticate_native, so OAUTH-1 to OAUTH-38 apply; case group OAUTH-25, such as adapters/oauth/oauth-25.inactive"},
-    {"path": "Use of the same access token, or the same Google ID token, at other resource servers, Microsoft Graph, or any SaaS or relying party that accepts it", "control": "out_of_claim", "evidence": "PACT enforcement by Graph or any SaaS is not established (handoff I02/I03 row); excluded in section 6"},
+    {"path": "Use of the same access token, or the same Google ID token, at other resource servers, Microsoft Graph, or any SaaS or relying party that accepts it", "control": "out_of_claim", "evidence": "PACT enforcement by Graph or any SaaS is not established (samples I02 and I03); excluded in section 6"},
     {"path": "Other routes and listeners on the gateway, such as health, metrics, or administration", "control": "out_of_claim", "evidence": "Not listed in section 2; excluded in section 6"},
-    {"path": "The downstream credential of R2 (an on-behalf-of token for Microsoft Graph) and any app-only fallback", "control": "out_of_claim", "evidence": "Belongs to the Graph profile (finding G18); excluded in section 6"}
+    {"path": "The downstream credential of R2 (an on-behalf-of token for Microsoft Graph) and any app-only fallback", "control": "out_of_claim", "evidence": "Belongs to the Graph profile; excluded in section 6"}
   ],
   "unsupported_forms": [
-    "PACT enforcement by Microsoft Graph or by any SaaS: those APIs do not run the hook; only the custom gateway enforces (handoff I02/I03 row)",
-    "Protection of bypass routes outside the gateway: only B1 to B5 are controlled (handoff I02/I03 row)",
-    "Agent-operated MFA, consent, or role activation: these stay in the native flow; missing consent is a missing scope (OAUTH-31) and never triggers a fallback to broader access (handoff I14 row)",
+    "PACT enforcement by Microsoft Graph or by any SaaS: those APIs do not run the hook; only the custom gateway enforces (samples I02 and I03)",
+    "Protection of bypass routes outside the gateway: only B1 to B5 are controlled (samples I02 and I03)",
+    "Agent-operated MFA, consent, or role activation: these stay in the native flow; missing consent is a missing scope (OAUTH-31) and never triggers a fallback to broader access (sample I14)",
     "ID tokens as access tokens on a form I or form E route, and ID tokens as PACT evidence in any form: refused by OAUTH-32, and never an Evidence artifact (draft sections 7.3, 8.3, 11.3); a Google ID token is the credential of a form G route only (OAUTH-41, OAUTH-50)",
     "Google access tokens and the tokeninfo endpoint: opaque, and tokeninfo is documented as a debugging endpoint; deferred (OAUTH-50)",
     "Google ID tokens of an account outside the pinned hosted domain, including an account with no hd claim: refused (OAUTH-46)",

@@ -1,6 +1,6 @@
 # PACT integration profiles
 
-This directory holds integration profiles. An integration profile states, for one native gateway or product, the exact PACT conformance claim and the evidence behind it: protected routes and actions, enforcement points, native dependencies, alternative paths, unsupported forms, identity mapping, source freshness, membership and status sources, attribute sources, residual limits, and negative fixtures. Profiles exist because the draft requires enforced gateways and adapters, and each claim needs to be scoped and shown path by path. The open finding G01 of the specification review asks for this: demonstrate that every claimed path is controlled and that bypass paths are closed, equivalently enforced, or explicitly outside the claim.
+This directory holds integration profiles. An integration profile states, for one native gateway or product, the exact PACT conformance claim and the evidence behind it: protected routes and actions, enforcement points, native dependencies, alternative paths, unsupported forms, identity mapping, source freshness, membership and status sources, attribute sources, residual limits, and negative fixtures. Profiles exist because the draft requires enforced gateways and adapters, and each claim needs to be scoped and shown path by path. A profile demonstrates that every claimed path is controlled and that bypass paths are closed, equivalently enforced, or explicitly outside the claim.
 
 ## Four meanings of profile
 
@@ -9,7 +9,7 @@ Four different things in this repository are called "profile". Use the names bel
 | Name | Meaning | Example path |
 |---|---|---|
 | AgentProfile | The data object of draft §8.1, always written "AgentProfile". | `spec/v1.0/draft.md`, Appendix B.1 |
-| integration profile | The G01 template instance per native mechanism, `spec/v1.0/profiles/<mechanism>/profile.{md,json}`. The MCP adapter profile is an integration profile. | `spec/v1.0/profiles/mcp/profile.md` |
+| integration profile | The template instance per native mechanism, `spec/v1.0/profiles/<mechanism>/profile.{md,json}`. The MCP adapter profile is an integration profile. | `spec/v1.0/profiles/mcp/profile.md` |
 | transport profile | Draft §13.3: how PACT messages ride a channel other than the HTTPS baseline, `spec/v1.0/profiles/transport/<id>/`. | `spec/v1.0/profiles/transport/stdio-ipc/` |
 | conformance profile | Draft §22.1: a named subset of roles and §22.2 rows, `spec/v1.0/profiles/conformance/<id>/`. The ids are `full` and `single-owner`. | `spec/v1.0/profiles/conformance/single-owner/` |
 

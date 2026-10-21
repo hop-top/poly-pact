@@ -4,7 +4,7 @@ This document targets spec version 1.0 and wire version 0.1 and is a draft.
 
 ## 1. Purpose and status
 
-Every integration profile maps native identities to PACT identities (template section 7, [`TEMPLATE.md`](TEMPLATE.md)). This document is the part of that mapping that is the same for all of them, so that a profile states only the choices it makes or narrows. It is the profile deliverable for finding G02 of the specification review: namespaced native identifiers, trusted enrollment actors, shared-account handling, certificate, token, and role-session bindings, and lifecycle rules. The negative fixtures that complete the evidence for G02 are separate work and are not part of this document.
+Every integration profile maps native identities to PACT identities (template section 7, [`TEMPLATE.md`](TEMPLATE.md)). This document is the part of that mapping that is the same for all of them, so that a profile states only the choices it makes or narrows. It specifies namespaced native identifiers, trusted enrollment actors, shared-account handling, certificate, token, and role-session bindings, and lifecycle rules. The negative fixtures that complete the evidence for this mapping are separate work and are not part of this document.
 
 The document adds no wire field and no protocol requirement. It states how the identity rules of [`draft.md`](../draft.md) apply when an adapter binds a native workload to an `agent_id` and a holder key. Where this document and the draft differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. Sections 1 to 9 are normative for a profile that claims enforced support, except where a passage is marked informative; section 10 is informative.
 

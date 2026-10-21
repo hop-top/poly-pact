@@ -4,7 +4,7 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
 ## Purpose and status
 
-This is the integration profile ([`TEMPLATE.md`](../TEMPLATE.md)) for a gateway that authenticates machine clients with X.509 client certificates over mutual TLS and then requires a signed PACT presentation, the scenario of [`example_I07.md`](../../examples/example_I07.md). It states which certificates the gateway accepts and how a certificate names a workload; how certificate status, renewal, connection reuse, and session resumption behave; and the one way a TLS terminator in front of the gateway may pass a peer identity on. It answers the open finding G16 of the specification review; the section "G16 closure map" shows which rule answers which closure item.
+This is the integration profile ([`TEMPLATE.md`](../TEMPLATE.md)) for a gateway that authenticates machine clients with X.509 client certificates over mutual TLS and then requires a signed PACT presentation, the scenario of [`example_I07.md`](../../examples/example_I07.md). It states which certificates the gateway accepts and how a certificate names a workload; how certificate status, renewal, connection reuse, and session resumption behave; and the one way a TLS terminator in front of the gateway may pass a peer identity on. The section "Requirement coverage" shows which rule answers which requirement.
 
 The profile adds no wire field and no protocol requirement. Where it and [`draft.md`](../../draft.md) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. The rules MTLS-1 to MTLS-31 are normative for a claim made under this profile and carry ids so that fixtures and reviews can cite them. They are language-neutral. The section "Evidence" is informative: it records what the Go standard library does, as probed for this profile, and names the Go packages of this repository that an adapter builds on. The Go standard library is the reference TLS and X.509 stack of this repository and is called "the reference stack" in the rules. Section 10 indexes the conformance cases of this profile, the behaviour tested outside them, and the common cases the adapter replaces.
 
@@ -208,7 +208,7 @@ The five required functions run in request order inside the gateway, and the oth
 
 ## 4. Native dependencies
 
-Eleven of the sixteen handoff components are used, and each of the other five carries the reason it does not apply. The status column is honest about the state of this profile: the rules are written and the adapter that implements them is later work.
+Eleven of the sixteen components are used, and each of the other five carries the reason it does not apply. The status column is honest about the state of this profile: the rules are written and the adapter that implements them is later work.
 
 | ID | Responsibility | Needed when | Provided by | Owner | Status or reason not used |
 |---|---|---|---|---|---|
@@ -246,9 +246,9 @@ Eight other ways to reach the reconciliation data or the identity input are list
 
 ## 6. Unsupported forms
 
-The first three rows are seeded from the I07 row of the handoff "Deliberate design choices" table, which reads: "Native certificate plus separate enrolled PACT key" is the choice and "OAuth certificate-bound tokens, SPIFFE/SPIRE, or insecure peer-header forwarding" is the wider claim not established. The other rows come from the sections that follow the rules.
+The first three rows come from the design choice of sample I07, a native certificate plus a separate enrolled PACT key, and the wider claim it does not establish: OAuth certificate-bound tokens, SPIFFE/SPIRE, or insecure peer-header forwarding. The other rows come from the sections that follow the rules.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
 | OAuth certificate-bound access tokens (RFC 8705 §3) and OAuth mutual-TLS client authentication (RFC 8705 §2) | I07: "OAuth certificate-bound tokens" | The certificate authenticates the workload and nothing more (MTLS-28). No token is read, and none is checked against the certificate |
 | SPIFFE and SPIRE | I07: "SPIFFE/SPIRE" | No SVID validation (SPIFFE X509-SVID §5.2 requires cA false, the scheme `spiffe`, a non-root path, and exactly one URI name), no trust-domain bundles (§6), and no Workload API. A certificate that carries a `spiffe://` URI is treated as an opaque URI name of its pinned CA under MTLS-7 |
@@ -358,11 +358,11 @@ The common cases of the adapter conformance suite run against this adapter. Eigh
 | `IDENT-03.authenticate` | Splits user and client; under this mechanism the principal is the workload | `MTLS-18.same-key-other-name`: the same public key under another name; the other workload (MTLS-16) |
 | `IDENT-05.authenticate` | Expects `basic:acme-accounts:30981` | `MTLS-12.authenticate`: the subject common name is the analogue of a display name and is never compared |
 
-## G16 closure map
+## Requirement coverage
 
-The open finding G16 asks for a certificate identity policy, status and renewal, connection reuse and resumption, authenticated peer-identity forwarding from a trusted terminator, and a distinction from OAuth certificate-bound tokens, and it asks for evidence that forged forwarded headers, proxy bypass, wrong certificate, workload, and key combinations, and unacceptable certificate status on reused connections are all rejected. The table maps each item to the rules and planned cases of this profile.
+The requirements are a certificate identity policy, status and renewal, connection reuse and resumption, authenticated peer-identity forwarding from a trusted terminator, and a distinction from OAuth certificate-bound tokens, with evidence that forged forwarded headers, proxy bypass, wrong certificate, workload, and key combinations, and unacceptable certificate status on reused connections are all rejected. The table maps each item to the rules and planned cases of this profile.
 
-| G16 closure item | Rules | Cases |
+| Requirement | Rules | Cases |
 |---|---|---|
 | Certificate identity policy | MTLS-1 to MTLS-9, MTLS-30, MTLS-31 | `MTLS-09` to `MTLS-12` |
 | Certificate status | MTLS-10 to MTLS-15 | `MTLS-13`, `MTLS-14` |

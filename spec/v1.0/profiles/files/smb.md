@@ -30,7 +30,7 @@ Where this document and the draft ([`draft.md`](../../draft.md)) differ, the dra
 
 ## 3. Unsupported in wire version 0.1
 
-Every SMB form is unsupported. The first row is the wording of the I04 row of the handoff "Deliberate design choices" table.
+Every SMB form is unsupported. The first row is the wider claim that sample I04 does not establish.
 
 | Unsupported form | Why it is not established |
 |---|---|
@@ -43,7 +43,7 @@ Every SMB form is unsupported. The first row is the wording of the I04 row of th
 
 ## 4. To become a claim
 
-A full profile replaces this stub, filled per [`TEMPLATE.md`](../TEMPLATE.md), with a `profile.json` that validates against `integration-profile.schema.json`, a registry entry, and negative fixtures that cover the local cases and the two that the finding adds for remote variants: delegation and share denial. A Windows environment with a domain controller and a second host is a precondition for the probe.
+A full profile replaces this stub, filled per [`TEMPLATE.md`](../TEMPLATE.md), with a `profile.json` that validates against `integration-profile.schema.json`, a registry entry, and negative fixtures that cover the local cases and the two that the requirements add for remote variants: delegation and share denial. A Windows environment with a domain controller and a second host is a precondition for the probe.
 
 ## Reference implementation (informative)
 

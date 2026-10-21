@@ -4,7 +4,7 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
 ## Purpose and status
 
-This is an integration profile, filled on the structure of [`TEMPLATE.md`](../TEMPLATE.md), for relationship-based access control (ReBAC) where the native decision is a Check against an OpenFGA relationship store. It is the profile deliverable for finding G23 of the specification review and fills the claim for the sample [I12](../../examples/example_I12.md). G23 asks to pin the tenant, store, model, relation, and object mappings, to say which contextual facts are trusted, to state the query and cache consistency, to state what a Check means when more than one sharing path exists, and to say who may write relationships. This profile answers each item (section 12) and states what stays unestablished (sections 6, 9, and 14).
+This is an integration profile, filled on the structure of [`TEMPLATE.md`](../TEMPLATE.md), for relationship-based access control (ReBAC) where the native decision is a Check against an OpenFGA relationship store. It fills the claim for the sample [I12](../../examples/example_I12.md). The requirements are to pin the tenant, store, model, relation, and object mappings, to say which contextual facts are trusted, to state the query and cache consistency, to state what a Check means when more than one sharing path exists, and to say who may write relationships. This profile answers each item (section 12) and states what stays unestablished (sections 6, 9, and 14).
 
 The profile adds no wire field and no protocol requirement. Where it and [`draft.md`](../../draft.md) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. The rules RB-1 to RB-19 (section 11) are normative for an adapter that claims this profile; the other sections state the claim, the evidence, and the limits.
 
@@ -15,7 +15,7 @@ Conventions used below:
 | Token | Meaning |
 |---|---|
 | `RB-n` | A normative rule of this profile (section 11). |
-| `REBAC-nn` | A closure item of G23 and the negative case that demonstrates it (sections 10 and 12). |
+| `REBAC-nn` | A requirement of section 12 and the negative case that demonstrates it (sections 10 and 12). |
 | `[OF-n]` | A statement about OpenFGA taken from the upstream page listed as OF-n in section 13, read while writing this profile. Every statement about what OpenFGA does carries one, or is marked "to probe". |
 | `P-n` | An item to probe against a real server before this profile supports an enforced claim (section 14). |
 | `R`, `B`, `F` ids | Route, bypass path, and freshness source rows of sections 2, 5, and 8. |
@@ -102,12 +102,12 @@ The sample's model has three types and the permission `viewer` derived from proj
 | 5 | Execution | The document service performs the read or the edit for the delegating principal | Resource owner | Declared executor class `delegated-user` (draft §17.5); reached only after steps 1 to 4 pass |
 | support | `resolve_agent_binding` | Enrollment registry lookup inside the gateway, by the realm, the authenticated workload, and the agent ID that the presentation names | Gateway implementer | Supplies the enrolled agent ID and holder key (identity-mapping §4). Whether a workload may carry more than one record is the choice of the authenticating profile (section 7) |
 | support | `read_native_claim` | Lookup in the authenticated request context and the installed configuration | Adapter owner | Approved native paths: `/attributes/environment/principal_id`, `/attributes/environment/tenant_id`, `/attributes/delegation/authority_ref`. The relationship store is not read through this function (RB-14) |
-| support | `check_context` | Installed gateway checks | Gateway implementer | `native-principal-binding-v1`, `native-delegation-v1`, `execution-identity-v1` (draft §17.5); their definitions belong to the delegation work of finding G03 (section 7) |
+| support | `check_context` | Installed gateway checks | Gateway implementer | `native-principal-binding-v1`, `native-delegation-v1`, `execution-identity-v1` (draft §17.5); their definitions belong to the delegation work, not yet specified (section 7) |
 | support | `record_outcome` | Gateway outcome writer after the Check and after execution | Gateway implementer | A Check allow and a Check deny are `AUTHORIZATION` events with zero reputation weight; the executed read is `EXECUTION`; each references an immutable native record of the executor (draft §14.2, §14.5). An outage is not misconduct (draft §14.3) |
 
 ## 4. Native dependencies
 
-**How to fill:** Twelve of the sixteen handoff components are used, and each of the other four carries the reason it does not apply.
+**How to fill:** Twelve of the sixteen components are used, and each of the other four carries the reason it does not apply.
 
 The deployment supplies each system. Listing a component does not assert that it has been built; the reference implementation has an adapter for this profile (section 15).
 
@@ -116,7 +116,7 @@ The deployment supplies each system. Listing a component does not assert that it
 | C01 | PACT enforcement gateway/validator | baseline | In-gateway validator and filter chain | Gateway implementer | To be supplied by the deployment |
 | C02 | Native authentication and claim adapters | baseline | The deployment's identity mechanism, and the adapter that implements `authorize_native` for this profile | IAM owner and adapter owner | The identity mechanism is to be supplied; the adapter is `go/adapters/rebac` in the reference implementation (section 15) |
 | C03 | Enrollment, issuer trust, and key lifecycle | baseline | Enrollment registry (identity-mapping §4) | IAM and security owner | To be supplied; a reference registry exists in `go/adapter/enroll` |
-| C04 | Native delegation and task authority | delegated or task execution | The collaboration system's record of the principal-to-agent task authorization | Collaboration platform owner | Required: the sample assumes it; its binding rules are the delegation work of finding G03 (section 7) |
+| C04 | Native delegation and task authority | delegated or task execution | The collaboration system's record of the principal-to-agent task authorization | Collaboration platform owner | Required: the sample assumes it; its binding rules are the delegation work, not yet specified (section 7) |
 | C05 | Evidence and authoritative status sources | baseline | OpenFGA store (the Check), enrollment registry | Resource owner, adapter owner | To be supplied |
 | C06 | External approval, exception, or PIM workflow | required external authorization | none | none | Not used: read and edit of a document need no external approval in this claim |
 | C07 | Purpose and exact operation mapper | baseline | Mapping registry holding the pin record, relation table, and subject and object mappings (RB-1 to RB-6) | Adapter owner | To be supplied; this profile specifies it |
@@ -147,9 +147,9 @@ The alternative-path semantics of B1 are stated in RB-14: after a membership rem
 
 ## 6. Unsupported forms
 
-**How to fill:** The first row is seeded from the "I11/I12 ABAC/ReBAC" row of the handoff "Deliberate design choices" table, whose wider claim not established reads "Universal policies/relationships or instantaneous propagation". The other rows come from sections 2, 5, and 11.
+**How to fill:** The first row is the wider claim that samples I11 and I12 do not establish: universal policies or relationships, or instantaneous propagation. The other rows come from sections 2, 5, and 11.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
 | Universal relationships: any relationship model or store, or one fixed graph semantics, treated as covered | I11/I12 ABAC/ReBAC: "Universal policies/relationships or instantaneous propagation" | Only a configured store and a pinned model are claimed; the model's meaning belongs to the native system (RB-1, RB-14) |
 | Instantaneous propagation of a relationship change | I11/I12 ABAC/ReBAC: same row | A change reaches the gateway at the next Check, within the store's own consistency; the bound is stated in section 8 and section 9 and depends on probes P-1 and P-2 |
@@ -177,9 +177,9 @@ The alternative-path semantics of B1 are stated in RB-14: after a membership rem
 | Lifecycle rules (rotation, compromise, recovery) | Deferred to identity-mapping §7. Removing a principal from the registry withdraws every PACT-mediated access of that principal at the next evaluation. A subject id is never reassigned (RB-6) |
 | Departures from `spec/v1.0/profiles/identity-mapping.md` | None. The profile is stricter in one place: the registry mapping is one to one per store, so no two principals share a subject id (RB-6) |
 
-### 7.1 Dependency on the delegation work (finding G03)
+### 7.1 Dependency on the delegation work
 
-The relationship `user` of a Check is bound to the delegating principal: the principal of the operation context, for whom the task was authorized, and never the agent and never a service or administrator identity (RB-19). Finding G03 of the specification review covers how the agent, the principal, the authorized task, the native delegation, the broker, and the downstream executor are bound and checked (draft §17.5). This profile depends on that work textually only. It names the values the checks bind (`principal_id`, `Intent.task_id`, `/attributes/delegation/authority_ref`, the executor class `delegated-user`) and the results the sample expects, and it defines no algorithm for `native-principal-binding-v1`, `native-delegation-v1`, or `execution-identity-v1`. Until that work lands, a claim under this profile cannot cite more than the draft's own §17.5 text for those checks.
+The relationship `user` of a Check is bound to the delegating principal: the principal of the operation context, for whom the task was authorized, and never the agent and never a service or administrator identity (RB-19). How the agent, the principal, the authorized task, the native delegation, the broker, and the downstream executor are bound and checked (draft §17.5) is separate delegation work, not yet specified. This profile depends on that work textually only. It names the values the checks bind (`principal_id`, `Intent.task_id`, `/attributes/delegation/authority_ref`, the executor class `delegated-user`) and the results the sample expects, and it defines no algorithm for `native-principal-binding-v1`, `native-delegation-v1`, or `execution-identity-v1`. Until that work lands, a claim under this profile cannot cite more than the draft's own §17.5 text for those checks.
 
 ## 8. Freshness
 
@@ -244,7 +244,7 @@ The documentation gives a cost: "Always specifying `HIGHER_CONSISTENCY` will hav
 
 **How to fill:** the negative cases that demonstrate the claim and the expected result of each.
 
-Nine cases carry the closure items of G23, and `REBAC-10` to `REBAC-12` replace three common cases. Each is a group of adapter cases of this profile in `spec/v1.0/fixtures/adapters/rebac/`, one file per variant, named by its lower-case ID and variant, such as `rebac-04.stale-membership.json`, with the manifest id `adapters/rebac/rebac-04.stale-membership`; a group of one case has no variant (`rebac-10.json`). The native state of the cases, the fake store a harness builds from it and the hooks it fires are described in the cases README (`spec/v1.0/fixtures/adapters/rebac/README.md`). The reference model of section 2.2 is the asset `assets/model.fga`, and `assets/model-next.fga` is a later model of the same store. Every case and both assets are registered in `spec/v1.0/fixtures/manifest.json` and listed in the `fixtures` array of `profile.json`.
+Nine cases carry the requirements of section 12, and `REBAC-10` to `REBAC-12` replace three common cases. Each is a group of adapter cases of this profile in `spec/v1.0/fixtures/adapters/rebac/`, one file per variant, named by its lower-case ID and variant, such as `rebac-04.stale-membership.json`, with the manifest id `adapters/rebac/rebac-04.stale-membership`; a group of one case has no variant (`rebac-10.json`). The native state of the cases, the fake store a harness builds from it and the hooks it fires are described in the cases README (`spec/v1.0/fixtures/adapters/rebac/README.md`). The reference model of section 2.2 is the asset `assets/model.fga`, and `assets/model-next.fga` is a later model of the same store. Every case and both assets are registered in `spec/v1.0/fixtures/manifest.json` and listed in the `fixtures` array of `profile.json`.
 
 | Fixture ID | Negative case (input) | Expected result | Evidence | Covers |
 |---|---|---|---|---|
@@ -277,7 +277,7 @@ Paths without a fixture: B5 and B6 are `out-of-claim`. Section 14 lists the rule
 
 ## 11. Normative rules
 
-The rules are grouped by the item of G23 they answer. "Request" means the actual authenticated request and the presentation; "registry" means the mapping registry of component C07.
+The rules are grouped by the requirement of section 12 they answer. "Request" means the actual authenticated request and the presentation; "registry" means the mapping registry of component C07.
 
 ### 11.1 Pins and mappings
 
@@ -364,11 +364,11 @@ The Check request for the sample's read, with the model id of the pin and no con
 
 The subject id `u-0042` and the object id `northstar.orion-brief` are registry outputs for Maya and for the briefing document in the realm of the example (RB-4, RB-6).
 
-## 12. G23 closure map
+## 12. Requirement coverage
 
-Each item G23 requests, and each piece of evidence it needs to close, maps to rules and to cases. The first table maps the work G23 requests, the second the evidence it needs, both as worded in the specification review.
+Each requested work item, and each piece of evidence it needs, maps to rules and to cases. The first table maps the requested work, the second the evidence it needs.
 
-| G23 requested work | Rules | Cases |
+| Requested work | Rules | Cases |
 |---|---|---|
 | Pin tenant, store, model, relation, and object mappings | RB-1 to RB-6, RB-17 | REBAC-01, REBAC-02, REBAC-08, REBAC-09 |
 | Trusted contextual facts | RB-7, RB-8 | REBAC-03 |
@@ -376,7 +376,7 @@ Each item G23 requests, and each piece of evidence it needs to close, maps to ru
 | Full alternative-path semantics | RB-14, RB-15 | REBAC-05 |
 | Authorized relationship writes | RB-16, RB-17 | REBAC-03 for the claim that names a tuple; no case exercises the write path itself (O-1) |
 
-| G23 evidence needed to close | Case | Result |
+| Evidence needed | Case | Result |
 |---|---|---|
 | Tenant and model substitution | REBAC-01, REBAC-02, REBAC-09 | Mismatch or ignored; the configured store and model decide |
 | Injected tuples | REBAC-03 | Not a tuple; `contextual_tuples` empty |

@@ -12,7 +12,7 @@ The [draft](../draft.md) bounds the age of every fact an admission rests on (§7
 - which facts are re-read at the four points where the draft checks them again: issuance, evaluation, sidecar handoff, and execution (section 6);
 - why re-signing cannot make an old observation new (section 7).
 
-It answers the open finding G05 of the review. It restates the draft's rules with their section and adds profile conventions. The "Basis" column of each table separates the two: "draft §x" cites a rule of the draft, "profile" marks a convention this document adds. A convention is adopted by an integration profile that cites this document. Where this document and the draft differ, the draft governs. Section 8 cross-references the reference implementation; the other sections are language-neutral.
+It restates the draft's rules with their section and adds profile conventions. The "Basis" column of each table separates the two: "draft §x" cites a rule of the draft, "profile" marks a convention this document adds. A convention is adopted by an integration profile that cites this document. Where this document and the draft differ, the draft governs. Section 8 cross-references the reference implementation; the other sections are language-neutral.
 
 ## 1. Where it is used
 

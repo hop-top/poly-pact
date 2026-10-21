@@ -51,7 +51,7 @@
     {"component": "C01", "owner": "Gateway implementer", "what_exists": "In-gateway validator and filter chain; to be supplied"},
     {"component": "C02", "owner": "IAM owner and adapter owner", "what_exists": "Inherited inbound adapters (oauth profile form E; the named workload profile) and the executor registry claim reader, ReadNativeClaim of the reference implementation go/adapters/graph"},
     {"component": "C03", "owner": "IAM and security owner", "what_exists": "Enrollment registry of the authenticating profile; executor application registrations and credential lifecycle in Microsoft Entra ID; to be supplied"},
-    {"component": "C04", "owner": "Application and IAM owner", "what_exists": "Native task and delegation registry under the opaque authority_ref, supplied by the deployment; its structure waits for the delegation binding model of finding G03"},
+    {"component": "C04", "owner": "Application and IAM owner", "what_exists": "Native task and delegation registry under the opaque authority_ref, supplied by the deployment; its structure waits for the delegation binding model, not yet specified"},
     {"component": "C05", "owner": "Adapter owner", "what_exists": "Executor registry, grant preflight results, task registry, hold store; to be supplied"},
     {"component": "C06", "owner": "none", "what_exists": "Not used: the read rows declare no external approval; consent is native"},
     {"component": "C07", "owner": "Adapter owner", "what_exists": "Mapper at revision pact-graph-1 with the translation table of the profile: MapOperation and Adapter.Execute of go/adapters/graph"},
@@ -99,7 +99,7 @@
     {
       "path": "The agent's own access to Microsoft Graph or Exchange Online with any token its client can obtain",
       "control": "out_of_claim",
-      "evidence": "Excluded in unsupported_forms: Microsoft Graph is not PACT-aware (handoff row I02/I03); no negative fixture applies"
+      "evidence": "Excluded in unsupported_forms: Microsoft Graph is not PACT-aware (samples I02 and I03); no negative fixture applies"
     },
     {
       "path": "Use of the gateway application's, executor application's, or auditor's credential outside the gateway",
@@ -113,10 +113,10 @@
     }
   ],
   "unsupported_forms": [
-    "Microsoft Graph being PACT-aware, or PACT enforcement by Graph (handoff row I02/I03): Graph decides on token B only",
-    "Protection of bypass routes outside the gateway (handoff row I02/I03)",
-    "Borrowed user rights in app-only execution (handoff row I08)",
-    "Mailbox narrowing by profile declaration (handoff row I08): the mailbox boundary is the native RBAC scope that the preflight verifies",
+    "Microsoft Graph being PACT-aware, or PACT enforcement by Graph (samples I02 and I03): Graph decides on token B only",
+    "Protection of bypass routes outside the gateway (samples I02 and I03)",
+    "Borrowed user rights in app-only execution (sample I08)",
+    "Mailbox narrowing by profile declaration (sample I08): the mailbox boundary is the native RBAC scope that the preflight verifies",
     "/me in app-only execution: no form A row has a user context",
     "Fallback from on-behalf-of to app-only, or to any broader credential",
     "Application access policies as the mailbox boundary: RBAC for Applications replaces them",
