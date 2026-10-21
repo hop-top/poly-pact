@@ -1,6 +1,8 @@
-# pact
+# PACT (CLI)
 
-Command-line tools of the PACT protocol: the conformance runner `pactc`, and `pactconf`, `pactfix` and `pactvalidate`.
+Purpose-bound Access Control & Trust: AI agents prove who they act for and why, on every request — on top of the auth you already run, from HTTP Basic and files to OAuth, LDAP, Entra, Kubernetes and AWS.
+
+Command-line tools: the conformance runner `pactc`, and `pactconf`, `pactfix` and `pactvalidate`.
 
 Read-only mirror of the `pact` component (`cli/`) of [hop-top/poly-pact](https://github.com/hop-top/poly-pact); open issues and pull requests there.
 
