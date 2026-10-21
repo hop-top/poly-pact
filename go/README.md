@@ -1,6 +1,8 @@
-# pact-go
+# PACT (Go SDK)
 
-Go reference implementation of the PACT protocol: holder, validator, gateway middleware and native adapters.
+Purpose-bound Access Control & Trust: AI agents prove who they act for and why, on every request — on top of the auth you already run, from HTTP Basic and files to OAuth, LDAP, Entra, Kubernetes and AWS.
+
+Go reference implementation: holder, validator, gateway middleware and native adapters.
 
 Read-only mirror of `go/` in [hop-top/poly-pact](https://github.com/hop-top/poly-pact); open issues and pull requests there.
 
@@ -20,7 +22,7 @@ Status: prerelease. The protocol is a [draft](https://github.com/hop-top/spec-pa
 - [Security](#security)
 - [License](#license)
 
-[PACT](https://github.com/hop-top/spec-pact) (Purpose-bound Access Control & Trust) is a protocol
+[PACT](https://github.com/hop-top/spec-pact) is a protocol
 for agent profiles, intent, reputation and adaptive admission: a gateway admits an agent's
 signed, purpose-bound request, and native authorization stays final. This module is its Go
 reference implementation: the holder, the validator, the gateway middleware, the reputation
