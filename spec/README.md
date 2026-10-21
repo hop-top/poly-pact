@@ -1,6 +1,8 @@
-# spec-pact
+# PACT (Specification)
 
-Specification of the PACT protocol: the draft, its JSON Schema, integration profiles and conformance fixtures.
+Purpose-bound Access Control & Trust: AI agents prove who they act for and why, on every request — on top of the auth you already run, from HTTP Basic and files to OAuth, LDAP, Entra, Kubernetes and AWS.
+
+The draft, its JSON Schema, integration profiles and conformance fixtures.
 
 Read-only mirror of `spec/` in [hop-top/poly-pact](https://github.com/hop-top/poly-pact); open issues and pull requests there.
 
@@ -8,7 +10,7 @@ Read-only mirror of `spec/` in [hop-top/poly-pact](https://github.com/hop-top/po
 
 The spec version and status of each version directory are in its front matter; see [Versions](#versions).
 
-PACT (Purpose-bound Access Control & Trust) is a protocol for agent profiles, intent,
+PACT is a protocol for agent profiles, intent,
 reputation and adaptive admission: a gateway admits an agent's signed, purpose-bound request,
 and native authorization stays final. This repository holds no code and nothing to install.
 Every implementation reads the same files: the draft, the schema, the profiles and the
