@@ -109,4 +109,4 @@ The copy of `entry-path` with a backslash path, and a control that inserts a sec
 
 ### Adding a case
 
-A fixture change that alters a manifest rule adds the rule's case here in the same change ([docs/sdk/ports-plan.md](../../docs/sdk/ports-plan.md), section 5.4). A rule of `go/runner/manifest/problem.go` without a case, or a case naming a rule that file lacks, fails `make spec-parity`.
+A fixture change that alters a manifest rule adds the rule's case here in the same change ([tools/parity/README.md](../parity/README.md#fixture-changes), Fixture changes). A rule of `go/runner/manifest/problem.go` without a case, or a case naming a rule that file lacks, fails `make spec-parity`.

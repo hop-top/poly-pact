@@ -26,7 +26,7 @@ from hop_top_pact.vectors import GROUPS, RUN_KINDS
 
 # The largest fixture file, the RFC 8785 number list, is under 1 MiB.
 MAX_FIXTURE_BYTES = 4 << 20
-# Reasons of a skipped result (docs/sdk/ports-plan.md section 5.1).
+# Reasons of a skipped result (tools/parity/README.md, Skipped reasons).
 OUT_OF_SCOPE = "out-of-scope"
 SPEC_DEFECT = "spec-defect"
 CAPABILITY = "capability"

@@ -2,7 +2,7 @@
  * The `node:http` front of the binding, outside the conformance path: a
  * {@link RawRequest} read from an `IncomingMessage`.
  *
- * What `node:http` hides (docs/sdk/probes/ts.md, P1):
+ * What `node:http` hides:
  *
  * - field values arrive without their leading and trailing whitespace, which
  *   the baseline normalization removes anyway;

@@ -1,7 +1,7 @@
 """The adaptertest case model frozen with the adapter contract.
 
 The case model of go/adapter/adaptertest (casefile.go, harness.go and the
-options of suite.go; docs/sdk/adapter-contract-freeze.md, section 3.3), the
+options of suite.go; tools/parity/README.md, Adapter contract), the
 Hooks recorder, and the shared request decoder that fills RawRequest from a
 case request. Every case file under spec/v1.0/fixtures/adapters strict-decodes
 into Case: it fails when the fixtures are absent under PACT_REQUIRE_VECTORS=1
@@ -52,7 +52,7 @@ def annotation(cls: type, name: str) -> str:
 
 def test_one_tls_peer_type() -> None:
     """The case model's TLSPeer is the RawRequest one, with the API names of the
-    freeze note; the case files spell the members the same way."""
+    frozen contract; the case files spell the members the same way."""
     assert adaptertest.TLSPeer is binding.TLSPeer
     assert names(TLSPeer) == ["subject_cn", "issuer_cn", "dns_names", "uris"]
     assert annotation(Request, "tls_peer") == "TLSPeer | None"

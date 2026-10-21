@@ -41,7 +41,7 @@ export interface Entry {
 const TWO_SEGMENT_GROUPS = ['vectors', 'adapters', 'sources'];
 
 /**
- * The prefix of an entry id (docs/sdk/ports-plan.md section 5.3): its first
+ * The prefix of an entry id (tools/parity/README.md, Gates file): its first
  * segment, or its first two under vectors/, adapters/ and sources/.
  */
 export function prefixOf(id: string): string {

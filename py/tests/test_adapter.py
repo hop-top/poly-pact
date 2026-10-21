@@ -1,7 +1,7 @@
 """The seven functions of draft section 17.1 and the composite Adapter.
 
 Port of go/adapter/adapter_test.go. The expected names and signatures are
-written from the 17.1 table and the adapter-contract freeze note, not
+written from the 17.1 table and the frozen adapter contract, not
 derived from the package under test. It reads spec/v1.0/draft.md: it fails when
 the draft is absent under PACT_REQUIRE_VECTORS=1 (make py-test) and skips
 otherwise (a mirror checkout).

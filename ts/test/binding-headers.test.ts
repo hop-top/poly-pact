@@ -218,7 +218,7 @@ describe('TestRejectDuplicateHost', () => {
   });
 });
 
-// node:http accepts a second Host field line (docs/sdk/probes/ts.md, P1), so
+// node:http accepts a second Host field line, so
 // the binding refuses it from the wire.
 test('TestRejectDuplicateHostOverWire', async () => {
   await bindRefused(

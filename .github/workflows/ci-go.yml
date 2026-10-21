@@ -70,7 +70,7 @@ jobs:
 
       - name: API parity ledger
         # docs/sdk/parity-ledger.md has one row per exported symbol of the Go
-        # library packages in scope (docs/sdk/ports-plan.md, section 5.5); the
+        # library packages in scope (tools/parity/README.md, API ledger); the
         # script reads them with go doc -all. The self-test runs first so a
         # parser defect cannot pass as a clean ledger.
         run: |

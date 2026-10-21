@@ -50,7 +50,7 @@ func TestCheckLinksCommand(t *testing.T) {
 	if code, stdout, stderr := runPactfix("check", "links", "-spec", spec); code != 0 || !strings.Contains(stdout, "ok") {
 		t.Fatalf("exit %d\nstdout %s\nstderr %s", code, stdout, stderr)
 	}
-	writeFile(t, filepath.Join(spec, "README.md"), []byte("[h](../docs/handoff.md)\n"))
+	writeFile(t, filepath.Join(spec, "README.md"), []byte("[h](../docs/notes.md)\n"))
 	if code, _, stderr := runPactfix("check", "links", "-spec", spec); code != 1 || !strings.Contains(stderr, "[link-outside] spec/README.md:1") {
 		t.Fatalf("exit %d, stderr %s", code, stderr)
 	}

@@ -433,8 +433,8 @@ PARITY_LANGS := go $(if $(wildcard ts/package.json),ts) $(if $(wildcard py/pypro
 # Extra tools/parity/parity.py check flags, such as --runner-report go=FILE
 # for a pactc/v1 report (pactc run --json) of the runner leg.
 PARITY_ARGS ?=
-# The runner leg of go is the report of conformance (docs/sdk/ports-plan.md
-# section 5.1). CI passes the report its conformance step wrote through
+# The runner leg of go is the report of conformance (tools/parity/README.md,
+# Go legs). CI passes the report its conformance step wrote through
 # PARITY_ARGS; without a --runner-report there, parity runs conformance first
 # and reads CONFORMANCE_REPORT.
 parity_runner := $(if $(wildcard cli/pactc),$(if $(findstring --runner-report,$(PARITY_ARGS)),,--runner-report go=$(CONFORMANCE_REPORT)))

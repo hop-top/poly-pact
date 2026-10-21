@@ -43,7 +43,7 @@ test('decodeSegment is canonical unpadded base64url', () => {
   assert.deepEqual([...decodeSegment('')], []);
   assert.deepEqual([...decodeSegment('AQ')], [1]);
   assert.deepEqual([...decodeSegment('-_8')], [0xfb, 0xff]);
-  // Node's decoder accepts each of these (docs/sdk/probes/ts.md, P6 fact 1).
+  // Node's decoder accepts each of these.
   for (const s of ['AQ==', 'AQ=', 'AR', 'A Q', 'AQ\n', '+/8', 'A', 'AQ\r', 'é']) {
     assert.throws(() => decodeSegment(s), JSON.stringify(s));
   }

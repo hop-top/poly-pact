@@ -1,6 +1,6 @@
 /**
  * The ts column of the gates file, tools/parity/gates.json
- * (docs/sdk/ports-plan.md section 5.3), for the exit status of the harness.
+ * (tools/parity/README.md, Gates file), for the exit status of the harness.
  *
  * @module
  */

@@ -45,8 +45,7 @@ export function verifyES256(key: KeyObject, signingInput: string, sig: Uint8Arra
 /**
  * The ES256 signature of `signingInput` under the P-256 private `key`. ECDSA
  * signing is randomized; S is always the low value of the pair (S, n-S), as
- * Go writes it: Node's signer writes a high S about half the time
- * (docs/sdk/probes/ts.md).
+ * Go writes it: Node's signer writes a high S about half the time.
  */
 export function signES256(key: KeyObject, signingInput: string): Uint8Array {
   const sig = sign('sha256', Buffer.from(signingInput, 'utf8'), {

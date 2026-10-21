@@ -4,7 +4,7 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
 ## Purpose and status
 
-This is the integration profile (the structure of [`TEMPLATE.md`](../TEMPLATE.md)) for attribute-based access control through an installed policy decision point, Open Policy Agent (OPA), reached through its REST Data API. It answers the open finding G22 of `docs/handoff.md` (source repository only, not part of the mirror): where each policy input fact comes from and how fresh it must be, how clearance is compared, what a policy decision document contains and how it is pinned to a policy version, which conditions are read again before execution, and how the obligations of a decision are enforced before any data is disclosed. [Example I11](../../examples/example_I11.md) is the informative narrative; its organizations, routes, and thresholds are fictional and this profile does not make them real.
+This is the integration profile (the structure of [`TEMPLATE.md`](../TEMPLATE.md)) for attribute-based access control through an installed policy decision point, Open Policy Agent (OPA), reached through its REST Data API. It answers the open finding G22 of the specification review: where each policy input fact comes from and how fresh it must be, how clearance is compared, what a policy decision document contains and how it is pinned to a policy version, which conditions are read again before execution, and how the obligations of a decision are enforced before any data is disclosed. [Example I11](../../examples/example_I11.md) is the informative narrative; its organizations, routes, and thresholds are fictional and this profile does not make them real.
 
 The native policy engine stays authoritative. A PACT rejection can make access more restrictive; a PACT pass never makes a native permission more permissive, and a native denial always wins (draft §2.3, §4.3). This profile defines no PACT policy language. It fixes the fact inputs, the comparison of clearance levels, the decision document, the execution-time rechecks, and the obligation handling, and nothing about what a policy decides.
 
@@ -21,7 +21,7 @@ The machine-readable form is [`profile.json`](profile.json), which validates aga
 | Spec version, wire version | `1.0`, `0.1` |
 | Profile revision, date | `r1`, 2026-10-16; the ABAC check runs through `check_context` on the principal it receives (draft §17.1); cases `abac-04.check`, `abac-11.check`, `abac-13.check`, `abac-14.check`, `abac-28.check`, `abac-38.*` |
 | Maintainer | PACT adapter maintainers; a named maintainer is open item O9 |
-| Reference documents | draft = `spec/v1.0/draft.md`; handoff = `docs/handoff.md` (source repository only; finding G22); example = `spec/v1.0/examples/example_I11.md`; shared rules = [`identity-mapping.md`](../identity-mapping.md) and [`freshness.md`](../freshness.md) |
+| Reference documents | draft = `spec/v1.0/draft.md`; example = `spec/v1.0/examples/example_I11.md`; shared rules = [`identity-mapping.md`](../identity-mapping.md) and [`freshness.md`](../freshness.md) |
 
 ## 1. Claim scope
 

@@ -2,7 +2,7 @@
 
 This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
-It is the integration profile (template instance, [`TEMPLATE.md`](../TEMPLATE.md)) for the database broker of the integration sample [`example_I13.md`](../../examples/example_I13.md): a PACT-aware broker that runs one fixed, parameterized query on PostgreSQL under a dedicated login role mapped to the requesting principal, so that the database's own privileges and row-level security decide which rows are returned. It answers the open finding G20 of `docs/handoff.md` (source repository only, not part of the mirror): role acquisition and current-role verification, owner, superuser, and `BYPASSRLS` exclusions, grants, row semantics, query binding, connection reset, and pooled identity. Section 10.1 maps each G20 closure item to the cases `DB-01` to `DB-10`. The machine-readable form is [`profile.json`](profile.json).
+It is the integration profile (template instance, [`TEMPLATE.md`](../TEMPLATE.md)) for the database broker of the integration sample [`example_I13.md`](../../examples/example_I13.md): a PACT-aware broker that runs one fixed, parameterized query on PostgreSQL under a dedicated login role mapped to the requesting principal, so that the database's own privileges and row-level security decide which rows are returned. It answers the open finding G20 of the specification review: role acquisition and current-role verification, owner, superuser, and `BYPASSRLS` exclusions, grants, row semantics, query binding, connection reset, and pooled identity. Section 10.1 maps each G20 closure item to the cases `DB-01` to `DB-10`. The machine-readable form is [`profile.json`](profile.json).
 
 The profile adds no wire field and no protocol requirement. Where it and the draft ([`draft.md`](../../draft.md)) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. Identity rules come from [`identity-mapping.md`](../identity-mapping.md) (cited IM-n), freshness rules from [`freshness.md`](../freshness.md), and request binding rules from [`request-binding.md`](../request-binding.md) (cited RB-n); this profile records only its own choices. Its rules carry the identifiers RA-1 to RA-7, CV-1 to CV-8, CR-1 to CR-7, QB-1 to QB-7, RS-1 to RS-7, and PI-1, so that fixtures and reviews can cite them.
 
@@ -27,7 +27,7 @@ Where a premise is `probe`, the rule that rests on it is written so that it fail
 | Spec version, wire version | `1.0`, `0.1` |
 | Profile revision, date | `r1`, 2026-10-16 |
 | Maintainer | PACT adapter maintainers |
-| Reference documents | draft = [`draft.md`](../../draft.md); handoff = `docs/handoff.md` (source repository only; sections 4 and 6 draw on it); example = [`example_I13.md`](../../examples/example_I13.md); [`identity-mapping.md`](../identity-mapping.md); [`freshness.md`](../freshness.md); [`request-binding.md`](../request-binding.md) |
+| Reference documents | draft = [`draft.md`](../../draft.md); example = [`example_I13.md`](../../examples/example_I13.md); [`identity-mapping.md`](../identity-mapping.md); [`freshness.md`](../freshness.md); [`request-binding.md`](../request-binding.md) |
 
 ## 1. Claim scope
 

@@ -7,7 +7,7 @@
 
 ## Assumptions, required components, and unresolved gaps
 
-**Review ID:** I05. Finding and component IDs refer to the companion handoff.md. These are editorial identifiers, not new protocol fields or registered reason codes.
+**Review ID:** I05. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
 
 ### Assumptions
 

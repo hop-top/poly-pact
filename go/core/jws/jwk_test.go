@@ -207,8 +207,8 @@ func TestKeySet(t *testing.T) {
 	wantReason(t, err, jws.ErrJWKUsage)
 }
 
-// TestFixtureThumbprints: the thumbprints of the P-256 test keys, as the
-// TypeScript, Python, Rust and PHP probe records report them.
+// TestFixtureThumbprints: the thumbprints of the P-256 test keys, as
+// computed independently in TypeScript, Python, Rust and PHP.
 func TestFixtureThumbprints(t *testing.T) {
 	want := map[string]core.Digest{
 		"holder":              holderJKT,

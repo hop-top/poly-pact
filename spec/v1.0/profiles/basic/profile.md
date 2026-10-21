@@ -15,7 +15,7 @@ Status. The fixture index in section 10 lists the cases, and the `fixtures` arra
 | Spec version, wire version | `1.0`, `0.1` |
 | Profile revision, date | `1`, 2026-10-16 |
 | Maintainer | jadb |
-| Reference documents | draft = [`draft.md`](../../draft.md); example = [I01](../../examples/example_I01.md); identity rules = [`identity-mapping.md`](../identity-mapping.md); freshness rules = [`freshness.md`](../freshness.md); handoff = `docs/handoff.md` (source repository only; sections 4 and 6 draw on it) |
+| Reference documents | draft = [`draft.md`](../../draft.md); example = [I01](../../examples/example_I01.md); identity rules = [`identity-mapping.md`](../identity-mapping.md); freshness rules = [`freshness.md`](../freshness.md) |
 
 ## 1. Claim scope
 

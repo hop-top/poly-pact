@@ -98,8 +98,8 @@ integer Unix seconds; a conversion truncates to the second and maps None to
 an absent (null) member.
 
 The Protocols are the contract that implementations and the conformance
-suite share, frozen with the Go package (docs/sdk/adapter-contract-freeze.md
-in the source repository): a change to a signature or to a type's fields
+suite share, frozen with the Go package (tools/parity/README.md
+in the source repository, Adapter contract): a change to a signature or to a type's fields
 breaks every implementation.
 """
 

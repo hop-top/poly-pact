@@ -1,5 +1,5 @@
 // The adaptertest case model frozen with the adapter contract
-// (docs/sdk/adapter-contract-freeze.md, section 3.3): the hooks recorder of
+// (tools/parity/README.md, Adapter contract): the hooks recorder of
 // go/adapter/adaptertest/harness.go, and the request types the shared
 // request decoder fills.
 
@@ -18,7 +18,7 @@ import { decodeRequest } from '../src/internal/request.ts';
 import { assertType, type Equal } from './support/types.ts';
 
 // One TLS peer type: the case model's is the RawRequest one, with the API
-// names of the freeze note; the case files spell the members in snake case.
+// names of the frozen contract; the case files spell the members in snake case.
 assertType<Equal<TLSPeer, BindingTLSPeer>>();
 assertType<Equal<Request['tlsPeer'], TLSPeer | null>>();
 assertType<Equal<NonNullable<RawRequest['tlsPeer']>, TLSPeer>>();

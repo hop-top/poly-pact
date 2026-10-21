@@ -7,7 +7,7 @@ directory, then runs parity.py on a clean baseline and on one mutated copy
 per rule. The baseline must exit 0; each mutation must exit with the status
 it names and print its rule id on standard error, so a comparator that fails
 for the wrong reason does not count. The cases required by
-docs/sdk/ports-plan.md section 5.3 are the first five: a wrong outcome under
+tools/parity/README.md (Self-test) are the first five: a wrong outcome under
 a required gate, a missing id, a manifest prefix without a gate row, a
 skipped:spec-defect on a vector without the flag, and a pass under an n/a
 gate. The rest cover the other rules of parity.py.
@@ -255,7 +255,7 @@ def chain(*mutations):
 
 # (name, mutation, expected exit status, rule id that must be reported)
 CASES = [
-    # docs/sdk/ports-plan.md section 5.3, the five required cases.
+    # tools/parity/README.md (Self-test), the five required cases.
     ("wrong outcome under a required gate",
      set_result("go", "vectors/digest/plain", "fail"), 1, "required-not-pass"),
     ("missing id", drop_line("ts", "keys/a"), 1, "id-missing"),

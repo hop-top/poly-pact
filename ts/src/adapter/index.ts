@@ -93,8 +93,8 @@
  * to an absent (null) member.
  *
  * The interfaces are the contract that implementations and the conformance
- * harness share, frozen with the Go package (docs/sdk/adapter-contract-freeze.md
- * of the source repository).
+ * harness share, frozen with the Go package (tools/parity/README.md of the
+ * source repository, Adapter contract).
  *
  * @module
  */

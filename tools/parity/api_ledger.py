@@ -21,8 +21,8 @@ exported field of an exported struct type (`Type.Field`, including an
 embedded exported type). Fields of anonymous struct types are not symbols of
 their own; their struct-typed field is.
 
-The scope is SCOPE below, the package patterns of docs/sdk/ports-plan.md
-section 5.5, relative to the Go library module.
+The scope is SCOPE below, the package patterns of tools/parity/README.md
+(API ledger), relative to the Go library module.
 
 Usage:
   python3 -I tools/parity/api_ledger.py [--go-dir DIR] [--ledger FILE] [--go GO]

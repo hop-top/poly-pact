@@ -66,7 +66,7 @@ CANONICALIZE: list[tuple[str, str, str]] = [
         "123456789.125,4.35,0.30000000000000004,1e+22,1e+23,12345678901234567000,1,"
         "9007199254740991,-9007199254740991,1.7976931348623157e+308,0.000025]",
     ),
-    # The port adds the two float edges of the plan: 1e-400 underflows to 0
+    # The port adds two float edges: 1e-400 underflows to 0
     # and 2.5e-324 rounds to the smallest subnormal.
     ("float edges", "[1e-400,2.5e-324,-2.5e-324]", "[0,5e-324,-5e-324]"),
 ]

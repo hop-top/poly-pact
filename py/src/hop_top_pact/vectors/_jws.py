@@ -220,7 +220,7 @@ def _jwk_path(record: Mapping[str, Any]) -> str:
 
 
 def run_key(root: Path, e: Entry) -> None:
-    """The key rule of docs/sdk/ports-plan.md section 5.2.
+    """The key rule of tools/parity/README.md (Key rule).
 
     A P-256 JWK passes when it parses as a public key and its point is its
     record's scalar times the base point, and, for the record of role

@@ -1,4 +1,4 @@
-"""The py column of the parity gates (docs/sdk/ports-plan.md section 5.3).
+"""The py column of the parity gates (tools/parity/README.md, Gates file).
 
 The harness exits 1 on a fail under a gate that is required for py; a fail
 under a planned gate is printed and counted. The gates file sits at

@@ -4,8 +4,8 @@
  * (RFC 7515 sections 2 and 5.2), and only the canonical encoding of the
  * octets (RFC 4648 section 3.5: the spare bits of the last character are
  * zero, and the length is not 1 mod 4). `Buffer.from(s, 'base64url')` alone
- * accepts padding, spare bits, white space and the standard alphabet
- * (docs/sdk/probes/ts.md), so the alphabet is scanned first and the octets
+ * accepts padding, spare bits, white space and the standard alphabet,
+ * so the alphabet is scanned first and the octets
  * must encode back to `s`.
  *
  * @module

@@ -1,6 +1,6 @@
 """The adapter-case leg of the harness: the common adapter cases against the
 memory adapter (the counterpart of the Go test binary of adapters/memory run
-with -ndjson; docs/sdk/ports-plan.md of the source repository, section 5.1).
+with -ndjson; tools/parity/README.md of the source repository, Go legs).
 
 The suite runs the memory adapter in both workload modes: dedicated
 workloads, the default of every profile, and workloads shared by several

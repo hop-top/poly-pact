@@ -8,7 +8,7 @@ use HopTop\Pact\Core\JsonObject;
 
 /**
  * The php column of the parity gates (tools/parity/gates.json of the source
- * repository; docs/sdk/ports-plan.md section 5.3).
+ * repository; tools/parity/README.md, Gates file).
  *
  * The harness exits 1 on a fail under a gate required for php; a fail under
  * any other gate value is printed and counted. Without the gates file (a mirror

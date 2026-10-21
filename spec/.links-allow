@@ -5,8 +5,8 @@
 # One entry per line: <source> -> <target>
 #   source  Markdown file under spec/, path from the repository root
 #   target  where the link resolves, path from the repository root (not the text
-#           as written: ../../../docs/handoff.md in spec/v1.0/examples/README.md
-#           is docs/handoff.md)
+#           as written: ../../../README.md in spec/v1.0/examples/README.md
+#           is README.md)
 # Blank lines and lines starting with # are ignored.
 #
 # No entry: a document of the source repository is linked by its absolute
