@@ -2,9 +2,9 @@
 
 This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
-This is the integration profile (template: [`TEMPLATE.md`](../TEMPLATE.md)) for LDAP-backed authentication, group membership, and account state, in the form example [I06](../../examples/example_I06.md) describes. An application authenticates a dedicated directory account with the directory's own mechanism, and PACT consumes the directory's identity, group, and account-state facts while the application keeps its own resource-permission model. The profile answers the open finding G15 of the specification review: directory realms, supported authentication, stable identifiers, group and nested-group resolution, disabled-account semantics, lookup authority, and replication bounds. Its machine-readable form is [`profile.json`](profile.json), which follows [`../integration-profile.schema.json`](../integration-profile.schema.json).
+This is the integration profile (template: [`TEMPLATE.md`](../TEMPLATE.md)) for LDAP-backed authentication, group membership, and account state, in the form example [I06](../../examples/example_I06.md) describes. An application authenticates a dedicated directory account with the directory's own mechanism, and PACT consumes the directory's identity, group, and account-state facts while the application keeps its own resource-permission model. The profile specifies directory realms, supported authentication, stable identifiers, group and nested-group resolution, disabled-account semantics, lookup authority, and replication bounds. Its machine-readable form is [`profile.json`](profile.json), which follows [`../integration-profile.schema.json`](../integration-profile.schema.json).
 
-It adds no wire field and no protocol requirement. Where it and the [draft](../../draft.md) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. The rules of the appendices carry the identifiers LR-1 to LR-30, and the G15 closure items carry LDAP-01 to LDAP-10, so that fixtures and reviews can cite them. Identity rules are cited as IM-n from [`identity-mapping.md`](../identity-mapping.md) and freshness rules by section from [`freshness.md`](../freshness.md).
+It adds no wire field and no protocol requirement. Where it and the [draft](../../draft.md) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. The rules of the appendices carry the identifiers LR-1 to LR-30, and the requirement cases carry LDAP-01 to LDAP-10, so that fixtures and reviews can cite them. Identity rules are cited as IM-n from [`identity-mapping.md`](../identity-mapping.md) and freshness rules by section from [`freshness.md`](../freshness.md).
 
 Every statement has one of four bases. *Draft* cites a draft section. *Source* cites an RFC section or a vendor page that was read for this profile; the sources table in Appendix I lists each one. *Profile* marks a convention this profile adds. *To probe* marks a fact that documentation did not establish: the probe is in Appendix H and no rule depends on the unprobed behavior. No statement here describes a directory from memory.
 
@@ -118,9 +118,9 @@ No negative fixture for a bypass path is planned (section 10), and a `closed` or
 
 ## 6. Unsupported forms
 
-**How to fill:** what the integration did not establish, starting from the matching row of the handoff.
+**How to fill:** what the integration did not establish, starting from the wider claims that sample I06 does not establish.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
 | Employee delegation, universal schema, or nested-group semantics | I06: "Employee delegation or universal schema/nested-group semantics" | Only the dedicated account and the configured resolver are claimed. Nesting is supported only through the Active Directory resolver of LR-17 and is unsupported for OpenLDAP |
 | Application entitlement taxonomy | Example I06, simplifications: "No universal LDAP schema, group expansion, or application entitlement taxonomy is supplied" | A directory group is a fact. What it permits stays with the application |
@@ -191,7 +191,7 @@ F1 to F3 supply identity, membership, and account-status facts and are listed ag
 
 **How to fill:** the negative cases that demonstrate the claim and the expected result of each.
 
-Ten cases carry the G15 closure items, and `LDAP-11` covers the configuration-error rule of section 7 and is not a closure item. The IDs `LDAP-01` to `LDAP-10` are the closure identifiers of Appendix G. Each is a group of adapter cases of this profile in `spec/v1.0/fixtures/adapters/ldap/`, one file per variant, named by its lower-case ID and variant, such as `ldap-01.empty-password.json`, with the manifest id `adapters/ldap/ldap-01.empty-password`; every file is registered in `spec/v1.0/fixtures/manifest.json` and listed in the `fixtures` array of `profile.json`. The cases run against a directory built from the seed `adapters/ldap/assets/seed.ldif` (two OpenLDAP realms, `hq` and `branch`, in one database) or `adapters/ldap/assets/ad-seed.ldif` (one Active Directory realm, `corp`), in the model `ldap/1` of the [LDAP cases README](../../fixtures/adapters/ldap/README.md), which also states how the request carries the name and the password. The Evidence column names the files, and the part of an item that is a property of the validator rather than of an adapter function says so: an adapter case shows the claim value, and the admission effect of Appendix G (`FAIL`, `INADMISSIBLE`, `DEFERRED`) is the validator's comparison of it with the requirement. The identity, freshness, and request-binding cases of `spec/v1.0/fixtures/adapters/_common/` also apply and are not repeated. Bypass paths B1 to B3 are `out-of-claim` and have no fixture.
+Ten cases carry the requirement cases of Appendix G, and `LDAP-11` covers the configuration-error rule of section 7 and is not one of them. The IDs `LDAP-01` to `LDAP-10` are the identifiers of Appendix G. Each is a group of adapter cases of this profile in `spec/v1.0/fixtures/adapters/ldap/`, one file per variant, named by its lower-case ID and variant, such as `ldap-01.empty-password.json`, with the manifest id `adapters/ldap/ldap-01.empty-password`; every file is registered in `spec/v1.0/fixtures/manifest.json` and listed in the `fixtures` array of `profile.json`. The cases run against a directory built from the seed `adapters/ldap/assets/seed.ldif` (two OpenLDAP realms, `hq` and `branch`, in one database) or `adapters/ldap/assets/ad-seed.ldif` (one Active Directory realm, `corp`), in the model `ldap/1` of the [LDAP cases README](../../fixtures/adapters/ldap/README.md), which also states how the request carries the name and the password. The Evidence column names the files, and the part of an item that is a property of the validator rather than of an adapter function says so: an adapter case shows the claim value, and the admission effect of Appendix G (`FAIL`, `INADMISSIBLE`, `DEFERRED`) is the validator's comparison of it with the requirement. The identity, freshness, and request-binding cases of `spec/v1.0/fixtures/adapters/_common/` also apply and are not repeated. Bypass paths B1 to B3 are `out-of-claim` and have no fixture.
 
 | Fixture ID | Negative case (input) | Expected result | Evidence | Covers |
 |---|---|---|---|---|
@@ -300,7 +300,7 @@ The denial is the same for no entry and for several, so a caller cannot learn wh
 | Never the executor | It is never the identity passed to `authorize_native`, which receives the original principal (draft §17.5), and never an allowed executor in any class of `execution-identity-v1`. A connector's service credential "is not evidence that the requesting agent is authorized" and cannot replace the principal's native restrictions (draft §4.3). The check returns `FAIL` with `EXECUTOR_MISMATCH` if it is the executor |
 | Never an enrollment actor | Reading the directory confers no authority to enroll, rotate, revoke, or mark an agent (IM-13) |
 
-The closure item LDAP-10 asserts the last three rules. *Basis: draft, source, profile; to probe (P12).*
+The requirement case LDAP-10 asserts the last three rules. *Basis: draft, source, profile; to probe (P12).*
 
 **LR-14. Visibility sentinel.** LDAP does not require a server to tell a client that an attribute or an entry was hidden. A search returns the attributes it can "subject to access control", an attribute can come back with no values "when access controls prevent the return of values", and some attributes "may not be included in Search results due to access controls" (RFC 4511 §4.5.1.8, §4.5.2). An entry for which a filter evaluates to false or undefined "is ignored for the Search" without an error (RFC 4511 §4.5.1.7), and OpenLDAP grants `search` "to apply search filters" and `read` "to read search results" [OL-AC §8.2.3]; what a filter on an attribute without `search` evaluates to is not stated in the pages read (P12). A server may also substitute a result code to avoid a disclosure, for example `noSuchObject` for `insufficientAccessRights` (RFC 4511 Appendix A). An empty answer is therefore the same for "none" and for "hidden", and example I06 says "an empty lookup is not proof of membership or non-membership".
 
@@ -366,9 +366,9 @@ The freshness profile defines the vocabulary and the arithmetic. This appendix f
 
 **LR-30. Timeouts.** Every directory request has a client time limit, and no evaluation waits beyond its deadline (draft §12.2; [`freshness.md`](../freshness.md) §5). *Basis: draft, profile.*
 
-## Appendix G. G15 closure items
+## Appendix G. Requirement cases
 
-| ID | G15 item | Input | Adapter result | Admission effect | Rules |
+| ID | Requirement | Input | Adapter result | Admission effect | Rules |
 |---|---|---|---|---|---|
 | LDAP-01 | Empty bind | Name with an empty password | Native denial `NO_CREDENTIAL` before any directory request | Native authentication fails (`INVALID_PROOF`); no evaluation starts | LR-5, LR-6 |
 | LDAP-02 | Disabled account | State attributes say disabled | `account_state` `disabled` | `FAIL`, `INADMISSIBLE` (`INVALID_CLAIM`) | LR-20 to LR-23 |

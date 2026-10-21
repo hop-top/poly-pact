@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I05. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -25,15 +25,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 | C08 | Portal execution retaining session-principal restrictions. |
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
-
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G14 | Specify SAML session/broker lifecycle and supported versus unattended flows. Specified by the integration profile [`saml`](../profiles/saml/profile.md), whose Annex C maps each item to rules and cases; the profile closes none of the evidence items until all of its cases exist and pass, and `SAML-10` to `SAML-16` are still planned. | Profile / coverage |
 
 ### Deliberate simplifications and limitations
 
@@ -65,7 +56,12 @@ The adapter cases are in [`fixtures/adapters/saml/`](../fixtures/adapters/saml/R
 
 The planned cases `SAML-10` (an agent credential on a grant creation route), `SAML-11` (a method or route outside R1 and R2), and `SAML-16` (two enrollments on one broker workload) concern paths and configurations that this sample does not show.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Specify SAML session/broker lifecycle and supported versus unattended flows. Specified by the integration profile [`saml`](../profiles/saml/profile.md), whose Annex C maps each requirement to rules and cases; the profile establishes none of the evidence items until all of its cases exist and pass, and `SAML-10` to `SAML-16` are still planned.
 
 The cases above cover wrong SP, replay, expired and logged-out sessions, wrong users, and unauthorized tasks, and show that a login time is not a membership observation time, at the adapter and against a fake SP. These remain unvalidated:
 
@@ -76,7 +72,7 @@ The cases above cover wrong SP, replay, expired and logged-out sessions, wrong u
 - Behaviour that depends on the identity provider: how a session that ends there reaches the SP, since only a logout request at the SP or a new authentication does (profile section 9), whether an identity provider may issue a persistent identifier again to another subject (open item OI-4), and the handling of a persistent identifier whose `NameQualifier` names another entity (OI-3).
 - Sessions established by an unsolicited response, which the `SPSession` cannot tell apart (open item OI-6), and the forged portal action that creates a grant without the user's intent, which is the SP's own defence to specify (profile section 9).
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

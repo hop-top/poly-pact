@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I08. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -26,16 +26,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 | C15 | Bound schedule, paging, and task limits. |
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
-
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G18 | Specify app-only grants and exclude scope-defeating parallel grants. Specified for this sample by the integration profile [`graph`](../profiles/graph/profile.md), form A (rows GA1 and GA2), whose G18 closure map ties each item to rules and cases; its grant preflight withdraws the claim while a parallel grant exists. The delegated half is sample [I02](example_I02.md). | Profile / deployment |
-| G26 | Preserve schedule/task/page limits across new exchanges. Specified across operations by the [multi-operation profile](../profiles/multi-operation.md), whose G26 closure map (section 12) ties each item to rules and to the cases `TASK-01` to `TASK-09`, and whose section 13.3 works this sample: each page reserves one operation and one page of the run's native task (rules MO-55 to MO-57; `TASK-04`), a run that the registry has not issued is refused with `task-unknown` (rule MO-6; `TASK-07`), a run that the scheduler marks done refuses further pages with `task-completed` (rules MO-49, MO-50; `TASK-06`), and a run's budget is renewed only by a new reference that the registry issues. The Graph profile binds each continuation to the task, workload, and route (rule GR-24; `GRAPH-09`, `GRAPH-10`) and reserves each page in that profile's task ledger (its component C15; open item OI-4, closed). Whether the registry names the run or the schedule, and so whether a budget spans one run or every run, is the deployment's to state (multi-operation section 13.3). | Profile / deployment |
 
 ### Deliberate simplifications and limitations
 
@@ -66,7 +56,13 @@ The adapter cases are in [`fixtures/adapters/graph/`](../fixtures/adapters/graph
 | `GRAPH-21` | A workload with no executor binding | `adapters/graph/graph-21.no-binding` (`UNKNOWN`, `DEPENDENCY_UNAVAILABLE`), `adapters/graph/graph-21.map-no-binding` (no row selected, `UNSUPPORTED_REQUIREMENT`); contract issuance is the gateway's |
 | `GRAPH-22` | The executor registry cannot answer; Graph throttles the read | `adapters/graph/graph-22.map-registry-unavailable` (`DEPENDENCY_UNAVAILABLE`: the mailbox comes only from the registry); unit case `GRAPH-22.throttled` (one attempt, then 503 with `Retry-After`) |
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Specify app-only grants and exclude scope-defeating parallel grants. Specified for this sample by the integration profile [`graph`](../profiles/graph/profile.md), form A (rows GA1 and GA2), whose requirement coverage table ties each item to rules and cases; its grant preflight withdraws the claim while a parallel grant exists. The delegated half is sample [I02](example_I02.md).
+- Preserve schedule/task/page limits across new exchanges. Specified across operations by the [multi-operation profile](../profiles/multi-operation.md), whose requirement coverage table (section 12) ties each item to rules and to the cases `TASK-01` to `TASK-09`, and whose section 13.3 works this sample: each page reserves one operation and one page of the run's native task (rules MO-55 to MO-57; `TASK-04`), a run that the registry has not issued is refused with `task-unknown` (rule MO-6; `TASK-07`), a run that the scheduler marks done refuses further pages with `task-completed` (rules MO-49, MO-50; `TASK-06`), and a run's budget is renewed only by a new reference that the registry issues. The Graph profile binds each continuation to the task, workload, and route (rule GR-24; `GRAPH-09`, `GRAPH-10`) and reserves each page in that profile's task ledger (its component C15; open item OI-4, closed). Whether the registry names the run or the schedule, and so whether a budget spans one run or every run, is the deployment's to state (multi-operation section 13.3).
 
 The cases above cover another executor or mailbox, user-endpoint misuse, parallel broad grants, and a native denial that never triggers another application's credentials, at the adapter and at the unit tier, against fakes. These remain unvalidated:
 
@@ -80,7 +76,7 @@ The cases above cover another executor or mailbox, user-endpoint misuse, paralle
 - The deployment requirements DR3, DR4, and DR5: one executor application per workload with the RBAC assignment the preflight verifies, credentials in protected stores the agent cannot read, and egress limited to Graph and the token endpoint.
 - Runtime evidence and the hold store: no Graph case exercises them.
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

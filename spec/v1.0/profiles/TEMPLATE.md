@@ -86,9 +86,9 @@ Profiles and adapter fixtures must stay language-neutral so that adapter SDKs in
 
 ## 4. Native dependencies
 
-**How to fill:** Map each native system the integration relies on to a handoff component C01 to C16 and name its owner.
+**How to fill:** Map each native system the integration relies on to one of the components C01 to C16 below and name its owner.
 
-The table below lists the sixteen components (C01 to C16) from the handoff document's "Required components and ownership" table. These are logical responsibilities: an existing system can supply one or several of them, a single component can fulfil several responsibilities, and listing a component does not assert that it has been built.
+The table below lists the sixteen components (C01 to C16) that a PACT integration draws on, each with the condition under which it is needed. These are logical responsibilities: an existing system can supply one or several of them, a single component can fulfil several responsibilities, and listing a component does not assert that it has been built.
 
 | ID | Responsibility | Needed when | Provided by | Owner | Status or reason not used |
 |---|---|---|---|---|---|
@@ -127,11 +127,11 @@ The table below lists the sixteen components (C01 to C16) from the handoff docum
 
 ## 6. Unsupported forms
 
-**How to fill:** State what the integration did not establish, starting from the matching row of the "Deliberate design choices" table in the handoff.
+**How to fill:** State what the integration did not establish. Start from the integration's design choice and the wider claim that choice leaves out: a narrower form a reader could take as supported, such as enforcement on an unchanged server, a broader identity or delegation model, or other products and paths of the same kind. Each row names the form, its source (the sample or design choice it comes from, or the section of this profile where it was found), and what this integration does instead. Then add the forms found while filling sections 2 and 5.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
-| `<wider claim not established>` | `<source ID and wording of the matching handoff row>` | `<what this integration does instead>` |
+| `<wider claim not established>` | `<sample ID and the wider claim its design choice does not establish>` | `<what this integration does instead>` |
 | `<form found while filling sections 2 and 5>` | `<section reference>` | `<reason>` |
 
 ## 7. Identity mapping
@@ -255,7 +255,7 @@ The five required functions run in request order inside the gateway's own filter
 
 ### 4. Native dependencies
 
-Eleven of the sixteen handoff components are used, and each of the other five carries the reason it does not apply.
+Eleven of the sixteen components are used, and each of the other five carries the reason it does not apply.
 
 | ID | Responsibility | Needed when | Provided by | Owner | Status or reason not used |
 |---|---|---|---|---|---|
@@ -289,9 +289,9 @@ Four other ways to reach invoices are listed, one `closed` by network policy, on
 
 ### 6. Unsupported forms
 
-The first two rows are seeded from the I01 and I06 rows of the handoff "Deliberate design choices" table, and the last two come from the routes and paths found while filling sections 2 and 5.
+The first two rows are the wider claims that samples I01 and I06 do not establish, and the last two come from the routes and paths found while filling sections 2 and 5.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
 | Telling agents apart when they share one account, or enforcement on an unchanged server | I01: "Shared-password agent distinction or enforcement on an unchanged server" | Only dedicated accounts behind this gateway are claimed |
 | Employee delegation, and nested-group semantics of the directory | I06: "Employee delegation or universal schema/nested-group semantics" | No delegation exists; only the group lookup described in section 8 is claimed |

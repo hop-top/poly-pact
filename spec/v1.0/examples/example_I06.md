@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I06. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -26,15 +26,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G02 | Pin account/group/key namespaces and ambiguous-name handling. | Profile |
-| G15 | Define bind/account state, nested groups, lookup access, and replication bounds. Specified for OpenLDAP 2.6 and Active Directory Domain Services by the integration profile [`ldap`](../profiles/ldap/profile.md), whose Appendix G maps each G15 item to rules and cases. | Profile |
-
 ### Deliberate simplifications and limitations
 
 - The agent uses its own account; employee delegation is not demonstrated.
@@ -44,7 +35,12 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 The integration profile [`ldap`](../profiles/ldap/profile.md) states the conformance claim behind this sample: the native-integration part of the gateway, for OpenLDAP 2.6 and Active Directory Domain Services; a simple bind with a non-empty password, over LDAPS or StartTLS only, as the entry that one unique discovery search returned (rules LR-4 to LR-11); the identifier `ldap:{realm_id}:{unique_id}`, with `entryUUID` or `objectGUID` as the unique id, for accounts and groups alike (rule LR-2); a lookup account that is never an actor (rule LR-13); direct groups, and nested groups through the Active Directory in-chain rule only (rules LR-16 and LR-17); and an account-state vocabulary (rule LR-20). Its reference route R1 (`GET /api/v1/warehouses/{warehouse_id}/stock`, action `stock.read`) is illustrative; the inventory application's routes and permissions stay native. The adapter cases are in [`fixtures/adapters/ldap/`](../fixtures/adapters/ldap/README.md), registered in the fixture manifest, and run against a directory built from the seed assets `adapters/ldap/seed` (two OpenLDAP realms) and `adapters/ldap/ad-seed` (one Active Directory realm); the decisions table below names the case group or case for each row. An integration tier runs the cases one OpenLDAP 2.6 server can realize, only when a server is configured; the Active Directory cases run against the unit tier's fake only.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Pin account/group/key namespaces and ambiguous-name handling.
+- Define bind/account state, nested groups, lookup access, and replication bounds. Specified for OpenLDAP 2.6 and Active Directory Domain Services by the integration profile [`ldap`](../profiles/ldap/profile.md), whose Appendix G maps each requirement to rules and cases.
 
 The cases cover empty and unauthenticated binds, disabled, locked, expired, and reset accounts, duplicate names, unsupported nesting, removal, outages, and the lookup account as principal, executor, or authorizer, at the adapter. These remain unvalidated:
 
@@ -54,7 +50,7 @@ The cases cover empty and unauthenticated binds, disabled, locked, expired, and 
 - That the directory enforces the state it reports, such as a loaded password-policy overlay (profile section 9).
 - The bypass paths B1 to B3 (other application logins, direct backend requests, direct use of the lookup credential), which the profile leaves `out-of-claim`.
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I14. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,17 +27,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G06 | Normalize activation states and fresh evaluation after activation. | Clarification / profile |
-| G17 | Specify audience-correct credentials, refresh, and interaction. The operations gateway's inbound access token is specified as form E (a Microsoft Entra ID v2.0 access token) by the integration profile [`oauth`](../profiles/oauth/profile.md), whose G17 closure map ties each item to rules and case groups; the downstream Azure credential and the activation interaction are outside that profile. | Profile |
-| G26 | Preserve restart/task semantics and avoid blind retries. Specified across operations by the [multi-operation profile](../profiles/multi-operation.md), whose G26 closure map (section 12) ties each item to rules and to the cases `TASK-01` to `TASK-09`, and whose section 13.4 works this sample: the restart is a ledger-deduplicated write sent at most once per logical operation, and a repeat under a fresh contract is answered from the record (rules MO-26 to MO-33; `TASK-02`); a 202 is accepted, not completed (rules MO-41 to MO-47; `TASK-03`); a restart that times out is `Unknown` and is reconciled, never repeated (rules MO-35 to MO-39; `TASK-05`); and a pending activation reserves nothing (rule MO-10; `TASK-09`). | Profile / deployment |
-
 ### Deliberate simplifications and limitations
 
 - Human action and native elevation stay external; no agent-operated MFA or generic privilege service is implemented.
@@ -47,7 +36,16 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 The integration profile [`oauth`](../profiles/oauth/profile.md) covers one part of this sample: the access token with which the operations gateway authenticates Maya's requests, validated as form E against the key set of one pinned tenant (rules OAUTH-19 to OAUTH-33), with the principal `oauth:{issuer-id}:{tid}:{oid}` (rule OAUTH-37) and the client as the enrolled workload (rule OAUTH-38). Its form E case groups (`OAUTH-09` to `OAUTH-16`, `OAUTH-18`, `OAUTH-19`, `OAUTH-22`, `OAUTH-23`, and `OAUTH-27`; profile section 10) are in [`fixtures/adapters/oauth/`](../fixtures/adapters/oauth/README.md), registered in the fixture manifest, and run on the profile's route R2; they test the adapter against key sets that the harness serves itself. The profile does not claim the restart route, the activation check, or the downstream Azure call (profile section 2 and section 6), so no case of it covers the activation or restart rows below.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Normalize activation states and fresh evaluation after activation.
+- Specify audience-correct credentials, refresh, and interaction. The operations gateway's inbound access token is specified as form E (a Microsoft Entra ID v2.0 access token) by the integration profile [`oauth`](../profiles/oauth/profile.md), whose requirement coverage table ties each item to rules and case groups; the downstream Azure credential and the activation interaction are outside that profile.
+- Preserve restart/task semantics and avoid blind retries. Specified across operations by the [multi-operation profile](../profiles/multi-operation.md), whose requirement coverage table (section 12) ties each item to rules and to the cases `TASK-01` to `TASK-09`, and whose section 13.4 works this sample: the restart is a ledger-deduplicated write sent at most once per logical operation, and a repeat under a fresh contract is answered from the record (rules MO-26 to MO-33; `TASK-02`); a 202 is accepted, not completed (rules MO-41 to MO-47; `TASK-03`); a restart that times out is `Unknown` and is reconciled, never repeated (rules MO-35 to MO-39; `TASK-05`); and a pending activation reserves nothing (rule MO-10; `TASK-09`).
+
+Still to validate:
 
 - Test pending/missing/rejected/expired/wrong-scope activation, unavailable status, and downstream denial.
 - Activate after contract expiry and test fresh admission plus async completion or ambiguous timeout.
@@ -56,7 +54,7 @@ The integration profile [`oauth`](../profiles/oauth/profile.md) covers one part 
 - The audience-bound, user-delegated Azure credential workflow and its executor record (C08); the inbound token is never forwarded (rule OAUTH-36).
 - The live tenant facts that the integration profile leaves to probes P1 to P5 and P7, and its application registration (deployment requirement DR6).
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 
@@ -129,7 +127,7 @@ The gateway's native adapter uses the supported [Azure VM restart operation](htt
 
 The [multi-operation profile](../profiles/multi-operation.md) fixes how the restart runs under the incident task (its section 13.4). The restart is a ledger-deduplicated write: the gateway reserves it in the task ledger before the POST, sends at most one request for it, and answers a repeat under a fresh contract from the record, with `operation-in-flight` while it runs and no second request (rules MO-26, MO-31, MO-33; `TASK-02.restart-dedupe`). A 202 makes the record `Accepted` with the handle; the tracker waits the `Retry-After` period and reads the `status` of the asynchronous operation, never the virtual machine's `provisioningState`, and a status it is not permitted to read leaves the record `Accepted` with no success inferred (rules MO-41 to MO-46; `TASK-03`). A POST that times out leaves the record `Unknown`; it is reconciled only through a native status source and is never sent again (rules MO-35 to MO-39; `TASK-05.restart-timeout`). Which Azure read can serve as that source is to probe (profile probe P1).
 
-The source repository has an executor for this restart, the Go package `go/adapters/graph/azurerm` (not part of the mirror). It runs the restart under the task ledger as above and reads the `status` of the asynchronous operation, not `provisioningState` (rule MO-44). Its activation check is an interface, `ActivationGate`, that the deployment supplies, because the normalization of activation states (finding G06) is not yet specified; the executor reserves and sends nothing unless that check returns `PASS` (rule MO-10).
+The source repository has an executor for this restart, the Go package `go/adapters/graph/azurerm` (not part of the mirror). It runs the restart under the task ledger as above and reads the `status` of the asynchronous operation, not `provisioningState` (rule MO-44). Its activation check is an interface, `ActivationGate`, that the deployment supplies, because the normalization of activation states is not yet specified; the executor reserves and sends nothing unless that check returns `PASS` (rule MO-10).
 
 ## Decisions and failure variations
 

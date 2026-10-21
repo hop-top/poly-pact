@@ -2,12 +2,12 @@
 
 **Status:** Informative integration sample for PACT Protocol v1.0. All organizations, identifiers, routes, and policies are illustrative. HTTP examples contain placeholders and are not executable fixtures. Profile excerpts omit required core fields and signatures; they are not complete wire objects. The adapter configuration below is a deployment design, not a new PACT wire schema.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I02. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,17 +27,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G17 | Define token, refresh, consent, interaction, and sender-proof handling. Specified for token A (form E, a Microsoft Entra ID v2.0 access token) by the integration profile [`oauth`](../profiles/oauth/profile.md); its G17 closure map ties each item to rules and case groups. | Profile |
-| G18 | Publish the Graph OBO/resource/grant profile. Specified for the delegated half by the integration profile [`graph`](../profiles/graph/profile.md), form D (rows GD1 and GD2); its G18 closure map ties each item to rules and cases. The app-only half is sample [I08](example_I08.md). | Profile / deployment |
-| G26 | Preserve task and page scope across exchanges. Specified across operations by the [multi-operation profile](../profiles/multi-operation.md), whose G26 closure map (section 12) ties each item to rules and to the cases `TASK-01` to `TASK-09`, and whose section 13.1 works this sample: each page, the first included, reserves one operation and one page of the native task's budget, a new listing counts again, a continuation presented under another native task is refused with `CONTEXT_MISMATCH` before any reservation (rules MO-55 to MO-58; `TASK-04`), and a fresh contract resets no counter (rule MO-20; `TASK-01`). The Graph profile binds each continuation to the task, principal, agent, and route (rule GR-24; `GRAPH-09`, `GRAPH-10`) and reserves each page in that profile's task ledger (its component C15; open item OI-4, closed). | Profile / deployment |
-
 ### Deliberate simplifications and limitations
 
 - Graph itself is not PACT-aware; enforcement is in the custom gateway.
@@ -45,7 +34,7 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 ### Profile and fixtures
 
-The integration profile [`oauth`](../profiles/oauth/profile.md) states, as its form E, the conformance claim for the inbound side of this sample: route R2 (`GET /mail/messages`, action `mail.message.list`) under issuer entry E2, token A validated locally against the key set of one pinned tenant (rules OAUTH-19 to OAUTH-33), the principal `oauth:{issuer-id}:{tid}:{oid}` (rule OAUTH-37), the client `azp` as the enrolled workload (rule OAUTH-38), the deployment requirements of its section 4, and the fixture index of its section 10. It claims the inbound authentication and binding of R2 only; the translation to Microsoft Graph, the on-behalf-of executor, and token B are outside it and belong to the integration profile [`graph`](../profiles/graph/profile.md) of finding G18, described in the next subsection. The adapter cases are in [`fixtures/adapters/oauth/`](../fixtures/adapters/oauth/README.md), registered in the fixture manifest under the ids below. They test the adapter against discovery documents and key sets that the harness serves itself, with keys it generates; they are not a live tenant.
+The integration profile [`oauth`](../profiles/oauth/profile.md) states, as its form E, the conformance claim for the inbound side of this sample: route R2 (`GET /mail/messages`, action `mail.message.list`) under issuer entry E2, token A validated locally against the key set of one pinned tenant (rules OAUTH-19 to OAUTH-33), the principal `oauth:{issuer-id}:{tid}:{oid}` (rule OAUTH-37), the client `azp` as the enrolled workload (rule OAUTH-38), the deployment requirements of its section 4, and the fixture index of its section 10. It claims the inbound authentication and binding of R2 only; the translation to Microsoft Graph, the on-behalf-of executor, and token B are outside it and belong to the integration profile [`graph`](../profiles/graph/profile.md), described in the next subsection. The adapter cases are in [`fixtures/adapters/oauth/`](../fixtures/adapters/oauth/README.md), registered in the fixture manifest under the ids below. They test the adapter against discovery documents and key sets that the harness serves itself, with keys it generates; they are not a live tenant.
 
 | Fixture ID | Token A in this sample | Evidence |
 |---|---|---|
@@ -89,7 +78,14 @@ The adapter cases are in [`fixtures/adapters/graph/`](../fixtures/adapters/graph
 
 A forbidden query gets no trusted personalized contract (case `GRAPH-21`, shown for form D by the `GRAPH-01` files); contract issuance is the gateway's.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Define token, refresh, consent, interaction, and sender-proof handling. Specified for token A (form E, a Microsoft Entra ID v2.0 access token) by the integration profile [`oauth`](../profiles/oauth/profile.md); its requirement coverage table ties each item to rules and case groups.
+- Publish the Graph OBO/resource/grant profile. Specified for the delegated half by the integration profile [`graph`](../profiles/graph/profile.md), form D (rows GD1 and GD2); its requirement coverage table ties each item to rules and cases. The app-only half is sample [I08](example_I08.md).
+- Preserve task and page scope across exchanges. Specified across operations by the [multi-operation profile](../profiles/multi-operation.md), whose requirement coverage table (section 12) ties each item to rules and to the cases `TASK-01` to `TASK-09`, and whose section 13.1 works this sample: each page, the first included, reserves one operation and one page of the native task's budget, a new listing counts again, a continuation presented under another native task is refused with `CONTEXT_MISMATCH` before any reservation (rules MO-55 to MO-58; `TASK-04`), and a fresh contract resets no counter (rule MO-20; `TASK-01`). The Graph profile binds each continuation to the task, principal, agent, and route (rule GR-24; `GRAPH-09`, `GRAPH-10`) and reserves each page in that profile's task ledger (its component C15; open item OI-4, closed).
 
 The `oauth` cases above cover wrong audience, tenant, and client, and missing consent as a missing delegated scope, at the adapter. The `graph` cases cover interaction requirements, OBO failure, and mutated query, mailbox, and page targets at the adapter and at the unit tier, against fakes. These remain unvalidated:
 
@@ -105,7 +101,7 @@ The `oauth` cases above cover wrong audience, tenant, and client, and missing co
 - Network policy that closes the gateway's API to every other caller (`oauth` DR1) and HTTPS-only listeners (`oauth` DR2).
 - Token exclusion from the deployment's own logs and telemetry; `OAUTH-22` covers the adapter's results only.
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Scenario and placement
 

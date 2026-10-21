@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I12. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -26,15 +26,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G23 | Define consistency, contextual facts, updates, and legitimate alternative sharing paths. Specified for an OpenFGA relationship store by the integration profile [`rebac`](../profiles/rebac/profile.md), whose section 12 maps each G23 item to rules and cases. | Profile |
-
 ### Deliberate simplifications and limitations
 
 - The OpenFGA server, store, and model are the deployment's and are assumed; the adapter that calls them is specified by the integration profile and has a reference implementation (`go/adapters/rebac`, source repository).
@@ -44,7 +35,12 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 The integration profile [`rebac`](../profiles/rebac/profile.md) states the conformance claim behind this sample: `authorize_native` is one OpenFGA Check per protected operation, against the store and model of a pin record in trusted configuration (rules RB-1 to RB-3), with the relation chosen by the action from a versioned table (rule RB-5), the subject and object produced by a registry that keeps tenants apart (rules RB-4 and RB-6), no contextual tuple from the agent (rules RB-7 and RB-8), `HIGHER_CONSISTENCY` on every Check and no adapter cache (rules RB-9 and RB-10), and the full model deciding, so that a remaining direct share legitimately keeps access (rule RB-14). It claims two routes, R1 (read, relation `viewer`) and R2 (edit, relation `editor`); this sample's model defines no `editor`, so the profile's reference model adds it as a direct assignment (open item O-5). The principal is the identifier of the mechanism that authenticated Maya; the relationship engine authenticates nobody (profile section 7). The adapter cases are in [`fixtures/adapters/rebac/`](../fixtures/adapters/rebac/README.md), registered in the fixture manifest, with this sample's model as the asset `adapters/rebac/model` and a later model of the same store as `adapters/rebac/model-next`; the decisions table below names the case group or case for each row. The cases run against a fake store that the harness builds; an integration tier runs the cases an OpenFGA server can realize only when one is configured.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Define consistency, contextual facts, updates, and legitimate alternative sharing paths. Specified for an OpenFGA relationship store by the integration profile [`rebac`](../profiles/rebac/profile.md), whose section 12 maps each requirement to rules and cases.
 
 The cases cover other tenants and models, injected tuples, stale membership, outage, view-to-edit changes, and the removal of inherited access with and without a remaining direct share, at the adapter. These remain unvalidated:
 
@@ -52,9 +48,9 @@ The cases cover other tenants and models, injected tuples, stale membership, out
 - That one store credential can be limited to Check (P-5), that the adapter has no write path to the store, and that the agent has no route to the store API (open item O-1; bypass path B6, `out-of-claim`), or to the document service around the gateway (B5, `out-of-claim`).
 - A principal with no registry entry, and a `user` that is a userset or a wildcard (open item O-2).
 - The rollout time of a new pin record or mapping, and the gap between the Check and the document service's operation (profile section 9).
-- The definitions of `native-principal-binding-v1`, `native-delegation-v1`, and `execution-identity-v1`, which the profile names and leaves to the delegation work of finding G03 (profile section 7.1).
+- The definitions of `native-principal-binding-v1`, `native-delegation-v1`, and `execution-identity-v1`, which the profile names and leaves to the work on delegation and actual downstream execution identity (profile section 7.1).
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

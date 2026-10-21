@@ -2,7 +2,7 @@
 
 This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
-It is the integration profile (template instance, [`TEMPLATE.md`](../TEMPLATE.md)) for the database broker of the integration sample [`example_I13.md`](../../examples/example_I13.md): a PACT-aware broker that runs one fixed, parameterized query on PostgreSQL under a dedicated login role mapped to the requesting principal, so that the database's own privileges and row-level security decide which rows are returned. It answers the open finding G20 of the specification review: role acquisition and current-role verification, owner, superuser, and `BYPASSRLS` exclusions, grants, row semantics, query binding, connection reset, and pooled identity. Section 10.1 maps each G20 closure item to the cases `DB-01` to `DB-10`. The machine-readable form is [`profile.json`](profile.json).
+It is the integration profile (template instance, [`TEMPLATE.md`](../TEMPLATE.md)) for the database broker of the integration sample [`example_I13.md`](../../examples/example_I13.md): a PACT-aware broker that runs one fixed, parameterized query on PostgreSQL under a dedicated login role mapped to the requesting principal, so that the database's own privileges and row-level security decide which rows are returned. It specifies role acquisition and current-role verification, owner, superuser, and `BYPASSRLS` exclusions, grants, row semantics, query binding, connection reset, and pooled identity. Section 10.1 maps each requirement to the cases `DB-01` to `DB-10`. The machine-readable form is [`profile.json`](profile.json).
 
 The profile adds no wire field and no protocol requirement. Where it and the draft ([`draft.md`](../../draft.md)) differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. Identity rules come from [`identity-mapping.md`](../identity-mapping.md) (cited IM-n), freshness rules from [`freshness.md`](../freshness.md), and request binding rules from [`request-binding.md`](../request-binding.md) (cited RB-n); this profile records only its own choices. Its rules carry the identifiers RA-1 to RA-7, CV-1 to CV-8, CR-1 to CR-7, QB-1 to QB-7, RS-1 to RS-7, and PI-1, so that fixtures and reviews can cite them.
 
@@ -218,7 +218,7 @@ The outcome mapping of RS-5:
 
 | # | Rule | Basis |
 |---|---|---|
-| PI-1 | The claimed form is one dedicated login role per principal with one pool per role (RA-2, CR-1). Shared pooling under one login role that switches with `SET ROLE` or `SET LOCAL ROLE` is unsupported in wire version 0.1 (sample I13, handoff I13 row). The pages read give the reasons. The session user needs the `SET` option, directly or through a chain of memberships, for every role it switches to, so the pool's login role can become any mapped role and is broader than any one principal. `RESET ROLE` and `SET ROLE NONE` "can be executed by any user" and return the current user to the session user or the connection-time setting. `SET ROLE` does not process the role's `ALTER ROLE` settings, which happens only at login, so the session differs from a login as that role. `current_user` changes with `SET ROLE` and `session_user` does not, so CV-1 cannot hold. `SET SESSION AUTHORIZATION` to another user requires an authenticated superuser, which CV-1 refuses. Open decision OD-1 records the runner-up and what adopting it would change. | `doc PG10`, `doc PG11`, `doc PG12`, `design` |
+| PI-1 | The claimed form is one dedicated login role per principal with one pool per role (RA-2, CR-1). Shared pooling under one login role that switches with `SET ROLE` or `SET LOCAL ROLE` is unsupported in wire version 0.1 (sample I13). The pages read give the reasons. The session user needs the `SET` option, directly or through a chain of memberships, for every role it switches to, so the pool's login role can become any mapped role and is broader than any one principal. `RESET ROLE` and `SET ROLE NONE` "can be executed by any user" and return the current user to the session user or the connection-time setting. `SET ROLE` does not process the role's `ALTER ROLE` settings, which happens only at login, so the session differs from a login as that role. `current_user` changes with `SET ROLE` and `session_user` does not, so CV-1 cannot hold. `SET SESSION AUTHORIZATION` to another user requires an authenticated superuser, which CV-1 refuses. Open decision OD-1 records the runner-up and what adopting it would change. | `doc PG10`, `doc PG11`, `doc PG12`, `design` |
 
 ## 4. Native dependencies
 
@@ -229,7 +229,7 @@ All sixteen components are listed; each unused one carries its reason. "To be su
 | C01 | PACT enforcement gateway/validator | baseline | In-gateway validator and filter chain of the database broker | Gateway implementer | To be supplied |
 | C02 | Native authentication and claim adapters | baseline | Front-door authentication under the profile the deployment names; the broker's reads of the role and tenant registry and of the delegation and task registry | IAM owner and adapter owner | To be supplied; the front-door mechanism is defined by its own profile |
 | C03 | Enrollment, issuer trust, and key lifecycle | baseline | Enrollment registry with administrator-run enrollment, looked up by the agent's front-door workload and the presented `agent_id` | IAM and security owner | Registry contract and a memory backend exist; a durable backend is to be supplied |
-| C04 | Native delegation and task authority | delegated or task execution | Delegation and task registry binding user, agent, and report task, read through `authority_ref` | Application and IAM owner | To be supplied; the semantics of `authority_ref` are a dependency on the delegation and execution-identity deliverable (finding G03) |
+| C04 | Native delegation and task authority | delegated or task execution | Delegation and task registry binding user, agent, and report task, read through `authority_ref` | Application and IAM owner | To be supplied; the semantics of `authority_ref` are a dependency on the delegation and execution-identity work, not yet specified |
 | C05 | Evidence and authoritative status sources | baseline | Role and tenant registry, delegation and task registry, hold store, and the PostgreSQL catalog read by V1 to V3 | Adapter owner, database administrator | To be supplied; the catalog exists |
 | C06 | External approval, exception, or PIM workflow | required external authorization | none | none | Not used: the read route needs no external approval |
 | C07 | Purpose and exact operation mapper | baseline | Mapper at revision `pact-db-1` with the query registry (section 2) | Adapter owner | To be supplied |
@@ -256,9 +256,9 @@ All sixteen components are listed; each unused one carries its reason. "To be su
 
 ## 6. Unsupported forms
 
-The first two rows are two of the three forms of the I13 row of the handoff "Deliberate design choices" table; the third form is no longer unsupported (below the table). The others come from sample I13 and from the rules of section 3.
+The first two rows are two of the three forms of the wider claim that sample I13 does not establish; the third form is no longer unsupported (below the table). The others come from sample I13 and from the rules of section 3.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
 | Safe shared pooling, including one login role that switches with `SET ROLE` or `SET LOCAL ROLE` | I13 database: "Safe shared pooling" | One login role per principal and one pool per role are claimed (3.3); the reasons and the runner-up are in PI-1 and OD-1 |
 | Arbitrary SQL | I13 database: "arbitrary SQL" | Only the fixed statements of the query registry run (3.4) |
@@ -331,7 +331,7 @@ F1 also supplies the tenant of the principal. The delegation reference of F4 is 
 
 ## 10. Fixture index
 
-Ten cases cover the G20 closure items. Each is a group of adapter cases of this profile in `spec/v1.0/fixtures/adapters/db/`, one file per variant, named by its lower-case ID and variant, such as `db-04.in-grammar.json`, with the manifest id `adapters/db/db-04.in-grammar`; the sample I13 schema is the native-format asset `spec/v1.0/fixtures/adapters/db/schema.sql`, the SQL of the sample verbatim, registered as `adapters/db/schema` with kind `adapter-asset`. Every file is registered in `spec/v1.0/fixtures/manifest.json` and listed in the `fixtures` array of `profile.json`. The native state of the cases is the model `db/1` of the [database cases README](../../fixtures/adapters/db/README.md). A case file calls one of the seven adapter functions, none of which sends a statement on a database connection, so the Evidence column says which part of a case the files show and which part is shown by the implementation's unit tier, with a recording database driver that answers V1 to V3 and asserts statement text, parameters, and the reset, or by its integration tier, which loads `schema.sql` into a PostgreSQL 16 server and runs only when one is configured. The identity, freshness, and request-binding cases of `spec/v1.0/fixtures/adapters/_common/` also apply and are not repeated; no common case is replaced.
+Ten cases cover the requirements of section 10.1. Each is a group of adapter cases of this profile in `spec/v1.0/fixtures/adapters/db/`, one file per variant, named by its lower-case ID and variant, such as `db-04.in-grammar.json`, with the manifest id `adapters/db/db-04.in-grammar`; the sample I13 schema is the native-format asset `spec/v1.0/fixtures/adapters/db/schema.sql`, the SQL of the sample verbatim, registered as `adapters/db/schema` with kind `adapter-asset`. Every file is registered in `spec/v1.0/fixtures/manifest.json` and listed in the `fixtures` array of `profile.json`. The native state of the cases is the model `db/1` of the [database cases README](../../fixtures/adapters/db/README.md). A case file calls one of the seven adapter functions, none of which sends a statement on a database connection, so the Evidence column says which part of a case the files show and which part is shown by the implementation's unit tier, with a recording database driver that answers V1 to V3 and asserts statement text, parameters, and the reset, or by its integration tier, which loads `schema.sql` into a PostgreSQL 16 server and runs only when one is configured. The identity, freshness, and request-binding cases of `spec/v1.0/fixtures/adapters/_common/` also apply and are not repeated; no common case is replaced.
 
 | Fixture ID | Negative case (input) | Expected result | Evidence | Covers |
 |---|---|---|---|---|
@@ -348,11 +348,11 @@ Ten cases cover the G20 closure items. Each is a group of adapter cases of this 
 
 A stub that queries as the pool administrator and filters rows in code fails `DB-01`, `DB-02`, and `DB-05` in the unit tier, and is the mutant those cases are written against. Freshness rows F4 to F6 and their outages are covered by the common identity and freshness fixtures; this profile adds no database-specific case for them.
 
-### 10.1 Mapping of the G20 closure items to fixtures
+### 10.1 Requirement coverage
 
-The finding G20 of the handoff asks for seven specifications and names five kinds of evidence. Each item maps to rules and to `DB-*` cases.
+The requirements are seven specifications and five kinds of evidence. Each item maps to rules and to `DB-*` cases.
 
-| G20 item | Where | Fixtures | Status |
+| Requirement | Where | Fixtures | Status |
 |---|---|---|---|
 | Role acquisition and current-role verification | 3.1, 3.2 | `DB-01`, `DB-02`, `DB-08` | |
 | Owner, superuser, and `BYPASSRLS` exclusions | 3.2, CV-1 to CV-3 | `DB-02`, `DB-10` | Owner-membership bypass `OI-2` |
@@ -436,4 +436,4 @@ PostgreSQL 16 documentation pages, all read on 2026-10-16 under `https://www.pos
 | PG21 | `sql-revoke.html` (REVOKE) |
 | PG22 | `errcodes-appendix.html` (Appendix A, PostgreSQL Error Codes) |
 
-The sample [`example_I13.md`](../../examples/example_I13.md), the draft, and the handoff's G20 finding and I13 row are the other references.
+The sample [`example_I13.md`](../../examples/example_I13.md), and the draft are the other references.

@@ -64,7 +64,7 @@
     }
   ],
   "unsupported_forms": [
-    "Employee delegation, universal schema, or nested-group semantics (handoff row I06): only the dedicated account and the configured resolver are claimed; nesting is supported only through the Active Directory in-chain resolver and is unsupported for OpenLDAP",
+    "Employee delegation, universal schema, or nested-group semantics (sample I06): only the dedicated account and the configured resolver are claimed; nesting is supported only through the Active Directory in-chain resolver and is unsupported for OpenLDAP",
     "Application entitlement taxonomy: a directory group is a fact, and what it permits stays with the application",
     "Authentication other than the simple bind over LDAPS or StartTLS (anonymous or unauthenticated bind, an unprotected simple bind, every SASL mechanism, the Active Directory Sicily mechanism, LDAPv2): only one arrangement is admitted",
     "Shared directory accounts: one directory account per agent, the default of identity-mapping section 5, and a workload with more than one enrollment in force is a configuration error",

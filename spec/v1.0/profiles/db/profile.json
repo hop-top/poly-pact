@@ -79,8 +79,8 @@
     }
   ],
   "unsupported_forms": [
-    "Safe shared pooling, including one login role that switches with SET ROLE or SET LOCAL ROLE (handoff row I13): one login role per principal and one pool per role are claimed; role switching is pending the owner's decision",
-    "Arbitrary SQL (handoff row I13): only the fixed statements of the query registry run",
+    "Safe shared pooling, including one login role that switches with SET ROLE or SET LOCAL ROLE (sample I13): one login role per principal and one pool per role are claimed; role switching is pending the owner's decision",
+    "Arbitrary SQL (sample I13): only the fixed statements of the query registry run",
     "Database engines other than PostgreSQL, PostgreSQL major versions other than 16, and products that implement the PostgreSQL protocol: no documentation for them was read",
     "Any route other than the reference route of protected_routes, including every write: not listed, so not claimed",
     "Relations other than ordinary tables in a registered statement (views, materialized views, partitioned tables, foreign tables): row-security behavior for them was not read, and the verification refuses any relkind other than r",

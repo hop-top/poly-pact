@@ -2,12 +2,12 @@
 
 **Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I13. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -27,16 +27,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
 
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G03 | Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check. | Profile / clarification |
-| G20 | Specify pooled identity, reset, isolation, and supported query variants. Specified for PostgreSQL 16 by the integration profile [`db`](../profiles/db/profile.md), whose section 10.1 maps each G20 item to rules and cases; shared pooling that switches roles stays unsupported. | Profile / coverage |
-| G07 | Adopt the Section 14.5 mapping: a zero-row or filtered result is “Execution completed, zero rows or filtered result”, with `details` of `"empty"`, and never implies that a hidden row was read. | Profile / clarification |
-
 ### Deliberate simplifications and limitations
 
 - Dedicated login/fixed query simplify the scenario; shared pools and arbitrary SQL remain uncovered. Under the integration profile, one dedicated login role per principal with one connection pool per role is the claimed form; a shared login role that switches with `SET ROLE` is unsupported in wire version 0.1 (profile section 3.6, open decision OD-1).
@@ -46,7 +36,13 @@ Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already stat
 
 The integration profile [`db`](../profiles/db/profile.md) states the conformance claim behind this sample, for PostgreSQL 16 only: route R1 (`GET /api/v1/reports/{report_id}`, action `report.read`, an illustrative path) mapped to the fixed statement of step 6 in its query registry; one dedicated login role per principal, opened with that role's own credential and never changed after authentication (rules RA-1 to RA-6); the verification of every connection before the statement (rules CV-1 to CV-8); one pool per role with a rollback and `DISCARD ALL` on release (rules CR-1 to CR-7); and the zero-row semantics of rules RS-1 to RS-5. The authentication of Maya and of the agent's workload at the broker's front door is defined by the profile the deployment names for it, not by this one. The adapter cases are in [`fixtures/adapters/db/`](../fixtures/adapters/db/README.md), registered in the fixture manifest; the decisions table below names the case group or case for each row. The schema of this sample is the fixture asset [`schema.sql`](../fixtures/adapters/db/schema.sql), registered as `adapters/db/schema`. The case files call the adapter functions, none of which opens a database connection; the connections, their verification, and the reset are tested by the unit tier of the reference implementation with a recording driver, and by its integration tier (`TestIntegration` of the Go package `go/adapters/db`, source repository), which loads `schema.sql` verbatim into a PostgreSQL 16 server and runs `DB-01`, `DB-02`, `DB-05` to `DB-07`, `DB-09`, and `DB-10`. The profile's probe record of 2026-10-18 reports that tier green on PostgreSQL 16.15; the claim is limited to that version, and the tier is skipped when no server is configured.
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Actor binding and executor identity: see the Actor binding section below, Section 17.5, and the `execution-identity-v1` check.
+- Specify pooled identity, reset, isolation, and supported query variants. Specified for PostgreSQL 16 by the integration profile [`db`](../profiles/db/profile.md), whose section 10.1 maps each requirement to rules and cases; shared pooling that switches roles stays unsupported.
+- Adopt the Section 14.5 mapping: a zero-row or filtered result is “Execution completed, zero rows or filtered result”, with `details` of `"empty"`, and never implies that a hidden row was read.
 
 The cases and the integration tier cover tenant and principal separation across requests, owner, superuser, and `BYPASSRLS` roles, a removed `SELECT`, SQL substitution and injection, and empty results, for PostgreSQL 16.15. These remain unvalidated:
 
@@ -57,7 +53,7 @@ The cases and the integration tier cover tenant and principal separation across 
 - The native record of the connection role that Section 14.2 asks reports to reference (open decision OD-2), and the outcome-report sequences for the Section 14.5 rows (open decision OD-3).
 - That the policy expressions are correct; the broker verifies only that row security is enabled and forced, that the role is not elevated, and which table privileges it holds (profile section 9).
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Situation
 

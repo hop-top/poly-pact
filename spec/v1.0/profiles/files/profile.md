@@ -173,7 +173,7 @@ All sixteen components are listed; each unused one carries its reason. "To be su
 | C01 | PACT enforcement gateway/validator | baseline | In-gateway validator and filter chain in the file broker on the Windows file server | Gateway implementer | To be supplied |
 | C02 | Native authentication and claim adapters | baseline | Windows authentication through Negotiate, and the token read for principal and groups | Windows IAM owner and adapter owner | Authentication exists; the adapter is the reference implementation (see the end of this profile), not yet run on Windows |
 | C03 | Enrollment, issuer trust, and key lifecycle | baseline | Enrollment registry with administrator-run enrollment, looked up by the Windows SID workload and the presented `agent_id` | IAM and security owner | Registry contract and a memory backend exist; a durable backend is to be supplied |
-| C04 | Native delegation and task authority | delegated or task execution | Delegation and task registry binding user, agent, purpose and task, read through `authority_ref` | Application and IAM owner | To be supplied; the semantics of `authority_ref` for user-context acquisition are a dependency on the delegation and execution-identity deliverable (finding G03) |
+| C04 | Native delegation and task authority | delegated or task execution | Delegation and task registry binding user, agent, purpose and task, read through `authority_ref` | Application and IAM owner | To be supplied; the semantics of `authority_ref` for user-context acquisition are a dependency on the delegation and execution-identity work, not yet specified |
 | C05 | Evidence and authoritative status sources | baseline | Enrollment registry, delegation and task registry, hold store, Windows security context | Adapter owner | To be supplied |
 | C06 | External approval, exception, or PIM workflow | required external authorization | none | none | Not used: the read route needs no external approval; a separately approved task is a task-authority fact (C04) |
 | C07 | Purpose and exact operation mapper | baseline | Mapper at revision `pact-files-1` and the file registry | Adapter owner | To be supplied |
@@ -201,9 +201,9 @@ All sixteen components are listed; each unused one carries its reason. "To be su
 
 ## 6. Unsupported forms
 
-The first three rows are the I04 row of the handoff "Deliberate design choices" table, split into its three forms. The fourth, broker-account fallback, comes from the sample's statement of the boundary. The others come from the routes and paths found while filling sections 2, 3 and 5.
+The first three rows are the wider claim that sample I04 does not establish, split into its three forms. The fourth, broker-account fallback, comes from the sample's statement of the boundary. The others come from the routes and paths found while filling sections 2, 3 and 5.
 
-| Unsupported form | Seed (handoff source row) | Why it is not established |
+| Unsupported form | Source | Why it is not established |
 |---|---|---|
 | Remote SMB delegation and share-level permission controls | I04 files: "Remote SMB delegation/share controls" | The claim is a broker-local open of a local NTFS file at the local impersonation level (IA-7). [`smb.md`](smb.md) is a stub: not claimed |
 | Unix behavior | I04 files: "Unix behavior" | No Unix identity, permission, ACL or path semantics are claimed. [`unix.md`](unix.md) is a stub: not claimed |
@@ -304,11 +304,11 @@ The common cases of the adapter conformance suite run against this adapter. Eigh
 | `COMMON-06.deny-unchanged` | Expects an obligation on the denial | `FILES-03.access-denied`: the native denial of the open's source with no obligation, and nothing executes |
 | `COMMON-06.decision-provenance` | Expects a decision record, a decision time and a policy revision of a policy source | `FILES-03.decision-provenance`: the decision names the open as its source and carries no decision record (`source_ref` null) and no decision time, because the access check reports neither |
 
-### 10.1 Mapping of the G19 closure items to fixtures
+### 10.1 Requirement coverage
 
-The finding G19 of the handoff asks for six specifications and for separate remote and Unix profiles. It names five cases to reject, and delegation and share denial for remote variants.
+The requirements are six specifications and separate remote and Unix profiles, with five cases to reject, and delegation and share denial for remote variants.
 
-| G19 item | Where | Fixtures | Status |
+| Requirement | Where | Fixtures | Status |
 |---|---|---|---|
 | Identity acquisition | 3.1 | `FILES-01`, `FILES-04`, `FILES-12` | The levels a real exchange gives are `OI-1`, `OI-2` |
 | Effective user, group and inherited rights | 3.2 | `FILES-03`, `FILES-08`, `FILES-W01`, `FILES-W02` | No case for an inherited group grant; recommended |

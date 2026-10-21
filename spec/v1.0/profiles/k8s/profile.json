@@ -95,9 +95,9 @@
     }
   ],
   "unsupported_forms": [
-    "Universal interception of Kubernetes API access (handoff row I10): only requests through the gateway's routes are claimed",
-    "Arbitrary impersonation (handoff row I10): the executor never impersonates and the preflight denies the verb",
-    "Absence of other additive grants from one YAML snippet (handoff row I10): RBAC is additive, and the preflight checks a finite list at a time",
+    "Universal interception of Kubernetes API access (sample I10): only requests through the gateway's routes are claimed",
+    "Arbitrary impersonation (sample I10): the executor never impersonates and the preflight denies the verb",
+    "Absence of other additive grants from one YAML snippet (sample I10): RBAC is additive, and the preflight checks a finite list at a time",
     "Users other than service accounts, such as OpenID Connect, X.509, static, and webhook token users: only service accounts map to a workload",
     "Legacy token Secrets, unbound tokens, and offline JWT validation: only reviewed, pod-bound tokens are accepted",
     "Shared service accounts: one registered account per agent, the default of identity-mapping section 5; a workload with more than one enrollment in force is a configuration error (KR-10)",

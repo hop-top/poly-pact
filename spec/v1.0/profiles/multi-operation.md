@@ -18,13 +18,13 @@ This profile fixes that memory once for every integration profile and adapter th
 - paging bound to a task (section 10);
 - the outcome reports that follow (section 11).
 
-It answers the open finding G26 of the review. Section 12 maps each closure item of that finding to the rules and to the cases `TASK-01` to `TASK-09` of section 15. Section 13 works through samples I02, I03, I08, and I14 and points to U01, U06, and U07.
+Section 12 maps each requirement to the rules and to the cases `TASK-01` to `TASK-09` of section 15. Section 13 works through samples I02, I03, I08, and I14 and points to U01, U06, and U07.
 
 The document adds no wire field, no message type, and no check identifier to the draft. The ledger is a native-side control of the gateway, in the same position as the transaction and budget controls the draft leaves with the native system (§10.3, §17.3). It enforces after admission and before the downstream request. Where this document and the draft differ, the draft governs. The uppercase requirement words have the meanings given in draft §3. Sections 3 to 11 are normative for a profile that claims enforced support for a route that can cause more than one downstream request for a task, or a downstream side effect that an agent can ask for again; sections 12 to 19 are informative. A profile can make a rule stricter. It MUST NOT weaken one.
 
 The rules carry the identifiers MO-1 to MO-62 so that profiles, fixtures, and reviews can cite them. In the "Basis" column, "draft §x" cites the draft; "RB-n", "GR-n", and "FR" cite the [request binding](request-binding.md), [Graph](graph/profile.md), and [freshness](freshness.md) documents; an RFC, a draft, or a vendor page cites the part read for this document (section 18); and "profile" marks a convention this document adds. A statement about an external system that has no source read for this document is marked "to probe" and listed in section 17.
 
-The textual dependencies of finding G26 are met by the draft as it stands: the approval, exception, and activation check results of §17.3.1 (finding G06) and the asynchronous rows of the native outcome mapping in §14.5 (finding G07). The delegation binding model of §17.5 (finding G03) supplies the principal, agent, and task binding the ledger uses. Draft §13.4 gives the limit refusals of the ledger the code `TASK_LIMIT`, and draft §14.5 gives an asynchronous operation that finishes cancelled its row; section 16 records those and the other gaps this document found.
+The textual dependencies of this profile are met by the draft as it stands: the approval, exception, and activation check results of §17.3.1 and the asynchronous rows of the native outcome mapping in §14.5. The delegation binding model of §17.5 supplies the principal, agent, and task binding the ledger uses. Draft §13.4 gives the limit refusals of the ledger the code `TASK_LIMIT`, and draft §14.5 gives an asynchronous operation that finishes cancelled its row; section 16 records those and the other gaps this document found.
 
 ### 1.1 Draft anchors
 
@@ -238,9 +238,9 @@ The ledger adds no row to draft §14.5. Each event of this profile maps to a row
 
 Every `EXECUTION` and `AUTHORIZATION` report references the immutable native record of the actual executor (draft §14.2). Subdivided or repeated operations within one native task collapse into one independence group (draft §14.6 rule 3), so a ledger that admits many operations does not multiply the positive weight of a task.
 
-## 12. G26 closure map
+## 12. Requirement coverage
 
-| Closure item (finding G26) | Rules | Cases (section 15.1) |
+| Requirement | Rules | Cases (section 15.1) |
 |---|---|---|
 | Task correlation | MO-1 to MO-8, MO-62 | `TASK-07` |
 | Page correlation | MO-55 to MO-60 | `TASK-04` |

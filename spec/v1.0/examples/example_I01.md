@@ -2,12 +2,12 @@
 
 **Status:** Informative integration sample for PACT Protocol v1.0. All organizations, identifiers, routes, and policies are illustrative. HTTP examples contain placeholders and are not executable fixtures. Profile excerpts omit required core fields and signatures; they are not complete wire objects. The adapter configuration below is a deployment design, not a new PACT wire schema.
 
-**Readiness review (2026-10-15):** Conditional design only. This narrative does not establish a live integration, interoperability, or end-to-end security result. Read the assumptions, components, and unresolved items before interpreting the successful exchange.
+This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
-## Assumptions, required components, and unresolved gaps
+## Assumptions, components, and limitations
 
-**Review ID:** I01. Finding and component IDs are editorial identifiers, not new protocol fields or registered reason codes.
+Component IDs C01 to C16 are the components of section 4 of the integration profile [template](../profiles/TEMPLATE.md); they are editorial identifiers, not protocol fields or registered reason codes.
 
 ### Assumptions
 
@@ -25,16 +25,6 @@ The shared baseline requires C01–C03, C05, C07, C09–C10, C13–C14, and the 
 | C08 | Backend preserving the native account's effective restrictions. |
 
 C11 and the full C12 lifecycle are needed wherever reputation or adaptation is used; an authorized current conservative baseline is still required without adaptive relaxation. C16 actual containment is required for the runtime/data-use guarantees claimed, not merely because a profile includes a runtime label.
-
-### Unresolved gaps
-
-Shared open work: G01, G02, G04, G05, G07, G13, G24, G27. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Specific issues exposed here:
-
-| Finding | Issue to resolve | Classification |
-|---|---|---|
-| G01 | Declare and test backend/alternative-route bypass boundaries. | Profile / coverage |
-| G02 | Specify native account and holder-key binding, including shared-account ambiguity. | Profile |
-| G25 | Distinguish attested from enforced data-use controls per §17.4. | Deployment / coverage |
 
 ### Deliberate simplifications and limitations
 
@@ -58,7 +48,13 @@ The integration profile [`basic`](../profiles/basic/profile.md) states the confo
 | `BASIC-08` | Profile roles beyond the roles mapped from the account | `adapters/basic/basic-08.*`, with the control `basic-08.principal-id`; evaluation case `admission/self-asserted-privileged-role` |
 | `BASIC-09` | Invoice that belongs to another department | `adapters/basic/basic-09.other-department`, with the control `basic-09.same-department` |
 
-### Validation still required
+### Limitations and open points
+
+Open in every example: the enforced integration scope; native identity and the enrolled agent and key mapping; exact request binding and native translation; achievable source freshness and execution-time rechecks; native outcome and visibility mappings; executed end-to-end conformance evidence; privacy, retention, correction, and lineage operations; and transport, latency, capacity, and outage budgets. The draft already states many underlying security rules; profiles, implementations, and evidence still need to establish them. Open points specific to this example:
+
+- Declare and test backend/alternative-route bypass boundaries.
+- Specify native account and holder-key binding, including shared-account ambiguity.
+- Distinguish attested from enforced data-use controls per §17.4.
 
 The cases above cover the adapter and validator behaviour of this exchange. These remain unvalidated:
 
@@ -67,7 +63,7 @@ The cases above cover the adapter and validator behaviour of this exchange. Thes
 - The other deployment requirements of the integration profile, DR2 to DR6: an HTTPS-only listener, uncached reads from the authoritative account database, replay state shared by every gateway replica, the header allowlist, and a presentation header size that every proxy in the path accepts.
 - Credential exclusion from the deployment's own logs and telemetry; `BASIC-06` covers the adapter's results only.
 
-No finding is closed by this narrative or by the fixture coverage above. Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
+Native IAM, approvals, resource policy, and execution remain responsibilities of the environment; the dependencies are not a proposal to move those subsystems into the PACT core.
 
 ## Scenario and placement
 

@@ -37,7 +37,7 @@ Integration samples for native authentication and authorization mechanisms. `I` 
 | I13 | [example_I13.md](example_I13.md) | Database privileges and row-level security; [profile](../profiles/db/profile.md) (PostgreSQL 16) |
 | I14 | [example_I14.md](example_I14.md) | Privileged access management and just-in-time activation; [profile](../profiles/oauth/profile.md) (inbound token) |
 
-The [multi-operation profile](../profiles/multi-operation.md) carries the task, budget, retry, and side-effect rules that span exchanges (finding G26). Its section 13 works [I02](example_I02.md) (mailbox pages), [I03](example_I03.md) (record reads under a refreshed token), [I08](example_I08.md) (pages of a scheduled run), and [I14](example_I14.md) (the virtual machine restart) row by row, and points to [U01](example_U01.md), [U06](example_U06.md), and [U07](example_U07.md). Those examples cite its rules `MO-n` and its cases `TASK-01` to `TASK-09`, which are tests of a Go package of the source repository, not fixture cases.
+The [multi-operation profile](../profiles/multi-operation.md) carries the task, budget, retry, and side-effect rules that span exchanges. Its section 13 works [I02](example_I02.md) (mailbox pages), [I03](example_I03.md) (record reads under a refreshed token), [I08](example_I08.md) (pages of a scheduled run), and [I14](example_I14.md) (the virtual machine restart) row by row, and points to [U01](example_U01.md), [U06](example_U06.md), and [U07](example_U07.md). Those examples cite its rules `MO-n` and its cases `TASK-01` to `TASK-09`, which are tests of a Go package of the source repository, not fixture cases.
 
 ## Outcome mapping index
 

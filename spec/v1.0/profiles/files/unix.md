@@ -32,7 +32,7 @@ A claim needs each row below to be specified, probed and covered by a negative c
 
 ## 3. Unsupported in wire version 0.1
 
-Every Unix form is unsupported. The rows below are the forms a reader could assume from the sample and the handoff row for I04 ("Unix behavior").
+Every Unix form is unsupported. The rows below are the forms a reader could assume from sample I04, Unix behavior among them.
 
 | Unsupported form | Why it is not established |
 |---|---|

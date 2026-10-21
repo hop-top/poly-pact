@@ -17,7 +17,7 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft. It is
 
 The profile covers one arrangement, the one of [`example_I05.md`](../../examples/example_I05.md). A SAML 2.0 service provider (SP) signs its users in through its own SAML implementation and keeps its own session for each user. An application task broker in the SP performs delegated tasks for an enrolled agent inside that user's session, on the SP's own resources. The adapter consumes two native records, an `SPSession` and a `TaskGrant` (Annex A). It consumes no SAML message.
 
-The profile specifies the work items that finding G14 of the specification review asks for: SP-session task authorization, agent enrollment, broker authority, expiry and logout, and the supported workflows, while the actual SAML validation is retained by the SP. It does not close G14. Closure needs executed negative cases (Annex C), which are separate work.
+The profile specifies SP-session task authorization, agent enrollment, broker authority, expiry and logout, and the supported workflows, while the actual SAML validation is retained by the SP. Meeting these requirements needs executed negative cases (Annex C), which are separate work.
 
 **Boundary.** SAML assertion processing stays in the SP's SAML implementation. The table lists the checks that implementation makes, with the source text of each, to say what the adapter does not do. This profile adds no requirement to these checks and restates none of them; it assumes them. A deployment whose SAML implementation does not make them cannot claim this profile.
 
@@ -35,7 +35,7 @@ The profile specifies the work items that finding G14 of the specification revie
 
 An assertion that the SAML implementation rejects leaves no `SPSession` and so no principal, and it yields no `OutcomeReport` (draft §14.5, pre-authentication failure). The JSON signatures of PACT do not replace XML signature processing.
 
-**Dependency on the delegation binding model.** The final semantics of `/attributes/delegation/authority_ref` wait for the delegation binding model of finding G03. SB-12 fixes only what it states, and open item OI-1 records the rest.
+**Dependency on the delegation binding model.** The final semantics of `/attributes/delegation/authority_ref` wait for the delegation binding model, not yet specified. SB-12 fixes only what it states, and open item OI-1 records the rest.
 
 ## 1. Claim scope
 
@@ -92,7 +92,7 @@ Twelve of the sixteen components are used and four carry the reason they are not
 | C01 | PACT enforcement gateway/validator | baseline | In-gateway validator in the SP's request path | Gateway implementer | To be supplied |
 | C02 | Native authentication and claim adapters | baseline | The SP's SAML implementation and session store; the broker's agent authentication; the adapter's claim and check functions | SP and IAM owners, adapter owner | SAML implementation and session store assumed to exist; broker authentication and adapter functions to be supplied |
 | C03 | Enrollment, issuer trust, and key lifecycle | baseline | Enrollment registry (identity-mapping §4), administrator-run enrollment | IAM and security owner | A reference registry exists (Annex F); a production store is to be supplied |
-| C04 | Native delegation and task authority | delegated or task execution | The task broker and its `TaskGrant` store | Application and IAM owner | Assumed by the example and to be supplied by the SP; final `authority_ref` semantics wait for G03 (OI-1) |
+| C04 | Native delegation and task authority | delegated or task execution | The task broker and its `TaskGrant` store | Application and IAM owner | Assumed by the example and to be supplied by the SP; final `authority_ref` semantics wait for the delegation binding model (OI-1) |
 | C05 | Evidence and authoritative status sources | baseline | `SPSession` store, `TaskGrant` store, enrollment registry, hold store; membership from a directory adapter under its own profile | SP, IAM and adapter owners | Stores to be supplied; the directory adapter profile has not landed (OI-7) |
 | C06 | External approval, exception, or PIM workflow | required external authorization | none | none | Not used: no approval workflow is part of this profile. Reauthentication or approval the environment requires is handled by its own workflow, after which the agent obtains a fresh contract and presentation |
 | C07 | Purpose and exact operation mapper | baseline | Broker mapper at revision `pact-saml-1` | Adapter owner | To be supplied |
@@ -121,9 +121,9 @@ Six other ways to reach the SP's resources or its sessions are listed: two `clos
 
 ## 6. Unsupported forms
 
-The first two rows are seeded from the I05 row of the handoff "Deliberate design choices" table. The others come from the example, from the sections above, and from the SAML texts.
+The first two rows are the wider claims that sample I05 does not establish. The others come from the example, from the sections above, and from the SAML texts.
 
-| ID | Unsupported form | Seed (handoff source row) | Why it is not established |
+| ID | Unsupported form | Source | Why it is not established |
 |---|---|---|---|
 | U1 | Universal unattended SAML agent login | I05: "Universal unattended SAML agent login or delegation supplied by SAML itself" | A request with no live `SPSession` has no principal (SB-16, case SAML-09). Browser SSO is the flow in which the principal reaches the SP through a user agent, and the scenario assumes a standard commercial browser (SAML Profiles §4.1, §4.1.2 step 1). The Enhanced Client or Proxy profile (SAML Profiles §4.2) and any other SAML profile or binding used by an agent as a SAML party are not claimed |
 | U2 | Delegation supplied by SAML itself | I05: "Universal unattended SAML agent login or delegation supplied by SAML itself" | The only delegation this profile reads is the `TaskGrant`, created by a portal action (SB-8). No delegation, proxying or act-as meaning is read from any SAML message or extension |
@@ -134,7 +134,7 @@ The first two rows are seeded from the I05 row of the handoff "Deliberate design
 | U7 | Membership, role and account-state facts taken from the assertion, the `SPSession` or `authn_instant` | Example I05, Required profile and evidence: "the configured native source must establish the demanded freshness" | Such facts come only from a directory adapter with its own observation time (SB-22). No directory adapter profile has landed (OI-7) |
 | U8 | A requirement on how recently the user authenticated | Section 8 | `authn_instant` is not a freshness time (SB-7). A deployment that needs authentication recency installs a named check; none is defined here (OI-10) |
 | U9 | An SP that has no task broker | Example I05, Deliberate simplifications: "An application task broker is assumed; not every SP provides one" | There is no `TaskGrant` and no authenticated portal action to create one |
-| U10 | The final semantics of `authority_ref` | Section 1 | They wait for the delegation binding model of G03 (OI-1) |
+| U10 | The final semantics of `authority_ref` | Section 1 | They wait for the delegation binding model (OI-1) |
 
 ## 7. Identity mapping
 
@@ -189,7 +189,7 @@ The profile states what remains true after a successful admission and how each e
 
 ## 10. Fixture index
 
-Seventeen negative cases are listed. The first nine map the G14 closure evidence and the readiness items of example I05 (Annex C); `SAML-17` shows, in the identifier grammar of this profile, the `authenticate_native` properties of the common cases that this adapter replaces. Each expected result is derived from the draft, from identity-mapping and from freshness, not from an implementation. The landed cases are adapter cases of this profile and live in `spec/v1.0/fixtures/adapters/saml/`, each file named after its case id in lower case, such as `saml-04.expired.json`, with the manifest id `adapters/saml/saml-04.expired`; the [cases README](../../fixtures/adapters/saml/README.md) defines their native state, in which a fake SP stands in for the SP's SAML implementation and turns the assertions of a case into sessions. The `fixtures` array lists every landed case file.
+Seventeen negative cases are listed. The first nine map the required evidence and the open points of example I05 (Annex C); `SAML-17` shows, in the identifier grammar of this profile, the `authenticate_native` properties of the common cases that this adapter replaces. Each expected result is derived from the draft, from identity-mapping and from freshness, not from an implementation. The landed cases are adapter cases of this profile and live in `spec/v1.0/fixtures/adapters/saml/`, each file named after its case id in lower case, such as `saml-04.expired.json`, with the manifest id `adapters/saml/saml-04.expired`; the [cases README](../../fixtures/adapters/saml/README.md) defines their native state, in which a fake SP stands in for the SP's SAML implementation and turns the assertions of a case into sessions. The `fixtures` array lists every landed case file.
 
 ### Landed
 
@@ -345,7 +345,7 @@ Nothing else creates a grant: not an agent credential, not an assertion or any S
 
 `native-delegation-v1` evaluates the table in this order at evaluation and returns `PASS` with `REQUIREMENT_SATISFIED` when every condition holds. SB-16 refuses at native authentication a request whose grant names another agent, so an evaluated operation is under a grant for the agent the presentation names; condition 5 verifies it again from the binding the validator established (draft §11.3 step 2), independently of the broker, and is never the only comparison. The broker evaluates conditions 2 and 3 again immediately before execution starts. If a store cannot answer, the result is `UNKNOWN` with `DEPENDENCY_UNAVAILABLE` (SB-18). Each `FAIL` makes the decision `INADMISSIBLE`.
 
-**SB-12. `authority_ref`.** `/attributes/delegation/authority_ref` carries an opaque reference to exactly one `TaskGrant`. The reference is not a credential: no request is authorized by possessing it, and it only names the grant that SB-11 then evaluates. Its syntax, its binding to the principal, agent and task, who may learn it, and how `native-delegation-v1` resolves it are final only when the delegation binding model of G03 lands. Until then this profile fixes only what this rule states (OI-1).
+**SB-12. `authority_ref`.** `/attributes/delegation/authority_ref` carries an opaque reference to exactly one `TaskGrant`. The reference is not a credential: no request is authorized by possessing it, and it only names the grant that SB-11 then evaluates. Its syntax, its binding to the principal, agent and task, who may learn it, and how `native-delegation-v1` resolves it are final only when the delegation binding model lands. Until then this profile fixes only what this rule states (OI-1).
 
 **SB-13. A grant adds no native authority.** `authorize_native` runs with the session principal and the actual operation (draft §17.5), and a native denial is final (draft §2.3). The grant is not a role, group, ACL entry or token (draft §4.3). `scope` is an upper bound that is intersected with the user's own native authority and never widens it.
 
@@ -375,11 +375,11 @@ Nothing else creates a grant: not an agent credential, not an assertion or any S
 
 **SB-23. Session claims.** The two native claims read from the session store, `/attributes/environment/principal_id` and `/attributes/environment/idp_realm`, are current state read live (section 8, F1). Their observation time and status time are both the instant of that read, which falls inside the evaluation. Their `SourceRef` is empty, because each read establishes the value again (freshness §7). The read is of the authoritative session record: a copy taken earlier is not a live read. Any other native path returns `UNSUPPORTED_REQUIREMENT`.
 
-## Annex C. Map of the G14 closure items
+## Annex C. Requirement coverage
 
-Finding G14 of the specification review asks for a specification of SP-session task authorization, agent enrollment, broker authority, expiry and logout, and supported workflows, while retaining the actual SAML validation. Its closure evidence is the rejection of wrong-SP and replayed assertions, of another session principal, of expired user or broker authority, and of unauthorized agent tasks. The tables map each item to the rules of Annex B and to the cases of section 10: `SAML-01` to `SAML-09` have landed, and `SAML-12` and `SAML-13` are planned. This profile specifies; it closes none of the evidence items until the cases exist and pass.
+The requirements are a specification of SP-session task authorization, agent enrollment, broker authority, expiry and logout, and supported workflows, while retaining the actual SAML validation. The evidence required is the rejection of wrong-SP and replayed assertions, of another session principal, of expired user or broker authority, and of unauthorized agent tasks. The tables map each item to the rules of Annex B and to the cases of section 10: `SAML-01` to `SAML-09` have landed, and `SAML-12` and `SAML-13` are planned. This profile specifies; it establishes none of the evidence items until the cases exist and pass.
 
-| G14 work item | Rules and sections |
+| Work item | Rules and sections |
 |---|---|
 | SP-session task authorization | SB-4 to SB-8, SB-10, SB-11, SB-13; Annex A |
 | Agent enrollment | SB-14, SB-15; section 7 |
@@ -388,7 +388,7 @@ Finding G14 of the specification review asks for a specification of SP-session t
 | Supported workflows | Sections 2 and 6 (U1 to U10); SB-20, SB-21 |
 | Retaining the actual SAML validation | The boundary table; SB-1 to SB-3 |
 
-| G14 closure evidence (or readiness item of example I05) | Case | Rules | Expected result |
+| Evidence (or open point of example I05) | Case | Rules | Expected result |
 |---|---|---|---|
 | Reject an assertion for a different SP (wrong audience) | `SAML-01` | SB-1, SB-2 | No session, no principal, no report |
 | Reject a replayed assertion | `SAML-02` | SB-2 | No new session; the existing one unaffected |
@@ -397,7 +397,7 @@ Finding G14 of the specification review asks for a specification of SP-session t
 | Reject logged-out user authority | `SAML-05` | SB-6, SB-10 | Denied; grants revoked |
 | Reject expired broker authority | `SAML-06` | SB-9, SB-11 | `STALE_EVIDENCE` (OI-2) |
 | Reject unauthorized agent tasks | `SAML-07`, `SAML-12`, `SAML-13` | SB-8, SB-11, SB-14 | `TASK_MISMATCH`; another agent refused at native authentication (SB-16); no grant for an unenrolled agent; revoked binding not admitted |
-| Fresh membership comes from an achievable source, not the login time (example I05, Validation still required) | `SAML-08` | SB-22, SB-23 | `RESTAMPED` or `STALE_EVIDENCE` |
+| Fresh membership comes from an achievable source, not the login time (example I05, Limitations and open points) | `SAML-08` | SB-22, SB-23 | `RESTAMPED` or `STALE_EVIDENCE` |
 | Unattended agent login is not established (example I05, Deliberate simplifications) | `SAML-09` | SB-16 | No principal |
 
 ## Annex D. SAML facts and sources
@@ -432,7 +432,7 @@ Facts the texts read do not establish, so no rule relies on them: whether an ide
 
 | ID | Open item | Provisional position in this profile |
 |---|---|---|
-| OI-1 | The final semantics of `/attributes/delegation/authority_ref`: syntax, binding, disclosure and resolution by `native-delegation-v1`. They depend on the delegation binding model of G03 | SB-12 fixes only that it is an opaque reference to one grant and not a credential |
+| OI-1 | The final semantics of `/attributes/delegation/authority_ref`: syntax, binding, disclosure and resolution by `native-delegation-v1`. They depend on the delegation binding model | SB-12 fixes only that it is an opaque reference to one grant and not a credential |
 | OI-2 | Draft §17.5 fixes `TASK_MISMATCH` for a changed task and `STALE_EVIDENCE` or `REVOKED_EVIDENCE` for a stale or revoked delegation. It names no code for an operation outside `scope`, for a task with no grant, or for a principal other than the grant's, and does not say whether an expired grant is stale | Fixed by this profile under draft §13.4 and §17.3.1: outside scope and another principal are `CONTEXT_MISMATCH`, no grant is `MISSING_FIELD`, an expired grant is `STALE_EVIDENCE` (SB-11). A grant for another agent is refused at native authentication (SB-16), and the check repeats the comparison from the binding it receives with `CONTEXT_MISMATCH` (SB-11, condition 5) |
 | OI-3 | A persistent `NameID` whose `NameQualifier` names an entity other than the configured issuer (SAML Core §8.3.7) | Not mapped to a principal, which is the stricter choice |
 | OI-4 | The persistent identifier reuse question of Annex D, and whether `idp_realm` needs a tenant dimension for an identity provider that serves several tenants | `idp_realm` is the configured identity provider identifier; reuse is a residual limit (IM-6) |

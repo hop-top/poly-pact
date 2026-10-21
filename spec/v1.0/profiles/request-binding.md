@@ -6,7 +6,7 @@ This profile targets spec version 1.0 and wire version 0.1 and is a draft.
 
 The [draft](../draft.md) binds a presentation to one actual operation (§10.2, §11.3 step 5) and gives the baseline HTTP mapping in a few sentences. An adapter still has to decide, for every request it protects, where the origin comes from, which headers are consequential, how a path becomes an action and resources, what the mapping version covers, and what the gateway may send downstream once the request is admitted. Two adapters that decide differently compute different digests for the same request, or the same digest for requests that do different things. This document makes those decisions once for every integration profile and adapter. Which encodings are ambiguous is no longer one of them: draft §10.2 defines them, and section 4.1 gives the rule that refuses each.
 
-It is the profile deliverable for finding G04 of the specification review: pin the origin, method, path and query, body, principal, resource and action mapping, consequential headers, mapping version, paging, fixed queries, and downstream translations. The cross-language test vectors of the baseline HTTP mapping are the binding vectors of [`fixtures/vectors/README.md`](../fixtures/vectors/README.md#binding-vectors); they are not part of this document.
+It pins the origin, method, path and query, body, principal, resource and action mapping, consequential headers, mapping version, paging, fixed queries, and downstream translations. The cross-language test vectors of the baseline HTTP mapping are the binding vectors of [`fixtures/vectors/README.md`](../fixtures/vectors/README.md#binding-vectors); they are not part of this document.
 
 It covers:
 
