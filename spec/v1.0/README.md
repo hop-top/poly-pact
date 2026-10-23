@@ -22,4 +22,4 @@ The source of this directory is `spec/v1.0/` in [hop-top/poly-pact](https://gith
 
 ## License
 
-MIT, © 2026 Idea Crafters LLC and jadb. See [LICENSE](../LICENSE).
+MIT, © 2026 Idea Crafters LLC and Jad Bitar. See [LICENSE](../LICENSE).

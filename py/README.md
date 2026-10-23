@@ -162,5 +162,5 @@ Report vulnerabilities to security@hop.top, not in a public issue; see
 
 ## License
 
-MIT, © 2026 Idea Crafters LLC and jadb. See
+MIT, © 2026 Idea Crafters LLC and Jad Bitar. See
 [LICENSE](https://github.com/hop-top/pact-py/blob/main/LICENSE).

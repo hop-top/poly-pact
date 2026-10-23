@@ -432,4 +432,4 @@ Report vulnerabilities to security@hop.top, not in a public issue; see
 
 ## License
 
-MIT, © 2026 Idea Crafters LLC and jadb. See [LICENSE](LICENSE).
+MIT, © 2026 Idea Crafters LLC and Jad Bitar. See [LICENSE](LICENSE).

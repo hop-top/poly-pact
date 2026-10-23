@@ -18,7 +18,10 @@ description = "Python SDK of the PACT protocol: wire types, strict JSON, JCS, di
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
-authors = [{ name = "Idea Crafters LLC", email = "open@ideacrafters.com" }]
+authors = [
+  { name = "Idea Crafters LLC", email = "open@ideacrafters.com" },
+  { name = "Jad Bitar" },
+]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Programming Language :: Python :: 3",

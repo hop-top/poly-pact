@@ -97,4 +97,4 @@ Questions, bug reports and pull requests go to [hop-top/poly-pact](https://githu
 
 ## License
 
-MIT, copyright Idea Crafters LLC and jadb. See [LICENSE](LICENSE).
+MIT, © 2026 Idea Crafters LLC and Jad Bitar. See [LICENSE](LICENSE).

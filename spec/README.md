@@ -86,4 +86,4 @@ mirror. `make spec-links` in the source repository checks every link of the tree
 
 ## License
 
-MIT, © 2026 Idea Crafters LLC and jadb. See [LICENSE](LICENSE).
+MIT, © 2026 Idea Crafters LLC and Jad Bitar. See [LICENSE](LICENSE).
