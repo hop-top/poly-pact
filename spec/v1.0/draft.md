@@ -2,7 +2,7 @@
 title: "PACT Protocol Specification"
 subtitle: "Agent Profiles, Intent, Reputation, and Adaptive Admission"
 expansion: "Purpose-bound Access Control & Trust"
-spec_version: "1.0.0-alpha.0" # x-release-please-version
+spec_version: "1.0.0-alpha.1" # x-release-please-version
 wire_version: "0.1"
 status: "Draft" # Draft | In Review | Approved | Implemented | Deprecated
 authors:
@@ -32,7 +32,7 @@ last_updated: 2026-10-15
 # PACT Protocol Specification
 
 * **Authors:** Jad (me@jadb.io)
-* **Status:** Draft | **Spec version:** 1.0.0-alpha.0 | **Wire version:** `0.1` <!-- x-release-please-version -->
+* **Status:** Draft | **Spec version:** 1.0.0-alpha.1 | **Wire version:** `0.1` <!-- x-release-please-version -->
 * **Last Updated:** 2026-10-15
 * **Name:** PACT — Purpose-bound Access Control & Trust
 * **Agent Profiles:** Requirement-driven disclosure views; holder-key proof of possession
