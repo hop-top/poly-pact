@@ -1,7 +1,6 @@
 # PACT specification v1.0
 
 **Status:** Draft
-
 **Spec version:** 1.0.0-alpha.1 | **Wire version:** `0.1` <!-- x-release-please-version -->
 
 Version 1.0 of the language-neutral specification of PACT (Purpose-bound Access Control & Trust), with the spec version and wire version of the front matter of `draft.md`. The spec version numbers releases of this document; the wire version numbers the message format and stays `0.x` until the format is declared stable. The draft claims no implementation, interoperability suite, or independent security assessment.

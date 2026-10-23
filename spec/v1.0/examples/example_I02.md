@@ -1,7 +1,6 @@
 # Integration sample 02 — Microsoft 365 with Entra ID, OIDC, and OAuth
 
-**Status:** Informative integration sample for PACT Protocol v1.0. All organizations, identifiers, routes, and policies are illustrative. HTTP examples contain placeholders and are not executable fixtures. Profile excerpts omit required core fields and signatures; they are not complete wire objects. The adapter configuration below is a deployment design, not a new PACT wire schema.
-
+**Status:** Draft
 This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 

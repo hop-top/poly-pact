@@ -1,7 +1,6 @@
 # Integration 13 — Database privileges and row-level security
 
-**Status:** Informative integration example for PACT Protocol v1.0. Organizations, identifiers, routes, requirements, and thresholds are fictional deployment choices. Excerpts are incomplete illustrations, not signed wire fixtures or a tested implementation. The gateway needs the described installed adapter; the named platform is not claimed to support PACT natively.
-
+**Status:** Draft
 This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
