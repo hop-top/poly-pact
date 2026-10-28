@@ -73,7 +73,7 @@ jobs:
           cache: true
       # PHP is not in mise.toml (mise builds it from source); php-vectors
       # runs php and composer from PATH.
-      - uses: shivammathur/setup-php@2.37.2
+      - uses: shivammathur/setup-php@2.40.0
         with:
           php-version: "8.5"
           extensions: hash, iconv, json, mbstring, openssl, pcre
