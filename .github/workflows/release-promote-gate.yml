@@ -51,7 +51,7 @@ jobs:
       - name: Set up toolchains
         # node only (promote.js needs >= 20): the other pins of mise.toml
         # are not needed here.
-        uses: jdx/mise-action@v5.1.1
+        uses: jdx/mise-action@v5.1.2
         with:
           install: true
           install_args: node

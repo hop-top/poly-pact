@@ -46,7 +46,7 @@ jobs:
 
       # Rust from rs/mise.toml (with rustfmt and clippy) and Python, from the
       # root mise.toml, for the mutation runner; nothing else is installed.
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           working_directory: rs
           install: true
@@ -95,7 +95,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           working_directory: rs
           install: true
@@ -126,7 +126,7 @@ jobs:
             exit 1
           fi
 
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           working_directory: rs
           install: true
