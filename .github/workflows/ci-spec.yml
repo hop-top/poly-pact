@@ -76,7 +76,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           install: true
           install_args: python
@@ -113,7 +113,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           install: true
           install_args: python
@@ -131,7 +131,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           install: true
           install_args: python lychee
@@ -149,7 +149,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           install: true
           install_args: python
@@ -168,7 +168,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           install: true
           install_args: python go

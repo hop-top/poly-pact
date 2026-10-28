@@ -60,12 +60,12 @@ jobs:
 
       # Every toolchain of mise.toml in one runner: make parity runs the
       # harness of each language whose package exists.
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           install: true
           cache: true
       # The rs harness: Rust from the package-local rs/mise.toml.
-      - uses: jdx/mise-action@v5.1.1
+      - uses: jdx/mise-action@v5.1.2
         with:
           working_directory: rs
           install: true
