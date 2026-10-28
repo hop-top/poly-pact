@@ -57,7 +57,7 @@ jobs:
     if: needs.branch-role.outputs.release == 'true'
     permissions:
       contents: read
-    uses: hop-top/.github/.github/workflows/release-please-on-push.yml@5ce6680ccde9878428ed6cfa24e0e8f635d829a1
+    uses: hop-top/.github/.github/workflows/release-please-on-push.yml@bd2a35bc97d3f288b0a7720ca5bb37d14221c729
     secrets:
       RELEASE_BOT_APP_ID: ${{ secrets.RELEASE_BOT_APP_ID }}
       RELEASE_BOT_PRIVATE_KEY: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
