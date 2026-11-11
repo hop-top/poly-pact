@@ -16,7 +16,7 @@ include = ["Cargo.toml", "README.md", "LICENSE", "src/**", "schema/**", "example
 [dependencies]
 base64 = { version = "=0.23.1", default-features = false, features = ["std"] }
 getrandom = { version = "=0.4.3", default-features = false, features = ["sys_rng"] }
-jsonschema = { version = "=0.59.0", default-features = false }
+jsonschema = { version = "=0.60.2", default-features = false }
 p256 = { version = "=0.14.0", default-features = false, features = ["ecdsa"] }
 regex = { version = "=1.13.1", default-features = false, features = ["std"] }
 serde = { version = "=1.0.229", features = ["derive"] }
