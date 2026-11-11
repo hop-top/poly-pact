@@ -22,7 +22,7 @@ pycparser==3.11
 
 # Development
 build==1.6.1
-mypy==2.4.0
+mypy==2.4.1
 pytest==9.1.1
 rfc8785==0.1.4
 ruff==0.17.1
