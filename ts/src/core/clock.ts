@@ -323,6 +323,7 @@ function clamp(sec: number): number {
  * no clock reading reaches it.
  */
 export function replayRetention(exp: number, iat: number, skewMs: number): number {
+  // biome-ignore lint/complexity/useMathMinMax: NaN counts as zero here; Math.max would return NaN
   const skew = skewMs > 0 ? skewMs : 0;
   const expiry = instant(clamp(exp), 0);
   const horizon = instant(clamp(iat), PRESENTATION_VALIDITY * 1000 + skew);
