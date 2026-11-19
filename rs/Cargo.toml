@@ -1,6 +1,6 @@
 [package]
 name = "hop-top-pact"
-version = "1.0.0-alpha.0"
+version = "1.0.0-alpha.1"
 edition = "2024"
 rust-version = "1.88"
 description = "Rust SDK of the PACT protocol: wire types, strict JSON, JCS, digests and ES256 JWS"
