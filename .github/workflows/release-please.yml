@@ -14,7 +14,7 @@ name: release-please
 # workflows and sidestep the CODEOWNERS self-approval block). Labels come
 # from the config.
 #
-# Pin: the full commit SHA of a hop-top/.github release tag (v0.15.0, the
+# Pin: the full commit SHA of a hop-top/.github release tag (v0.19.0; v0.15.0 was the
 # first to carry the target-versioning extension), with `tooling-ref`
 # naming the same commit. The pin stays a SHA, not the moving v0 tag, so
 # the release run and the promotion replay use the same code. .github/scripts/promote-release.sh and
@@ -57,7 +57,7 @@ jobs:
     if: needs.branch-role.outputs.release == 'true'
     permissions:
       contents: read
-    uses: hop-top/.github/.github/workflows/release-please-on-push.yml@5ce6680ccde9878428ed6cfa24e0e8f635d829a1
+    uses: hop-top/.github/.github/workflows/release-please-on-push.yml@d493bd1f094e193ae836324cfe5ffc7773004997
     secrets:
       RELEASE_BOT_APP_ID: ${{ secrets.RELEASE_BOT_APP_ID }}
       RELEASE_BOT_PRIVATE_KEY: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
@@ -65,4 +65,4 @@ jobs:
       config-file: .github/release-please-config.json
       manifest-file: .github/.release-please-manifest.json
       versioning-extension: true
-      tooling-ref: 5ce6680ccde9878428ed6cfa24e0e8f635d829a1
+      tooling-ref: d493bd1f094e193ae836324cfe5ffc7773004997

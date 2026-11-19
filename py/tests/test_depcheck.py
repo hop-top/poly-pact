@@ -124,7 +124,7 @@ def test_guard_negative_control(tmp_path: Path) -> None:
     meta = root / "pyproject.toml"
     text = meta.read_text(encoding="utf-8")
     text = text.replace("dependencies = [\n", 'dependencies = [\n    "requests>=2,<3",\n', 1)
-    text = text.replace('requires = ["flit_core==4.1.0"]', 'requires = ["hatchling==1.27.0"]')
+    text = text.replace('requires = ["flit_core==4.2.0"]', 'requires = ["hatchling==1.27.0"]')
     meta.write_text(text, encoding="utf-8")
     (root / "src" / PACKAGE / "bad.py").write_text(
         "import requests\nfrom referencing._core import Resource\nimport attrs\n",

@@ -351,7 +351,7 @@ used by the Rust and PHP packages.
 | `version-check.yml` | push to role branches, every pull request | no stray release-version literal; every `spec/vX.Y` path is a manifest version |
 
 `release-please.yml` and `release-please-preflight.yml` call hop-top/.github
-at one full commit SHA, that of a release tag (v0.15.0, the first with the
+at one full commit SHA, that of a release tag (v0.19.0; v0.15.0 was the first with the
 target-versioning extension), rather than the moving `v0` tag, so the
 release run and the promotion replay use the same code;
 `promote-release.sh` reads that pin. Move both pins together.

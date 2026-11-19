@@ -68,24 +68,24 @@ The runnable program is [`test/readme-example.ts`](test/readme-example.ts).
 
 Each entry point is a subpath export. Its module comment states what it covers and the draft sections it implements; every export carries TSDoc in the shipped `.d.ts` files, which editors show inline. The sources are in [`src/`](src/).
 
-| Import | Contents |
-|---|---|
-| `@hop-top/pact` | wire object types, enums, member shapes, limits and constants |
-| `@hop-top/pact/core/strictjson` | strict JSON decoding: size, depth, duplicate names and the other checks `JSON.parse` does not make |
-| `@hop-top/pact/core/jcs` | RFC 8785 JSON canonicalization |
-| `@hop-top/pact/core/digest` | object, artifact and bytes digests (SHA-256, base64url) |
-| `@hop-top/pact/core/jws` | compact JWS signing and verification (ES256), JWKs, key sets and resolvers |
-| `@hop-top/pact/core/clock` | time windows, skew and baseline lifetimes |
-| `@hop-top/pact/core/binding` | operation context of the baseline HTTP request binding |
-| `@hop-top/pact/core/schema` | JSON Schema validation against the bundled `schema/pact.schema.json` |
-| `@hop-top/pact/adapter` | native adapter contract: the seven functions, their value types and errors |
-| `@hop-top/pact/adapter/enroll` | enrollment registry contract and binding resolver |
-| `@hop-top/pact/adapter/enroll/memory` | in-memory enrollment registry |
-| `@hop-top/pact/adapter/freshness` | age limits of a field rule against a native claim |
-| `@hop-top/pact/adapter/adaptertest` | adapter conformance suite: `runConformance` for `node:test`, `evaluateConformance` for any runner |
-| `@hop-top/pact/adapters/memory` | in-memory reference adapter |
-| `@hop-top/pact/runner/manifest` | fixture manifest reading and checks |
-| `@hop-top/pact/conformance` | evaluation-case loader for the conformance fixtures |
+| Import                                | Contents                                                                                           |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `@hop-top/pact`                       | wire object types, enums, member shapes, limits and constants                                      |
+| `@hop-top/pact/core/strictjson`       | strict JSON decoding: size, depth, duplicate names and the other checks `JSON.parse` does not make |
+| `@hop-top/pact/core/jcs`              | RFC 8785 JSON canonicalization                                                                     |
+| `@hop-top/pact/core/digest`           | object, artifact and bytes digests (SHA-256, base64url)                                            |
+| `@hop-top/pact/core/jws`              | compact JWS signing and verification (ES256), JWKs, key sets and resolvers                         |
+| `@hop-top/pact/core/clock`            | time windows, skew and baseline lifetimes                                                          |
+| `@hop-top/pact/core/binding`          | operation context of the baseline HTTP request binding                                             |
+| `@hop-top/pact/core/schema`           | JSON Schema validation against the bundled `schema/pact.schema.json`                               |
+| `@hop-top/pact/adapter`               | native adapter contract: the seven functions, their value types and errors                         |
+| `@hop-top/pact/adapter/enroll`        | enrollment registry contract and binding resolver                                                  |
+| `@hop-top/pact/adapter/enroll/memory` | in-memory enrollment registry                                                                      |
+| `@hop-top/pact/adapter/freshness`     | age limits of a field rule against a native claim                                                  |
+| `@hop-top/pact/adapter/adaptertest`   | adapter conformance suite: `runConformance` for `node:test`, `evaluateConformance` for any runner  |
+| `@hop-top/pact/adapters/memory`       | in-memory reference adapter                                                                        |
+| `@hop-top/pact/runner/manifest`       | fixture manifest reading and checks                                                                |
+| `@hop-top/pact/conformance`           | evaluation-case loader for the conformance fixtures                                                |
 
 ## Conformance
 

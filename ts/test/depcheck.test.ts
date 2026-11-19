@@ -14,7 +14,7 @@ const SRC = join(ROOT, 'src');
 
 const RUNTIME: Readonly<Record<string, string>> = { ajv: '8.20.0' };
 const DEVELOPMENT: Readonly<Record<string, string>> = {
-  '@biomejs/biome': '2.5.15',
+  '@biomejs/biome': '2.6.5',
   '@types/node': '22.20.5',
   'ajv-formats': '3.0.1',
   typescript: '7.0.2',

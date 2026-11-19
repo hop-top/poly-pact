@@ -6,7 +6,7 @@
 # install ("there is no single file to hash").
 #
 # The build backend is pinned in [build-system].requires of pyproject.toml
-# (flit_core==4.1.0); `python -m build` installs it in its own isolated
+# (flit_core==4.2.0); `python -m build` installs it in its own isolated
 # environment.
 
 # Runtime
@@ -18,14 +18,14 @@ jsonschema-specifications==2025.9.1
 rpds-py==2026.9.1
 typing-extensions==4.16.0
 cffi==2.1.1
-pycparser==3.11
+pycparser==3.12
 
 # Development
 build==1.6.1
-mypy==2.4.0
-pytest==9.1.1
+mypy==2.4.1
+pytest==9.2.0
 rfc8785==0.1.4
-ruff==0.17.1
+ruff==0.17.3
 ast-serialize==0.13.1
 colorama==0.4.6
 iniconfig==2.3.1
