@@ -1,7 +1,6 @@
 # Integration sample 04 — File access under the user's own permissions
 
-**Status:** Informative integration sample for PACT Protocol v1.0. Names, paths, groups, and policies are fictional. HTTP and profile excerpts are partial illustrations, not runnable or complete signed wire fixtures. The adapter design is deployment-specific.
-
+**Status:** Draft
 This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 

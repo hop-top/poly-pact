@@ -7,7 +7,6 @@ The draft, its JSON Schema, integration profiles and conformance fixtures.
 Read-only mirror of `spec/` in [hop-top/poly-pact](https://github.com/hop-top/poly-pact); open issues and pull requests there.
 
 **Status:** Draft
-
 The spec version and status of each version directory are in its front matter; see [Versions](#versions).
 
 PACT is a protocol for agent profiles, intent,
