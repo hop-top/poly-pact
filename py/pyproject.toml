@@ -13,7 +13,7 @@ name = "hop-top-pact"
 # PEP 440 form of the release seed 1.0.0-alpha.0 (release-please manifest).
 # release-please rewrites this line on every release in its SemVer spelling
 # (1.0.0-alpha.1), which PEP 440 accepts and normalizes (1.0.0a1).
-version = "1.0.0a0"
+version = "1.0.0-alpha.1"
 description = "Python SDK of the PACT protocol: wire types, strict JSON, JCS, digests, ES256 JWS and the native adapter contract"
 readme = "README.md"
 requires-python = ">=3.11"
