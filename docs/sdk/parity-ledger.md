@@ -2100,13 +2100,13 @@ SDK extra of the PHP SDK: `Core\Schema` (validation with `opis/json-schema` and 
 | `TypLearningEvent` | `TYP_LEARNING_EVENT` | `TYP_LEARNING_EVENT` | done |  |
 | `DefaultMaxCompactBytes` | `DEFAULT_MAX_COMPACT_BYTES` | `DEFAULT_MAX_COMPACT_BYTES` | done |  |
 | `Sign` | `sign` | `sign` | done |  |
-| `SignEd25519` | `signEd25519` | `sign_ed25519` | planned | Ed25519 is ported in neither language |
+| `SignEd25519` | `signEd25519` | `sign_ed25519` | planned | Python ported; TypeScript pending |
 | `Thumbprint` | `thumbprint` | `thumbprint` | done |  |
 | `Typs` | `typs` | `typs` | done |  |
-| `Algorithms` | `Algorithms` | `Algorithms` | planned | Python: no `Algorithms` type (ES256 only) |
-| `Algorithms.Accepts` | `Algorithms.accepts` | `Algorithms.accepts` | planned | Python: no `Algorithms` type (ES256 only) |
-| `Algorithms.NewKeySet` | `Algorithms.newKeySet` | `Algorithms.new_key_set` | planned | Python: no `Algorithms` type (ES256 only) |
-| `Algorithms.ParseJWK` | `Algorithms.parseJWK` | `Algorithms.parse_jwk` | planned | Python: no `Algorithms` type (ES256 only) |
+| `Algorithms` | `Algorithms` | `Algorithms` | planned | Python ported; TypeScript pending |
+| `Algorithms.Accepts` | `Algorithms.accepts` | `Algorithms.accepts` | planned | Python ported; TypeScript pending |
+| `Algorithms.NewKeySet` | `Algorithms.newKeySet` | `Algorithms.new_key_set` | planned | Python ported; TypeScript pending |
+| `Algorithms.ParseJWK` | `Algorithms.parseJWK` | `Algorithms.parse_jwk` | planned | Python ported; TypeScript pending |
 | `Error` | `JWSError` | `JWSError` | done |  |
 | `Error.Reason` | `JWSError.reason` | `JWSError.reason` | done |  |
 | `Error.Detail` | `JWSError.detail` | `JWSError.detail` | done |  |
@@ -2127,10 +2127,10 @@ SDK extra of the PHP SDK: `Core\Schema` (validation with `opis/json-schema` and 
 | `JWK.Alg` | `JWK.alg` | `JWK.alg` | done | JSON member name |
 | `JWK.Use` | `JWK.use` | `JWK.use` | done | JSON member name |
 | `ParseJWK` | `parseJWK` | `parse_jwk` | done |  |
-| `PublicEd25519JWK` | `publicEd25519JWK` | `public_ed25519_jwk` | planned | Ed25519 is ported in neither language |
+| `PublicEd25519JWK` | `publicEd25519JWK` | `public_ed25519_jwk` | planned | Python ported; TypeScript pending |
 | `PublicJWK` | `publicJWK` | `public_jwk` | done |  |
 | `JWK.Algorithm` | `algorithmOf(jwk)` | `JWK.algorithm` | done | TypeScript: free function, `JWK` is an interface |
-| `JWK.Ed25519PublicKey` | `ed25519PublicKeyOf(jwk)` | `JWK.ed25519_public_key` | planned | TypeScript: free function, `JWK` is an interface; Ed25519 is ported in neither language |
+| `JWK.Ed25519PublicKey` | `ed25519PublicKeyOf(jwk)` | `JWK.ed25519_public_key` | planned | TypeScript: free function, `JWK` is an interface; Python ported, TypeScript pending |
 | `JWK.PublicKey` | `publicKeyOf(jwk)` | `public_key_of(jwk)` | done | free function |
 | `KeyRequest` | `KeyRequest` | `KeyRequest` | done |  |
 | `KeyRequest.Typ` | `KeyRequest.typ` | `KeyRequest.typ` | done |  |
@@ -2207,7 +2207,7 @@ SDK extra of the PHP SDK: `Core\Schema` (validation with `opis/json-schema` and 
 | `Verifier.Typ` | `Verifier.typ` | `Verifier.typ` | done |  |
 | `Verifier.MaxCompactBytes` | `Verifier.maxCompactBytes` | `Verifier.max_compact_bytes` | done |  |
 | `Verifier.Limits` | `Verifier.limits` | `Verifier.limits` | done |  |
-| `Verifier.Algorithms` | `Verifier.algorithms` | `Verifier.algorithms` | planned | Python: no `Algorithms` type (ES256 only) |
+| `Verifier.Algorithms` | `Verifier.algorithms` | `Verifier.algorithms` | planned | Python ported; TypeScript pending |
 | `Verifier.Verify` | `Verifier.verify` | `Verifier.verify` | done |  |
 
 ## `core/strictjson`
@@ -2636,4 +2636,4 @@ SDK extra of the PHP SDK: `Core\Schema` (validation with `opis/json-schema` and 
 | `Validator.Contexts` | `Validator.contexts` | `Validator.contexts` | planned |  |
 | `Validator.Signer` | `Validator.signer` | `Validator.signer` | planned |  |
 | `Validator.Clock` | `Validator.clock` | `Validator.clock` | planned |  |
-| `Validator.Evaluate` | `Validator.evaluate` | `Validator.evaluate` | deviation | deviation: adapter calls |
+| `Validator.Evaluate` | `Validator.evaluate` | `Validator.evaluate` | deviation | deviation: adapter calls; Python takes a keyword-only `cancelled` predicate (`Callable[[], bool] \| None`) instead of the context's cancellation, and a receipt that could not be recorded is the `result` attribute of the raised error |

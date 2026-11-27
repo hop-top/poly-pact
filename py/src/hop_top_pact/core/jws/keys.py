@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import Protocol
 
 from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
 from hop_top_pact.core.jws.errors import JWSError, Reason
-from hop_top_pact.core.jws.jwk import JWK, _check_key, thumbprint
+from hop_top_pact.core.jws.jwk import JWK, _check_key, public_key_of, thumbprint
 from hop_top_pact.core.jws.typ import ALG_ES256, Role
 
 __all__ = ["KeyRequest", "KeyResolver", "KeySet", "StaticResolver", "new_key_set"]
@@ -17,23 +18,29 @@ __all__ = ["KeyRequest", "KeyResolver", "KeySet", "StaticResolver", "new_key_set
 
 @dataclass(frozen=True, slots=True)
 class _TrustedKey:
-    """A checked key: alg is the one algorithm it verifies, pub its public key."""
+    """A checked key: alg is the one algorithm it verifies; exactly one of pub (ES256) and
+    ed (Ed25519) is set."""
 
     jwk: JWK
     alg: str
-    pub: ec.EllipticCurvePublicKey
+    pub: ec.EllipticCurvePublicKey | None
+    ed: Ed25519PublicKey | None
     thumbprint: str
 
 
-def _trusted_key(k: JWK) -> _TrustedKey:
-    """Check k as parse_jwk does and keep its public key and thumbprint."""
-    pub = _check_key(k)
-    return _TrustedKey(jwk=k, alg=ALG_ES256, pub=pub, thumbprint=thumbprint(k))
+def _trusted_key(k: JWK, algs: Sequence[str] = ()) -> _TrustedKey:
+    """Check k for the algorithms algs as parse_jwk does and keep its public key and
+    thumbprint."""
+    alg = _check_key(k, algs)
+    if alg == ALG_ES256:
+        return _TrustedKey(k, alg, public_key_of(k), None, thumbprint(k))
+    return _TrustedKey(k, alg, None, k.ed25519_public_key(), thumbprint(k))
 
 
 class KeySet:
-    """A set of trusted ES256 public keys, looked up by kid. It is built from
-    configuration with new_key_set, never from an artifact; KeySet() is empty."""
+    """A set of trusted public keys, looked up by kid: ES256 keys and, in a set built by
+    Algorithms.new_key_set, Ed25519 keys. It is built from configuration with
+    new_key_set, never from an artifact; KeySet() is empty."""
 
     __slots__ = ("_keys",)
 
@@ -52,15 +59,20 @@ class KeySet:
 
 def new_key_set(*keys: JWK) -> KeySet:
     """Return the key set of keys, each checked as parse_jwk checks it, with a non-empty
-    kid unique within the set. Raises JWSError (KID_MISSING, KID_DUPLICATE, or the
+    kid unique within the set. It is the baseline, ES256 keys alone; see
+    Algorithms.new_key_set. Raises JWSError (KID_MISSING, KID_DUPLICATE, or the
     reason the key fails)."""
+    return _new_key_set((), keys)
+
+
+def _new_key_set(algs: Sequence[str], keys: Sequence[JWK]) -> KeySet:
     s = KeySet()
     for i, k in enumerate(keys):
         if not k.kid:
             raise JWSError(Reason.KID_MISSING, f"key {i} has no kid")
         if k.kid in s._keys:
             raise JWSError(Reason.KID_DUPLICATE, f"kid {k.kid!r}")
-        s._keys[k.kid] = _trusted_key(k)
+        s._keys[k.kid] = _trusted_key(k, algs)
     return s
 
 

@@ -94,10 +94,10 @@ run it with `python examples/sign_verify.py`.
 
 - The protocol is a draft. Its specification claims no interoperability suite and no
   independent security assessment.
-- ES256 is the only signature algorithm. Ed25519, optional in the draft, is not implemented:
-  `core.jws` rejects Ed25519 keys and signatures.
-- The package has no requirement contracts, holder, validator, gateway middleware, reputation
-  service or conformance runner, and no native adapter other than the in-memory one. Those are
+- ES256 is the baseline signature algorithm. Ed25519, optional in the draft, is accepted only
+  where it is negotiated (`core.jws.Algorithms`); the shared Ed25519 vectors and key fixture are
+  not yet run by this package's vector harness.
+- The package has no gateway middleware, reputation service or conformance runner, and no native adapter other than the in-memory one. Those are
   in [pact-go](https://github.com/hop-top/pact-go).
 - `adapters.memory` keeps its native stores in the process; it is the reference adapter for
   tests and the adapter conformance suite.
@@ -118,6 +118,9 @@ documented at [pkg.go.dev/hop.top/pact-go](https://pkg.go.dev/hop.top/pact-go).
 | `adapter` | the native adapter contract, with `enroll` (agent enrollment registry) and `freshness` (field-rule age limits) |
 | `adapter.adaptertest` | the adapter conformance suite |
 | `adapters.memory` | the in-memory reference adapter |
+| `contract` | requirement contract issuance (`Publisher`) and verification (`Verifier`), with the replay store |
+| `validator` | the admission validator: `Validator.evaluate` (draft 11.3, 12), receipts and their stores, `Handoff`; `evaluate` takes an optional `cancelled` predicate, polled while it runs, in place of Go's context cancellation |
+| `holder` | the agent side: negotiation, contract verification, requirement-driven disclosure and signed presentations |
 | `runner.manifest` | reading and checking the fixture manifest |
 | `conformance` | evaluation-case loading for an implementation under test |
 | `errors` | `PactError`, the root of the package's exceptions |

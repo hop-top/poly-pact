@@ -1,10 +1,12 @@
 """ES256 compact JWS profile, JWK, key resolution and RFC 7638 thumbprint (draft
 sections 7.2 and 7.3 over RFC 7515). Mirrors hop.top/pact-go/core/jws.
 
-ES256 (ECDSA P-256 and SHA-256, RFC 7518 section 3.4) is the baseline and
-the only algorithm of this package; Ed25519, which the Go package accepts
-where it is negotiated, is not implemented; thumbprint computes the RFC 8037
-thumbprint of an OKP Ed25519 key without checking its point.
+ES256 (ECDSA P-256 and SHA-256, RFC 7518 section 3.4) is the baseline.
+Ed25519 (RFC 9864 section 2.2, keys of RFC 8037 section 2) is accepted only
+where it is negotiated explicitly, by listing it in Algorithms (an empty
+Algorithms is ES256 alone); the ambiguous EdDSA identifier never matches.
+Verifier.algorithms, Algorithms.parse_jwk and Algorithms.new_key_set apply it,
+and sign_ed25519 signs under it.
 
 Verification (verify, Verifier.verify) checks a compact JWS in this order
 and stops at the first failure, raising JWSError with its Reason:
@@ -14,18 +16,19 @@ and stops at the first failure, raising JWSError with its Reason:
 2. the header segment is canonical unpadded base64url and a strict JSON
    object (core.strictjson: no duplicate members, valid Unicode, bounded
    depth);
-3. no crit, b64, jku, x5u or x5c member; alg is ES256; typ is in the draft
+3. no crit, b64, jku, x5u or x5c member; alg is one of Verifier.algorithms (ES256
+   when none are given); typ is in the draft
    7.3 table and, when Verifier.typ is set, equals it; kid, if present, is a
    string. Other members are ignored (RFC 7515 section 4);
 4. by the signer role of typ: a holder-signed artifact embeds a jwk that
-   parse_jwk accepts; any other artifact has a kid and no jwk;
+   Algorithms.parse_jwk accepts and that is a key for alg; any other artifact has a kid and no jwk;
 5. the payload segment is not empty (no detached payload), is canonical
    base64url and a strict JSON object;
 6. the signature segment is canonical base64url of exactly 64 octets;
 7. the key: for a holder, the embedded jwk's thumbprint equals the
    holder_jkt the KeyResolver expects; otherwise kid is found in the key set
    the resolver trusts for the role, and nowhere else;
-8. the ECDSA signature over the received signing input, the compact text up
+8. the signature of alg (ECDSA or Ed25519) over the received signing input, the compact text up
    to its second period. Nothing is decoded and re-encoded to rebuild it.
    cryptography's InvalidSignature, and its ValueError for R or S out of
    range, are signature-invalid. A high S is accepted: neither RFC 7518 nor
@@ -41,12 +44,14 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, replace
+from collections.abc import Callable
+from dataclasses import dataclass, field, replace
 from typing import Final
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.asymmetric.utils import (
     decode_dss_signature,
     encode_dss_signature,
@@ -54,6 +59,8 @@ from cryptography.hazmat.primitives.asymmetric.utils import (
 
 from hop_top_pact.core import strictjson
 from hop_top_pact.core.jws import base64url
+from hop_top_pact.core.jws._ed25519 import verify_ed25519
+from hop_top_pact.core.jws.alg import Algorithms
 from hop_top_pact.core.jws.errors import JWSError, Reason, reason_of
 from hop_top_pact.core.jws.jwk import (
     JWK,
@@ -61,6 +68,7 @@ from hop_top_pact.core.jws.jwk import (
     _decode_object,
     _jwk_from_object,
     parse_jwk,
+    public_ed25519_jwk,
     public_jwk,
     public_key_of,
     thumbprint,
@@ -87,6 +95,7 @@ from hop_top_pact.core.jws.typ import (
     TYP_REPUTATION,
     TYP_REQUIREMENTS,
     Role,
+    accepts,
     typ_role,
     typs,
 )
@@ -106,6 +115,7 @@ __all__ = [
     "TYP_PRESENTATION",
     "TYP_REPUTATION",
     "TYP_REQUIREMENTS",
+    "Algorithms",
     "Header",
     "JWSError",
     "KeyRequest",
@@ -118,10 +128,12 @@ __all__ = [
     "Verifier",
     "new_key_set",
     "parse_jwk",
+    "public_ed25519_jwk",
     "public_jwk",
     "public_key_of",
     "reason_of",
     "sign",
+    "sign_ed25519",
     "thumbprint",
     "typ_role",
     "typs",
@@ -152,7 +164,8 @@ class Header:
     """The protected header of a PACT JWS. All header members are protected (draft 7.2)."""
 
     alg: str = ""
-    """ES256 (draft 7.2); sign accepts it empty."""
+    """ES256 or, where it is negotiated, Ed25519 (draft 7.2); sign and sign_ed25519 accept it
+    empty."""
     typ: str = ""
     """A typ of the draft 7.3 table."""
     kid: str = ""
@@ -197,13 +210,16 @@ class Verifier:
     typ). max_compact_bytes bounds the compact serialization in UTF-8 octets;
     None or a value of 0 or less is DEFAULT_MAX_COMPACT_BYTES. limits bounds
     the strict decoding of the protected header and payload; None is the
-    strictjson default.
+    strictjson default. algorithms are the algorithms the deployment has
+    negotiated; empty is the baseline, ES256 alone. The header alg must be one of
+    them, and the key that verifies the signature must be a key of that algorithm.
     """
 
     keys: KeyResolver | None
     typ: str | None = None
     max_compact_bytes: int | None = None
     limits: strictjson.Limits | None = None
+    algorithms: Algorithms = field(default_factory=Algorithms)
 
     def verify(self, compact: str) -> ParsedJWS:
         """Run the ordered checks of the profile (see the module documentation); raise
@@ -222,13 +238,13 @@ class Verifier:
             raise JWSError(Reason.COMPACT_FORM, "empty protected header")
 
         raw_header = _segment(h64, "protected header")
-        header, role, members = _parse_header(raw_header, self.limits)
+        header, role, members = _parse_header(raw_header, self.limits, self.algorithms)
         if self.typ and header.typ != self.typ:
             raise JWSError(Reason.TYP_MISMATCH, f"typ {header.typ!r}, want {self.typ!r}")
         if role == Role.HOLDER:
             if "jwk" not in members:
                 raise JWSError(Reason.JWK_MISSING, "a holder-signed artifact embeds its public jwk")
-            k = _jwk_from_object(members["jwk"])
+            k = _jwk_from_object(members["jwk"], self.algorithms)
             _match_alg(header.alg, k)
             header = replace(header, jwk=k)
         else:
@@ -258,7 +274,12 @@ class Verifier:
         key = self._resolve(req, header.jwk)
         _match_alg(header.alg, key.jwk)
         signing_input = compact[:last]
-        if not _verify_es256(key.pub, signing_input, sig):
+        if key.pub is not None:
+            valid = _verify_es256(key.pub, signing_input, sig)
+        else:
+            assert key.ed is not None
+            valid = verify_ed25519(key.ed, signing_input, sig)
+        if not valid:
             raise JWSError(Reason.SIGNATURE_INVALID)
         return ParsedJWS(
             compact=compact,
@@ -284,7 +305,7 @@ class Verifier:
                 raise JWSError(Reason.KEY_UNAVAILABLE, "holder_jkt", e) from e
             if not want:
                 raise JWSError(Reason.KEY_UNAVAILABLE, "no expected holder_jkt")
-            k = _trusted_key(embedded)
+            k = _trusted_key(embedded, self.algorithms)
             if k.thumbprint != want:
                 raise JWSError(
                     Reason.HOLDER_JKT_MISMATCH,
@@ -316,10 +337,12 @@ def _segment(s: str, name: str) -> bytes:
         raise JWSError(Reason.BASE64_URL, name, e) from e
 
 
-def _parse_header(raw: bytes, limits: strictjson.Limits | None) -> tuple[Header, Role, JSONObject]:
+def _parse_header(
+    raw: bytes, limits: strictjson.Limits | None, algs: Algorithms
+) -> tuple[Header, Role, JSONObject]:
     """Decode the protected header strictly and check the members that do not depend on
-    the signer role. Members the profile does not define are ignored (RFC 7515
-    section 4), except the prohibited ones."""
+    the signer role: alg must be one of algs. Members the profile does not define are
+    ignored (RFC 7515 section 4), except the prohibited ones."""
     try:
         m = _decode_object(raw, limits)
     except strictjson.StrictJSONError as e:
@@ -328,7 +351,7 @@ def _parse_header(raw: bytes, limits: strictjson.Limits | None) -> tuple[Header,
         if name in m:
             raise JWSError(reason, "member " + name)
     alg = m.get("alg")
-    if alg != ALG_ES256:
+    if not isinstance(alg, str) or not accepts(algs, alg):
         raise JWSError(Reason.ALG_UNSUPPORTED, _describe("alg", m))
     typ = m.get("typ")
     role = typ_role(typ) if isinstance(typ, str) else None
@@ -337,7 +360,7 @@ def _parse_header(raw: bytes, limits: strictjson.Limits | None) -> tuple[Header,
     kid = m.get("kid", "")
     if not isinstance(kid, str):
         raise JWSError(Reason.HEADER_JSON, "kid is not a string")
-    return Header(alg=ALG_ES256, typ=typ, kid=kid), role, m
+    return Header(alg=alg, typ=typ, kid=kid), role, m
 
 
 def _describe(name: str, m: JSONObject) -> str:
@@ -430,7 +453,41 @@ def sign(header: Header, payload: bytes, key: ec.EllipticCurvePrivateKey | None)
         own = public_jwk(key.public_key())
     except JWSError as e:
         raise JWSError(Reason.SIGNING_KEY, "not a P-256 key", e) from e
-    if header.alg and header.alg != ALG_ES256:
+
+    def sign_es256(signing_input: str) -> bytes:
+        r, s = decode_dss_signature(
+            key.sign(signing_input.encode("ascii"), ec.ECDSA(hashes.SHA256()))
+        )
+        if s > _N >> 1:
+            s = _N - s
+        return r.to_bytes(_COORDINATE_OCTETS, "big") + s.to_bytes(_COORDINATE_OCTETS, "big")
+
+    return _sign(header, payload, ALG_ES256, own, sign_es256)
+
+
+def sign_ed25519(header: Header, payload: bytes, key: Ed25519PrivateKey | None) -> str:
+    """sign for a deployment that has negotiated Ed25519 (draft 7.2): the header alg is
+    written as Ed25519 (RFC 9864 section 2.2), header.alg may be empty or Ed25519, and an
+    embedded holder jwk is the OKP key of RFC 8037 section 2. Ed25519 signatures are
+    deterministic (RFC 8032 section 5.1.6), so the same input always gives the same
+    compact JWS. Raises JWSError."""
+    if not isinstance(key, Ed25519PrivateKey):
+        raise JWSError(Reason.SIGNING_KEY, "no Ed25519 private key")
+    try:
+        own = public_ed25519_jwk(key.public_key())
+    except JWSError as e:
+        raise JWSError(Reason.SIGNING_KEY, "", e) from e
+    return _sign(
+        header, payload, ALG_ED25519, own, lambda signing_input: key.sign(signing_input.encode())
+    )
+
+
+def _sign(
+    header: Header, payload: bytes, alg: str, own: JWK, sign_fn: Callable[[str], bytes]
+) -> str:
+    """Write the header for alg, check header against the signer's public JWK own and sign
+    the signing input with sign_fn."""
+    if header.alg and header.alg != alg:
         raise JWSError(Reason.ALG_UNSUPPORTED, "alg " + header.alg)
     role = typ_role(header.typ)
     if role is None:
@@ -440,8 +497,12 @@ def sign(header: Header, payload: bytes, key: ec.EllipticCurvePrivateKey | None)
         embedded = own
         if header.jwk is not None:
             given = thumbprint(header.jwk)
-            _check_usage(header.jwk, ALG_ES256)
-            if given != thumbprint(own):
+            _check_usage(header.jwk, alg)
+            try:
+                own_jkt = thumbprint(own)
+            except JWSError as e:
+                raise JWSError(Reason.SIGNING_KEY, "", e) from e
+            if given != own_jkt:
                 raise JWSError(Reason.SIGNING_KEY, "jwk is not the public key of the signing key")
             embedded = header.jwk
     else:
@@ -457,10 +518,6 @@ def sign(header: Header, payload: bytes, key: ec.EllipticCurvePrivateKey | None)
     except strictjson.StrictJSONError as e:
         raise JWSError(Reason.PAYLOAD_JSON, "", e) from e
 
-    text = _header_text(ALG_ES256, header.typ, header.kid, embedded)
+    text = _header_text(alg, header.typ, header.kid, embedded)
     signing_input = base64url.encode(text) + "." + base64url.encode(payload)
-    r, s = decode_dss_signature(key.sign(signing_input.encode("ascii"), ec.ECDSA(hashes.SHA256())))
-    if s > _N >> 1:
-        s = _N - s
-    sig = r.to_bytes(_COORDINATE_OCTETS, "big") + s.to_bytes(_COORDINATE_OCTETS, "big")
-    return signing_input + "." + base64url.encode(sig)
+    return signing_input + "." + base64url.encode(sign_fn(signing_input))
