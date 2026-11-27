@@ -3,7 +3,7 @@
 The import name is ``hop_top_pact``; ``pact`` belongs to the unrelated
 ``pact-python`` distribution. Subpackages mirror the Go import paths of
 ``hop.top/pact-go``: ``core``, ``core.jws``, ``core.binding``, ``adapter``,
-``adapter.adaptertest``, ``adapters.memory``, ``contract`` and ``runner.manifest``.
+``adapter.adaptertest``, ``adapters.memory``, ``contract``, ``holder`` and ``runner.manifest``.
 """
 
 from importlib.metadata import version as _version

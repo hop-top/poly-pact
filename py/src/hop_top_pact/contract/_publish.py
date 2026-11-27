@@ -12,7 +12,6 @@ from typing import Final, Protocol
 from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePrivateKey
 
 from hop_top_pact.adapter import BindingStatus, Code, Realm
-from hop_top_pact.contract import _wire
 from hop_top_pact.contract._errors import (
     CODE_REPLAY,
     CODE_SECURITY_HOLD,
@@ -27,7 +26,7 @@ from hop_top_pact.contract._types import (
     ThresholdRule,
 )
 from hop_top_pact.contract._validate import REPUTATION_PREFIX, bounded, validate, within
-from hop_top_pact.core import VERSION, clock, digest, jws
+from hop_top_pact.core import VERSION, _wire, clock, digest, jws
 from hop_top_pact.core.enums import RuleSource
 from hop_top_pact.core.jws import base64url
 from hop_top_pact.core.types import (

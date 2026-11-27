@@ -26,8 +26,9 @@ from cryptography.hazmat.primitives.asymmetric.ec import (
     EllipticCurvePrivateKey,
     derive_private_key,
 )
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from hop_top_pact import contract
+from hop_top_pact import contract, holder
 from hop_top_pact.adapter import (
     AgentBinding,
     BindingStatus,
@@ -39,7 +40,7 @@ from hop_top_pact.adapter import (
     Realm,
 )
 from hop_top_pact.adapter.adaptertest import RealmJSON
-from hop_top_pact.core import jcs, jws, strictjson
+from hop_top_pact.core import _wire, jcs, jws, strictjson
 from hop_top_pact.core.binding import RawRequest
 from hop_top_pact.core.clock import FakeClock
 from hop_top_pact.core.enums import (
@@ -51,11 +52,14 @@ from hop_top_pact.core.enums import (
     Severity,
 )
 from hop_top_pact.core.types import (
+    AgentProfile,
     Attribution,
     ContractRequest,
+    Evidence,
     Intent,
     OperationContext,
     ReputationContext,
+    ReputationSnapshot,
     RequirementContract,
 )
 from hop_top_pact.errors import PactError
@@ -1161,6 +1165,9 @@ class ContractKit:
     def fixture_key_set(self, *names: str) -> jws.KeySet:
         return jws.new_key_set(*(jws.parse_jwk(self.fixture(f"keys/{n}.jwk.json")) for n in names))
 
+    def fixture_jwk(self, name: str) -> jws.JWK:
+        return jws.parse_jwk(self.fixture(f"keys/{name}.jwk.json"))
+
     def issuer_signer(self) -> contract.ES256Signer:
         """Signs as the requirement publisher of the fixtures: scalar 2, kid test-issuer-key-1."""
         return contract.ES256Signer(kid="test-issuer-key-1", key=self.scalar_key(2))
@@ -1283,3 +1290,308 @@ class ContractKit:
 @pytest.fixture
 def ck() -> ContractKit:
     return ContractKit()
+
+
+class HolderKit:
+    """The shared helpers of the holder tests, as the fixture ``hk``: the port of
+    go/holder/helpers_test.go over the Appendix B context of ContractKit."""
+
+    B_CONTRACT_EXP = 1792080060
+    B_REPUTATION = "https://reputation.example/finance"
+    B_PRESENTATION_ID = "v6wxT-_cB0Ua8Xkqgcuu2g"
+    B_PROFILE_DIGEST = "b6pNI8i5pX5MtuxkaBw0M-4tmzdkGsHVS_Kyji7_uOU"
+    VALID = "admission/valid/"
+
+    def __init__(self, ck: ContractKit) -> None:
+        self.ck = ck
+
+    def ed_key(self) -> Ed25519PrivateKey:
+        """The Ed25519 test key of spec/v1.0/fixtures/keys/test-private-scalars.json."""
+        f = json.loads(self.ck.fixture("keys/test-private-scalars.json"))
+        for k in f["keys"]:
+            if k.get("kty") == "OKP":
+                return Ed25519PrivateKey.from_private_bytes(jws.base64url.decode(k["d"]))
+        pytest.fail("no Ed25519 test key")
+
+    def memory_key(self, n: int) -> holder.MemoryKey:
+        return holder.MemoryKey.es256(self.ck.scalar_key(n))
+
+    def key_set(self, algs: jws.Algorithms, *names: str) -> jws.KeySet:
+        return algs.new_key_set(
+            *(algs.parse_jwk(self.ck.fixture(f"keys/{n}.jwk.json")) for n in names)
+        )
+
+    def b_holder(self, keys: holder.KeySource) -> holder.Holder:
+        """The B.4 agent with the holder key (scalar 1), presenting to the finance gateway
+        and trusting the finance publisher (the issuer key)."""
+        ck = self.ck
+        return holder.Holder(
+            agent_id=ck.B4_AGENT,
+            keys=keys,
+            gateway=ck.B4_GATEWAY,
+            realm=ck.B4_REALM,
+            publishers={ck.B4_PUBLISHER: self.key_set(jws.Algorithms(), "issuer")},
+            skew=timedelta(seconds=5),
+        )
+
+    def b_intent(self) -> Intent:
+        return strictjson.decode(self.ck.draft_block("B.2"), Intent)
+
+    def b_operation(self) -> OperationContext:
+        return strictjson.decode(self.ck.draft_block("B.3"), OperationContext)
+
+    def b_profile(self) -> AgentProfile:
+        return strictjson.decode(self.ck.draft_block("B.1"), AgentProfile)
+
+    def source_profile(self) -> AgentProfile:
+        """What the agent holds before disclosure: the B.1 core fields and attributes,
+        without the reputation value (the snapshot supplies it, draft 15.2), plus
+        attributes no B.4 rule asks for."""
+        p = self.b_profile()
+        attrs = {k: v for k, v in p.attributes.items() if k != "reputation"}
+        attrs["environment"] = {
+            "principal_id": "https://identity.example/principals/alice",
+            "roles": ("finance-reader",),
+            "display_name": "Invoice assistant",
+        }
+        attrs["capabilities"] = {"languages": ("en", "fr")}
+        attrs["runtime"] = {"isolation": "managed", "host": "build-17"}
+        return replace(p, attributes=attrs)
+
+    def b_input(self) -> holder.Input:
+        """The input of the Appendix B presentation: the fixture's signed B.4 contract, B.5
+        evidence and B.6 snapshot, the B.2 intent, the B.3 operation and the source
+        profile."""
+        ck = self.ck
+        return holder.Input(
+            contract=ck.compact_of(self.VALID + "signed/contract.jws"),
+            intent=self.b_intent(),
+            operation=self.b_operation(),
+            profile=self.source_profile(),
+            evidence=(ck.compact_of(self.VALID + "signed/evidence/runtime.jws"),),
+            reputation=ck.compact_of(self.VALID + "signed/reputation.jws"),
+        )
+
+    @staticmethod
+    def jti_random(v: str) -> Callable[[int], bytes]:
+        """The random source that yields the jti v (its 16 octets)."""
+        b = jws.base64url.decode(v)
+        return lambda n: b[:n]
+
+    def sign_evidence(self, n: int, kid: str, e: Evidence) -> str:
+        return jws.sign(
+            jws.Header(typ=jws.TYP_EVIDENCE, kid=kid), _wire.payload(e), self.ck.scalar_key(n)
+        )
+
+    def b_evidence(self) -> Evidence:
+        return strictjson.decode(self.ck.draft_block("B.5"), Evidence)
+
+    def issue(
+        self,
+        store: contract.ReplayStore,
+        holder_jkt: str,
+        r: contract.Requirements,
+        op: OperationContext,
+        now: datetime,
+    ) -> contract.Contract:
+        """Have the finance publisher issue a contract at now for op and the B.2 intent,
+        bound to holder_jkt, registering its nonce in store."""
+        ck = self.ck
+        p = ck.new_publisher(store)
+        auth = contract.Authenticated(
+            principal=Principal(
+                id=ck.B4_PRINCIPAL,
+                realm=ck.B4_REALM,
+                workload="workload:invoice-assistant",
+                authenticated_at=now,
+            ),
+            binding=AgentBinding(
+                agent_id=ck.B4_AGENT,
+                operator_id=ck.B4_OPERATOR,
+                holder_jkt=holder_jkt,
+                status=BindingStatus.ACTIVE,
+                observed_at=now,
+                status_checked_at=now,
+                source_id="enrollment",
+            ),
+        )
+        req = ContractRequest(
+            agent_id=ck.B4_AGENT, holder_jkt=holder_jkt, intent=self.b_intent(), operation=op
+        )
+        c: contract.Contract = p.issue(req, auth, r, now)
+        return c
+
+    def sign_snapshot_with(
+        self, typ: str, edit: Callable[[ReputationSnapshot], ReputationSnapshot]
+    ) -> str:
+        """The B.6 snapshot, edited, signed under the reputation service key (scalar 4)
+        with header typ typ."""
+        s = edit(strictjson.decode(self.ck.draft_block("B.6"), ReputationSnapshot))
+        return jws.sign(
+            jws.Header(typ=typ, kid="test-reputation-service-key-1"),
+            _wire.payload(s),
+            self.ck.scalar_key(4),
+        )
+
+    def sign_snapshot_for(self, iat: int, jkt: str) -> str:
+        return self.sign_snapshot_with(
+            jws.TYP_REPUTATION,
+            lambda s: replace(s, holder_jkt=jkt, iat=iat, nbf=iat, exp=iat + 300),
+        )
+
+    def gateway_run(
+        self,
+        compact: str,
+        *,
+        enrolled: jws.JWK,
+        actual: OperationContext,
+        now: datetime,
+        algs: jws.Algorithms | None = None,
+    ) -> tuple[Any, contract.NonceRecord]:
+        """The presentation checks of draft 11.2 and 11.3 that the packages implement,
+        applied independently of package holder: the holder signature under the enrolled
+        holder_jkt (step 2), the contract (step 3), the presentation time bounds and nonce
+        association (step 4), the operation and intent binding against the actual operation
+        (step 5), the profile's subject, holder and tenant (step 6), and the signatures of
+        the embedded evidence and snapshot (steps 7 and 9). Raise ValueError naming the
+        step that fails; return the decoded presentation and the nonce record the
+        presentation binds."""
+        from hop_top_pact.core import clock, digest
+        from hop_top_pact.core.types import Presentation
+
+        ck = self.ck
+        algs = algs or jws.Algorithms()
+        try:
+            parsed = jws.Verifier(
+                keys=jws.StaticResolver(expected_holder_jkt=jws.thumbprint(enrolled)),
+                typ=jws.TYP_PRESENTATION,
+                algorithms=algs,
+            ).verify(compact)
+        except jws.JWSError as e:
+            raise ValueError(f"step 2 signature: {e}") from e
+        p = strictjson.decode(parsed.payload, Presentation)
+        if p.pact_version != "0.1":
+            raise ValueError(f"step 1 version {p.pact_version!r}")
+        if not (
+            p.iss == p.profile.agent_id
+            and p.sub == p.profile.agent_id
+            and p.aud == ck.B4_GATEWAY
+            and p.tenant_id == ck.B4_TENANT
+        ):
+            raise ValueError("11.2 iss, sub, aud or tenant")
+        v = contract.Verifier(
+            publishers={ck.B4_PUBLISHER: self.key_set(jws.Algorithms(), "issuer")},
+            skew=timedelta(seconds=5),
+        )
+        try:
+            c = v.verify(p.contract, now)
+            c.check(contract.Expect(agent_id=p.sub, audience=ck.B4_GATEWAY, realm=ck.B4_REALM))
+            c.check_active(ck.b4_policy())
+        except contract.ContractError as e:
+            raise ValueError(f"step 3 contract: {e}") from e
+        try:
+            clock.check_presentation(p.iat, p.nbf, p.exp, now, timedelta(seconds=5))
+        except clock.ClockError as e:
+            raise ValueError(f"step 4 time: {e}") from e
+        if p.nonce != c.claims.nonce:
+            raise ValueError("step 4 nonce differs from the contract's")
+        if (
+            parsed.key_thumbprint != c.claims.holder_jkt
+            or p.profile.holder_jkt != c.claims.holder_jkt
+        ):
+            raise ValueError("11.2 key, profile and contract holder_jkt differ")
+        actual_digest = digest.object_digest(actual)
+        if (
+            actual_digest != c.claims.operation_digest
+            or digest.object_digest(p.operation) != c.claims.operation_digest
+        ):
+            raise ValueError("step 5 operation digest differs")
+        if digest.object_digest(p.intent) != c.claims.intent_digest:
+            raise ValueError("step 5 intent digest differs")
+        if p.profile.agent_id != c.claims.sub or p.profile.tenant_id != c.claims.tenant_id:
+            raise ValueError("step 6 profile subject or tenant")
+        try:
+            clock.check_window(
+                p.profile.created_at,
+                p.profile.created_at,
+                p.profile.expires_at,
+                now,
+                timedelta(seconds=5),
+            )
+        except clock.ClockError as e:
+            raise ValueError(f"step 6 profile age: {e}") from e
+        issuers = jws.StaticResolver(
+            key_sets={
+                jws.Role.ISSUER: self.key_set(jws.Algorithms(), "issuer"),
+                jws.Role.REPUTATION_SERVICE: self.key_set(jws.Algorithms(), "reputation-service"),
+            }
+        )
+        try:
+            for ev in p.evidence:
+                jws.Verifier(keys=issuers, typ=jws.TYP_EVIDENCE).verify(ev)
+            if p.reputation is not None:
+                jws.Verifier(keys=issuers, typ=jws.TYP_REPUTATION).verify(p.reputation)
+        except jws.JWSError as e:
+            raise ValueError(f"step 7/9 embedded artifact: {e}") from e
+        rec = contract.NonceRecord(
+            nonce=p.nonce,
+            agent_id=p.sub,
+            holder_jkt=parsed.key_thumbprint,
+            realm=Realm(tenant_id=p.tenant_id, environment_id=p.operation.environment_id),
+            operation_digest=actual_digest,
+            requirements_digest=c.digest,
+        )
+        return p, rec
+
+    @staticmethod
+    @contextmanager
+    def raises(code: str, kind: str = "") -> Iterator[None]:
+        """The block raises a HolderError of code and kind, and of no other."""
+        with pytest.raises(holder.HolderError) as ei:
+            yield
+        assert (ei.value.code, ei.value.kind) == (code, kind), f"error {ei.value}"
+
+
+@pytest.fixture
+def hk(ck: ContractKit) -> HolderKit:
+    return HolderKit(ck)
+
+
+class CountingKey:
+    """A KeySource that counts its signatures and can sign with another key than the one it
+    advertises."""
+
+    def __init__(self, public: holder.KeySource, signer: holder.KeySource) -> None:
+        self.public = public
+        self.signer = signer
+        self.signs = 0
+
+    def public_jwk(self) -> jws.JWK:
+        return self.public.public_jwk()
+
+    def sign(self, signing_input: bytes) -> bytes:
+        self.signs += 1
+        return self.signer.sign(signing_input)
+
+
+class FailingKey:
+    """A KeySource whose signer is unavailable."""
+
+    def __init__(self, public: holder.KeySource) -> None:
+        self.public = public
+
+    def public_jwk(self) -> jws.JWK:
+        return self.public.public_jwk()
+
+    def sign(self, signing_input: bytes) -> bytes:
+        raise RuntimeError("keychain locked")
+
+
+@pytest.fixture
+def counting_key() -> type[CountingKey]:
+    return CountingKey
+
+
+@pytest.fixture
+def failing_key() -> type[FailingKey]:
+    return FailingKey
