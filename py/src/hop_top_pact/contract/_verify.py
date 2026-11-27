@@ -14,7 +14,7 @@ from hop_top_pact.contract._types import Contract
 from hop_top_pact.contract._validate import validate
 from hop_top_pact.core import clock, digest, jws, strictjson
 from hop_top_pact.core.clock import ClockError, ClockErrorKind
-from hop_top_pact.core.jws import KeyRequest, KeySet, Reason
+from hop_top_pact.core.jws import Algorithms, KeyRequest, KeySet, Reason
 from hop_top_pact.core.types import RequirementContract
 
 __all__ = ["Verifier"]
@@ -53,11 +53,12 @@ class Verifier:
     publishers maps the iss of each gateway-authorized requirement publisher to the
     keys its trust record holds (draft 7.3: iss selects a trust record). A contract
     whose iss is not a key of the map has no trusted key. skew is the allowed clock
-    skew, 0 to 5 s (draft 7.5); zero allows none. The signature algorithm is ES256
-    alone, as in core.jws.
+    skew, 0 to 5 s (draft 7.5); zero allows none. algorithms are the negotiated JWS
+    algorithms; empty is ES256 alone.
     """
 
     publishers: Mapping[str, KeySet] = field(default_factory=dict)
+    algorithms: Algorithms = field(default_factory=Algorithms)
     skew: timedelta = timedelta(0)
 
     def verify(self, compact: str, now: datetime) -> Contract:
@@ -81,7 +82,9 @@ class Verifier:
             raise ValueError(f"contract: skew {self.skew} outside 0 to {clock.BASELINE_SKEW}")
         try:
             parsed = jws.Verifier(
-                keys=_PublisherKeys(self.publishers), typ=jws.TYP_REQUIREMENTS
+                keys=_PublisherKeys(self.publishers),
+                typ=jws.TYP_REQUIREMENTS,
+                algorithms=self.algorithms,
             ).verify(compact)
         except jws.JWSError as e:
             code: str = Code.INVALID_PROOF

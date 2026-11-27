@@ -94,8 +94,9 @@ run it with `python examples/sign_verify.py`.
 
 - The protocol is a draft. Its specification claims no interoperability suite and no
   independent security assessment.
-- ES256 is the only signature algorithm. Ed25519, optional in the draft, is not implemented:
-  `core.jws` rejects Ed25519 keys and signatures.
+- ES256 is the baseline signature algorithm. Ed25519, optional in the draft, is accepted only
+  where it is negotiated (`core.jws.Algorithms`); the shared Ed25519 vectors and key fixture are
+  not yet run by this package's vector harness.
 - The package has no holder, validator, gateway middleware, reputation service or conformance
   runner, and no native adapter other than the in-memory one. Those are
   in [pact-go](https://github.com/hop-top/pact-go).

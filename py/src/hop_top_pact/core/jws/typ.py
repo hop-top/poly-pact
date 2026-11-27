@@ -3,6 +3,7 @@ go/core/jws/typ.go and the algorithm constants of alg.go."""
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from enum import StrEnum
 from typing import Final
 
@@ -19,17 +20,17 @@ __all__ = [
     "TYP_REPUTATION",
     "TYP_REQUIREMENTS",
     "Role",
+    "accepts",
     "typ_role",
     "typs",
 ]
 
 ALG_ES256: Final = "ES256"
-"""ES256 (ECDSA P-256 and SHA-256, RFC 7518 section 3.4): the baseline, and the only
-algorithm this package signs and verifies."""
+"""ES256 (ECDSA P-256 and SHA-256, RFC 7518 section 3.4): the baseline algorithm."""
 
 ALG_ED25519: Final = "Ed25519"
 """The fully specified Ed25519 identifier (RFC 9864 section 2.2), accepted by the Go
-package only where it is negotiated. This package does not implement it."""
+package and this one only where it is negotiated (see Algorithms)."""
 
 
 class Role(StrEnum):
@@ -91,3 +92,15 @@ def typ_role(typ: str) -> Role | None:
 def typs() -> tuple[str, ...]:
     """Return the typ values of the draft 7.3 table, in its order."""
     return tuple(t for t, _ in _TYP_TABLE)
+
+
+def accepts(algs: Iterable[str], alg: str) -> bool:
+    """Report whether alg is an algorithm of algs: ES256 or Ed25519, and listed in algs, or
+    ES256 when algs is empty. Any other identifier, the ambiguous EdDSA included, never
+    matches."""
+    if alg not in (ALG_ES256, ALG_ED25519):
+        return False
+    listed = tuple(algs)
+    if not listed:
+        return alg == ALG_ES256
+    return alg in listed

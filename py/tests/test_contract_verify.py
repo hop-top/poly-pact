@@ -421,3 +421,28 @@ def test_malformed_jws(ck: Any, name: str) -> None:
 def test_payload_is_the_b4_contract_json(ck: Any) -> None:
     compact = ck.compact_of(ck.VALID_CONTRACT)
     assert json.loads(ck.segment(compact, 1)) == json.loads(ck.draft_block("B.4"))
+
+
+def test_negotiated_ed25519_publisher(ck: Any) -> None:
+    # A contract signed under Ed25519 verifies only where the verifier negotiated it.
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+    seed = "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60"
+    key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(seed))
+    compact = ck.compact_of(ck.VALID_CONTRACT)
+    signed = jws.sign_ed25519(
+        jws.Header(typ=jws.TYP_REQUIREMENTS, kid="test-ed25519-key-1"), ck.segment(compact, 1), key
+    )
+    negotiated = jws.Algorithms((jws.ALG_ES256, jws.ALG_ED25519))
+    jwk = negotiated.parse_jwk(ck.fixture("keys/ed25519.jwk.json"))
+    keys = negotiated.new_key_set(jwk)
+    publishers = {ck.B4_PUBLISHER: keys}
+    skew = timedelta(seconds=5)
+    v = contract.Verifier(publishers=publishers, algorithms=negotiated, skew=skew)
+    assert v.verify(signed, ck.at(ck.B4_TIME)).claims.sub == ck.B4_AGENT
+    with ck.raises(Code.INVALID_MESSAGE):
+        contract.Verifier(publishers=publishers, skew=skew).verify(signed, ck.at(ck.B4_TIME))
+    # An ES256 contract still verifies under the negotiated set of keys of both kinds.
+    both = negotiated.new_key_set(ck.fixture_key_set("issuer").lookup("test-issuer-key-1"), jwk)
+    v = contract.Verifier(publishers={ck.B4_PUBLISHER: both}, algorithms=negotiated, skew=skew)
+    v.verify(compact, ck.at(ck.B4_TIME))

@@ -1,22 +1,25 @@
 """Public JSON Web Keys of the profile and RFC 7638 thumbprints. Mirrors
-go/core/jws/jwk.go for EC P-256 keys."""
+go/core/jws/jwk.go and the Ed25519 part of alg.go."""
 
 from __future__ import annotations
 
 import hashlib
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Final
 
 from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 from hop_top_pact.core import strictjson
 from hop_top_pact.core.jws import base64url
+from hop_top_pact.core.jws._ed25519 import check_ed25519_point
 from hop_top_pact.core.jws.errors import JWSError, Reason
-from hop_top_pact.core.jws.typ import ALG_ED25519, ALG_ES256
+from hop_top_pact.core.jws.typ import ALG_ED25519, ALG_ES256, accepts
 from hop_top_pact.core.types import JSONObject, JSONValue
 
-__all__ = ["JWK", "parse_jwk", "public_jwk", "public_key_of", "thumbprint"]
+__all__ = ["JWK", "parse_jwk", "public_ed25519_jwk", "public_jwk", "public_key_of", "thumbprint"]
 
 # The private key members of RFC 7518 section 6: EC d, RSA d, p, q, dp, dq, qi,
 # oth, and the symmetric k.
@@ -30,10 +33,11 @@ _COORDINATE_OCTETS: Final = 32
 @dataclass(frozen=True, slots=True)
 class JWK:
     """A public key in JSON Web Key form (RFC 7517): an EC P-256 key (RFC 7518 section
-    6.2.1). An empty string is an absent member; kid, alg and use are optional.
+    6.2.1) or, where Ed25519 is negotiated, an OKP Ed25519 key (RFC 8037 section 2). An
+    empty string is an absent member; kid, alg and use are optional.
 
     A JWK built in Python is checked when it is used: by public_key_of,
-    thumbprint, new_key_set and sign.
+    ed25519_public_key, thumbprint, new_key_set and sign.
     """
 
     kty: str = ""
@@ -57,9 +61,18 @@ class JWK:
             f"kty {self.kty!r} crv {self.crv!r}, want EC P-256 or, when negotiated, OKP Ed25519",
         )
 
+    def ed25519_public_key(self) -> Ed25519PublicKey:
+        """Check kty, crv and x of an OKP Ed25519 key (RFC 8037 section 2: x is the 32-octet
+        public key, there is no y) and return the key. x must decode as a point of
+        edwards25519 (RFC 8032 section 5.1.3) in the subgroup of prime order L, [L]A the
+        identity, so neither of small nor of mixed order; otherwise JWSError(JWK_OFF_CURVE).
+        kid, alg and use are not looked at."""
+        return Ed25519PublicKey.from_public_bytes(_okp_x(self))
+
 
 def parse_jwk(data: bytes) -> JWK:
-    """Strict-parse the JWK text data and check that it is a usable ES256 public key.
+    """Strict-parse the JWK text data and check that it is a usable ES256 public key (the
+    baseline; Algorithms.parse_jwk also accepts an Ed25519 key).
 
     A strict JSON object (draft 7.1) without private members, kty EC, crv
     P-256, x and y the canonical unpadded base64url of 32 octets each and
@@ -69,11 +82,15 @@ def parse_jwk(data: bytes) -> JWK:
     does not define for this use are ignored (RFC 7517 section 4). Raises
     JWSError.
     """
+    return _parse_jwk(data, ())
+
+
+def _parse_jwk(data: bytes, algs: Sequence[str]) -> JWK:
     try:
         m = _decode_object(data)
     except strictjson.StrictJSONError as e:
         raise JWSError(Reason.JWK_INVALID, "not a strict JSON object", e) from e
-    return _jwk_from_object(m)
+    return _jwk_from_object(m, algs)
 
 
 def _decode_object(data: bytes, limits: strictjson.Limits | None = None) -> JSONObject:
@@ -82,8 +99,9 @@ def _decode_object(data: bytes, limits: strictjson.Limits | None = None) -> JSON
     return strictjson.decode(data, JSONObject, limits)  # type: ignore[type-abstract]
 
 
-def _jwk_from_object(m: JSONValue) -> JWK:
-    """parse_jwk for a value already strict-parsed, such as the jwk member of a header."""
+def _jwk_from_object(m: JSONValue, algs: Sequence[str] = ()) -> JWK:
+    """parse_jwk for a value already strict-parsed, such as the jwk member of a header, for
+    the algorithms algs."""
     if not isinstance(m, Mapping):
         raise JWSError(Reason.JWK_INVALID, "not a strict JSON object")
     for name in _PRIVATE_MEMBERS:
@@ -98,7 +116,7 @@ def _jwk_from_object(m: JSONValue) -> JWK:
             raise JWSError(Reason.JWK_INVALID, name + " is not a string")
         values[name] = v
     k = JWK(**values)
-    _check_key(k)
+    _check_key(k, algs)
     if "key_ops" in m:
         _check_key_ops(m["key_ops"])
     return k
@@ -116,15 +134,18 @@ def _check_key_ops(ops: JSONValue) -> None:
         raise JWSError(Reason.JWK_USAGE, f"key_ops {list(ops)!r} does not name verify")
 
 
-def _check_key(k: JWK) -> ec.EllipticCurvePublicKey:
-    """Check that k is a key for ES256 with valid material and fitting alg and use;
-    return its public key. An Ed25519 key is refused as not negotiated."""
+def _check_key(k: JWK, algs: Sequence[str] = ()) -> str:
+    """Return the algorithm of k after checking that algs accepts it, that the key material
+    is valid for it, and that alg and use, when present, are that algorithm and sig."""
     alg = k.algorithm()
-    if alg != ALG_ES256:
+    if not accepts(algs, alg):
         raise JWSError(Reason.JWK_CURVE, f"kty {k.kty!r} crv {k.crv!r}: {alg} is not negotiated")
-    pub = public_key_of(k)
+    if alg == ALG_ES256:
+        public_key_of(k)
+    else:
+        k.ed25519_public_key()
     _check_usage(k, alg)
-    return pub
+    return alg
 
 
 def _check_usage(k: JWK, alg: str) -> None:
@@ -188,9 +209,7 @@ def thumbprint(k: JWK) -> str:
     space: {"crv":...,"kty":...,"x":...,"y":...} for an EC key and
     {"crv":...,"kty":...,"x":...} for an OKP key (RFC 8037 Appendix A.3).
     Optional members do not enter it. k must be a valid P-256 key (see
-    public_key_of) or an OKP Ed25519 key with no y and an x of 32 octets in
-    canonical base64url; the point of an Ed25519 key is not checked, which
-    the Go package does (this package has no Ed25519). The values are hashed
+    public_key_of) or Ed25519 key (see JWK.ed25519_public_key). The values are hashed
     as written: base64url and fixed ASCII names, so nothing needs JSON
     escaping (RFC 7638 section 3.3).
     """
@@ -204,7 +223,10 @@ def thumbprint(k: JWK) -> str:
 
 
 def _okp_x(k: JWK) -> bytes:
-    """The x of an OKP Ed25519 key (RFC 8037 section 2): no y, 32 octets."""
+    """The x of an OKP Ed25519 key (RFC 8037 section 2): kty OKP and crv Ed25519, no y,
+    32 octets, and a point of edwards25519 in the subgroup of prime order L."""
+    if k.kty != "OKP" or k.crv != "Ed25519":
+        raise JWSError(Reason.JWK_CURVE, f"kty {k.kty!r} crv {k.crv!r}, want OKP Ed25519")
     if k.y:
         raise JWSError(Reason.JWK_INVALID, "an OKP key has no y")
     try:
@@ -213,4 +235,17 @@ def _okp_x(k: JWK) -> bytes:
         raise JWSError(Reason.JWK_INVALID, "x is not canonical base64url", e) from e
     if len(b) != _COORDINATE_OCTETS:
         raise JWSError(Reason.JWK_INVALID, f"x has {len(b)} octets, want {_COORDINATE_OCTETS}")
+    try:
+        check_ed25519_point(b)
+    except ValueError as e:
+        raise JWSError(Reason.JWK_OFF_CURVE, "x is " + str(e)) from e
     return b
+
+
+def public_ed25519_jwk(key: Ed25519PublicKey | None) -> JWK:
+    """Return the OKP JWK of the Ed25519 public key key (RFC 8037 section 2), with no
+    optional members."""
+    if not isinstance(key, Ed25519PublicKey):
+        raise JWSError(Reason.JWK_INVALID, "no Ed25519 public key")
+    raw = key.public_bytes(Encoding.Raw, PublicFormat.Raw)
+    return JWK(kty="OKP", crv="Ed25519", x=base64url.encode(raw))
