@@ -14,9 +14,31 @@ from __future__ import annotations
 from typing import Final
 
 from hop_top_pact.contract import SELECTION_CONSISTENCY_CHECK
+from hop_top_pact.validator._config import (
+    ActivePolicy,
+    Config,
+    ContextMapper,
+    EvidenceStatus,
+    HoldStore,
+    Issuer,
+    Native,
+    NativeMapping,
+    PolicyRegistry,
+    ReceiptStore,
+    Request,
+    Result,
+    Selection,
+    SelectionInput,
+    Selector,
+    Signer,
+    SourceCapability,
+    StatusChecker,
+)
 from hop_top_pact.validator._decide import decide
 from hop_top_pact.validator._errors import ValidatorError, ValidatorErrorKind
+from hop_top_pact.validator._handoff import AttestationStore, Handoff, MemoryAttestations
 from hop_top_pact.validator._problem import problem_of
+from hop_top_pact.validator._receipt import Ed25519Signer, ES256Signer, MemoryReceipts
 from hop_top_pact.validator._state import Event, State, next
 
 # The check identifiers of the mandatory protocol checks of draft 9.3, 11.3 and 12.1, in the
@@ -53,8 +75,32 @@ __all__ = [
     "CHECK_REPUTATION_CONTEXT",
     "CHECK_SECURITY_HOLD",
     "CHECK_SELECTION_CONSISTENCY",
+    "ActivePolicy",
+    "AttestationStore",
+    "Config",
+    "ContextMapper",
+    "ES256Signer",
+    "Ed25519Signer",
     "Event",
+    "EvidenceStatus",
+    "Handoff",
+    "HoldStore",
+    "Issuer",
+    "MemoryAttestations",
+    "MemoryReceipts",
+    "Native",
+    "NativeMapping",
+    "PolicyRegistry",
+    "ReceiptStore",
+    "Request",
+    "Result",
+    "Selection",
+    "SelectionInput",
+    "Selector",
+    "Signer",
+    "SourceCapability",
     "State",
+    "StatusChecker",
     "ValidatorError",
     "ValidatorErrorKind",
     "decide",
