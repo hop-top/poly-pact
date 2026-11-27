@@ -12,14 +12,22 @@ import base64
 import copy
 import json
 import os
+import re
 from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 import pytest
+from cryptography.hazmat.primitives.asymmetric.ec import (
+    SECP256R1,
+    EllipticCurvePrivateKey,
+    derive_private_key,
+)
 
+from hop_top_pact import contract
 from hop_top_pact.adapter import (
     AgentBinding,
     BindingStatus,
@@ -31,10 +39,25 @@ from hop_top_pact.adapter import (
     Realm,
 )
 from hop_top_pact.adapter.adaptertest import RealmJSON
+from hop_top_pact.core import jcs, jws, strictjson
 from hop_top_pact.core.binding import RawRequest
 from hop_top_pact.core.clock import FakeClock
-from hop_top_pact.core.enums import CausalAssessment, Dimension, EventKind, OutcomeResult, Severity
-from hop_top_pact.core.types import Attribution, OperationContext, ReputationContext
+from hop_top_pact.core.enums import (
+    CausalAssessment,
+    Dimension,
+    EventKind,
+    Mode,
+    OutcomeResult,
+    Severity,
+)
+from hop_top_pact.core.types import (
+    Attribution,
+    ContractRequest,
+    Intent,
+    OperationContext,
+    ReputationContext,
+    RequirementContract,
+)
 from hop_top_pact.errors import PactError
 from hop_top_pact.runner import manifest
 
@@ -1066,3 +1089,197 @@ class EvalCaseKit:
 @pytest.fixture
 def ec(tmp_path_factory: pytest.TempPathFactory) -> EvalCaseKit:
     return EvalCaseKit(lambda: tmp_path_factory.mktemp("evalcase"))
+
+
+# The contract tests: the port of go/contract/helpers_test.go. Values of draft
+# Appendix B.4 and of the fixture configuration of spec/v1.0/fixtures/admission/valid,
+# written out from the draft text.
+_SPEC = Path(__file__).resolve().parents[2] / "spec" / "v1.0"
+
+
+class ContractKit:
+    """The shared helpers of the contract tests, as the fixture ``ck``: the
+    Appendix B.4 context, the fixture keys and the payload editing of the
+    tampering tests."""
+
+    B4_TIME = 1792080000
+    B4_PUBLISHER = "https://trust.example/issuers/finance"
+    B4_AGENT = "https://identity.example/agents/invoice-assistant"
+    B4_GATEWAY = "https://gateway.example/finance"
+    B4_TENANT = "acme"
+    B4_ENV = "https://gateway.example/environments/finance"
+    B4_HOLDER_JKT = "xx0BcA-wMohw8atYDJOe6peGModklG2wRHBlXHMvl0M"
+    B4_PRINCIPAL = "https://identity.example/principals/alice"
+    B4_OPERATOR = "https://identity.example/operators/acme"
+    B4_BASE = "finance-base-3"
+    B4_POLICY_DIGEST = "mIu2mtBMHPAf6CgJkuwuDsUWhs9bu-Wkenl4QlrcQAQ"
+    B4_ARTIFACT_DIGEST = "Is5hAn87tiTQEbsbEPbL7oeEZWa74Gxmr4Xrp0SQUQ0"
+    B4_OP_DIGEST = "R5nfhv7g_o93VPHK6a2o56-MyyGy75GQwXxDM4M3cn0"
+    B4_INTENT_DIGEST = "t79YgXU70gzKitcuPJ_fUp4V_bM5MGooinyuyL8cE5M"
+    B4_REALM = Realm(tenant_id=B4_TENANT, environment_id=B4_ENV)
+    VALID_CONTRACT = "admission/valid/signed/contract.jws"
+    OTHER_HOLDER_JKT = "ahxE1XEYqxvLIZy3r4nx9RE4E0683KndykyuZTK9xQg"
+
+    @staticmethod
+    def at(sec: int, micro: int = 0) -> datetime:
+        return datetime.fromtimestamp(sec, UTC) + timedelta(microseconds=micro)
+
+    @staticmethod
+    def _read(path: Path) -> bytes:
+        if not path.exists():
+            if os.environ.get("PACT_REQUIRE_VECTORS") == "1":
+                pytest.fail(f"{path} absent under PACT_REQUIRE_VECTORS=1")
+            pytest.skip("no spec/ tree (mirror checkout)")
+        return path.read_bytes()
+
+    def fixture(self, rel: str) -> bytes:
+        return self._read(_SPEC / "fixtures" / rel)
+
+    def compact_of(self, rel: str) -> str:
+        return self.fixture(rel).decode("ascii").strip()
+
+    def draft_block(self, section: str) -> bytes:
+        """The first json block under the heading "### <section> " of the draft."""
+        draft = self._read(_SPEC / "draft.md").decode("utf-8")
+        m = re.search(
+            r"(?m)^### " + re.escape(section) + r" [^\n]*\n(?:[^\n#][^\n]*\n|\n)*?```json\n"
+            r"((?s:.*?))\n```\n",
+            draft,
+        )
+        assert m is not None, f"draft has no json block under {section}"
+        return m.group(1).encode("utf-8")
+
+    @staticmethod
+    def canonical(data: bytes) -> bytes:
+        return jcs.canonicalize(data)
+
+    @staticmethod
+    def scalar_key(n: int) -> EllipticCurvePrivateKey:
+        """The P-256 test key of private scalar n (spec/v1.0/fixtures/keys/README.md)."""
+        return derive_private_key(n, SECP256R1())
+
+    def fixture_key_set(self, *names: str) -> jws.KeySet:
+        return jws.new_key_set(*(jws.parse_jwk(self.fixture(f"keys/{n}.jwk.json")) for n in names))
+
+    def issuer_signer(self) -> contract.ES256Signer:
+        """Signs as the requirement publisher of the fixtures: scalar 2, kid test-issuer-key-1."""
+        return contract.ES256Signer(kid="test-issuer-key-1", key=self.scalar_key(2))
+
+    def b4_verifier(self) -> contract.Verifier:
+        return contract.Verifier(
+            publishers={ContractKit.B4_PUBLISHER: self.fixture_key_set("issuer")},
+            skew=timedelta(seconds=5),
+        )
+
+    @staticmethod
+    def b4_expect() -> contract.Expect:
+        return contract.Expect(
+            agent_id=ContractKit.B4_AGENT,
+            audience=ContractKit.B4_GATEWAY,
+            realm=ContractKit.B4_REALM,
+        )
+
+    @staticmethod
+    def b4_policy() -> contract.Policy:
+        return contract.Policy(
+            base_revision=ContractKit.B4_BASE,
+            learning_policy_digest=ContractKit.B4_POLICY_DIGEST,
+            learning_artifact_digest=ContractKit.B4_ARTIFACT_DIGEST,
+        )
+
+    def b4_requirements(self) -> contract.Requirements:
+        """The effective requirements of the B.4 contract; the conservative set is that
+        of the B.9 learning policy."""
+        c = strictjson.decode(self.draft_block("B.4"), RequirementContract)
+        return contract.Requirements(
+            policy=self.b4_policy(),
+            selected_set="supervised",
+            conservative_set="supervised",
+            field_rules=c.field_rules,
+            context_checks=c.context_checks,
+            mode=Mode.ENFORCED,
+        )
+
+    def b4_request(self) -> ContractRequest:
+        """The contract request of the B.2 intent and B.3 operation."""
+        return ContractRequest(
+            agent_id=ContractKit.B4_AGENT,
+            holder_jkt=ContractKit.B4_HOLDER_JKT,
+            intent=strictjson.decode(self.draft_block("B.2"), Intent),
+            operation=strictjson.decode(self.draft_block("B.3"), OperationContext),
+        )
+
+    def b4_auth(self) -> contract.Authenticated:
+        """Native context that authenticated alice in the B.4 realm with the enrolled
+        B.4 agent binding."""
+        return contract.Authenticated(
+            principal=Principal(
+                id=ContractKit.B4_PRINCIPAL,
+                realm=ContractKit.B4_REALM,
+                workload="workload:invoice-assistant",
+                authenticated_at=self.at(ContractKit.B4_TIME),
+            ),
+            binding=AgentBinding(
+                agent_id=ContractKit.B4_AGENT,
+                operator_id=ContractKit.B4_OPERATOR,
+                holder_jkt=ContractKit.B4_HOLDER_JKT,
+                status=BindingStatus.ACTIVE,
+                observed_at=self.at(ContractKit.B4_TIME),
+                status_checked_at=self.at(ContractKit.B4_TIME),
+                source_id="enrollment",
+            ),
+        )
+
+    def new_publisher(self, store: contract.ReplayStore | None) -> contract.Publisher:
+        return contract.Publisher(
+            issuer=ContractKit.B4_PUBLISHER,
+            audience=ContractKit.B4_GATEWAY,
+            realm=ContractKit.B4_REALM,
+            signer=self.issuer_signer(),
+            replay=store,
+        )
+
+    @staticmethod
+    def segment(compact: str, i: int) -> bytes:
+        parts = compact.split(".")
+        assert len(parts) == 3, f"not a compact JWS: {compact!r}"
+        return jws.base64url.decode(parts[i])
+
+    def resign(self, header: bytes, payload: bytes, key: EllipticCurvePrivateKey) -> str:
+        """The payload signed by key under the typ and kid of header, so that a test can
+        present a payload the publisher signed with a defect."""
+        h = json.loads(header)
+        return jws.sign(jws.Header(typ=h["typ"], kid=h["kid"]), payload, key)
+
+    def edit_payload(self, compact: str, edit: Callable[[dict[str, Any]], None]) -> bytes:
+        """The payload of compact decoded into a generic object, edited, and re-encoded."""
+        m = json.loads(self.segment(compact, 1))
+        edit(m)
+        return json.dumps(m, separators=(",", ":")).encode("utf-8")
+
+    def tampered(self, compact: str, edit: Callable[[dict[str, Any]], None]) -> str:
+        """compact with its payload edited and its signature left as it was."""
+        parts = compact.split(".")
+        parts[1] = jws.base64url.encode(self.edit_payload(compact, edit))
+        return ".".join(parts)
+
+    def resigned(
+        self, compact: str, edit: Callable[[dict[str, Any]], None], key_scalar: int = 2
+    ) -> str:
+        """compact with its payload edited and signed again by the publisher key."""
+        return self.resign(
+            self.segment(compact, 0), self.edit_payload(compact, edit), self.scalar_key(key_scalar)
+        )
+
+    @staticmethod
+    @contextmanager
+    def raises(code: str) -> Iterator[None]:
+        """The block raises a ContractError of code, and of no other."""
+        with pytest.raises(contract.ContractError) as ei:
+            yield
+        assert ei.value.code == code, f"error {ei.value}, want code {code}"
+
+
+@pytest.fixture
+def ck() -> ContractKit:
+    return ContractKit()
