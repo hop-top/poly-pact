@@ -5,6 +5,6 @@ of hop_top_pact.adapters.memory, and evaluates. It is not part of the package.""
 
 from __future__ import annotations
 
-from validator_support.run import Fixture, locate, prepare, run_case
+from validator_support.run import Fixture, locate, prepare, run_case, run_exchanges
 
-__all__ = ["Fixture", "locate", "prepare", "run_case"]
+__all__ = ["Fixture", "locate", "prepare", "run_case", "run_exchanges"]

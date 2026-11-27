@@ -59,17 +59,21 @@ def prepare(directory: str | Path) -> Fixture:
     return Fixture(validator=v, request=req, clock=g.clk)
 
 
-def run_case(directory: str | Path) -> list[str]:
-    """Run the evaluation case in directory and return its responses, one per line: each
-    exchange's submissions in order, then its handoff attempts."""
+def run_exchanges(directory: str | Path) -> list[list[str]]:
+    """Run the evaluation case in directory and return the responses of each exchange, in
+    order: its submissions, then its handoff attempts. The replay store, the receipts and
+    the consumed attestations carry over from one exchange to the next."""
     fixtures, id_ = locate(directory)
     c = conformance.read(fixtures, id_)
     keys = load_private_keys(fixtures)
     gs = GatewayState()
-    out: list[str] = []
-    for x in c.exchanges:
-        out += _run_exchange(fixtures, x, keys, gs)
-    return out
+    return [_run_exchange(fixtures, x, keys, gs) for x in c.exchanges]
+
+
+def run_case(directory: str | Path) -> list[str]:
+    """Run the evaluation case in directory and return its responses, one per line: each
+    exchange's submissions in order, then its handoff attempts."""
+    return [ln for lines in run_exchanges(directory) for ln in lines]
 
 
 def _run_exchange(
