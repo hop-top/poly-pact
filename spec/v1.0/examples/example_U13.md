@@ -1,7 +1,6 @@
 # Use case 13 — Gateway learns a better admission policy
 
-**Status:** Informative worked example for PACT Protocol v1.0. Names, amounts, policies, and thresholds are fictional deployment choices, not protocol defaults. Profile paths below are gateway-defined attributes. This is a behavioral example, not a complete signed wire fixture.
-
+**Status:** Draft
 This example is informative: it does not establish a live integration, interoperability, or an end-to-end security result.
 
 
