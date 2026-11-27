@@ -1,6 +1,6 @@
 {
   "go": "1.0.0-alpha.0",
-  "cli": "1.0.0-alpha.0",
+  "cli": "1.0.0-alpha.1",
   "ts": "1.0.0-alpha.0",
   "py": "1.0.0-alpha.0",
   "rs": "1.0.0-alpha.0",
