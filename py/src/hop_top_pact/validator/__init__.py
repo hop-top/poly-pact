@@ -3,10 +3,33 @@ Section 11.4 and the receipts and state machine of Section 12, for a gateway tha
 evaluates in its own request path or as a trusted sidecar (draft 4.4). Mirrors
 hop.top/pact-go/validator.
 
-This module holds, so far, the pieces that need no evaluation: the check identifiers, the
-decision table (decide), the state machine (State, Event, next) and the transport errors
-(problem_of). Every error code is the draft 13.4 code; ValidatorError carries the two
-failures that have none.
+Validator.evaluate takes the signed presentation, the actual operation the gateway mapped
+from the request and the principal native authentication established (draft 13.2, 17.1).
+Before an authenticated evaluation it applies, as transport checks that give no receipt
+(draft 12.2): native authentication; the presentation's size, strict parsing, typ and
+signature; the enrolled agent/key binding; the publisher's signature and validity window of
+the embedded contract; the transport the contract names; the presentation's time bounds; and
+the atomic consumption of the contract's nonce. The error is then a Rejection carrying the
+draft 13.4 code, which problem_of turns into the RFC 9457 transport error.
+
+An authenticated evaluation records every check in a CheckResult, in the order of the table
+of draft 12.1, then each field rule by its rule_id and each of the contract's context_checks,
+in contract order, each exactly once. A check that was not performed is never PASS: it is
+UNKNOWN with NOT_EVALUATED. decide is draft 11.4; a store that cannot answer makes the
+check that needs it UNKNOWN, which defers; it never admits (draft 18). A receipt is recorded
+before it is returned: one that cannot be recorded is DEFERRED with the check receipt-store
+UNKNOWN, and the raised error carries it as its result attribute.
+
+Time is the injected clock alone. The evaluation deadline is the earliest of the contract's
+and the presentation's exp and the start plus Config.evaluation_time, at most 30 seconds
+(draft 12.2). evaluate also takes a keyword-only cancelled predicate, the requestor's
+cancellation through native session control: it is polled while the evaluation runs, and
+once it returns true the evaluation seals DEFERRED with terminal reason CANCELLED. The calls
+take no context argument.
+
+Every other error is the draft 13.4 code the error carries; ValidatorError carries the two
+failures that have none. Handoff is the gateway's check of a sidecar validator's attestation
+(draft 11.5).
 """
 
 from __future__ import annotations

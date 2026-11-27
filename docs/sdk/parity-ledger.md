@@ -2636,4 +2636,4 @@ SDK extra of the PHP SDK: `Core\Schema` (validation with `opis/json-schema` and 
 | `Validator.Contexts` | `Validator.contexts` | `Validator.contexts` | planned |  |
 | `Validator.Signer` | `Validator.signer` | `Validator.signer` | planned |  |
 | `Validator.Clock` | `Validator.clock` | `Validator.clock` | planned |  |
-| `Validator.Evaluate` | `Validator.evaluate` | `Validator.evaluate` | deviation | deviation: adapter calls |
+| `Validator.Evaluate` | `Validator.evaluate` | `Validator.evaluate` | deviation | deviation: adapter calls; Python takes a keyword-only `cancelled` predicate (`Callable[[], bool] \| None`) instead of the context's cancellation, and a receipt that could not be recorded is the `result` attribute of the raised error |
