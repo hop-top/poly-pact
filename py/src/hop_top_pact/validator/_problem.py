@@ -30,6 +30,9 @@ class Rejection(PactError):
     def __init__(self, code: str, text: str) -> None:
         self.code = code
         self.text = text
+        self.result: object = None
+        """The sealed Result of an evaluation whose receipt could not be recorded: the error
+        carries it where Go returns it beside the error; None otherwise."""
         super().__init__(f"validator: {code}: {text}")
 
 

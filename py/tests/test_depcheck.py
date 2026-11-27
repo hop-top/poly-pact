@@ -24,8 +24,9 @@ BUILD = frozenset({"flit-core"})
 BUILD_BACKEND = "flit_core.buildapi"
 # Import names per tree, on top of the standard library.
 SRC_IMPORTS = RUNTIME | {PACKAGE}
-# broken is the test tree's own package (tests/broken), not a dependency.
-TEST_IMPORTS = SRC_IMPORTS | {"pytest", "rfc8785", "broken"}
+# broken and validator_support are the test tree's own packages (tests/broken,
+# tests/validator_support), not dependencies.
+TEST_IMPORTS = SRC_IMPORTS | {"pytest", "rfc8785", "broken", "validator_support"}
 EXAMPLE_IMPORTS = SRC_IMPORTS
 SCRIPT_IMPORTS: frozenset[str] = frozenset()
 

@@ -18,7 +18,7 @@ from hop_top_pact.errors import PactError
 from hop_top_pact.validator._config import HoldStore
 from hop_top_pact.validator._problem import code_of, reject
 
-__all__ = ["AttestationStore", "Handoff", "MemoryAttestations"]
+__all__ = ["AttestationStore", "Handoff", "IssuerKeys", "MemoryAttestations"]
 
 # The JWS failures that mean the signer could not be authenticated; every other failure is a
 # malformed message.
@@ -37,7 +37,7 @@ def is_proof_failure(err: jws.JWSError) -> bool:
     return err.reason in _PROOF
 
 
-class _IssuerKeys:
+class IssuerKeys:
     """Resolves the key set of the trust record that the payload's iss names; the payload is
     not authenticated yet (jws.KeyRequest)."""
 
@@ -116,7 +116,7 @@ class Handoff:
             raise ValueError("validator: Handoff needs a Consumed store")
         try:
             parsed = jws.Verifier(
-                keys=_IssuerKeys(self.validators), typ=jws.TYP_ADMISSION, algorithms=self.algorithms
+                keys=IssuerKeys(self.validators), typ=jws.TYP_ADMISSION, algorithms=self.algorithms
             ).verify(compact)
         except jws.JWSError as e:
             if is_proof_failure(e):

@@ -40,6 +40,7 @@ from hop_top_pact.validator._handoff import AttestationStore, Handoff, MemoryAtt
 from hop_top_pact.validator._problem import problem_of
 from hop_top_pact.validator._receipt import Ed25519Signer, ES256Signer, MemoryReceipts
 from hop_top_pact.validator._state import Event, State, next
+from hop_top_pact.validator._validator import Validator
 
 # The check identifiers of the mandatory protocol checks of draft 9.3, 11.3 and 12.1, in the
 # order a receipt lists them (the table of draft 12.1), and of the two baseline installed
@@ -101,6 +102,7 @@ __all__ = [
     "SourceCapability",
     "State",
     "StatusChecker",
+    "Validator",
     "ValidatorError",
     "ValidatorErrorKind",
     "decide",
