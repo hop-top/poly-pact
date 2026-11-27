@@ -106,7 +106,14 @@ class Gateway:
         self.gs = gs
         self.auth = nc.authenticated
         cfg = x.config
-        self.raw = json.loads((fixtures / x.path / "config.json").read_bytes())
+        # config.json members hop_top_pact.conformance does not read (purposes,
+        # reputation_context, active_policy.scoring_policy_revisions,
+        # selection.selector.checks) come from config.extras.json when a test moved them there,
+        # else from config.json itself.
+        extras = fixtures / x.path / "config.extras.json"
+        self.raw = json.loads(
+            (extras if extras.exists() else fixtures / x.path / "config.json").read_bytes()
+        )
         self.clk = FakeClock(at(cfg.now))
         self.cfg = validator_config(fixtures, cfg)
         self.signer = signer_for(keys, cfg.validator.key)
